@@ -21,6 +21,11 @@ public class PluginMain extends BukkitPlugin {
     }
     
     // 2. 添加 afterEnable()
+    //    除此之外，还可以添加 beforeEnable afterEnable (相对于 onEnable 而言)
+    //    beforeLoad afterLoad (相对于 onLoad 而言)
+    //    beforeDisable afterDisable (相对于 onDisable 而言)
+    //    而 onLoad onEnable onDisable 不推荐使用，请把它们留给 PluginBase 使用，
+    //    加这六个方法也是为了避免开发者猪鼻忘记加 super.onEnable(); 之类的导致无法正常初始化
     @Override
     protected void afterEnable() {
         // 如果需要，在这里注册事件
