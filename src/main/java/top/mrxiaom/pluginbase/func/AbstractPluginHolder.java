@@ -21,22 +21,22 @@ import java.util.Optional;
 
 import static top.mrxiaom.pluginbase.utils.Util.stackTraceToString;
 
-@SuppressWarnings({"unused"})
-public abstract class AbstractPluginHolder {
-    private static final Map<Class<?>, AbstractPluginHolder> registeredBungeeHolders = new HashMap<>();
-    private static final Map<Class<?>, AbstractPluginHolder> registeredHolders = new HashMap<>();
-    public final BukkitPlugin plugin;
+@SuppressWarnings({"unused", "unchecked"})
+public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
+    private static final Map<Class<?>, AbstractPluginHolder<?>> registeredBungeeHolders = new HashMap<>();
+    private static final Map<Class<?>, AbstractPluginHolder<?>> registeredHolders = new HashMap<>();
+    public final T plugin;
 
     public AbstractPluginHolder(BukkitPlugin plugin) {
         this(plugin, false);
     }
 
     public AbstractPluginHolder(BukkitPlugin plugin, boolean register) {
-        this.plugin = plugin;
+        this.plugin = (T) plugin;
         if (register) register();
     }
 
-    public static void loadModules(BukkitPlugin plugin, List<Class<? extends AbstractPluginHolder>> classList) {
+    public static void loadModules(BukkitPlugin plugin, List<Class<? extends AbstractPluginHolder<?>>> classList) {
         for (Class<?> clazz : classList) {
             try {
                 clazz.getDeclaredConstructor(plugin.getClass()).newInstance(plugin);
@@ -51,7 +51,7 @@ public abstract class AbstractPluginHolder {
     }
 
     public static void receiveFromBungee(String subChannel, byte[] bytes) {
-        for (AbstractPluginHolder holder : registeredBungeeHolders.values()) {
+        for (AbstractPluginHolder<?> holder : registeredBungeeHolders.values()) {
             try (DataInputStream msgIn = new DataInputStream(new ByteArrayInputStream(bytes))) {
                 holder.receiveBungee(subChannel, msgIn);
             } catch (Throwable t) {
@@ -65,7 +65,7 @@ public abstract class AbstractPluginHolder {
     }
 
     public static void reloadAllConfig(MemoryConfiguration config) {
-        for (AbstractPluginHolder inst : registeredHolders.values()) {
+        for (AbstractPluginHolder<?> inst : registeredHolders.values()) {
             inst.reloadConfig(config);
         }
     }
@@ -75,7 +75,7 @@ public abstract class AbstractPluginHolder {
     }
 
     public static void callDisable() {
-        for (AbstractPluginHolder holder : registeredHolders.values()) {
+        for (AbstractPluginHolder<?> holder : registeredHolders.values()) {
             holder.onDisable();
         }
         registeredHolders.clear();
@@ -159,19 +159,19 @@ public abstract class AbstractPluginHolder {
 
     @Nullable
     @SuppressWarnings({"unchecked"})
-    public static <T extends AbstractPluginHolder> T getOrNull(Class<T> clazz) {
+    public static <T extends AbstractPluginHolder<?>> T getOrNull(Class<T> clazz) {
         return (T) registeredHolders.get(clazz);
     }
 
     @SuppressWarnings({"unchecked"})
-    public static <T extends AbstractPluginHolder> Optional<T> get(Class<T> clazz) {
+    public static <T extends AbstractPluginHolder<?>> Optional<T> get(Class<T> clazz) {
         T inst = (T) registeredHolders.get(clazz);
         if (inst == null) return Optional.empty();
         return Optional.of(inst);
     }
 
     @SuppressWarnings({"unchecked"})
-    protected static <T extends AbstractPluginHolder> T instanceOf(Class<T> clazz) {
+    protected static <T extends AbstractPluginHolder<?>> T instanceOf(Class<T> clazz) {
         T inst = (T) registeredHolders.get(clazz);
         if (inst == null) throw new IllegalStateException("无法找到已注册的 " + clazz.getName());
         return inst;
