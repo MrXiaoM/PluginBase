@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.database.IDatabase;
 import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
+import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.func.GuiManager;
 import top.mrxiaom.pluginbase.utils.Util;
 
@@ -47,6 +48,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
         public EconomyHolder economy() {
             return vaultEconomy ? economyHolder : null;
+        }
+
+        public DatabaseHolder database() {
+            return database ? databaseHolder : null;
         }
 
         public Options bungee(boolean value) {
@@ -120,8 +125,22 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     @Override
     @Deprecated
+    @SuppressWarnings({"unchecked"})
     public void onLoad() {
         beforeLoad();
+        String name = getClass().getPackage().getName();
+        getLogger().info("正在扫描包 " + name + " 下的所有类");
+        for (Class<?> clazz : Util.getClasses(name)) {
+            if (clazz.isInterface() || clazz.isAnnotation() || clazz.isEnum()) continue;
+            if (clazz.isAssignableFrom(AbstractPluginHolder.class)) {
+                AutoRegister annotation = clazz.getAnnotation(AutoRegister.class);
+                getLogger().info("扫描到了 " + clazz.getName() + " " + (annotation == null ? "[ ]" : "[x]"));
+                if (annotation != null) {
+                    modulesToRegister.add((Class<? extends AbstractPluginHolder>) clazz);
+                }
+            }
+        }
+        getLogger().info("扫描完毕");
         afterLoad();
     }
 

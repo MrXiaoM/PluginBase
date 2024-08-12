@@ -15,9 +15,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.net.JarURLConnection;
+import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -262,7 +266,58 @@ public class Util {
         return num;
     }
 
-    
+    public static Set<Class<?>> getClasses(String packageName) {
+        Set<Class<?>> classes = new HashSet<>();
+        try {
+            String name = packageName.replace(".", "/");
+            Enumeration<URL> urls = Thread.currentThread().getContextClassLoader().getResources(name);
+            while (urls.hasMoreElements()) {
+                URL url = urls.nextElement();
+                String protocol = url.getProtocol();
+                if ("file".equals(protocol)) {
+                    findAnnotatedClassesInDirectory(new File(url.toURI()), packageName, classes);
+                } else if ("jar".equals(protocol)) {
+                    findAnnotatedClassesInJar(url, packageName, classes);
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return classes;
+    }
+
+    private static void findAnnotatedClassesInDirectory(File directory, String packageName, Set<Class<?>> classes) {
+        File[] files = directory.listFiles(file -> ((file.isFile() && file.getName().endsWith(".class")) || file.isDirectory()));
+        if (files != null) for (File file : files) {
+            if (file.isFile()) {
+                String className = packageName + '.' + file.getName().substring(0, file.getName().length() - 6);
+                try {
+                    classes.add(Class.forName(className));
+                } catch (ClassNotFoundException ignored) {
+                }
+            } else if (file.isDirectory()) {
+                findAnnotatedClassesInDirectory(file, packageName + "." + file.getName(), classes);
+            }
+        }
+    }
+
+    private static void findAnnotatedClassesInJar(URL url, String packageName, Set<Class<?>> classes) throws Exception {
+        String packagePath = packageName.replace(".", "/");
+        JarFile jar = ((JarURLConnection) url.openConnection()).getJarFile();
+        Enumeration<JarEntry> entries = jar.entries();
+        while (entries.hasMoreElements()) {
+            JarEntry entry = entries.nextElement();
+            String name = entry.getName();
+            if (name.startsWith(packagePath) && name.endsWith(".class")) {
+                String className = name.substring(0, name.length() - 6).replace("/", ".");
+                try {
+                    classes.add(Class.forName(className));
+                } catch (ClassNotFoundException ignored) {
+                }
+            }
+        }
+    }
+
+
     public static class RegexResult {
         public final MatchResult result;
         public final boolean isMatched;
