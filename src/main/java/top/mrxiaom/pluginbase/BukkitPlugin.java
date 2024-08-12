@@ -79,7 +79,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
     public static BukkitPlugin getInstance() {
         return instance;
     }
-    private final List<Class<? extends AbstractPluginHolder>> modulesToRegister = new ArrayList<>();
+    private final List<Class<? extends AbstractPluginHolder<?>>> modulesToRegister = new ArrayList<>();
     private boolean pluginEnabled = false;
     protected final Options options;
     private GuiManager guiManager = null;
@@ -136,7 +136,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
                 AutoRegister annotation = clazz.getAnnotation(AutoRegister.class);
                 getLogger().info("扫描到了 " + clazz.getName() + " " + (annotation == null ? "[ ]" : "[x]"));
                 if (annotation != null) {
-                    modulesToRegister.add((Class<? extends AbstractPluginHolder>) clazz);
+                    modulesToRegister.add((Class<? extends AbstractPluginHolder<?>>) clazz);
                 }
             }
         }
@@ -170,7 +170,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
     }
 
     @SafeVarargs
-    protected final void registerModules(Class<? extends AbstractPluginHolder>... classList) {
+    protected final void registerModules(Class<? extends AbstractPluginHolder<?>>... classList) {
         if (pluginEnabled) {
             loadModules(this, Lists.newArrayList(classList));
         } else {
