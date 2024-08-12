@@ -39,6 +39,17 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
     public static void loadModules(BukkitPlugin plugin, List<Class<? extends AbstractPluginHolder<?>>> classList) {
         for (Class<?> clazz : classList) {
             try {
+                AutoRegister meta = clazz.getAnnotation(AutoRegister.class);
+                if (meta != null) {
+                    boolean load = true;
+                    for (String s : meta.requirePlugins()) {
+                        if (!Bukkit.getPluginManager().isPluginEnabled(s)) {
+                            load = false;
+                            break;
+                        }
+                    }
+                    if (!load) continue;
+                }
                 clazz.getDeclaredConstructor(plugin.getClass()).newInstance(plugin);
             } catch (Throwable t) {
                 plugin.warn("加载 " + clazz.getName() + "时出现异常:", t);
