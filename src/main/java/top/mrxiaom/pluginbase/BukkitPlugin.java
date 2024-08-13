@@ -27,6 +27,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         protected boolean reconnectDatabaseWhenReloadConfig;
         protected boolean vaultEconomy;
         protected EconomyHolder economyHolder;
+        protected String scanPackage = null;
         private Options() {}
         private void enable(BukkitPlugin plugin) {
             if (database) {
@@ -70,6 +71,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
             this.vaultEconomy = value;
             return this;
         }
+        public Options scanPackage(String packageName) {
+            this.scanPackage = packageName;
+            return this;
+        }
     }
     public static Options options() {
         return new Options();
@@ -84,7 +89,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
     protected final Options options;
     private GuiManager guiManager = null;
     public BukkitPlugin(Options options) {
-        if (className.equals("top.mrxiaom.pluginbase.BukkitPlugin")) {
+        if (className.equals("group.pluginbase.BukkitPlugin".replace("group", "top.mrxiaom"))) {
             throw new IllegalStateException("PluginBase 依赖没有 relocate 到插件包，插件无法正常工作，请联系开发者解决该问题\n参考文档: https://github.com/MrXiaoM/PluginBase");
         }
         this.options = options;
@@ -128,19 +133,17 @@ public abstract class BukkitPlugin extends JavaPlugin {
     @SuppressWarnings({"unchecked"})
     public void onLoad() {
         beforeLoad();
-        String name = getClass().getPackage().getName();
-        getLogger().info("正在扫描包 " + name + " 下的所有类");
-        for (Class<?> clazz : Util.getClasses(name)) {
+        String packageName = options.scanPackage != null ? options.scanPackage : getClass().getPackage().getName();
+        Set<Class<?>> classes = Util.getClasses(getClassLoader(), packageName);
+        for (Class<?> clazz : classes) {
             if (clazz.isInterface() || clazz.isAnnotation() || clazz.isEnum()) continue;
-            if (clazz.isAssignableFrom(AbstractPluginHolder.class)) {
+            if (AbstractPluginHolder.class.isAssignableFrom(clazz)) {
                 AutoRegister annotation = clazz.getAnnotation(AutoRegister.class);
-                getLogger().info("扫描到了 " + clazz.getName() + " " + (annotation == null ? "[ ]" : "[x]"));
                 if (annotation != null) {
                     modulesToRegister.add((Class<? extends AbstractPluginHolder<?>>) clazz);
                 }
             }
         }
-        getLogger().info("扫描完毕");
         afterLoad();
     }
 

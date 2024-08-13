@@ -266,11 +266,11 @@ public class Util {
         return num;
     }
 
-    public static Set<Class<?>> getClasses(String packageName) {
-        Set<Class<?>> classes = new HashSet<>();
+    public static Set<Class<?>> getClasses(ClassLoader loader, String packageName) {
+        Set<Class<?>> classes = new TreeSet<>(Comparator.comparing(Class::getName));
         try {
             String name = packageName.replace(".", "/");
-            Enumeration<URL> urls = Thread.currentThread().getContextClassLoader().getResources(name);
+            Enumeration<URL> urls = loader.getResources(name);
             while (urls.hasMoreElements()) {
                 URL url = urls.nextElement();
                 String protocol = url.getProtocol();
@@ -292,7 +292,7 @@ public class Util {
                 String className = packageName + '.' + file.getName().substring(0, file.getName().length() - 6);
                 try {
                     classes.add(Class.forName(className));
-                } catch (ClassNotFoundException ignored) {
+                } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
                 }
             } else if (file.isDirectory()) {
                 findAnnotatedClassesInDirectory(file, packageName + "." + file.getName(), classes);
@@ -311,7 +311,7 @@ public class Util {
                 String className = name.substring(0, name.length() - 6).replace("/", ".");
                 try {
                     classes.add(Class.forName(className));
-                } catch (ClassNotFoundException ignored) {
+                } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
                 }
             }
         }
