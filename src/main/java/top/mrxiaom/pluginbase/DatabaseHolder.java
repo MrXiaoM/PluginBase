@@ -41,9 +41,9 @@ public class DatabaseHolder {
     }
 
     public void reloadConfig() {
-        File file = new File(plugin.getDataFolder(), "configurations/database.yml");
+        File file = new File(plugin.getDataFolder(), "database.yml");
         if (!file.exists()) {
-            plugin.saveResource("configurations/database.yml", true);
+            plugin.saveResource("database.yml", true);
         }
         reloadFromFile(file);
     }
@@ -89,7 +89,7 @@ public class DatabaseHolder {
         }
         if (driver.equals("org.sqlite.JDBC")) {
             String database = config.getString("sqlite.file", "database.db");
-            hikariConfig.setJdbcUrl("jdbc:sqlite:plugins/" + plugin.getName() + "/" + database + query);
+            hikariConfig.setJdbcUrl("jdbc:sqlite:plugins/" + plugin.getName() + "/" + database);
         }
         if (!firstConnectFlag && !plugin.options.reconnectDatabaseWhenReloadConfig) {
             reconnect();
