@@ -11,7 +11,7 @@ query: 'useSSL=false&allowPublicKeyRetrieval=true&verifyServerCertificate=false&
 # 连接池设置
 hikari:
   max_lifetime: 120000
-  idle_timeout: 5000
+  idle_timeout: 10000
   connection_timeout: 5000
   minimum_idle: 8
   maximum_pool_size: 36

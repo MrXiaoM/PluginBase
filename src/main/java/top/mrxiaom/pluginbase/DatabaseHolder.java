@@ -22,12 +22,17 @@ public class DatabaseHolder {
     HikariDataSource dataSource = null;
     List<IDatabase> databases = new ArrayList<>();
     private boolean firstConnectFlag = false;
+    private String tablePrefix;
     protected DatabaseHolder(BukkitPlugin plugin) {
         this.plugin = plugin;
     }
 
     public void registerDatabase(IDatabase... databases) {
         this.databases.addAll(Arrays.asList(databases));
+    }
+
+    public String getTablePrefix() {
+        return tablePrefix;
     }
 
     @Nullable
@@ -56,6 +61,7 @@ public class DatabaseHolder {
                 return;
             }
         }
+        tablePrefix = config.getString("table_prefix", "");
         String type = config.getString("type", "sqlite").toLowerCase();
         String driver;
         switch (type) {
@@ -118,7 +124,7 @@ public class DatabaseHolder {
         Connection conn = getConnection();
         if (conn == null) plugin.getLogger().warning("无法连接到数据库!");
         else {
-            for (IDatabase db : databases) db.reload(conn);
+            for (IDatabase db : databases) db.reload(conn, tablePrefix);
             plugin.getLogger().info("数据库连接成功");
             try {
                 conn.close();
