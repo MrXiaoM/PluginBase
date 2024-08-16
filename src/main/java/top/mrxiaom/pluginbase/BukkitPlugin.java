@@ -95,7 +95,6 @@ public abstract class BukkitPlugin extends JavaPlugin {
         this.options = options;
     }
 
-    @Nullable
     public Connection getConnection() {
         return options.databaseHolder == null ? null : options.databaseHolder.getConnection();
     }

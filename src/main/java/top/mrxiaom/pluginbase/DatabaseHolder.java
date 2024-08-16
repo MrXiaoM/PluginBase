@@ -81,8 +81,13 @@ public class DatabaseHolder {
         hikariConfig.setMaxLifetime(120000L);
         hikariConfig.setIdleTimeout(5000L);
         hikariConfig.setConnectionTimeout(5000L);
-        hikariConfig.setMinimumIdle(10);
-        hikariConfig.setMaximumPoolSize(100);
+        if (type.equals("sqlite")) {
+            hikariConfig.setMinimumIdle(1);
+            hikariConfig.setMaximumPoolSize(1);
+        } else {
+            hikariConfig.setMinimumIdle(10);
+            hikariConfig.setMaximumPoolSize(100);
+        }
         if (driver.equals("com.mysql.cj.jdbc.Driver")) {
             String host = config.getString("mysql.host", "localhost");
             int port = config.getInt("mysql.port", 3306);
@@ -124,7 +129,7 @@ public class DatabaseHolder {
         Connection conn = getConnection();
         if (conn == null) plugin.getLogger().warning("无法连接到数据库!");
         else {
-            for (IDatabase db : databases) db.reload(conn, tablePrefix);
+            for (IDatabase db : databases) db.reload(conn, getTablePrefix());
             plugin.getLogger().info("数据库连接成功");
             try {
                 conn.close();

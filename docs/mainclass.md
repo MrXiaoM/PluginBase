@@ -15,9 +15,12 @@ public class PluginMain extends BukkitPlugin {
     // 1. 首先，让主类继承 BukkitPlugin，加一个无参的构造函数，
     //    然后把插件的参数写到 super(); 里
     public PluginMain() {
-        super(options()
+        super(options() // 框架选项
                 .bungee(false)
-                .database(false));
+                .database(false)
+                // 更改自动注册模块的包名，如果不填，则使用主类所在包名
+                .scanPackage("top.mrxiaom.example")
+        );
     }
     
     // 2. 添加 afterEnable()
@@ -48,6 +51,36 @@ public class PluginMain extends BukkitPlugin {
         // 在统一初始化之后，再进行注册模块操作与直接 new 没啥区别，不推荐在初始化后注册模块，不如直接 new
         
         registerModules(ExampleModule.class);
+        
+        // beforeLoad 之后，框架会扫描主类所在包下面的所有类，
+        // 寻找带有 @AutoRegister 的 AbstractModule 并自动注册模块
+        // 更推荐使用自动注册而非手动注册
+    }
+}
+```
+
+# 固定泛型
+
+可以不固定，固定了泛型类型，可以方便之后继承和调用。
+
+```java
+// 自觉替换 PluginMain 为插件主类
+package top.mrxiaom.example.func;
+
+import top.mrxiaom.example.PluginMain;
+
+public abstract class AbstractModule extends top.mrxiaom.pluginbase.func.AbstractModule<SweetRiceBase> {
+    public AbstractModule(SweetRiceBase plugin) {
+        super(plugin);
+    }
+}
+public abstract class AbstractPluginHolder extends top.mrxiaom.pluginbase.func.AbstractPluginHolder<PluginMain> {
+    public AbstractPluginHolder(PluginMain plugin) {
+        super(plugin);
+    }
+
+    public AbstractPluginHolder(PluginMain plugin, boolean register) {
+        super(plugin, register);
     }
 }
 ```
@@ -66,9 +99,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import top.mrxiaom.pluginbase.BukkitPlugin;
-import top.mrxiaom.pluginbase.func.AbstractModule;
+import top.mrxiaom.example.func.AbstractModule;
+import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.utils.ColorHelper;
 
+@AutoRegister // 自动注册
+@AutoRegister(requirePlugins = {"AuthMe"}) // 自动注册 (并要求服务端已安装某些插件)
 public class ExampleModule extends AbstractModule implements Listener {
     // 1. 首先，让模块类继承 AbstractModule，加一个 只有一个主类参数 的构造函数
     public ExampleModule(BukkitPlugin plugin) {
@@ -106,8 +142,6 @@ public class ExampleModule extends AbstractModule implements Listener {
     }
 }
 ```
-
-最后，不要忘记到主类中注册模块 `registerModules(ExampleModule.class);`
 
 # 注册命令
 

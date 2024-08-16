@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.Nullable;
@@ -14,10 +15,7 @@ import top.mrxiaom.pluginbase.utils.ColorHelper;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static top.mrxiaom.pluginbase.utils.Util.stackTraceToString;
 
@@ -79,6 +77,11 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         for (AbstractPluginHolder<?> inst : registeredHolders.values()) {
             inst.reloadConfig(config);
         }
+    }
+
+    public static Set<String> keys(ConfigurationSection section, String key) {
+        ConfigurationSection s = section == null ? null : section.getConfigurationSection(key);
+        return s == null ? new HashSet<>() : s.getKeys(false);
     }
 
     public void onDisable() {
