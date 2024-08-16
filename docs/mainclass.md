@@ -22,6 +22,12 @@ public class PluginMain extends BukkitPlugin {
                 .scanPackage("top.mrxiaom.example")
         );
     }
+
+    // (可选) 覆盖框架的 getInstance()
+    // 这样就能通过 PluginMain.getInstance() 获取主类实例了
+    public static PluginMain getInstance() {
+        return (PluginMain) BukkitPlugin.getInstance();
+    }
     
     // 2. 添加 afterEnable()
     //    除此之外，还可以添加 beforeEnable afterEnable (相对于 onEnable 而言)
