@@ -8,6 +8,7 @@
 2. 插件元数据 [plugin.yml](/docs/plugin.yml.md)
 3. 插件主类 [PluginMain.java](/docs/mainclass.md)
 4. 一些工具 [ColorHelper, ItemStackUtil, Util 等等](/docs/utils.md)
-5. 菜单 [GuiManager](/docs/gui.md)
-6. (可选) Vault 经济 等待编写文档
-7. (可选) HikariCP 数据库连接池 等待编写文档
+5. (可选) 菜单 [GuiManager](/docs/gui.md)
+6. (可选) Vault 经济 [EconomyHolder](/docs/vault.md)
+7. (可选) HikariCP 数据库连接池 [IDatabase](/docs/database.md)
+8. (可选) Adventure 在非 Paper 服务端的富文本支持 编写中
