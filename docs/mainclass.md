@@ -58,7 +58,7 @@ public class PluginMain extends BukkitPlugin {
         
         registerModules(ExampleModule.class);
         
-        // beforeLoad 之后，框架会扫描主类所在包下面的所有类，
+        // beforeEnable 之前，框架会扫描主类所在包下面的所有类，
         // 寻找带有 @AutoRegister 的 AbstractModule 并自动注册模块
         // 更推荐使用自动注册而非手动注册
     }

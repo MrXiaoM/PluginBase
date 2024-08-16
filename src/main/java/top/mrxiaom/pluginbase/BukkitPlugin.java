@@ -129,31 +129,32 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     @Override
     @Deprecated
-    @SuppressWarnings({"unchecked"})
     public void onLoad() {
         beforeLoad();
-        String packageName = options.scanPackage != null ? options.scanPackage : getClass().getPackage().getName();
-        Set<Class<?>> classes = Util.getClasses(getClassLoader(), packageName);
-        for (Class<?> clazz : classes) {
-            if (clazz.isInterface() || clazz.isAnnotation() || clazz.isEnum()) continue;
-            if (AbstractPluginHolder.class.isAssignableFrom(clazz)) {
-                AutoRegister annotation = clazz.getAnnotation(AutoRegister.class);
-                if (annotation != null) {
-                    modulesToRegister.add((Class<? extends AbstractPluginHolder<?>>) clazz);
-                }
-            }
-        }
         afterLoad();
     }
 
     @Override
     @Deprecated
+    @SuppressWarnings({"unchecked"})
     public void onEnable() {
         Util.init(instance = this);
         options.enable(this);
 
         if (options.vaultEconomy && options.economyHolder != null) {
             options.economyHolder.load();
+        }
+
+        String packageName = options.scanPackage != null ? options.scanPackage : getClass().getPackage().getName();
+        Set<Class<?>> classes = Util.getClasses(getClassLoader(), packageName);
+        for (Class<?> clazz : classes) {
+            if (clazz.isInterface() || clazz.isAnnotation() || clazz.isEnum()) continue;
+            if (!AbstractPluginHolder.class.isAssignableFrom(clazz)) continue;
+
+            AutoRegister annotation = clazz.getAnnotation(AutoRegister.class);
+            if (annotation != null) {
+                modulesToRegister.add((Class<? extends AbstractPluginHolder<?>>) clazz);
+            }
         }
 
         beforeEnable();
