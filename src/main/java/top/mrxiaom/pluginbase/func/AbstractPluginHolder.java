@@ -192,7 +192,7 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
     }
 
     public static boolean t(CommandSender sender, String... msg) {
-        sender.sendMessage(ColorHelper.parseColor(String.join("\n&r", msg)));
+        ColorHelper.parseAndSend(sender, String.join("\n&r", msg));
         return true;
     }
 }

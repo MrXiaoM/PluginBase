@@ -1,7 +1,10 @@
 package top.mrxiaom.pluginbase.utils;
 
 import com.google.common.collect.Lists;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,6 +16,20 @@ public class ColorHelper {
     private static final Pattern startWithColor = Pattern.compile("^(&[LMNKOlmnko])+");
     private static final Pattern gradientPattern = Pattern.compile("\\{(#[ABCDEFabcdef0123456789]{6}):(#[ABCDEFabcdef0123456789]{6}):(.*?)}");
     private static final Pattern hexPattern = Pattern.compile("&(#[ABCDEFabcdef0123456789]{6})");
+    private static final Pattern translatePattern = Pattern.compile("<translate:(.*?)>");
+
+    public static void parseAndSend(CommandSender sender, String s) {
+        TextComponent builder = new TextComponent("");
+        split(translatePattern, parseColor(s), regexResult -> {
+            if (!regexResult.isMatched) {
+                builder.addExtra(new TextComponent(regexResult.text));
+            } else {
+                TranslatableComponent translatable = new TranslatableComponent(regexResult.result.group(1));
+                builder.addExtra(translatable);
+            }
+        });
+        sender.spigot().sendMessage(builder);
+    }
 
     public static List<String> parseColor(List<String> s) {
         return Lists.newArrayList(parseColor(String.join("\n", s)).split("\n"));
