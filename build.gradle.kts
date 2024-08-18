@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "top.mrxiaom"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -45,13 +45,6 @@ tasks {
         options.encoding = "UTF-8"
         if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
             options.release.set(targetJavaVersion)
-        }
-    }
-    processResources {
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        from(sourceSets.main.get().resources.srcDirs) {
-            expand(mapOf("version" to version))
-            include("plugin.yml")
         }
     }
     register<Jar>("javadocJar") {
