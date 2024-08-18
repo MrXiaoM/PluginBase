@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import top.mrxiaom.pluginbase.BukkitPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class Util {
     public static Map<String, OfflinePlayer> players = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static Map<UUID, OfflinePlayer> playersByUUID = new TreeMap<>();
 
-    public static void init(JavaPlugin plugin) {
+    public static void init(BukkitPlugin plugin) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
                 if (player.getName() != null) {
@@ -52,6 +53,9 @@ public class Util {
             }
         }, plugin);
         PAPI.init();
+        if (plugin.options.adventure()) {
+            AdventureUtil.init(plugin);
+        }
     }
 
     public static Integer getInt(ConfigurationSection section, String key, Integer def) {

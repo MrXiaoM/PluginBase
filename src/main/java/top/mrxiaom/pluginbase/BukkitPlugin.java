@@ -22,13 +22,16 @@ public abstract class BukkitPlugin extends JavaPlugin {
     public static class Options {
         protected boolean bungee;
         protected boolean database;
-        protected DatabaseHolder databaseHolder;
         protected boolean reconnectDatabaseWhenReloadConfig;
         protected boolean vaultEconomy;
+        protected String scanPackage;
+        protected List<String> scanIgnore;
+        protected boolean adventure;
+
+        protected DatabaseHolder databaseHolder;
         protected EconomyHolder economyHolder;
-        protected String scanPackage = null;
-        protected List<String> scanIgnore = new ArrayList<>();
         private Options() {}
+
         private void enable(BukkitPlugin plugin) {
             if (database) {
                 databaseHolder = new DatabaseHolder(plugin);
@@ -37,16 +40,19 @@ public abstract class BukkitPlugin extends JavaPlugin {
                 economyHolder = new EconomyHolder(plugin);
             }
         }
+
         private void disable() {
             if (database && databaseHolder != null) {
                 databaseHolder.close();
             }
         }
+
         public void registerDatabase(IDatabase... databases) {
             if (database && databaseHolder != null) {
                 databaseHolder.registerDatabase(databases);
             }
         }
+
         public EconomyHolder economy() {
             return vaultEconomy ? economyHolder : null;
         }
@@ -55,37 +61,65 @@ public abstract class BukkitPlugin extends JavaPlugin {
             return database ? databaseHolder : null;
         }
 
-        public Options bungee(boolean value) {
+        public boolean adventure() {
+            return adventure;
+        }
+    }
+    public static class OptionsBuilder {
+        protected boolean bungee;
+        protected boolean database;
+        protected boolean reconnectDatabaseWhenReloadConfig;
+        protected boolean vaultEconomy;
+        protected String scanPackage = null;
+        protected List<String> scanIgnore = new ArrayList<>();
+        protected boolean adventure;
+        private Options build() {
+            return new Options() {{
+                OptionsBuilder builder = OptionsBuilder.this;
+                bungee = builder.bungee;
+                database = builder.database;
+                reconnectDatabaseWhenReloadConfig = builder.reconnectDatabaseWhenReloadConfig;
+                vaultEconomy = builder.vaultEconomy;
+                scanPackage = builder.scanPackage;
+                scanIgnore = builder.scanIgnore;
+                adventure = builder.adventure;
+            }};
+        }
+        public OptionsBuilder bungee(boolean value) {
             this.bungee = value;
             return this;
         }
-        public Options database(boolean value) {
+        public OptionsBuilder database(boolean value) {
             this.database = value;
             return this;
         }
-        public Options reconnectDatabaseWhenReloadConfig(boolean value) {
+        public OptionsBuilder reconnectDatabaseWhenReloadConfig(boolean value) {
             this.reconnectDatabaseWhenReloadConfig = value;
             return this;
         }
-        public Options vaultEconomy(boolean value) {
+        public OptionsBuilder vaultEconomy(boolean value) {
             this.vaultEconomy = value;
             return this;
         }
-        public Options scanPackage(String packageName) {
+        public OptionsBuilder scanPackage(String packageName) {
             this.scanPackage = packageName;
             return this;
         }
-        public Options scanIgnore(Collection<String> packageNames) {
+        public OptionsBuilder scanIgnore(Collection<String> packageNames) {
             scanIgnore.clear();
             scanIgnore.addAll(packageNames);
             return this;
         }
-        public Options scanIgnore(String... packageNames) {
+        public OptionsBuilder scanIgnore(String... packageNames) {
             return scanIgnore(Lists.newArrayList(packageNames));
         }
+        public OptionsBuilder adventure(boolean adventure) {
+            this.adventure = adventure;
+            return this;
+        }
     }
-    public static Options options() {
-        return new Options();
+    protected static OptionsBuilder options() {
+        return new OptionsBuilder();
     }
     private static final String className = BukkitPlugin.class.getName();
     private static BukkitPlugin instance;
@@ -94,9 +128,12 @@ public abstract class BukkitPlugin extends JavaPlugin {
     }
     private final List<Class<? extends AbstractPluginHolder<?>>> modulesToRegister = new ArrayList<>();
     private boolean pluginEnabled = false;
-    protected final Options options;
+    public final Options options;
     private GuiManager guiManager = null;
-    public BukkitPlugin(Options options) {
+    public BukkitPlugin(OptionsBuilder builder) {
+        this(builder.build());
+    }
+    private BukkitPlugin(Options options) {
         if (className.equals("group.pluginbase.BukkitPlugin".replace("group", "top.mrxiaom"))) {
             throw new IllegalStateException("PluginBase 依赖没有 relocate 到插件包，插件无法正常工作，请联系开发者解决该问题\n参考文档: https://github.com/MrXiaoM/PluginBase");
         }

@@ -26,6 +26,11 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.zaxxer:HikariCP:4.0.3")
 
+    compileOnly("net.kyori:adventure-api:4.17.0")
+    compileOnly("net.kyori:adventure-platform-bukkit:4.3.4")
+    compileOnly("net.kyori:adventure-text-minimessage:4.17.0")
+    compileOnly("de.tr7zw:item-nbt-api:2.13.2")
+
     implementation("org.jetbrains:annotations:21.0.0")
 }
 val targetJavaVersion = 8
