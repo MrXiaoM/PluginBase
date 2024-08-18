@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.database.IDatabase;
 import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
 import top.mrxiaom.pluginbase.func.AutoRegister;
@@ -28,6 +27,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         protected boolean vaultEconomy;
         protected EconomyHolder economyHolder;
         protected String scanPackage = null;
+        protected List<String> scanIgnore = new ArrayList<>();
         private Options() {}
         private void enable(BukkitPlugin plugin) {
             if (database) {
@@ -74,6 +74,14 @@ public abstract class BukkitPlugin extends JavaPlugin {
         public Options scanPackage(String packageName) {
             this.scanPackage = packageName;
             return this;
+        }
+        public Options scanIgnore(Collection<String> packageNames) {
+            scanIgnore.clear();
+            scanIgnore.addAll(packageNames);
+            return this;
+        }
+        public Options scanIgnore(String... packageNames) {
+            return scanIgnore(Lists.newArrayList(packageNames));
         }
     }
     public static Options options() {
@@ -146,7 +154,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
 
         String packageName = options.scanPackage != null ? options.scanPackage : getClass().getPackage().getName();
-        Set<Class<?>> classes = Util.getClasses(getClassLoader(), packageName);
+        Set<Class<?>> classes = Util.getClasses(getClassLoader(), packageName, options.scanIgnore);
         for (Class<?> clazz : classes) {
             if (clazz.isInterface() || clazz.isAnnotation() || clazz.isEnum()) continue;
             if (!AbstractPluginHolder.class.isAssignableFrom(clazz)) continue;

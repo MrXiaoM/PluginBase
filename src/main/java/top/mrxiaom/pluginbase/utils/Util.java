@@ -14,7 +14,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.*;
@@ -266,7 +269,7 @@ public class Util {
         return num;
     }
 
-    public static Set<Class<?>> getClasses(ClassLoader loader, String packageName) {
+    public static Set<Class<?>> getClasses(ClassLoader loader, String packageName, List<String> ignorePackages) {
         Set<Class<?>> classes = new TreeSet<>(Comparator.comparing(Class::getName));
         try {
             String name = packageName.replace(".", "/");
@@ -275,9 +278,9 @@ public class Util {
                 URL url = urls.nextElement();
                 String protocol = url.getProtocol();
                 if ("file".equals(protocol)) {
-                    findAnnotatedClassesInDirectory(new File(url.toURI()), packageName, classes);
+                    findAnnotatedClassesInDirectory(new File(url.toURI()), packageName, ignorePackages, classes);
                 } else if ("jar".equals(protocol)) {
-                    findAnnotatedClassesInJar(url, packageName, classes);
+                    findAnnotatedClassesInJar(url, packageName, ignorePackages, classes);
                 }
             }
         } catch (Exception ignored) {
@@ -285,8 +288,11 @@ public class Util {
         return classes;
     }
 
-    private static void findAnnotatedClassesInDirectory(File directory, String packageName, Set<Class<?>> classes) {
+    private static void findAnnotatedClassesInDirectory(File directory, String packageName, List<String> ignorePackages, Set<Class<?>> classes) {
         File[] files = directory.listFiles(file -> ((file.isFile() && file.getName().endsWith(".class")) || file.isDirectory()));
+        for (String ignorePackage : ignorePackages) {
+            if (packageName.startsWith(ignorePackage)) return;
+        }
         if (files != null) for (File file : files) {
             if (file.isFile()) {
                 String className = packageName + '.' + file.getName().substring(0, file.getName().length() - 6);
@@ -295,12 +301,12 @@ public class Util {
                 } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
                 }
             } else if (file.isDirectory()) {
-                findAnnotatedClassesInDirectory(file, packageName + "." + file.getName(), classes);
+                findAnnotatedClassesInDirectory(file, packageName + "." + file.getName(), ignorePackages, classes);
             }
         }
     }
 
-    private static void findAnnotatedClassesInJar(URL url, String packageName, Set<Class<?>> classes) throws Exception {
+    private static void findAnnotatedClassesInJar(URL url, String packageName, List<String> ignorePackages, Set<Class<?>> classes) throws Exception {
         String packagePath = packageName.replace(".", "/");
         JarFile jar = ((JarURLConnection) url.openConnection()).getJarFile();
         Enumeration<JarEntry> entries = jar.entries();
@@ -309,6 +315,14 @@ public class Util {
             String name = entry.getName();
             if (name.startsWith(packagePath) && name.endsWith(".class")) {
                 String className = name.substring(0, name.length() - 6).replace("/", ".");
+                boolean flag = false;
+                for (String ignorePackage : ignorePackages) {
+                    if (packageName.startsWith(ignorePackage)) {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag) continue;
                 try {
                     classes.add(Class.forName(className));
                 } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
