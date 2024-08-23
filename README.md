@@ -13,3 +13,6 @@ Minecraft 插件开发前置
 
 详见 [文档](/docs)
 
+## 正在使用 PluginBase 的插件
+
++ SweetRiceBase [闭源] 甜米服务器基础玩法插件
