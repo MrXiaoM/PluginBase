@@ -152,7 +152,7 @@ public class Util {
         return Optional.empty();
     }
 
-    public static List<Player> getOnlinePlayersByUUID(List<UUID> uuidList) {
+    public static List<Player> getOnlinePlayersByUUID(Collection<UUID> uuidList) {
         List<Player> players = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (uuidList.contains(player.getUniqueId())) players.add(player);
@@ -160,7 +160,7 @@ public class Util {
         return players;
     }
 
-    public static List<Player> getOnlinePlayersByName(List<String> nameList) {
+    public static List<Player> getOnlinePlayersByName(Collection<String> nameList) {
         Set<String> names = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         names.addAll(nameList);
         List<Player> players = new ArrayList<>();
