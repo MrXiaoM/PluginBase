@@ -1,5 +1,6 @@
 package top.mrxiaom.pluginbase.func;
 
+import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,18 +15,24 @@ import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.gui.IGui;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
-public class GuiManager extends AbstractPluginHolder implements Listener {
+public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Listener {
     final Map<UUID, IGui> playersGui = new HashMap<>();
-
+    BiConsumer<Player, IGui> disable = (player, gui) -> {
+        player.sendTitle("&e请等等", "&f管理员正在更新插件", 10, 30, 10);
+    };
+    boolean disabled = false;
     public GuiManager(BukkitPlugin plugin) {
         super(plugin, true);
         registerEvents(this);
     }
 
     public void openGui(IGui gui) {
+        if (disabled) return;
         Player player = gui.getPlayer();
         if (player == null) return;
         player.closeInventory();
@@ -35,23 +42,31 @@ public class GuiManager extends AbstractPluginHolder implements Listener {
     }
 
     public void onDisable() {
-        for (Map.Entry<UUID, IGui> entry : playersGui.entrySet()) {
+        disabled = true;
+        List<Map.Entry<UUID, IGui>> entries = Lists.newArrayList(playersGui.entrySet());
+        for (Map.Entry<UUID, IGui> entry : entries) {
             Player player = Bukkit.getPlayer(entry.getKey());
             if (player == null) continue;
             entry.getValue().onClose(player.getOpenInventory());
+            playersGui.remove(entry.getKey());
             player.closeInventory();
-            player.sendTitle("&e请等等", "&f管理员正在更新插件", 10, 30, 10);
+            if (disable != null) disable.accept(player, entry.getValue());
         }
-        playersGui.clear();
+    }
+
+    public void setDisableAction(@Nullable BiConsumer<Player, IGui> consumer) {
+        this.disable = consumer;
     }
 
     @Nullable
     public IGui getOpeningGui(Player player) {
+        if (disabled) return null;
         return playersGui.get(player.getUniqueId());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
+        if (disabled) return;
         Player player = e.getPlayer();
         IGui remove = playersGui.remove(player.getUniqueId());
         if (remove != null) {
@@ -61,7 +76,7 @@ public class GuiManager extends AbstractPluginHolder implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) return;
+        if (disabled || !(event.getWhoClicked() instanceof Player)) return;
         Player player = (Player) event.getWhoClicked();
         if (playersGui.containsKey(player.getUniqueId())) {
             playersGui.get(player.getUniqueId()).onClick(event.getAction(), event.getClick(), event.getSlotType(),
@@ -71,7 +86,7 @@ public class GuiManager extends AbstractPluginHolder implements Listener {
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) return;
+        if (disabled || !(event.getWhoClicked() instanceof Player)) return;
         Player player = (Player) event.getWhoClicked();
         if (playersGui.containsKey(player.getUniqueId())) {
             playersGui.get(player.getUniqueId()).onDrag(event.getView(), event);
@@ -80,7 +95,7 @@ public class GuiManager extends AbstractPluginHolder implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        if (!(event.getPlayer() instanceof Player)) return;
+        if (disabled || !(event.getPlayer() instanceof Player)) return;
         Player player = (Player) event.getPlayer();
         IGui remove = playersGui.remove(player.getUniqueId());
         if (remove != null) {
