@@ -23,6 +23,7 @@ public class DatabaseHolder {
     List<IDatabase> databases = new ArrayList<>();
     private boolean firstConnectFlag = false;
     private String tablePrefix;
+    private String driver;
     protected DatabaseHolder(BukkitPlugin plugin) {
         this.plugin = plugin;
     }
@@ -33,6 +34,18 @@ public class DatabaseHolder {
 
     public String getTablePrefix() {
         return tablePrefix;
+    }
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public boolean isSQLite() {
+        return "org.sqlite.JDBC".equals(getDriver());
+    }
+
+    public boolean isMySQL() {
+        return "com.mysql.cj.jdbc.Driver".equals(getDriver());
     }
 
     @Nullable
@@ -63,7 +76,6 @@ public class DatabaseHolder {
         }
         tablePrefix = config.getString("table_prefix", "");
         String type = config.getString("type", "sqlite").toLowerCase();
-        String driver;
         switch (type) {
             case "mysql":
                 driver = checkDriver("MySQL", "com.mysql.cj.jdbc.Driver");
@@ -81,6 +93,7 @@ public class DatabaseHolder {
         hikariConfig.setMaxLifetime(120000L);
         hikariConfig.setIdleTimeout(5000L);
         hikariConfig.setConnectionTimeout(5000L);
+        hikariConfig.setDriverClassName(driver);
         if (type.equals("sqlite")) {
             hikariConfig.setMinimumIdle(1);
             hikariConfig.setMaximumPoolSize(1);
@@ -88,7 +101,7 @@ public class DatabaseHolder {
             hikariConfig.setMinimumIdle(10);
             hikariConfig.setMaximumPoolSize(100);
         }
-        if (driver.equals("com.mysql.cj.jdbc.Driver")) {
+        if (isMySQL()) {
             String host = config.getString("mysql.host", "localhost");
             int port = config.getInt("mysql.port", 3306);
             String user = config.getString("mysql.user", "root");
@@ -98,7 +111,7 @@ public class DatabaseHolder {
             hikariConfig.setUsername(user);
             hikariConfig.setPassword(pass);
         }
-        if (driver.equals("org.sqlite.JDBC")) {
+        if (isSQLite()) {
             String database = config.getString("sqlite.file", "database.db");
             hikariConfig.setJdbcUrl("jdbc:sqlite:plugins/" + plugin.getName() + "/" + database);
         }
