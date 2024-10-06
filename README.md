@@ -13,7 +13,7 @@ Minecraft 插件开发前置
 
 详见 [文档](/docs)
 
-新的插件模板请见 [PluginBaseTemplate](https://github.com/MrXiaoM/PluginBaseTemplate)
+插件模板生成器详见 https://bukkit.mcio.dev
 
 ## 正在使用 PluginBase 的插件
 
