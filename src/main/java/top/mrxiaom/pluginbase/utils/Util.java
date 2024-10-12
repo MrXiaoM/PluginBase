@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.event.player.PlayerMoveEvent;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 
 import java.io.File;
@@ -128,6 +128,14 @@ public class Util {
 
     public static String fromLocation(Location loc) {
         return String.format("%.2f,%.2f,%.2f,%.2f,%.2f", loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+    }
+
+    public static boolean isMovedLoc(PlayerMoveEvent e) {
+        return isMovedLoc(e.getFrom(), e.getTo());
+    }
+
+    public static boolean isMovedLoc(Location loc1, Location loc2) {
+        return loc1 != null && loc2 != null && (loc1.getX() != loc2.getX() || loc1.getZ() != loc2.getZ());
     }
 
     public static Optional<OfflinePlayer> getOfflinePlayer(String name) {
