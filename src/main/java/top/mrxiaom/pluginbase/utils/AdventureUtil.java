@@ -22,6 +22,14 @@ public class AdventureUtil {
                 .build();
     }
 
+    public static BukkitAudiences adventure() {
+        return adventure;
+    }
+
+    public static MiniMessage miniMessage() {
+        return miniMessage;
+    }
+
     public static Component miniMessage(String s) {
         return s == null
                 ? Component.empty()
@@ -36,6 +44,14 @@ public class AdventureUtil {
                         Duration.ofMillis(fadeOut * 50L)
                 )
         ));
+    }
+
+    public static void resetTitle(Player player) {
+        adventure.player(player).resetTitle();
+    }
+
+    public static void clearTitle(Player player) {
+        adventure.player(player).clearTitle();
     }
 
     public static void sendMessage(CommandSender sender, String message) {
