@@ -19,3 +19,5 @@ Minecraft 插件开发前置
 
 + SweetRiceBase [闭源] 甜米服务器基础玩法插件
 + SweetRiceTeam [闭源] 甜米服务器副本组队插件
++ SweetRiceActivity [闭源] 甜米服务器活动服机制
++ [SweetWarehouse](https://github.com/MrXiaoM/SweetWarehouse) 云物品仓库插件
