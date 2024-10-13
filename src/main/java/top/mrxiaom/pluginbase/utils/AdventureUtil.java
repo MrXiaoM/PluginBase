@@ -1,15 +1,18 @@
 package top.mrxiaom.pluginbase.utils;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 
 import java.time.Duration;
+import java.util.UUID;
 
 public class AdventureUtil {
     private static BukkitAudiences adventure;
@@ -24,6 +27,18 @@ public class AdventureUtil {
 
     public static BukkitAudiences adventure() {
         return adventure;
+    }
+
+    public static Audience of(Player player) {
+        return adventure.player(player);
+    }
+
+    public static Audience of(UUID player) {
+        return adventure.player(player);
+    }
+
+    public static Audience console() {
+        return adventure.sender(Bukkit.getConsoleSender());
     }
 
     public static MiniMessage miniMessage() {
