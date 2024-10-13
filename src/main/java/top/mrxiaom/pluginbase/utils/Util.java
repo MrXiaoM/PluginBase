@@ -302,12 +302,12 @@ public class Util {
 
     private static void findAnnotatedClassesInDirectory(File directory, String packageName, List<String> ignorePackages, Set<Class<?>> classes) {
         File[] files = directory.listFiles(file -> ((file.isFile() && file.getName().endsWith(".class")) || file.isDirectory()));
-        for (String ignorePackage : ignorePackages) {
-            if (packageName.startsWith(ignorePackage)) return;
-        }
         if (files != null) for (File file : files) {
             if (file.isFile()) {
                 String className = packageName + '.' + file.getName().substring(0, file.getName().length() - 6);
+                for (String ignorePackage : ignorePackages) {
+                    if (className.startsWith(ignorePackage)) return;
+                }
                 try {
                     classes.add(Class.forName(className));
                 } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
@@ -329,7 +329,7 @@ public class Util {
                 String className = name.substring(0, name.length() - 6).replace("/", ".");
                 boolean flag = false;
                 for (String ignorePackage : ignorePackages) {
-                    if (packageName.startsWith(ignorePackage)) {
+                    if (className.startsWith(ignorePackage)) {
                         flag = true;
                         break;
                     }
