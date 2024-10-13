@@ -111,7 +111,7 @@ public class AdventureUtil {
                 case 'm': stringBuilder.append("<st>"); break;
                 case 'o': stringBuilder.append("<i>"); break;
                 case 'n': stringBuilder.append("<u>"); break;
-                case 'k': stringBuilder.append("<o>"); break;
+                case 'k': stringBuilder.append("<obf>"); break;
                 case 'x': {
                     if (i + 13 >= chars.length
                             || !isColorCode(chars[i+2])
