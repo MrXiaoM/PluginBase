@@ -39,6 +39,8 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
     }
+    withSourcesJar()
+    withJavadocJar()
 }
 tasks {
     withType<JavaCompile>().configureEach {
@@ -46,11 +48,6 @@ tasks {
         if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
             options.release.set(targetJavaVersion)
         }
-    }
-    register<Jar>("javadocJar") {
-        dependsOn(javadoc)
-        archiveClassifier.set("javadoc")
-        from(javadoc.get().destinationDir)
     }
     javadoc {
         (options as StandardJavadocDocletOptions).apply {
@@ -72,8 +69,6 @@ publishing {
             groupId = project.group.toString()
             artifactId = rootProject.name
             version = project.version.toString()
-
-            artifact(tasks.getByName("javadocJar"))
         }
     }
 }
