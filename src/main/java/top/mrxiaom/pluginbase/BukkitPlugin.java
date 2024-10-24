@@ -9,6 +9,7 @@ import top.mrxiaom.pluginbase.database.IDatabase;
 import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
 import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.func.GuiManager;
+import top.mrxiaom.pluginbase.func.LanguageManager;
 import top.mrxiaom.pluginbase.utils.Util;
 
 import java.sql.Connection;
@@ -130,6 +131,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
     private boolean pluginEnabled = false;
     public final Options options;
     private GuiManager guiManager = null;
+    private LanguageManager languageManager = null;
     public BukkitPlugin(OptionsBuilder builder) {
         this(builder.build());
     }
@@ -146,6 +148,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     public GuiManager getGuiManager() {
         return guiManager;
+    }
+
+    public LanguageManager getLanguageManager() {
+        return languageManager;
     }
 
     protected void beforeLoad() {
@@ -202,11 +208,12 @@ public abstract class BukkitPlugin extends JavaPlugin {
             }
         }
 
-        beforeEnable();
         pluginEnabled = true;
+        guiManager = new GuiManager(this);
+        languageManager = new LanguageManager(this);
+        beforeEnable();
         loadModules(this, modulesToRegister);
         modulesToRegister.clear();
-        guiManager = new GuiManager(this);
 
         reloadConfig();
 
