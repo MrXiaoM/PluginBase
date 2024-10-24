@@ -1,3 +1,5 @@
+[<< 返回开发文档](README.md)
+
 # 插件主类
 
 这里示例的主类是 top.mrxiaom.example.PluginMain

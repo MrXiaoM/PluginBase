@@ -1,3 +1,5 @@
+[<< 返回开发文档](README.md)
+
 # Adventure
 
 Adventure 是一个截止当前最好用、最广泛使用的 Minecraft 文本组件处理库，文档地址[在这里](https://docs.advntr.dev/getting-started.html)。

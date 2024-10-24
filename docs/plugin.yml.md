@@ -1,3 +1,5 @@
+[<< 返回开发文档](README.md)
+
 # plugin.yml
 
 与正常开发插件的 plugin.yml 格式一致
