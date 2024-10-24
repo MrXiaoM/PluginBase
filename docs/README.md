@@ -12,3 +12,4 @@
 6. (可选) Vault 经济 [EconomyHolder](/docs/vault.md)
 7. (可选) HikariCP 数据库连接池 [IDatabase](/docs/database.md)
 8. (可选) Adventure 在非 Paper 服务端的富文本支持 [AdventureUtil](/docs/adventure.md)
+9. (可选) 本地化（语言文件）系统 [LanguageManager](/docs/language.md)
