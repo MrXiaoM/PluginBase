@@ -2,14 +2,17 @@ package top.mrxiaom.pluginbase.utils;
 
 import com.google.common.collect.Lists;
 import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList;
+import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,39 @@ public class AdventureItemStack {
         setItemDisplayNameByJson(item, json);
     }
 
+    @Nullable
+    public String getItemDisplayNameAsMiniMessage(ItemStack item) {
+        Component component = getItemDisplayName(item);
+        if (component == null) return null;
+        return AdventureUtil.miniMessage(component);
+    }
+
+    @Nullable
+    public Component getItemDisplayName(ItemStack item) {
+        String nameAsJson = getItemDisplayNameAsJson(item);
+        if (nameAsJson == null) return null;
+        return GsonComponentSerializer.gson().deserialize(nameAsJson);
+    }
+
+    @Nullable
+    public static String getItemDisplayNameAsJson(ItemStack item) {
+        if (item == null) return null;
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+            ReadWriteNBT nbtItem = NBT.itemStackToNBT(item);
+            ReadWriteNBT nbt = nbtItem.getCompound("components");
+            return nbt != null && nbt.hasTag("minecraft:custom_name", NBTType.NBTTagString)
+                    ? nbt.getString("minecraft:custom_name")
+                    : null;
+        } else {
+            return NBT.get(item, nbt -> {
+                ReadableNBT display = nbt.getCompound("display");
+                return display != null && display.hasTag("Name", NBTType.NBTTagString)
+                        ? display.getString("Name")
+                        : null;
+            });
+        }
+    }
+
     public static void setItemDisplayNameByJson(ItemStack item, String json) {
         if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
             NBT.modifyComponents(item, nbt -> {
@@ -68,6 +104,49 @@ public class AdventureItemStack {
             json.add(GsonComponentSerializer.gson().serialize(line));
         }
         setItemLoreByJson(item, json);
+    }
+
+    @Nullable
+    public static List<String> getItemLoreAsMiniMessage(ItemStack item) {
+        List<Component> components = getItemLore(item);
+        if (components == null) return null;
+        List<String> lore = new ArrayList<>();
+        for (Component component : components) {
+            String s = miniMessage(component);
+            lore.add(s);
+        }
+        return lore;
+    }
+
+    @Nullable
+    public static List<Component> getItemLore(ItemStack item) {
+        List<String> loreAsJson = getItemLoreAsJson(item);
+        if (loreAsJson == null) return null;
+        List<Component> lore = new ArrayList<>();
+        for (String line : loreAsJson) {
+            Component component = GsonComponentSerializer.gson().deserialize(line);
+            lore.add(component);
+        }
+        return lore;
+    }
+
+    @Nullable
+    public static List<String> getItemLoreAsJson(ItemStack item) {
+        if (item == null) return null;
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+            ReadWriteNBT nbtItem = NBT.itemStackToNBT(item);
+            ReadWriteNBT nbt = nbtItem.getCompound("components");
+            return nbt != null && nbt.hasTag("minecraft:custom_name", NBTType.NBTTagList)
+                    ? nbt.getStringList("minecraft:lore").toListCopy()
+                    : null;
+        } else {
+            return NBT.get(item, nbt -> {
+                ReadableNBT display = nbt.getCompound("display");
+                return display != null && display.hasTag("Lore", NBTType.NBTTagList)
+                        ? display.getStringList("Lore").toListCopy()
+                        : null;
+            });
+        }
     }
 
     public static void setItemLoreByJson(ItemStack item, List<String> json) {

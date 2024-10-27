@@ -51,6 +51,12 @@ public class AdventureUtil {
                 : miniMessage.deserialize(legacyToMiniMessage(s));
     }
 
+    public static String miniMessage(Component component) {
+        return component == null
+                ? ""
+                : miniMessage.serialize(component);
+    }
+
     public static void sendTitle(Player player, String title, String subTitle, int fadeIn, int stay, int fadeOut) {
         adventure.player(player).showTitle(Title.title(
                 miniMessage(title), miniMessage(subTitle), Title.Times.times(
