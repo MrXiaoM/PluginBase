@@ -67,7 +67,7 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
 
     protected abstract void clearMainIcons();
     protected abstract void loadMainIcon(ConfigurationSection section, String id, LoadedIcon icon);
-    protected abstract ItemStack applyMainIcon(char id, int index, int appearTimes);
+    protected abstract ItemStack applyMainIcon(Player player, char id, int index, int appearTimes);
 
     public static char[] getInventory(MemorySection config, String key) {
         return String.join("", config.getStringList(key)).toCharArray();
@@ -94,7 +94,7 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
                 char id = inventory[i];
                 int appearTimes = appearMap.getOrDefault(id, 0) + 1;
                 appearMap.put(id, appearTimes);
-                ItemStack item = applyMainIcon(id, i, appearTimes);
+                ItemStack item = applyMainIcon(player, id, i, appearTimes);
                 if (item != null) {
                     setItem.accept(i, item);
                     continue;
