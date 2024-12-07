@@ -92,6 +92,10 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
             Map<Character, Integer> appearMap = new HashMap<>();
             for (int i = 0; i < inventory.length; i++) {
                 char id = inventory[i];
+                if (id == ' ' || id == '　') {
+                    setItem.accept(i, null);
+                    continue;
+                }
                 int appearTimes = appearMap.getOrDefault(id, 0) + 1;
                 appearMap.put(id, appearTimes);
                 ItemStack item = applyMainIcon(player, id, i, appearTimes);
