@@ -24,10 +24,16 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
     protected final File file;
     protected String guiTitle;
     protected char[] guiInventory;
+    private final String mainIconsKey, otherIconsKey;
     protected final Map<Character, LoadedIcon> otherIcons = new HashMap<>();
     public AbstractGuiModule(BukkitPlugin plugin, File file) {
+        this(plugin, file, "main-icons", "other-icons");
+    }
+    public AbstractGuiModule(BukkitPlugin plugin, File file, @Nullable String mainIconsKey, @Nullable String otherIconsKey) {
         super(plugin);
         this.file = file;
+        this.mainIconsKey = mainIconsKey;
+        this.otherIconsKey = otherIconsKey;
     }
 
     protected abstract String warningPrefix();
@@ -37,21 +43,25 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         guiTitle = config.getString("title", "");
         guiInventory = getInventory(config, "inventory");
-        clearMainIcons();
-        otherIcons.clear();
-        ConfigurationSection section = config.getConfigurationSection("main-icons");
-        if (section != null) for (String key : section.getKeys(false)) {
-            LoadedIcon icon = LoadedIcon.load(section, key);
-            loadMainIcon(section, key, icon);
-        }
-        section = config.getConfigurationSection("other-icons");
-        if (section != null) for (String key : section.getKeys(false)) {
-            LoadedIcon icon = LoadedIcon.load(section, key);
-            if (key.length() != 1) {
-                warn(warningPrefix() + " 其它图标 " + key + " 的图标ID过长，请改成单个字符");
-                continue;
+        if (mainIconsKey != null) {
+            clearMainIcons();
+            ConfigurationSection section = config.getConfigurationSection(mainIconsKey);
+            if (section != null) for (String key : section.getKeys(false)) {
+                LoadedIcon icon = LoadedIcon.load(section, key);
+                loadMainIcon(section, key, icon);
             }
-            otherIcons.put(key.charAt(0), icon);
+        }
+        if (otherIconsKey != null) {
+            otherIcons.clear();
+            ConfigurationSection section = config.getConfigurationSection(otherIconsKey);
+            if (section != null) for (String key : section.getKeys(false)) {
+                LoadedIcon icon = LoadedIcon.load(section, key);
+                if (key.length() != 1) {
+                    warn(warningPrefix() + " 其它图标 " + key + " 的图标ID过长，请改成单个字符");
+                    continue;
+                }
+                otherIcons.put(key.charAt(0), icon);
+            }
         }
     }
 
