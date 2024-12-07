@@ -1,6 +1,7 @@
 package top.mrxiaom.pluginbase.utils;
 
 import com.google.common.collect.Lists;
+import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -152,7 +153,7 @@ public class ItemStackUtil {
         ItemMeta im = item.getItemMeta() == null ? getItemMeta(item.getType()) : item.getItemMeta();
         if (im == null)
             return;
-        im.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        im.setDisplayName(ColorHelper.parseColor(name));
         item.setItemMeta(im);
     }
 
@@ -172,6 +173,16 @@ public class ItemStackUtil {
         });
         im.setLore(newLore);
         item.setItemMeta(im);
+    }
+
+    public static void setCustomModelData(ItemStack item, Integer customModelData) {
+        try {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.setCustomModelData(customModelData);
+            }
+        } catch (Throwable ignored) {
+        }
     }
 
     public static ItemStack buildFrameItem(Material material) {
