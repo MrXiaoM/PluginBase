@@ -12,6 +12,10 @@ import top.mrxiaom.pluginbase.func.GuiManager;
 import top.mrxiaom.pluginbase.func.LanguageManager;
 import top.mrxiaom.pluginbase.utils.Util;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.*;
 import java.util.logging.Level;
@@ -272,5 +276,20 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     public void warn(String msg) {
         getLogger().log(Level.WARNING, msg);
+    }
+    
+    public void saveResource(String path, File file) {
+        try (InputStream resource = getResource(path)) {
+            if (resource == null) return;
+            try (FileOutputStream output = new FileOutputStream(file)) {
+                int len;
+                byte[] buffer = new byte[1024];
+                while ((len = resource.read(buffer)) != -1) {
+                    output.write(buffer, 0, len);
+                }
+            }
+        } catch (IOException e) {
+            warn("保存资源文件 " + path + " 时出错", e);
+        }
     }
 }
