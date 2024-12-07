@@ -16,7 +16,7 @@
 public class GuiExample extends AbstractGuiModule { // 这里的 AbstractGuiModule 要跟「插件主类」章节的 AbstractModule 一样，自行固定泛型
     LoadedIcon testIcon;
     int testIconExtraConfig;
-    public GuiExample(SweetAdaptiveShop plugin) {
+    public GuiExample(BukkitPlugin plugin) {
         super(plugin, new File(plugin.getDataFolder(), "example.yml")); // 界面配置文件
     }
 
@@ -58,12 +58,12 @@ public class GuiExample extends AbstractGuiModule { // 这里的 AbstractGuiModu
         return null;
     }
 
-    public static GuiBuyShop inst() {
-        return instanceOf(GuiBuyShop.class);
+    public static GuiExample inst() {
+        return instanceOf(GuiExample.class);
     }
 
     public static Impl create(Player player) {
-        GuiBuyShop self = inst();
+        GuiExample self = inst();
         return self.new Impl(player, self.guiTitle, self.guiInventory);
     }
 
