@@ -279,6 +279,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
     }
     
     public void saveResource(String path, File file) {
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs();
+        }
         try (InputStream resource = getResource(path)) {
             if (resource == null) return;
             try (FileOutputStream output = new FileOutputStream(file)) {
