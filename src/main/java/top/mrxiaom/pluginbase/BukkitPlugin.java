@@ -134,8 +134,6 @@ public abstract class BukkitPlugin extends JavaPlugin {
     private final List<Class<? extends AbstractPluginHolder<?>>> modulesToRegister = new ArrayList<>();
     private boolean pluginEnabled = false;
     public final Options options;
-    private GuiManager guiManager = null;
-    private LanguageManager languageManager = null;
     public BukkitPlugin(OptionsBuilder builder) {
         this(builder.build());
     }
@@ -148,14 +146,6 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     public Connection getConnection() {
         return options.databaseHolder == null ? null : options.databaseHolder.getConnection();
-    }
-
-    public GuiManager getGuiManager() {
-        return guiManager;
-    }
-
-    public LanguageManager getLanguageManager() {
-        return languageManager;
     }
 
     protected void beforeLoad() {
@@ -211,10 +201,18 @@ public abstract class BukkitPlugin extends JavaPlugin {
                 modulesToRegister.add((Class<? extends AbstractPluginHolder<?>>) clazz);
             }
         }
+        try {
+            Class<LanguageManager> languageManagerClass = LanguageManager.class;
+            modulesToRegister.add(languageManagerClass);
+        } catch (Throwable ignored) {
+        }
+        try {
+            Class<GuiManager> guiManagerClass = GuiManager.class;
+            modulesToRegister.add(guiManagerClass);
+        } catch (Throwable ignored) {
+        }
 
         pluginEnabled = true;
-        guiManager = new GuiManager(this);
-        languageManager = new LanguageManager(this);
         beforeEnable();
         loadModules(this, modulesToRegister);
         modulesToRegister.clear();
@@ -281,7 +279,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
     public void saveResource(String path, File file) {
         File parent = file.getParentFile();
         if (parent != null && !parent.exists()) {
-            parent.mkdirs();
+            Util.mkdirs(parent);
         }
         try (InputStream resource = getResource(path)) {
             if (resource == null) return;

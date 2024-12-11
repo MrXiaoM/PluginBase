@@ -5,7 +5,8 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import top.mrxiaom.pluginbase.BukkitPlugin;
+import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
+import top.mrxiaom.pluginbase.func.GuiManager;
 
 public interface IGui {
     /**
@@ -53,6 +54,6 @@ public interface IGui {
      * 为玩家打开或重新打开界面
      */
     default void open() {
-        BukkitPlugin.getInstance().getGuiManager().openGui(this);
+        AbstractPluginHolder.get(GuiManager.class).ifPresent(it -> it.openGui(this));
     }
 }

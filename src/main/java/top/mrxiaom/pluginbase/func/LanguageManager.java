@@ -154,4 +154,8 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
         }
         return this;
     }
+
+    public static LanguageManager inst() {
+        return instanceOf(LanguageManager.class);
+    }
 }

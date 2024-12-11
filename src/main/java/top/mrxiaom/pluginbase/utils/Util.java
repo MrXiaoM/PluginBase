@@ -8,11 +8,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 
 import java.io.File;
@@ -52,7 +54,10 @@ public class Util {
                 playersByUUID.put(player.getUniqueId(), player);
             }
         }, plugin);
-        PAPI.init();
+        try {
+            PAPI.init();
+        } catch (Throwable ignored) {
+        }
         if (plugin.options.adventure()) {
             AdventureUtil.init(plugin);
         }
@@ -114,6 +119,10 @@ public class Util {
     @CanIgnoreReturnValue
     public static boolean createNewFile(File file) throws IOException {
         return file.createNewFile();
+    }
+    @CanIgnoreReturnValue
+    public static boolean mkdirs(File file) {
+        return file.mkdirs();
     }
 
     public static String stackTraceToString(Throwable t) {

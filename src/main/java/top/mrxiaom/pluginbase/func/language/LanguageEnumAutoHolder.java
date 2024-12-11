@@ -19,7 +19,7 @@ public class LanguageEnumAutoHolder<T extends Enum<T>> extends AbstractLanguageH
 
     @Override
     public LanguageManager getLanguageManager() {
-        return BukkitPlugin.getInstance().getLanguageManager();
+        return LanguageManager.inst();
     }
 
     public static <T extends Enum<T>> LanguageEnumAutoHolder<T> wrap(Enum<T> e, String defaultValue) {

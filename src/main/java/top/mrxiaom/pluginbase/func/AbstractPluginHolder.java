@@ -15,6 +15,7 @@ import top.mrxiaom.pluginbase.utils.ColorHelper;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.*;
 
 import static top.mrxiaom.pluginbase.utils.Util.stackTraceToString;
@@ -48,7 +49,13 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
                     }
                     if (!load) continue;
                 }
-                clazz.getDeclaredConstructor(plugin.getClass()).newInstance(plugin);
+                Constructor<?> constructor;
+                try {
+                    constructor = clazz.getDeclaredConstructor(BukkitPlugin.class);
+                } catch (Throwable t) {
+                    constructor = clazz.getDeclaredConstructor(plugin.getClass());
+                }
+                constructor.newInstance(plugin);
             } catch (Throwable t) {
                 plugin.warn("加载 " + clazz.getName() + "时出现异常:", t);
             }
@@ -184,7 +191,7 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         return Optional.of(inst);
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({"unchecked", "SameParameterValue"})
     protected static <T extends AbstractPluginHolder<?>> T instanceOf(Class<T> clazz) {
         T inst = (T) registeredHolders.get(clazz);
         if (inst == null) throw new IllegalStateException("无法找到已注册的 " + clazz.getName());
