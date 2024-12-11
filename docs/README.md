@@ -14,3 +14,75 @@
 8. (可选) HikariCP 数据库连接池 [IDatabase](/docs/database.md)
 9. (可选) Adventure 在非 Paper 服务端的富文本支持 [AdventureUtil](/docs/adventure.md)
 10. (可选) 本地化（语言文件）系统 [LanguageManager](/docs/language.md)
+
+## shadow 去除不必要部分
+
+适当地给插件减重，去除当前插件不需要的功能  
+(部分功能仅能在 1.0.8 版本后去除，否则会出现一些问题)
+```kotlin
+tasks {
+    // ...
+    shadowJar {
+        // ...
+        listOf(
+            // 界面配置
+            "top/mrxiaom/pluginbase/func/AbstractGui*",
+            "top/mrxiaom/pluginbase/func/gui/*",
+            // 界面菜单管理器
+            "top/mrxiaom/pluginbase/func/GuiManager*",
+            "top/mrxiaom/pluginbase/gui/*",
+            // 多语言支持
+            "top/mrxiaom/pluginbase/func/LanguageManager*",
+            "top/mrxiaom/pluginbase/func/language/*",
+            // Adventure (消息和物品) 支持
+            "top/mrxiaom/pluginbase/utils/Adventure*",
+            // BungeeCord 消息通道 ByteArrayDataOutput 消警告
+            "top/mrxiaom/pluginbase/utils/Bytes*",
+            // ItemsAdder 支持
+            "top/mrxiaom/pluginbase/utils/IA*",
+            // 物品操作相关支持
+            "top/mrxiaom/pluginbase/utils/ItemStackUtil*",
+        ).forEach(this::exclude)
+    }
+    // ...
+}
+```
+## shadow 部分 relocate
+
+我在做 paper 与 spigot 兼容的时候发现，因为我要把 adventure 打包到插件里并 relocate 到我的包，那么如果我要调用 paper 的 `Bukkit.createInventory` 来在标题使用 adventure，那么就会因为包被 relocate 了而报错。
+
+我的解决方法是，把 paper 的操作放到了一个单独的类 `PaperInventoryFactory`，里面有一个 `create(InventoryHolder, int, String)`，参数 String 是标题。  
+执行之后，会调用 mini message 转换为 Component 对象，传给 paper 的 `Bukkit.createInventory`。只要修改 shadowJar 插件让这个 `PaperInventoryFactory` 类不会被 relocate 即可。  
+我已经把 shadowJar 改好了，直接用就行：
+```kotlin
+// settings.gradle.kts
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("top.mrxiaom:shadow:7.1.3")
+    }
+}
+```
+shadow 7.1.2 的工具链有点老了，发布不到 Gradle Plugin Portal，升级工具链又不支持 gradle 7.x，干脆就发 Maven Central 了。反正这样添加起来也不麻烦，多几行代码不碍事，能解决问题就行。
+```kotlin
+// build.gradle.kts
+plugins {
+    // ...
+    id("top.mrxiaom.shadow")
+}
+// ...
+tasks {
+    // ...
+    shadowJar {
+        // ...
+        ignoreRelocations("org/example/plugin/utils/PaperInventoryFactory.class")
+    }
+}
+```
+
+我的需求比较简单，所以现用 String 通过 mini message 转 Component。如果复杂一点，可以用 `GsonComponentSerializer` 作桥梁，沟通打包到你插件里的 adventure 和 paper 的 adventure。
+
+顺带一提，可以加 ProtocolLib、packetevents 之类的依赖来解决 spigot 不支持在容器标题使用 adventure 的问题。不过，要加依赖插件的东西就不写到这个框架里了。
