@@ -24,10 +24,17 @@ tasks {
     // ...
     shadowJar {
         // ...
+        // 避免匿名类没删除，最好加通配符*来匹配
         listOf(
             // 界面配置
             "top/mrxiaom/pluginbase/func/AbstractGui*",
             "top/mrxiaom/pluginbase/func/gui/*",
+            // PAPI兼容 (注意: 界面配置依赖这个)
+            "top/mrxiaom/pluginbase/utils/PAPI*",
+            // ItemsAdder 支持
+            "top/mrxiaom/pluginbase/utils/IA*",
+            // 物品操作相关支持
+            "top/mrxiaom/pluginbase/utils/ItemStackUtil*",
             // 界面菜单管理器
             "top/mrxiaom/pluginbase/func/GuiManager*",
             "top/mrxiaom/pluginbase/gui/*",
@@ -38,10 +45,6 @@ tasks {
             "top/mrxiaom/pluginbase/utils/Adventure*",
             // BungeeCord 消息通道 ByteArrayDataOutput 消警告
             "top/mrxiaom/pluginbase/utils/Bytes*",
-            // ItemsAdder 支持
-            "top/mrxiaom/pluginbase/utils/IA*",
-            // 物品操作相关支持
-            "top/mrxiaom/pluginbase/utils/ItemStackUtil*",
         ).forEach(this::exclude)
     }
     // ...
