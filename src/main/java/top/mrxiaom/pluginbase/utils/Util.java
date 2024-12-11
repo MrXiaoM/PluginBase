@@ -58,8 +58,52 @@ public class Util {
         }
     }
 
+    @NotNull
+    public static List<ConfigurationSection> getSectionList(ConfigurationSection parent, String key) {
+        List<ConfigurationSection> list = new ArrayList<>();
+        List<Map<?, ?>> rawList = parent.getMapList(key);
+        for (Map<?, ?> map : rawList) {
+            MemoryConfiguration section = new MemoryConfiguration();
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                String sectionKey = entry.getKey().toString();
+                section.set(sectionKey, processValue(section, sectionKey, entry.getValue()));
+            }
+            list.add(section);
+        }
+        return list;
+    }
+
+    private static Object processValue(ConfigurationSection parent, String key, Object value) {
+        if (value instanceof Map<?, ?>) {
+            Map<?, ?> map = (Map<?, ?>) value;
+            ConfigurationSection section;
+            if (parent == null || key == null) { // 兼容 List
+                section = new MemoryConfiguration();
+            } else { // 兼容 Map
+                section = parent.createSection(key);
+            }
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                String mapKey = entry.getKey().toString();
+                section.set(mapKey, processValue(section, mapKey, entry.getValue()));
+            }
+            return section;
+        }
+        if (value instanceof List<?>) {
+            List<?> list = (List<?>) value;
+            List<Object> result = new ArrayList<>();
+            for (Object object : list) {
+                result.add(processValue(null, null, object));
+            }
+            return result;
+        }
+        return value;
+    }
+    public static Double getDouble(ConfigurationSection section, String key, Double def) {
+        return section.contains(key) && section.isDouble(key) ? Double.valueOf(section.getDouble(key)) : def;
+    }
+
     public static Integer getInt(ConfigurationSection section, String key, Integer def) {
-        return section.contains(key) ? Integer.valueOf(section.getInt(key)) : def;
+        return section.contains(key) && section.isInt(key) ? Integer.valueOf(section.getInt(key)) : def;
     }
 
     public static Material getItem(ConfigurationSection section, String key, Material def) {
