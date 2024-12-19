@@ -10,6 +10,7 @@ version = "1.0.9"
 
 repositories {
     mavenCentral()
+    maven("https://maven.fastmirror.net/repositories/minecraft/")
     maven("https://repo.codemc.io/repository/maven-public/")
 
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
