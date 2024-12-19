@@ -1,5 +1,6 @@
 package top.mrxiaom.pluginbase.func;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -8,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -123,9 +125,13 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
 
         @Override
         public Inventory newInventory() {
-            Inventory inv = Bukkit.createInventory(null, inventory.length, title);
+            Inventory inv = create(null, inventory.length, title);
             updateInventory(inv);
             return inv;
+        }
+
+        protected Inventory create(InventoryHolder holder, int size, String title) {
+            return Bukkit.createInventory(holder, size, title);
         }
 
         public Character getClickedId(int slot) {
