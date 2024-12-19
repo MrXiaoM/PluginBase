@@ -1,5 +1,7 @@
 package top.mrxiaom.pluginbase.utils;
 
+import org.jetbrains.annotations.Nullable;
+
 public class Pair<K, V> {
     K key;
     V value;
@@ -36,9 +38,24 @@ public class Pair<K, V> {
 
     public static String replace(String s, Pair<String, Object>[] replacements) {
         for (Pair<String, Object> replacement : replacements) {
+            if (replacement.key.startsWith("__internal__")) continue;
             s = s.replace(replacement.key, String.valueOf(replacement.value));
         }
         return s;
+    }
+
+    @Nullable
+    public static <K, V> V firstOrNull(Pair<K, V>[] array, K key) {
+        for (Pair<K, V> pair : array) {
+            if (key == null) {
+                if (pair.key == null) {
+                    return pair.value;
+                }
+            } else if (key.equals(pair.key)) {
+                return pair.value;
+            }
+        }
+        return null;
     }
 
     @SuppressWarnings({"unchecked"})

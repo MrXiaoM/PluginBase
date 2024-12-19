@@ -97,7 +97,8 @@ public class LoadedIcon {
             default:
                 return;
         }
-        Pair<String, Object>[] args = Pair.array(0);
+        Pair<String, Object>[] args = Pair.array(1);
+        args[0] = Pair.of("__internal__loaded_icon", this);
         for (IAction action : actions) {
             action.run(player, args);
         }
