@@ -43,7 +43,7 @@ dependencies {
     // NMS: https://repo.rosewooddev.io/service/rest/repository/browse/public/org/spigotmc/spigot/
     compileOnly("org.spigotmc:spigot:1.20")
 
-    implementation("com.github.MrXiaoM:PluginBase:1+") // 使用 1.x 最新版依赖库
+    implementation("top.mrxiaom:PluginBase:1+") // 使用 1.x 最新版依赖库
     implementation("org.jetbrains:annotations:21.0.0")
     // implementation("com.zaxxer:HikariCP:4.0.3") // 数据库连接池
 }
