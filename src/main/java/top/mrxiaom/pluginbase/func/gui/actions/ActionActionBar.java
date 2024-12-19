@@ -16,7 +16,7 @@ public class ActionActionBar implements IAction {
         return null;
     };
     public final String message;
-    private ActionActionBar(String message) {
+    public ActionActionBar(String message) {
         this.message = message;
     }
 

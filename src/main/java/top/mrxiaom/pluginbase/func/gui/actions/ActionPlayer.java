@@ -17,7 +17,7 @@ public class ActionPlayer implements IAction {
         return null;
     };
     public final String command;
-    private ActionPlayer(String command) {
+    public ActionPlayer(String command) {
         this.command = ColorHelper.parseColor(command);
     }
 

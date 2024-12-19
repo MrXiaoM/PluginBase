@@ -17,7 +17,7 @@ public class ActionConsole implements IAction {
         return null;
     };
     public final String command;
-    private ActionConsole(String command) {
+    public ActionConsole(String command) {
         this.command = ColorHelper.parseColor(command);
     }
 

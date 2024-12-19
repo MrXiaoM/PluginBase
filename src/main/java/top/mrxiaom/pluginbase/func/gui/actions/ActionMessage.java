@@ -17,7 +17,7 @@ public class ActionMessage implements IAction {
         return null;
     };
     public final String message;
-    private ActionMessage(String message) {
+    public ActionMessage(String message) {
         this.message = message;
     }
 
