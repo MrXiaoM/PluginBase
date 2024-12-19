@@ -6,6 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.gui.actions.IAction;
 import top.mrxiaom.pluginbase.utils.*;
@@ -13,6 +14,7 @@ import top.mrxiaom.pluginbase.utils.*;
 import java.util.*;
 
 import static top.mrxiaom.pluginbase.func.AbstractGuiModule.loadActions;
+import static top.mrxiaom.pluginbase.func.gui.IModifier.fit;
 
 public class LoadedIcon {
     private static final List<ITagProvider> tagProviders = new ArrayList<>();
@@ -50,16 +52,19 @@ public class LoadedIcon {
         this.tag = tag;
     }
 
-    @SuppressWarnings({"deprecation"})
     public ItemStack generateIcon(Player player) {
+        return generateIcon(player, null, null);
+    }
+    @SuppressWarnings({"deprecation"})
+    public ItemStack generateIcon(Player player, @Nullable IModifier<String> displayNameModifier, @Nullable IModifier<List<String>> loreModifier) {
         ItemStack item = data == 0 ? new ItemStack(material, amount) : new ItemStack(material, amount, (short) data);
         if (!display.isEmpty()) {
-            String displayName = PAPI.setPlaceholders(player, display);
+            String displayName = PAPI.setPlaceholders(player, fit(displayNameModifier, display));
             if (adventure) AdventureItemStack.setItemDisplayName(item, displayName);
             else ItemStackUtil.setItemDisplayName(item, displayName);
         }
         if (!lore.isEmpty()) {
-            List<String> loreList = PAPI.setPlaceholders(player, lore);
+            List<String> loreList = PAPI.setPlaceholders(player, fit(loreModifier, lore));
             if (adventure) AdventureItemStack.setItemLore(item, loreList);
             else ItemStackUtil.setItemLore(item, loreList);
         }
