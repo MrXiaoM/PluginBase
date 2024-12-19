@@ -1,6 +1,8 @@
 plugins {
     java
+    signing
     `maven-publish`
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 group = "top.mrxiaom"
@@ -69,6 +71,47 @@ publishing {
             groupId = project.group.toString()
             artifactId = rootProject.name
             version = project.version.toString()
+
+            pom {
+                name.set(artifactId)
+                description.set("MrXiaoM's Bukkit plugin basic core")
+                url.set("https://github.com/MrXiaoM/PluginBase")
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://github.com/MrXiaoM/PluginBase/blob/main/LICENSE")
+                    }
+                }
+                developers {
+                    developer {
+                        name.set("MrXiaoM")
+                        email.set("mrxiaom@qq.com")
+                    }
+                }
+                scm {
+                    url.set("https://github.com/MrXiaoM/PluginBase")
+                    connection.set("scm:git:https://github.com/MrXiaoM/PluginBase.git")
+                    developerConnection.set("scm:git:https://github.com/MrXiaoM/PluginBase.git")
+                }
+            }
+        }
+    }
+}
+signing {
+    val signingKey = findProperty("signingKey")?.toString()
+    val signingPassword = findProperty("signingPassword")?.toString()
+    if (signingKey != null && signingPassword != null) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign(publishing.publications.getByName("maven"))
+    }
+}
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+            username.set(findProperty("MAVEN_USERNAME")?.toString())
+            password.set(findProperty("MAVEN_PASSWORD")?.toString())
         }
     }
 }
