@@ -7,10 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import top.mrxiaom.pluginbase.BukkitPlugin;
+import top.mrxiaom.pluginbase.func.gui.actions.IAction;
 import top.mrxiaom.pluginbase.utils.*;
 
 import java.util.*;
 
+import static top.mrxiaom.pluginbase.func.AbstractGuiModule.loadActions;
 
 public class LoadedIcon {
     private static final List<ITagProvider> tagProviders = new ArrayList<>();
@@ -23,13 +25,14 @@ public class LoadedIcon {
     public final boolean glow;
     public final Integer customModelData;
     public final Map<String, String> nbtStrings;
-    public final List<String> leftClickCommands;
-    public final List<String> rightClickCommands;
-    public final List<String> shiftLeftClickCommands;
-    public final List<String> shiftRightClickCommands;
-    public final List<String> dropCommands;
+    public final List<IAction> leftClickCommands;
+    public final List<IAction> rightClickCommands;
+    public final List<IAction> shiftLeftClickCommands;
+    public final List<IAction> shiftRightClickCommands;
+    public final List<IAction> dropCommands;
+    public final Object tag;
 
-    LoadedIcon(boolean adventure, Material material, int data, int amount, String display, List<String> lore, boolean glow, Integer customModelData, Map<String, String> nbtStrings, List<String> leftClickCommands, List<String> rightClickCommands, List<String> shiftLeftClickCommands, List<String> shiftRightClickCommands, List<String> dropCommands, Object tag) {
+    LoadedIcon(boolean adventure, Material material, int data, int amount, String display, List<String> lore, boolean glow, Integer customModelData, Map<String, String> nbtStrings, List<IAction> leftClickCommands, List<IAction> rightClickCommands, List<IAction> shiftLeftClickCommands, List<IAction> shiftRightClickCommands, List<IAction> dropCommands, Object tag) {
         this.adventure = adventure;
         this.material = material;
         this.data = data;
@@ -74,27 +77,30 @@ public class LoadedIcon {
     }
 
     public void click(Player player, ClickType type) {
-        List<String> commands;
+        List<IAction> actions;
         switch (type) {
             case LEFT:
-                commands = leftClickCommands;
+                actions = leftClickCommands;
                 break;
             case RIGHT:
-                commands = rightClickCommands;
+                actions = rightClickCommands;
                 break;
             case SHIFT_LEFT:
-                commands = shiftLeftClickCommands;
+                actions = shiftLeftClickCommands;
                 break;
             case SHIFT_RIGHT:
-                commands = shiftRightClickCommands;
+                actions = shiftRightClickCommands;
                 break;
             case DROP:
-                commands = dropCommands;
+                actions = dropCommands;
                 break;
             default:
                 return;
         }
-        Util.runCommands(player, commands);
+        Pair<String, Object>[] args = Pair.array(0);
+        for (IAction action : actions) {
+            action.run(player, args);
+        }
     }
 
     public static LoadedIcon load(ConfigurationSection section, String id) {
@@ -110,12 +116,11 @@ public class LoadedIcon {
         if (section1 != null) for (String key : section1.getKeys(false)) {
             nbtStrings.put(key, section1.getString(key, ""));
         }
-        List<String> leftClickCommands = section.getStringList(id + "left-click-commands");
-        List<String> rightClickCommands = section.getStringList(id + "right-click-commands");
-        List<String> shiftLeftClickCommands = section.getStringList(id + "shift-left-click-commands");
-        List<String> shiftRightClickCommands = section.getStringList(id + "shift-left-click-commands");
-        List<String> dropCommands = section.getStringList(id + "drop-commands");
-        return new LoadedIcon(BukkitPlugin.getInstance().options.adventure(), material, data, amount, display, lore, glow, customModelData, nbtStrings, leftClickCommands, rightClickCommands, shiftLeftClickCommands, shiftRightClickCommands, dropCommands);
+        List<IAction> leftClickCommands = loadActions(section, id + "left-click-commands");
+        List<IAction> rightClickCommands = loadActions(section, id + "right-click-commands");
+        List<IAction> shiftLeftClickCommands = loadActions(section, id + "shift-left-click-commands");
+        List<IAction> shiftRightClickCommands = loadActions(section, id + "shift-left-click-commands");
+        List<IAction> dropCommands = loadActions(section, id + "drop-commands");
         Object tag = null;
         for (ITagProvider provider : tagProviders) {
             if ((tag = provider.provide(section, id)) != null) {
