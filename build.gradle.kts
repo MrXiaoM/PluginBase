@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "top.mrxiaom"
-version = "1.0.9"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
@@ -22,6 +22,7 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
+    testImplementation("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
     
     compileOnly("net.milkbowl.vault:VaultAPI:1.7")
     // compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")
