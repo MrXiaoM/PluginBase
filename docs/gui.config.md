@@ -13,7 +13,7 @@
 ```java
 
 @AutoRegister
-public class GuiExample extends AbstractGuiModule { // 这里的 AbstractGuiModule 要跟「插件主类」章节的 AbstractModule 一样，自行固定泛型
+public class GuiExample extends AbstractGuiModule {
     LoadedIcon testIcon;
     int testIconExtraConfig;
     public GuiExample(BukkitPlugin plugin) {
@@ -80,6 +80,12 @@ public class GuiExample extends AbstractGuiModule { // 这里的 AbstractGuiModu
             if (id != null) {
                 if (id == '测') {
                     player.sendMessage("点击了测试按钮，extra=" + testIconExtraConfig);
+                    // 要是你想，可以 test.click(player, click); 给主要图标处理点击动作
+                }
+                // 处理额外图标点击
+                LoadedIcon icon = otherIcons.get(id);
+                if (icon != null) {
+                    icon.click(player, click);
                 }
             }
         }

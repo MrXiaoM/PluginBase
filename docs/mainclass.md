@@ -92,6 +92,19 @@ public abstract class AbstractPluginHolder extends top.mrxiaom.pluginbase.func.A
     }
 }
 ```
+如果需要[菜单配置文件](gui.config.md)的话，还要加上这个
+```java
+// 自觉替换 PluginMain 为插件主类
+package top.mrxiaom.example.func;
+
+import top.mrxiaom.example.PluginMain;
+
+public abstract class AbstractGuiModule extends top.mrxiaom.pluginbase.func.AbstractGuiModule<PluginMain> {
+    public AbstractGuiModule(PluginMain plugin, File file) {
+        super(plugin, file);
+    }
+}
+```
 
 # 新建模块
 
