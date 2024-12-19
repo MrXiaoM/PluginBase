@@ -27,6 +27,7 @@ public class LoadedIcon {
     public final boolean glow;
     public final Integer customModelData;
     public final Map<String, String> nbtStrings;
+    public final Map<String, String> nbtInts;
     public final List<IAction> leftClickCommands;
     public final List<IAction> rightClickCommands;
     public final List<IAction> shiftLeftClickCommands;
@@ -34,7 +35,7 @@ public class LoadedIcon {
     public final List<IAction> dropCommands;
     public final Object tag;
 
-    LoadedIcon(boolean adventure, Material material, int data, int amount, String display, List<String> lore, boolean glow, Integer customModelData, Map<String, String> nbtStrings, List<IAction> leftClickCommands, List<IAction> rightClickCommands, List<IAction> shiftLeftClickCommands, List<IAction> shiftRightClickCommands, List<IAction> dropCommands, Object tag) {
+    LoadedIcon(boolean adventure, Material material, int data, int amount, String display, List<String> lore, boolean glow, Integer customModelData, Map<String, String> nbtStrings, Map<String, String> nbtInts, List<IAction> leftClickCommands, List<IAction> rightClickCommands, List<IAction> shiftLeftClickCommands, List<IAction> shiftRightClickCommands, List<IAction> dropCommands, Object tag) {
         this.adventure = adventure;
         this.material = material;
         this.data = data;
@@ -44,6 +45,7 @@ public class LoadedIcon {
         this.glow = glow;
         this.customModelData = customModelData;
         this.nbtStrings = nbtStrings;
+        this.nbtInts = nbtInts;
         this.leftClickCommands = leftClickCommands;
         this.rightClickCommands = rightClickCommands;
         this.shiftLeftClickCommands = shiftLeftClickCommands;
@@ -70,11 +72,17 @@ public class LoadedIcon {
         }
         if (glow) ItemStackUtil.setGlow(item);
         if (customModelData != null) ItemStackUtil.setCustomModelData(item, customModelData);
-        if (!nbtStrings.isEmpty()) {
+        if (!nbtStrings.isEmpty() || !nbtInts.isEmpty()) {
             NBT.modify(item, nbt -> {
                 for (Map.Entry<String, String> entry : nbtStrings.entrySet()) {
                     String value = PAPI.setPlaceholders(player, entry.getValue());
                     nbt.setString(entry.getKey(), value);
+                }
+                for (Map.Entry<String, String> entry : nbtInts.entrySet()) {
+                    String value = PAPI.setPlaceholders(player, entry.getValue());
+                    Integer i = Util.parseInt(value).orElse(null);
+                    if (i == null) continue;
+                    nbt.setInteger(entry.getKey(), i);
                 }
             });
         }
@@ -122,6 +130,11 @@ public class LoadedIcon {
         if (section1 != null) for (String key : section1.getKeys(false)) {
             nbtStrings.put(key, section1.getString(key, ""));
         }
+        Map<String, String> nbtInts = new HashMap<>();
+        section1 = section.getConfigurationSection(id + ".nbt-ints");
+        if (section1 != null) for (String key : section1.getKeys(false)) {
+            nbtInts.put(key, section1.getString(key, ""));
+        }
         List<IAction> leftClickCommands = loadActions(section, id + "left-click-commands");
         List<IAction> rightClickCommands = loadActions(section, id + "right-click-commands");
         List<IAction> shiftLeftClickCommands = loadActions(section, id + "shift-left-click-commands");
@@ -133,7 +146,7 @@ public class LoadedIcon {
                 break;
             }
         }
-        return new LoadedIcon(BukkitPlugin.getInstance().options.adventure(), material, data, amount, display, lore, glow, customModelData, nbtStrings, leftClickCommands, rightClickCommands, shiftLeftClickCommands, shiftRightClickCommands, dropCommands, tag);
+        return new LoadedIcon(BukkitPlugin.getInstance().options.adventure(), material, data, amount, display, lore, glow, customModelData, nbtStrings, nbtInts, leftClickCommands, rightClickCommands, shiftLeftClickCommands, shiftRightClickCommands, dropCommands, tag);
     }
 
     public static void registerTagProvider(ITagProvider provider) {
