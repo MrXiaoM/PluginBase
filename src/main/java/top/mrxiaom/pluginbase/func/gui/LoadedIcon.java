@@ -7,16 +7,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import top.mrxiaom.pluginbase.BukkitPlugin;
-import top.mrxiaom.pluginbase.utils.AdventureItemStack;
-import top.mrxiaom.pluginbase.utils.ItemStackUtil;
-import top.mrxiaom.pluginbase.utils.PAPI;
-import top.mrxiaom.pluginbase.utils.Util;
+import top.mrxiaom.pluginbase.utils.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 public class LoadedIcon {
+    private static final List<ITagProvider> tagProviders = new ArrayList<>();
     private final boolean adventure;
     public final Material material;
     public final int data;
@@ -32,7 +29,7 @@ public class LoadedIcon {
     public final List<String> shiftRightClickCommands;
     public final List<String> dropCommands;
 
-    LoadedIcon(boolean adventure, Material material, int data, int amount, String display, List<String> lore, boolean glow, Integer customModelData, Map<String, String> nbtStrings, List<String> leftClickCommands, List<String> rightClickCommands, List<String> shiftLeftClickCommands, List<String> shiftRightClickCommands, List<String> dropCommands) {
+    LoadedIcon(boolean adventure, Material material, int data, int amount, String display, List<String> lore, boolean glow, Integer customModelData, Map<String, String> nbtStrings, List<String> leftClickCommands, List<String> rightClickCommands, List<String> shiftLeftClickCommands, List<String> shiftRightClickCommands, List<String> dropCommands, Object tag) {
         this.adventure = adventure;
         this.material = material;
         this.data = data;
@@ -47,6 +44,7 @@ public class LoadedIcon {
         this.shiftLeftClickCommands = shiftLeftClickCommands;
         this.shiftRightClickCommands = shiftRightClickCommands;
         this.dropCommands = dropCommands;
+        this.tag = tag;
     }
 
     @SuppressWarnings({"deprecation"})
@@ -118,5 +116,17 @@ public class LoadedIcon {
         List<String> shiftRightClickCommands = section.getStringList(id + "shift-left-click-commands");
         List<String> dropCommands = section.getStringList(id + "drop-commands");
         return new LoadedIcon(BukkitPlugin.getInstance().options.adventure(), material, data, amount, display, lore, glow, customModelData, nbtStrings, leftClickCommands, rightClickCommands, shiftLeftClickCommands, shiftRightClickCommands, dropCommands);
+        Object tag = null;
+        for (ITagProvider provider : tagProviders) {
+            if ((tag = provider.provide(section, id)) != null) {
+                break;
+            }
+        }
+        return new LoadedIcon(BukkitPlugin.getInstance().options.adventure(), material, data, amount, display, lore, glow, customModelData, nbtStrings, leftClickCommands, rightClickCommands, shiftLeftClickCommands, shiftRightClickCommands, dropCommands, tag);
+    }
+
+    public static void registerTagProvider(ITagProvider provider) {
+        tagProviders.add(provider);
+        tagProviders.sort(Comparator.comparingInt(ITagProvider::priority));
     }
 }

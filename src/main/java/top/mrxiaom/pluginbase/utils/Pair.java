@@ -1,7 +1,5 @@
 package top.mrxiaom.pluginbase.utils;
 
-import java.time.LocalDateTime;
-
 public class Pair<K, V> {
     K key;
     V value;
@@ -41,5 +39,10 @@ public class Pair<K, V> {
             s = s.replace(replacement.key, String.valueOf(replacement.value));
         }
         return s;
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public static <K, V> Pair<K, V>[] array(int length) {
+        return new Pair[length];
     }
 }
