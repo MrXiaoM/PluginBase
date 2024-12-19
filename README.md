@@ -22,3 +22,4 @@ Minecraft 插件开发前置
 + SweetRiceActivity [闭源] 甜米服务器活动服机制
 + SweetQuests [暂定闭源] 甜米服务器剧情系统
 + [SweetWarehouse](https://github.com/MrXiaoM/SweetWarehouse) 云物品仓库插件
++ [SweetAdaptiveShop](https://github.com/MrXiaoM/SweetAdaptiveShop) 动态价格商店插件
