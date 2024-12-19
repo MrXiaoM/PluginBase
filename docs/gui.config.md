@@ -147,3 +147,19 @@ other-icons:
     # 鼠标悬停按Q键执行操作
     drop-commands: []
 ```
+
+## 图标 tag
+
+如果你想给额外图标增加一些额外数据，可以通过 `LoadedIcon.registerTagProvider` 注册 tag 提供器，从菜单配置读取并赋值到图标的 `tag` 字段，你可以将这个 `tag` 字段当作 C# WinForm 控件的 `Tag` 属性来使用，仅用于存储开发者自定义的数据。
+
+## 自定义点击操作
+
+你可以通过 `AbstractGuiModule.registerActionProvider` 来给额外图标的`点击执行操作`功能增加更多你自己定义的类型，当前自带以下类型
++ [ActionActionBar](/src/main/java/top/mrxiaom/pluginbase/func/gui/actions/ActionActionBar.java) `[actionbar]物品栏上方提示（需要启用Adventure）`
++ [ActionConsole](/src/main/java/top/mrxiaom/pluginbase/func/gui/actions/ActionConsole.java) `[console]后台执行`
++ [ActionPlayer](/src/main/java/top/mrxiaom/pluginbase/func/gui/actions/ActionPlayer.java) `[player]玩家执行`
++ [ActionMessageAdventure](/src/main/java/top/mrxiaom/pluginbase/func/gui/actions/ActionMessageAdventure.java) `[message]聊天提示（需要启用Adventure）`
++ [ActionMessage](/src/main/java/top/mrxiaom/pluginbase/func/gui/actions/ActionMessage.java) `[message]聊天提示`
++ [ActionClose](/src/main/java/top/mrxiaom/pluginbase/func/gui/actions/ActionClose.java) `[close]` (关闭界面)
+
+如果需要添加类型，请记得要通过 `PAPI.setPlaceholders(player, s)` 来处理 PlaceholderAPI 变量。
