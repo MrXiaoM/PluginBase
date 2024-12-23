@@ -18,9 +18,14 @@ public abstract class AbstractLanguageHolder {
     public final boolean isList;
     public final Object defaultValue;
 
-    public AbstractLanguageHolder(@NotNull String key, boolean isList, Object defaultValue) {
+    public AbstractLanguageHolder(@NotNull String key, List<String> defaultValue) {
         this.key = key;
-        this.isList = isList;
+        this.isList = true;
+        this.defaultValue = defaultValue;
+    }
+    public AbstractLanguageHolder(@NotNull String key, String defaultValue) {
+        this.key = key;
+        this.isList = false;
         this.defaultValue = defaultValue;
     }
 

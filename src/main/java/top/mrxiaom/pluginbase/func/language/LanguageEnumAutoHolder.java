@@ -13,8 +13,12 @@ public class LanguageEnumAutoHolder<T extends Enum<T>> extends AbstractLanguageH
         return lang == null ? name : (lang.prefix() + name);
     }
     public final Enum<T> enumValue;
-    public LanguageEnumAutoHolder(Enum<T> enumValue, boolean isList, Object defaultValue) {
-        super(key(enumValue), isList, defaultValue);
+    public LanguageEnumAutoHolder(Enum<T> enumValue, List<String> defaultValue) {
+        super(key(enumValue), defaultValue);
+        this.enumValue = enumValue;
+    }
+    private LanguageEnumAutoHolder(Enum<T> enumValue, String defaultValue) {
+        super(key(enumValue), defaultValue);
         this.enumValue = enumValue;
     }
 
@@ -24,13 +28,13 @@ public class LanguageEnumAutoHolder<T extends Enum<T>> extends AbstractLanguageH
     }
 
     public static <T extends Enum<T>> LanguageEnumAutoHolder<T> wrap(Enum<T> e, String defaultValue) {
-        return new LanguageEnumAutoHolder<>(e, false, defaultValue);
+        return new LanguageEnumAutoHolder<>(e, defaultValue);
     }
     public static <T extends Enum<T>> LanguageEnumAutoHolder<T> wrap(Enum<T> e, List<String> defaultValue) {
-        return new LanguageEnumAutoHolder<>(e, true, defaultValue);
+        return new LanguageEnumAutoHolder<>(e, defaultValue);
     }
     public static <T extends Enum<T>> LanguageEnumAutoHolder<T> wrap(Enum<T> e, String... defaultValue) {
         List<String> def = Lists.newArrayList(defaultValue);
-        return new LanguageEnumAutoHolder<>(e, true, def);
+        return new LanguageEnumAutoHolder<>(e, def);
     }
 }
