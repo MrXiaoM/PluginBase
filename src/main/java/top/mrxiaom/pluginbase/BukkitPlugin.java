@@ -201,18 +201,21 @@ public abstract class BukkitPlugin extends JavaPlugin {
                 modulesToRegister.add((Class<? extends AbstractPluginHolder<?>>) clazz);
             }
         }
+        List<Class<? extends AbstractPluginHolder<?>>> earlyLoadModules = new ArrayList<>();
         try {
             Class<LanguageManager> languageManagerClass = LanguageManager.class;
-            modulesToRegister.add(languageManagerClass);
+            earlyLoadModules.add(languageManagerClass);
         } catch (Throwable ignored) {
         }
         try {
             Class<GuiManager> guiManagerClass = GuiManager.class;
-            modulesToRegister.add(guiManagerClass);
+            earlyLoadModules.add(guiManagerClass);
         } catch (Throwable ignored) {
         }
 
         pluginEnabled = true;
+        loadModules(this, earlyLoadModules);
+        earlyLoadModules.clear();
         beforeEnable();
         loadModules(this, modulesToRegister);
         modulesToRegister.clear();
