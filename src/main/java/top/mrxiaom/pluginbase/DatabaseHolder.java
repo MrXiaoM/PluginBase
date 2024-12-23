@@ -90,16 +90,16 @@ public class DatabaseHolder {
         query = (query.isEmpty() ? "" : ("?" + query));
         hikariConfig = new HikariConfig();
         hikariConfig.setAutoCommit(true);
-        hikariConfig.setMaxLifetime(120000L);
-        hikariConfig.setIdleTimeout(5000L);
-        hikariConfig.setConnectionTimeout(5000L);
+        hikariConfig.setMaxLifetime(config.getLong("hikari.max_lifetime", 120000L));
+        hikariConfig.setIdleTimeout(config.getLong("hikari.idle_timeout", 10000L));
+        hikariConfig.setConnectionTimeout(config.getLong("hikari.connection_timeout", 5000L));
         hikariConfig.setDriverClassName(driver);
         if (type.equals("sqlite")) {
             hikariConfig.setMinimumIdle(1);
             hikariConfig.setMaximumPoolSize(1);
         } else {
-            hikariConfig.setMinimumIdle(10);
-            hikariConfig.setMaximumPoolSize(100);
+            hikariConfig.setMinimumIdle(config.getInt("hikari.minimum_idle", 8));
+            hikariConfig.setMaximumPoolSize(config.getInt("hikari.maximum_pool_size", 36));
         }
         if (isMySQL()) {
             String host = config.getString("mysql.host", "localhost");
