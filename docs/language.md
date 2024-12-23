@@ -75,12 +75,14 @@ errors:
 在主类 `beforeEnable` 进行配置。
 
 ```java
+import top.mrxiaom.pluginbase.func.LanguageManager;
+
 public class PluginMain extends BukkitPlugin {
     // ...
 
     @Override
     protected void beforeEnable() {
-        getLanguageManager()
+        LanguageManager.inst()
                 // 1. 设置本地化配置文件路径
                 .setLangFile("messages.yml")
                 // 2. 注册枚举类到本地化管理器
