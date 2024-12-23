@@ -60,8 +60,8 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         guiTitle = config.getString("title", "");
         guiInventory = getInventory(config, "inventory");
+        reloadMenuConfig(config);
         if (mainIconsKey != null) {
-            clearMainIcons();
             ConfigurationSection section = config.getConfigurationSection(mainIconsKey);
             if (section != null) for (String key : section.getKeys(false)) {
                 LoadedIcon icon = LoadedIcon.load(section, key);
@@ -81,8 +81,8 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
             }
         }
     }
-
-    protected abstract void clearMainIcons();
+    protected void reloadMenuConfig(YamlConfiguration config) {
+    }
     protected abstract void loadMainIcon(ConfigurationSection section, String id, LoadedIcon icon);
     protected abstract ItemStack applyMainIcon(IGui instance, Player player, char id, int index, int appearTimes);
 
