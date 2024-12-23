@@ -1,8 +1,9 @@
 package top.mrxiaom.pluginbase.func.language;
 
-import top.mrxiaom.pluginbase.BukkitPlugin;
+import com.google.common.collect.Lists;
 import top.mrxiaom.pluginbase.func.LanguageManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LanguageEnumAutoHolder<T extends Enum<T>> extends AbstractLanguageHolder {
@@ -29,6 +30,7 @@ public class LanguageEnumAutoHolder<T extends Enum<T>> extends AbstractLanguageH
         return new LanguageEnumAutoHolder<>(e, true, defaultValue);
     }
     public static <T extends Enum<T>> LanguageEnumAutoHolder<T> wrap(Enum<T> e, String... defaultValue) {
-        return new LanguageEnumAutoHolder<>(e, true, defaultValue);
+        List<String> def = Lists.newArrayList(defaultValue);
+        return new LanguageEnumAutoHolder<>(e, true, def);
     }
 }
