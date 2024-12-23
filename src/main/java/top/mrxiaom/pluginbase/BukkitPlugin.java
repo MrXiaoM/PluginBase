@@ -179,6 +179,26 @@ public abstract class BukkitPlugin extends JavaPlugin {
         afterLoad();
     }
 
+    private void earlyLoadModules() {
+        // 内部模块属于“依赖”的一部分，因为 scanIgnore 的存在，不能添加 @AutoRegister 注解来自动注册。
+        // 应该在这里将内部模块手动添加到 earlyLoadModules 里面，进行独立的早期加载。
+        // 并且由于部分内部模块应当是可选的，所以要额外加一层 try catch 以防相关类被精简导致报错。
+        List<Class<? extends AbstractPluginHolder<?>>> earlyLoadModules = new ArrayList<>();
+        try {
+            Class<LanguageManager> languageManagerClass = LanguageManager.class;
+            earlyLoadModules.add(languageManagerClass);
+        } catch (Throwable ignored) {
+        }
+        try {
+            Class<GuiManager> guiManagerClass = GuiManager.class;
+            earlyLoadModules.add(guiManagerClass);
+        } catch (Throwable ignored) {
+        }
+
+        loadModules(this, earlyLoadModules);
+        earlyLoadModules.clear();
+    }
+
     @Override
     @Deprecated
     @SuppressWarnings({"unchecked"})
@@ -201,21 +221,9 @@ public abstract class BukkitPlugin extends JavaPlugin {
                 modulesToRegister.add((Class<? extends AbstractPluginHolder<?>>) clazz);
             }
         }
-        List<Class<? extends AbstractPluginHolder<?>>> earlyLoadModules = new ArrayList<>();
-        try {
-            Class<LanguageManager> languageManagerClass = LanguageManager.class;
-            earlyLoadModules.add(languageManagerClass);
-        } catch (Throwable ignored) {
-        }
-        try {
-            Class<GuiManager> guiManagerClass = GuiManager.class;
-            earlyLoadModules.add(guiManagerClass);
-        } catch (Throwable ignored) {
-        }
 
         pluginEnabled = true;
-        loadModules(this, earlyLoadModules);
-        earlyLoadModules.clear();
+        earlyLoadModules();
         beforeEnable();
         loadModules(this, modulesToRegister);
         modulesToRegister.clear();
