@@ -142,10 +142,12 @@ public class DatabaseHolder {
         Connection conn = getConnection();
         if (conn == null) plugin.getLogger().warning("无法连接到数据库!");
         else {
-            for (IDatabase db : databases) db.reload(conn, getTablePrefix());
-            plugin.getLogger().info("数据库连接成功");
             try {
-                conn.close();
+                for (IDatabase db : databases) {
+                    db.reload(conn, getTablePrefix());
+                }
+                plugin.getLogger().info("数据库连接成功");
+                if (!conn.isClosed()) conn.close();
             } catch (Throwable t) {
                 plugin.warn("连接数据库时出现一个错误", t);
             }
