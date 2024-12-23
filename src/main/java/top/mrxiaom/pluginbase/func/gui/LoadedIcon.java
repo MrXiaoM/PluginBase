@@ -59,6 +59,7 @@ public class LoadedIcon {
     }
     @SuppressWarnings({"deprecation"})
     public ItemStack generateIcon(Player player, @Nullable IModifier<String> displayNameModifier, @Nullable IModifier<List<String>> loreModifier) {
+        if (material.equals(Material.AIR) || amount == 0) return new ItemStack(Material.AIR);
         ItemStack item = data == 0 ? new ItemStack(material, amount) : new ItemStack(material, amount, (short) data);
         if (!display.isEmpty()) {
             String displayName = PAPI.setPlaceholders(player, fit(displayNameModifier, display));
