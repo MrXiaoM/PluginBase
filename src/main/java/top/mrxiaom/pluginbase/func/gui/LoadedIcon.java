@@ -136,11 +136,11 @@ public class LoadedIcon {
         if (section1 != null) for (String key : section1.getKeys(false)) {
             nbtInts.put(key, section1.getString(key, ""));
         }
-        List<IAction> leftClickCommands = loadActions(section, id + "left-click-commands");
-        List<IAction> rightClickCommands = loadActions(section, id + "right-click-commands");
-        List<IAction> shiftLeftClickCommands = loadActions(section, id + "shift-left-click-commands");
-        List<IAction> shiftRightClickCommands = loadActions(section, id + "shift-left-click-commands");
-        List<IAction> dropCommands = loadActions(section, id + "drop-commands");
+        List<IAction> leftClickCommands = loadActions(section, id + ".left-click-commands");
+        List<IAction> rightClickCommands = loadActions(section, id + ".right-click-commands");
+        List<IAction> shiftLeftClickCommands = loadActions(section, id + ".shift-left-click-commands");
+        List<IAction> shiftRightClickCommands = loadActions(section, id + ".shift-left-click-commands");
+        List<IAction> dropCommands = loadActions(section, id + ".drop-commands");
         Object tag = null;
         for (ITagProvider provider : tagProviders) {
             if ((tag = provider.provide(section, id)) != null) {
