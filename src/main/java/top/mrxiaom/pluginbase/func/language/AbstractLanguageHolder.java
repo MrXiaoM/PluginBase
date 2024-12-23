@@ -2,7 +2,6 @@ package top.mrxiaom.pluginbase.func.language;
 
 import com.google.common.collect.Lists;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.func.LanguageManager;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
