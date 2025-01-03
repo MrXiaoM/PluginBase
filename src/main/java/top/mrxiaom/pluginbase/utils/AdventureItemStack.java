@@ -184,6 +184,7 @@ public class AdventureItemStack {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setCustomModelData(customModelData);
+            item.setItemMeta(meta);
         }
     }
 }
