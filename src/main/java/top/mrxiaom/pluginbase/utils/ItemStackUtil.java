@@ -1,9 +1,7 @@
 package top.mrxiaom.pluginbase.utils;
 
 import com.google.common.collect.Lists;
-import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -180,6 +178,7 @@ public class ItemStackUtil {
             ItemMeta meta = item.getItemMeta();
             if (meta != null) {
                 meta.setCustomModelData(customModelData);
+                item.setItemMeta(meta);
             }
         } catch (Throwable ignored) {
         }
