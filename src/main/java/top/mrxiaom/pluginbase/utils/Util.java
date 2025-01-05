@@ -24,6 +24,7 @@ import java.io.StringWriter;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.jar.JarEntry;
@@ -61,6 +62,38 @@ public class Util {
         if (plugin.options.adventure()) {
             AdventureUtil.init(plugin);
         }
+    }
+
+    public static void reloadFolder(File folder, boolean suffix, BiConsumer<String, File> reloadConfig) {
+        reloadFolder(folder, null, suffix, reloadConfig);
+    }
+
+    private static void reloadFolder(File root, File folder, boolean suffix, BiConsumer<String, File> reloadConfig) {
+        File[] files = (folder == null ? root : folder).listFiles();
+        if (files != null) for (File file : files) {
+            if (file.isDirectory()) {
+                if (!new File(file, ".ignore").exists()) {
+                    reloadFolder(root, file, suffix, reloadConfig);
+                }
+                continue;
+            }
+            String id = getRelationPath(root, file, suffix);
+            reloadConfig.accept(id, file);
+        }
+    }
+
+    public static String getRelationPath(File parent, File file, boolean suffix) {
+        String parentPath = parent.getAbsolutePath();
+        String path = file.getAbsolutePath();
+        if (!path.startsWith(parentPath)) return suffix ? path : nameWithoutSuffix(path);
+        String s = path.substring(parentPath.length());
+        String relation = s.startsWith("/") ? s.substring(1) : s;
+        return suffix ? relation : nameWithoutSuffix(relation);
+    }
+
+    public static String nameWithoutSuffix(String s) {
+        int index = s.lastIndexOf('.');
+        return index <= 0 ? s : s.substring(0, index);
     }
 
     @NotNull
