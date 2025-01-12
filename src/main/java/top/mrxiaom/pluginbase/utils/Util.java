@@ -149,6 +149,60 @@ public class Util {
         return valueOr(Material.class, section.getString(key), def);
     }
 
+    public static List<String> split(String string, String spliter) {
+        return split(string, spliter, 0);
+    }
+
+    public static List<String> split(String string, String spliter, int limit) {
+        int oldIndex = 0;
+        int length = spliter.length();
+        if (length == 0) throw new IllegalArgumentException("spliter can't be empty!");
+        int count = limit - 1;
+        boolean unlimited = limit <= 0;
+        List<String> list = new ArrayList<>();
+        while (unlimited || list.size() < count) {
+            int i = string.indexOf(spliter, oldIndex);
+            if (i >= 0) {
+                if (oldIndex == i) {
+                    list.add("");
+                } else {
+                    list.add(string.substring(oldIndex, i));
+                }
+                oldIndex = i + length;
+            } else {
+                break;
+            }
+        }
+        list.add(string.substring(oldIndex));
+        return list;
+    }
+
+    public static List<String> split(String string, char spliter) {
+        return split(string, spliter, 0);
+    }
+
+    public static List<String> split(String string, char spliter, int limit) {
+        int oldIndex = 0;
+        int count = limit - 1;
+        boolean unlimited = limit <= 0;
+        List<String> list = new ArrayList<>();
+        while (unlimited || list.size() < count) {
+            int i = string.indexOf(spliter, oldIndex);
+            if (i >= 0) {
+                if (oldIndex == i) {
+                    list.add("");
+                } else {
+                    list.add(string.substring(oldIndex, i));
+                }
+                oldIndex = i + 1;
+            } else {
+                break;
+            }
+        }
+        list.add(string.substring(oldIndex));
+        return list;
+    }
+
     @CanIgnoreReturnValue
     public static boolean createNewFile(File file) throws IOException {
         return file.createNewFile();
