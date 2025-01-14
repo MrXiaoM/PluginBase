@@ -110,12 +110,13 @@ public class DatabaseHolder {
             hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + query);
             hikariConfig.setUsername(user);
             hikariConfig.setPassword(pass);
+            hikariConfig.setConnectionTestQuery("SELECT NOW();");
         }
         if (isSQLite()) {
             String database = config.getString("sqlite.file", "database.db");
             hikariConfig.setJdbcUrl("jdbc:sqlite:plugins/" + plugin.getName() + "/" + database);
+            hikariConfig.setConnectionTestQuery("SELECT CURRENT_TIMESTAMP;");
         }
-        hikariConfig.setConnectionTestQuery("SHOW DATABASES;");
         if (!firstConnectFlag && !plugin.options.reconnectDatabaseWhenReloadConfig) {
             reconnect();
         }
