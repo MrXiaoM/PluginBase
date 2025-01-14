@@ -115,6 +115,7 @@ public class DatabaseHolder {
             String database = config.getString("sqlite.file", "database.db");
             hikariConfig.setJdbcUrl("jdbc:sqlite:plugins/" + plugin.getName() + "/" + database);
         }
+        hikariConfig.setConnectionTestQuery("SHOW DATABASES;");
         if (!firstConnectFlag && !plugin.options.reconnectDatabaseWhenReloadConfig) {
             reconnect();
         }
