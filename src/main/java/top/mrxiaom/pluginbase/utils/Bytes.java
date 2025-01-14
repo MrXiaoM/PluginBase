@@ -4,7 +4,6 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.CheckForNull;
 import java.io.*;
 
 public class Bytes {
@@ -259,7 +258,6 @@ public class Bytes {
             }
         }
         @Override
-        @CheckForNull
         public String readLine() {
             try {
                 return this.input.readLine();

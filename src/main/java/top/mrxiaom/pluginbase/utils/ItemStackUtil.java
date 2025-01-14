@@ -185,21 +185,21 @@ public class ItemStackUtil {
     }
 
     public static ItemStack buildFrameItem(Material material) {
-        if (material.isAir()) return new ItemStack(material);
+        if (material.equals(Material.AIR)) return new ItemStack(material);
         return buildItem(material, "&f&l*", Lists.newArrayList());
     }
 
     public static ItemStack buildItem(Material material, String name) {
-        if (material.isAir()) return new ItemStack(material);
+        if (material.equals(Material.AIR)) return new ItemStack(material);
         return buildItem(material, null, name, Lists.newArrayList());
     }
 
     public static ItemStack buildItem(Material material, String name, String... lore) {
-        if (material.isAir()) return new ItemStack(material);
+        if (material.equals(Material.AIR)) return new ItemStack(material);
         return buildItem(material, null, name, Lists.newArrayList(lore));
     }
     public static ItemStack buildItem(Material material, Integer customModeData, String name, String... lore) {
-        if (material.isAir()) return new ItemStack(material);
+        if (material.equals(Material.AIR)) return new ItemStack(material);
         return buildItem(material, customModeData, name, Lists.newArrayList(lore));
     }
 
@@ -207,7 +207,7 @@ public class ItemStackUtil {
         return buildItem(material, null, name, lore);
     }
     public static ItemStack buildItem(Material material, Integer customModelData, String name, List<String> lore) {
-        if (material.isAir()) return new ItemStack(material);
+        if (material.equals(Material.AIR)) return new ItemStack(material);
         ItemStack item = new ItemStack(material, 1);
         ItemMeta im = getItemMeta(material);
         im.setDisplayName(ColorHelper.parseColor(name));

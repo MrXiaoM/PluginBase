@@ -1,7 +1,6 @@
 package top.mrxiaom.pluginbase.utils;
 
 import com.google.common.collect.Lists;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -203,11 +202,9 @@ public class Util {
         return list;
     }
 
-    @CanIgnoreReturnValue
     public static boolean createNewFile(File file) throws IOException {
         return file.createNewFile();
     }
-    @CanIgnoreReturnValue
     public static boolean mkdirs(File file) {
         return file.mkdirs();
     }

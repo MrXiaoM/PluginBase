@@ -23,7 +23,9 @@ import java.util.function.BiConsumer;
 public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Listener {
     final Map<UUID, IGui> playersGui = new HashMap<>();
     BiConsumer<Player, IGui> disable = (player, gui) -> {
-        player.sendTitle("&e请等等", "&f管理员正在更新插件", 10, 30, 10);
+        try {
+            player.sendTitle("&e请等等", "&f管理员正在更新插件", 10, 30, 10);
+        } catch (Throwable ignored) {}
     };
     boolean disabled = false;
     public GuiManager(BukkitPlugin plugin) {
