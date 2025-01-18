@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import top.mrxiaom.pluginbase.BukkitPlugin;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,6 +22,10 @@ public class ColorHelper {
     private static boolean old = false;
 
     public static void parseAndSend(CommandSender sender, String s) {
+        if (BukkitPlugin.getInstance().options.adventure()) {
+            AdventureUtil.sendMessage(sender, s);
+            return;
+        }
         if (old && !(sender instanceof Player)) {
             sender.sendMessage(parseColor(s));
             return;
