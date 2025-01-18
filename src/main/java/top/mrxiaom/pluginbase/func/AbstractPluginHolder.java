@@ -62,11 +62,17 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         }
     }
 
+    public int priority() {
+        return 1000;
+    }
+
     public void receiveBungee(String subChannel, DataInputStream in) throws IOException {
 
     }
 
     public static void receiveFromBungee(String subChannel, byte[] bytes) {
+        List<AbstractPluginHolder<?>> holders = new ArrayList<>(registeredBungeeHolders.values());
+        holders.sort(Comparator.comparingInt(AbstractPluginHolder::priority));
         for (AbstractPluginHolder<?> holder : registeredBungeeHolders.values()) {
             try (DataInputStream msgIn = new DataInputStream(new ByteArrayInputStream(bytes))) {
                 holder.receiveBungee(subChannel, msgIn);
@@ -74,6 +80,7 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
                 BukkitPlugin.getInstance().warn("接收处理来自 BungeeCord 的消息时出现错误", t);
             }
         }
+        holders.clear();
     }
 
     public void reloadConfig(MemoryConfiguration config) {
@@ -81,9 +88,12 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
     }
 
     public static void reloadAllConfig(MemoryConfiguration config) {
-        for (AbstractPluginHolder<?> inst : registeredHolders.values()) {
+        List<AbstractPluginHolder<?>> holders = new ArrayList<>(registeredHolders.values());
+        holders.sort(Comparator.comparingInt(AbstractPluginHolder::priority));
+        for (AbstractPluginHolder<?> inst : holders) {
             inst.reloadConfig(config);
         }
+        holders.clear();
     }
 
     public static Set<String> keys(ConfigurationSection section, String key) {
@@ -96,9 +106,12 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
     }
 
     public static void callDisable() {
-        for (AbstractPluginHolder<?> holder : registeredHolders.values()) {
+        List<AbstractPluginHolder<?>> holders = new ArrayList<>(registeredHolders.values());
+        holders.sort(Comparator.comparingInt(AbstractPluginHolder::priority));
+        for (AbstractPluginHolder<?> holder : holders) {
             holder.onDisable();
         }
+        holders.clear();
         registeredHolders.clear();
         registeredBungeeHolders.clear();
     }
