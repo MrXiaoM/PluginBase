@@ -46,3 +46,32 @@ PlaceholderAPI 兼容接口，在服务器安装了 PlaceholderAPI 时正常替�
 + 快捷正则表达式分割字符串 `split(Pattern, String, Consumer<RegexResult>)`，在 ColorHelper 中有使用示例
 
 等
+
+## Bytes
+
+BungeeCord 消息构建轮子
+
+```java
+// 发送到所有子服
+void foo() {
+    Bytes.sendByWhoeverOrNot("BungeeCord", Bytes.build(out -> {
+        out.writeUTF(Bukkit.getVersion());
+        out.writeUTF("Hello World!");
+    }, /*subChannel:*/"Forward", /*arguments:*/"ALL", "MyChannel"));
+}
+```
+```java
+// 使用模块接收
+// 要在模块的构造函数里写 registerBungee();
+@Override
+public void receiveBungee(String subChannel, DataInputStream in) throws IOException {
+    if (subChannel.equals("MyChannel")) {
+        String bukkitVersion = in.readUTF();
+        String message = in.readUTF();
+        info("收到了 MyChannel 消息: " + bukkitVersion + ", " + message);
+    }
+}
+```
+
+**注意**：BungeeCord 消息是不可靠的，必须要有玩家在子服中，才能发送或接收。以及发送出去的消息，只有相同名字的插件才能接收。  
+对于我目前写插件的情况来说，用到 BungeeCord 消息的大多数用途，是发送“缓存已过期”提醒，让插件清掉，或更新某人的缓存，以便下次进入子服时数据同步。

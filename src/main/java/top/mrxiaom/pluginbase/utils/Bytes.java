@@ -1,12 +1,59 @@
 package top.mrxiaom.pluginbase.utils;
 
+import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.BukkitPlugin;
 
 import java.io.*;
 
 public class Bytes {
+    public void foo() {
+        Bytes.sendByWhoeverOrNot("BungeeCord", Bytes.build(out -> {
+            out.writeUTF(Bukkit.getVersion());
+            out.writeUTF("Hello World!");
+        }, "Forward", "ALL", "MyChannel"));
+    }
+    @FunctionalInterface
+    public interface DataConsumer {
+        void accept(DataOutputStream out) throws IOException;
+    }
+    public static byte @Nullable [] build(String subChannel, String... arguments) {
+        return build(null, subChannel, arguments);
+    }
+    public static byte @Nullable [] build(@Nullable DataConsumer data, String subChannel, String... arguments) {
+        ByteArrayDataOutput out = newDataOutput();
+        out.writeUTF(subChannel);
+        for (String argument : arguments) {
+            out.writeUTF(argument);
+        }
+        if (data != null) {
+            try (ByteArrayOutputStream output = new ByteArrayOutputStream();
+                DataOutputStream msg = new DataOutputStream(output)) {
+                data.accept(msg);
+                out.writeShort(output.toByteArray().length);
+                out.write(output.toByteArray());
+            } catch (IOException e) {
+                BukkitPlugin.getInstance().warn("构建 BungeeCord 插件消息时出现一个异常", e);
+            }
+        }
+        return out.toByteArray();
+    }
+    @Nullable
+    public static Player whoever() {
+        return Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
+    }
+    public static void sendByWhoeverOrNot(String channel, byte[] bytes) {
+        if (bytes == null) return;
+        Player whoever = whoever();
+        if (whoever == null) return;
+        whoever.sendPluginMessage(BukkitPlugin.getInstance(), channel, bytes);
+    }
+
     public static ByteArrayDataOutput newDataOutput() {
         return new ByteArrayDataOutputStream(new ByteArrayOutputStream());
     }
