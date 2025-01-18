@@ -91,13 +91,13 @@ public class DatabaseHolder {
         hikariConfig = new HikariConfig();
         hikariConfig.setAutoCommit(true);
         hikariConfig.setMaxLifetime(config.getLong("hikari.max_lifetime", 120000L));
-        hikariConfig.setIdleTimeout(config.getLong("hikari.idle_timeout", 10000L));
         hikariConfig.setConnectionTimeout(config.getLong("hikari.connection_timeout", 5000L));
         hikariConfig.setDriverClassName(driver);
         if (type.equals("sqlite")) {
             hikariConfig.setMinimumIdle(1);
             hikariConfig.setMaximumPoolSize(1);
         } else {
+            hikariConfig.setIdleTimeout(config.getLong("hikari.idle_timeout", 10000L));
             hikariConfig.setMinimumIdle(config.getInt("hikari.minimum_idle", 8));
             hikariConfig.setMaximumPoolSize(config.getInt("hikari.maximum_pool_size", 36));
         }
