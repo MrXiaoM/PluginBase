@@ -12,12 +12,6 @@ import top.mrxiaom.pluginbase.BukkitPlugin;
 import java.io.*;
 
 public class Bytes {
-    public void foo() {
-        Bytes.sendByWhoeverOrNot("BungeeCord", Bytes.build(out -> {
-            out.writeUTF(Bukkit.getVersion());
-            out.writeUTF("Hello World!");
-        }, "Forward", "ALL", "MyChannel"));
-    }
     @FunctionalInterface
     public interface DataConsumer {
         void accept(DataOutputStream out) throws IOException;
