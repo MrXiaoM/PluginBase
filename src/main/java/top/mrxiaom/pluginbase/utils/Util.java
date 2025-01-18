@@ -85,7 +85,7 @@ public class Util {
         String parentPath = parent.getAbsolutePath();
         String path = file.getAbsolutePath();
         if (!path.startsWith(parentPath)) return suffix ? path : nameWithoutSuffix(path);
-        String s = path.substring(parentPath.length());
+        String s = path.substring(parentPath.length()).replace("\\", "/");
         String relation = s.startsWith("/") ? s.substring(1) : s;
         return suffix ? relation : nameWithoutSuffix(relation);
     }
