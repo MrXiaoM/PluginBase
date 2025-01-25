@@ -10,6 +10,9 @@ import top.mrxiaom.pluginbase.utils.Util;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +27,7 @@ public class DatabaseHolder {
     private boolean firstConnectFlag = false;
     private String tablePrefix;
     private String driver;
+    private String version = "unknown";
     protected DatabaseHolder(BukkitPlugin plugin) {
         this.plugin = plugin;
     }
@@ -46,6 +50,10 @@ public class DatabaseHolder {
 
     public boolean isMySQL() {
         return "com.mysql.cj.jdbc.Driver".equals(getDriver());
+    }
+
+    public String getVersion() {
+        return version;
     }
 
     @Nullable
@@ -141,15 +149,25 @@ public class DatabaseHolder {
         if (dataSource != null) dataSource.close();
         dataSource = new HikariDataSource(hikariConfig);
         plugin.getLogger().info("正在连接数据库...");
+        version = "unknown";
         Connection conn = getConnection();
         if (conn == null) plugin.getLogger().warning("无法连接到数据库!");
         else {
-            try {
+            try (Connection connection = conn) {
+                try (PreparedStatement ps = connection.prepareStatement(isSQLite()
+                        ? "SELECT SQLITE_VERSION();"
+                        : "SELECT VERSION();");
+                     ResultSet result = ps.executeQuery()) {
+                    if (result.next()) {
+                        version = result.getString(1);
+                    }
+                } catch (SQLException e) {
+                    plugin.warn("获取目标数据库版本时出现一个错误: " + e);
+                }
                 for (IDatabase db : databases) {
-                    db.reload(conn, getTablePrefix());
+                    db.reload(connection, getTablePrefix());
                 }
                 plugin.getLogger().info("数据库连接成功");
-                if (!conn.isClosed()) conn.close();
             } catch (Throwable t) {
                 plugin.warn("连接数据库时出现一个错误", t);
             }
