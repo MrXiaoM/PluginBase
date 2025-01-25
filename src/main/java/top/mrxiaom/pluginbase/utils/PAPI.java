@@ -14,6 +14,10 @@ public class PAPI {
         isEnabled = Util.isPresent("me.clip.placeholderapi.PlaceholderAPI");
     }
 
+    public static boolean isEnabled() {
+        return isEnabled;
+    }
+
     public static String setPlaceholders(OfflinePlayer player, String s) {
         if (!isEnabled) return s.replace("%player_name%", String.valueOf(player.getName()));
         return PlaceholderAPI.setPlaceholders(player, s);
