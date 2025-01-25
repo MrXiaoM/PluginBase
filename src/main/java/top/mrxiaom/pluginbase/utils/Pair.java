@@ -36,6 +36,14 @@ public class Pair<K, V> {
         return new Pair<>(key, value);
     }
 
+    public static String replace(String s, Iterable<Pair<String, Object>> replacements) {
+        for (Pair<String, Object> replacement : replacements) {
+            if (replacement.key.startsWith("__internal__")) continue;
+            s = s.replace(replacement.key, String.valueOf(replacement.value));
+        }
+        return s;
+    }
+
     public static String replace(String s, Pair<String, Object>[] replacements) {
         for (Pair<String, Object> replacement : replacements) {
             if (replacement.key.startsWith("__internal__")) continue;

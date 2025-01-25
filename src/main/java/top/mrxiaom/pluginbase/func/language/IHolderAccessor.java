@@ -21,6 +21,9 @@ public interface IHolderAccessor {
     default String str(Pair... replacements) {
         return holder().str(replacements);
     }
+    default String str(Iterable<Pair<String, Object>> replacements) {
+        return holder().str(replacements);
+    }
     default List<String> list() {
         return holder().list();
     }
@@ -34,6 +37,9 @@ public interface IHolderAccessor {
         }
         return holder().list(array);
     }
+    default List<String> list(Iterable<Pair<String, Object>> replacements) {
+        return holder().list(replacements);
+    }
     default boolean t(CommandSender receiver) {
         ColorHelper.parseAndSend(receiver, str());
         return true;
@@ -46,6 +52,10 @@ public interface IHolderAccessor {
         ColorHelper.parseAndSend(receiver, str(replacements));
         return true;
     }
+    default boolean t(CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
+        ColorHelper.parseAndSend(receiver, str(replacements));
+        return true;
+    }
     default boolean tm(CommandSender receiver) {
         AdventureUtil.sendMessage(receiver, str());
         return true;
@@ -55,6 +65,10 @@ public interface IHolderAccessor {
         return true;
     }
     default boolean tm(CommandSender receiver, Pair... replacements) {
+        AdventureUtil.sendMessage(receiver, str(replacements));
+        return true;
+    }
+    default boolean tm(CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
         AdventureUtil.sendMessage(receiver, str(replacements));
         return true;
     }

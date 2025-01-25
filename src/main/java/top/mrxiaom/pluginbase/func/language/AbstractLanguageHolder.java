@@ -52,6 +52,9 @@ public abstract class AbstractLanguageHolder {
     public final String str(Pair<String, Object>... replacements) {
         return replace(str(), replacements);
     }
+    public String str(Iterable<Pair<String, Object>> replacements) {
+        return replace(str(), replacements);
+    }
     public List<String> list() {
         LanguageManager lang = getLanguageManager();
         if (isList) {
@@ -69,7 +72,12 @@ public abstract class AbstractLanguageHolder {
     @SafeVarargs
     public final List<String> list(Pair<String, Object>... replacements) {
         return list().stream()
-                .map(it -> replace(str(), replacements))
+                .map(it -> replace(it, replacements))
+                .collect(Collectors.toList());
+    }
+    public List<String> list(Iterable<Pair<String, Object>> replacements) {
+        return list().stream()
+                .map(it -> replace(it, replacements))
                 .collect(Collectors.toList());
     }
 
@@ -104,6 +112,16 @@ public abstract class AbstractLanguageHolder {
         return true;
     }
     /**
+     * 发送消息
+     * @param receiver 消息接收者
+     * @param replacements 变量替换键值对
+     * @return 用于命令快捷返回，恒返回 true
+     */
+    public boolean t(CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
+        ColorHelper.parseAndSend(receiver, str(replacements));
+        return true;
+    }
+    /**
      * 以 MiniMessage 格式发送消息
      * @param receiver 消息接收者
      * @return 用于命令快捷返回，恒返回 true
@@ -130,6 +148,16 @@ public abstract class AbstractLanguageHolder {
      */
     @SafeVarargs
     public final boolean tm(CommandSender receiver, Pair<String, Object>... replacements) {
+        AdventureUtil.sendMessage(receiver, str(replacements));
+        return true;
+    }
+    /**
+     * 以 MiniMessage 格式发送消息
+     * @param receiver 消息接收者
+     * @param replacements 变量替换键值对
+     * @return 用于命令快捷返回，恒返回 true
+     */
+    public boolean tm(CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
         AdventureUtil.sendMessage(receiver, str(replacements));
         return true;
     }
