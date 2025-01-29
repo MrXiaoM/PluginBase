@@ -72,7 +72,7 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
         return menus.get(id);
     }
 
-    public abstract class Gui implements IGui, InventoryHolder {
+    public static abstract class Gui<M extends IModel> implements IGui, InventoryHolder {
         protected Player player;
         protected M model;
         protected String title;
