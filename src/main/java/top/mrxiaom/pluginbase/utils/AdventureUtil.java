@@ -9,9 +9,12 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class AdventureUtil {
@@ -45,16 +48,42 @@ public class AdventureUtil {
         return miniMessage;
     }
 
+    @NotNull
     public static Component miniMessage(String s) {
         return s == null
                 ? Component.empty()
                 : miniMessage.deserialize(legacyToMiniMessage(s));
     }
 
+    @NotNull
     public static String miniMessage(Component component) {
         return component == null
                 ? ""
                 : miniMessage.serialize(component);
+    }
+
+    @NotNull
+    public static List<Component> miniMessage(List<String> list) {
+        if (list == null) return new ArrayList<>();
+        List<Component> components = new ArrayList<>();
+        for (String s : list) {
+            components.add(s == null
+                    ? Component.empty()
+                    : miniMessage.deserialize(legacyToMiniMessage(s)));
+        }
+        return components;
+    }
+
+    @NotNull
+    public static List<String> miniMessage_(List<Component> components) {
+        if (components == null) return new ArrayList<>();
+        List<String> list = new ArrayList<>();
+        for (Component component : components) {
+            list.add(component == null
+                    ? ""
+                    : miniMessage.serialize(component));
+        }
+        return list;
     }
 
     public static void sendTitle(Player player, String title, String subTitle, int fadeIn, int stay, int fadeOut) {

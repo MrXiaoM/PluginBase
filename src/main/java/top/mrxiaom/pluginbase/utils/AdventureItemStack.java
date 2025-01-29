@@ -35,7 +35,7 @@ public class AdventureItemStack {
         if (material.equals(Material.AIR)) return new ItemStack(material);
         ItemStack item = new ItemStack(material, 1);
         setItemDisplayName(item, name);
-        setItemLore(item, lore);
+        setItemLoreMiniMessage(item, lore);
         if (customModelData != null) setCustomModelData(item, customModelData);
         return item;
     }
@@ -48,6 +48,17 @@ public class AdventureItemStack {
             setItemDisplayNameByJson(item, json);
         } else {
             String legacy = LegacyComponentSerializer.legacySection().serialize(displayName);
+            setItemDisplayNameByJson(item, legacy);
+        }
+    }
+
+    public static void setItemDisplayName(ItemStack item, Component name) {
+        if (item == null) return;
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_13_R1)) {
+            String json = GsonComponentSerializer.gson().serialize(name);
+            setItemDisplayNameByJson(item, json);
+        } else {
+            String legacy = LegacyComponentSerializer.legacySection().serialize(name);
             setItemDisplayNameByJson(item, legacy);
         }
     }
@@ -98,11 +109,11 @@ public class AdventureItemStack {
         }
     }
 
-    public static void setItemLore(ItemStack item, String... lore) {
-        setItemLore(item, Lists.newArrayList(lore));
+    public static void setItemLoreMiniMessage(ItemStack item, String... lore) {
+        setItemLoreMiniMessage(item, Lists.newArrayList(lore));
     }
 
-    public static void setItemLore(ItemStack item, List<String> lore) {
+    public static void setItemLoreMiniMessage(ItemStack item, List<String> lore) {
         if (item == null) return;
         List<String> json = new ArrayList<>();
         if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_14_R1)) {
@@ -114,6 +125,21 @@ public class AdventureItemStack {
             for (String s : lore) {
                 Component line = miniMessage(s);
                 json.add(LegacyComponentSerializer.legacySection().serialize(line));
+            }
+        }
+        setItemLoreByJson(item, json);
+    }
+
+    public static void setItemLore(ItemStack item, List<Component> lore) {
+        if (item == null) return;
+        List<String> json = new ArrayList<>();
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_14_R1)) {
+            for (Component component : lore) {
+                json.add(GsonComponentSerializer.gson().serialize(component));
+            }
+        } else {
+            for (Component component : lore) {
+                json.add(LegacyComponentSerializer.legacySection().serialize(component));
             }
         }
         setItemLoreByJson(item, json);
