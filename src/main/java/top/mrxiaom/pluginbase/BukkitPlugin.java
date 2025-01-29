@@ -305,4 +305,8 @@ public abstract class BukkitPlugin extends JavaPlugin {
             warn("保存资源文件 " + path + " 时出错", e);
         }
     }
+
+    public File resolve(String path) {
+        return path.startsWith("./") ? new File(getDataFolder(), path.substring(2)) : new File(path);
+    }
 }
