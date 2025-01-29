@@ -68,7 +68,7 @@ public class LoadedIcon {
         }
         if (!lore.isEmpty()) {
             List<String> loreList = PAPI.setPlaceholders(player, fit(loreModifier, lore));
-            if (adventure) AdventureItemStack.setItemLore(item, loreList);
+            if (adventure) AdventureItemStack.setItemLoreMiniMessage(item, loreList);
             else ItemStackUtil.setItemLore(item, loreList);
         }
         if (glow) ItemStackUtil.setGlow(item);
