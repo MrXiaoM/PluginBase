@@ -38,13 +38,13 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
         menus.clear();
     }
 
-    public void loadConfig(File file, String id, IModelProvider<AbstractGuisModule<T, M>, M> provider) {
+    public <P extends AbstractGuisModule<T, M>> void loadConfig(P parent, File file, String id, IModelProvider<P, M> provider) {
         if (menus.containsKey(id)) {
             warn(warningPrefix + "重复菜单 " + id);
             return;
         }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        M loaded = provider.load(this, config, id);
+        M loaded = provider.load(parent, config, id);
         if (loaded != null) {
             menus.put(id, loaded);
         }
