@@ -135,6 +135,45 @@ public class Util {
         }
         return value;
     }
+
+    public static Double getPercentAsDouble(ConfigurationSection section, String key, Double def) {
+        return getPercentAsDouble(section.getString(key, null), def);
+    }
+
+    public static Float getPercentAsFloat(ConfigurationSection section, String key, Float def) {
+        return getPercentAsFloat(section.getString(key, null), def);
+    }
+
+    public static Double getPercentAsDouble(String s, Double def) {
+        if (s == null) return def;
+        try {
+            if (s.endsWith("%")) {
+                String str = s.substring(0, s.length() - 1);
+                double value = Double.parseDouble(str);
+                return value / 100.0;
+            } else {
+                return Double.parseDouble(s);
+            }
+        } catch (NumberFormatException e) {
+            return def;
+        }
+    }
+
+    public static Float getPercentAsFloat(String s, Float def) {
+        if (s == null) return def;
+        try {
+            if (s.endsWith("%")) {
+                String str = s.substring(0, s.length() - 1);
+                float value = Float.parseFloat(str);
+                return value / 100.0f;
+            } else {
+                return Float.parseFloat(s);
+            }
+        } catch (NumberFormatException e) {
+            return def;
+        }
+    }
+
     public static Double getDouble(ConfigurationSection section, String key, Double def) {
         return section.contains(key) && section.isDouble(key) ? Double.valueOf(section.getDouble(key)) : def;
     }
@@ -313,6 +352,15 @@ public class Util {
             if (names.contains(player.getName())) players.add(player);
         }
         return players;
+    }
+
+    public static Optional<Float> parseFloat(String s) {
+        if (s == null) return Optional.empty();
+        try {
+            return Optional.of(Float.parseFloat(s));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
     }
 
     public static Optional<Double> parseDouble(String s) {
