@@ -1,7 +1,10 @@
 package top.mrxiaom.pluginbase.func.gui.actions;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.utils.Pair;
+
+import java.util.List;
 
 public class ActionClose implements IAction {
     public static final IActionProvider PROVIDER;
@@ -14,7 +17,7 @@ public class ActionClose implements IAction {
     }
 
     @Override
-    public void run(Player player, Pair<String, Object>[] replacements) {
+    public void run(Player player, @Nullable List<Pair<String, Object>> replacements) {
         player.closeInventory();
     }
 }

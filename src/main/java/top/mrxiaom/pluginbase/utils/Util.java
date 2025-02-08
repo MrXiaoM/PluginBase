@@ -1,7 +1,6 @@
 package top.mrxiaom.pluginbase.utils;
 
 import com.google.common.collect.Lists;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,6 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.BukkitPlugin;
+import top.mrxiaom.pluginbase.func.gui.actions.IAction;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +31,8 @@ import java.util.jar.JarFile;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static top.mrxiaom.pluginbase.func.AbstractGuiModule.loadActions;
 
 @SuppressWarnings({"unused"})
 public class Util {
@@ -256,21 +258,13 @@ public class Util {
         return sw.toString();
     }
 
+    @Deprecated
     @SafeVarargs
     public static void runCommands(Player player, List<String> list, Pair<String, Object>... replacements) {
-        for (String s : ColorHelper.parseColor(PlaceholderAPI.setPlaceholders(player, list))) {
-            for (Pair<String, Object> pair : replacements) {
-                s = s.replace(pair.getKey(), String.valueOf(pair.getValue()));
-            }
-            if (s.startsWith("[console]")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.substring(9).trim());
-            }
-            if (s.startsWith("[player]")) {
-                Bukkit.dispatchCommand(player, s.substring(8).trim());
-            }
-            if (s.startsWith("[message]")) {
-                player.sendMessage(s.substring(9).trim());
-            }
+        List<IAction> actions = loadActions(list);
+        List<Pair<String, Object>> args = Lists.newArrayList(replacements);
+        for (IAction action : actions) {
+            action.run(player, args);
         }
     }
 

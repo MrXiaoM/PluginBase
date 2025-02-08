@@ -1,5 +1,6 @@
 package top.mrxiaom.pluginbase.func.gui;
 
+import com.google.common.collect.Lists;
 import de.tr7zw.changeme.nbtapi.NBT;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -111,8 +112,9 @@ public class LoadedIcon {
             default:
                 return;
         }
-        Pair<String, Object>[] args = Pair.array(1);
-        args[0] = Pair.of("__internal__loaded_icon", this);
+        List<Pair<String, Object>> args = Lists.newArrayList(
+                Pair.of("__internal__loaded_icon", this)
+        );
         for (IAction action : actions) {
             action.run(player, args);
         }

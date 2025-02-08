@@ -36,7 +36,8 @@ public class Pair<K, V> {
         return new Pair<>(key, value);
     }
 
-    public static String replace(String s, Iterable<Pair<String, Object>> replacements) {
+    public static String replace(String s, @Nullable Iterable<Pair<String, Object>> replacements) {
+        if (replacements == null) return s;
         for (Pair<String, Object> replacement : replacements) {
             if (replacement.key.startsWith("__internal__")) continue;
             s = s.replace(replacement.key, String.valueOf(replacement.value));
@@ -44,7 +45,8 @@ public class Pair<K, V> {
         return s;
     }
 
-    public static String replace(String s, Pair<String, Object>[] replacements) {
+    public static String replace(String s, Pair<String, Object> @Nullable [] replacements) {
+        if (replacements == null) return s;
         for (Pair<String, Object> replacement : replacements) {
             if (replacement.key.startsWith("__internal__")) continue;
             s = s.replace(replacement.key, String.valueOf(replacement.value));

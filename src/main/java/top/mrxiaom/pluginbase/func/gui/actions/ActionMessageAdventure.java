@@ -1,9 +1,12 @@
 package top.mrxiaom.pluginbase.func.gui.actions;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Pair;
+
+import java.util.List;
 
 public class ActionMessageAdventure implements IAction {
     public static final IActionProvider PROVIDER = s -> {
@@ -21,7 +24,7 @@ public class ActionMessageAdventure implements IAction {
     }
 
     @Override
-    public void run(Player player, Pair<String, Object>[] replacements) {
+    public void run(Player player, @Nullable List<Pair<String, Object>> replacements) {
         String s = Pair.replace(message, replacements);
         AdventureUtil.sendMessage(player, PAPI.setPlaceholders(player, s));
     }

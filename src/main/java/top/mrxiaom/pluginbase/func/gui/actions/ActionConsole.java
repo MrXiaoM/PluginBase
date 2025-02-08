@@ -2,9 +2,12 @@ package top.mrxiaom.pluginbase.func.gui.actions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.utils.ColorHelper;
 import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Pair;
+
+import java.util.List;
 
 public class ActionConsole implements IAction {
     public static final IActionProvider PROVIDER = s -> {
@@ -22,7 +25,7 @@ public class ActionConsole implements IAction {
     }
 
     @Override
-    public void run(Player player, Pair<String, Object>[] replacements) {
+    public void run(Player player, @Nullable List<Pair<String, Object>> replacements) {
         String s = Pair.replace(command, replacements);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PAPI.setPlaceholders(player, s));
     }
