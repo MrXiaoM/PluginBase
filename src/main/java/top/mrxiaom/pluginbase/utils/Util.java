@@ -258,6 +258,11 @@ public class Util {
         return sw.toString();
     }
 
+    @SuppressWarnings({"UnstableApiUsage"})
+    public static void submitInvUpdate(Player player) {
+        player.updateInventory();
+    }
+
     @Deprecated
     @SafeVarargs
     public static void runCommands(Player player, List<String> list, Pair<String, Object>... replacements) {
