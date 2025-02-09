@@ -20,6 +20,7 @@ import top.mrxiaom.pluginbase.gui.IGui;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
 public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IModel> extends AbstractModule<T> {
@@ -109,7 +110,9 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
                 }
                 int appearTimes = appearMap.getOrDefault(id, 0) + 1;
                 appearMap.put(id, appearTimes);
-                ItemStack item = model.applyMainIcon(this, player, id, i, appearTimes);
+                AtomicBoolean ignore = new AtomicBoolean(false);
+                ItemStack item = model.applyMainIcon(this, player, id, i, appearTimes, ignore);
+                if (ignore.get()) continue;
                 if (item != null) {
                     setItem.accept(i, item);
                     continue;

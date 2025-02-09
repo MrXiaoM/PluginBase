@@ -20,6 +20,7 @@ import top.mrxiaom.pluginbase.gui.IGui;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
 public abstract class AbstractGuiModule<T extends BukkitPlugin> extends AbstractModule<T> {
@@ -84,7 +85,12 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
     protected void reloadMenuConfig(YamlConfiguration config) {
     }
     protected abstract void loadMainIcon(ConfigurationSection section, String id, LoadedIcon icon);
-    protected abstract ItemStack applyMainIcon(IGui instance, Player player, char id, int index, int appearTimes);
+    protected ItemStack applyMainIcon(IGui instance, Player player, char id, int index, int appearTimes) {
+        return null;
+    }
+    protected ItemStack applyMainIcon(IGui instance, Player player, char id, int index, int appearTimes, AtomicBoolean ignore) {
+        return applyMainIcon(instance, player, id, index, appearTimes);
+    }
 
     public static char[] getInventory(MemorySection config, String key) {
         return String.join("", config.getStringList(key)).toCharArray();
@@ -115,7 +121,9 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
                 }
                 int appearTimes = appearMap.getOrDefault(id, 0) + 1;
                 appearMap.put(id, appearTimes);
-                ItemStack item = applyMainIcon(this, player, id, i, appearTimes);
+                AtomicBoolean ignore = new AtomicBoolean(false);
+                ItemStack item = applyMainIcon(this, player, id, i, appearTimes, ignore);
+                if (ignore.get()) continue;
                 if (item != null) {
                     setItem.accept(i, item);
                     continue;
