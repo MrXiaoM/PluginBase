@@ -171,9 +171,13 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
         List<URL> urls = new ArrayList<>();
         File[] files = librariesFolder.listFiles();
-        if (files != null) for (File file : files) try {
-            urls.add(file.toURI().toURL());
-        } catch (Throwable ignored) {
+        if (files != null) for (File file : files) {
+            if (file.isDirectory()) continue;
+            try {
+                urls.add(file.toURI().toURL());
+                getLogger().info("加载依赖库 " + file.getName());
+            } catch (Throwable ignored) {
+            }
         }
         if (urls.isEmpty()) {
             librariesClassLoader = null;
