@@ -10,6 +10,7 @@ import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
 import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.func.GuiManager;
 import top.mrxiaom.pluginbase.func.LanguageManager;
+import top.mrxiaom.pluginbase.utils.ClassLoaderWrapper;
 import top.mrxiaom.pluginbase.utils.Util;
 
 import java.io.File;
@@ -149,7 +150,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
     private final List<Class<? extends AbstractPluginHolder<?>>> modulesToRegister = new ArrayList<>();
     private boolean pluginEnabled = false;
     public final Options options;
-    private URLClassLoader librariesClassLoader;
+    protected final ClassLoaderWrapper classLoader;
     public BukkitPlugin(OptionsBuilder builder) {
         this(builder.build());
     }
@@ -158,6 +159,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
             throw new IllegalStateException("PluginBase 依赖没有 relocate 到插件包，插件无法正常工作，请联系开发者解决该问题\n参考文档: https://github.com/MrXiaoM/PluginBase");
         }
         this.options = options;
+        this.classLoader = new ClassLoaderWrapper((URLClassLoader) getClassLoader());
         if (this.options.libraries()) {
             loadLibraries();
         }
@@ -169,33 +171,16 @@ public abstract class BukkitPlugin extends JavaPlugin {
             Util.mkdirs(librariesFolder);
             return;
         }
-        List<URL> urls = new ArrayList<>();
         File[] files = librariesFolder.listFiles();
         if (files != null) for (File file : files) {
             if (file.isDirectory()) continue;
             try {
-                urls.add(file.toURI().toURL());
-                getLogger().info("加载依赖库 " + file.getName());
-            } catch (Throwable ignored) {
+                URL url = file.toURI().toURL();
+                this.classLoader.addURL(url);
+                info("已加载依赖库 " + file.getName());
+            } catch (Throwable t) {
+                warn("无法加载依赖库 " + file.getName(), t);
             }
-        }
-        if (urls.isEmpty()) {
-            librariesClassLoader = null;
-        } else {
-            URL[] array = new URL[urls.size()];
-            for (int i = 0; i < urls.size(); i++) {
-                array[i] = urls.get(i);
-            }
-            librariesClassLoader = new URLClassLoader(array, super.getClassLoader());
-            urls.clear();
-        }
-    }
-
-    public ClassLoader classLoader() {
-        if (librariesClassLoader == null) {
-            return super.getClassLoader();
-        } else {
-            return librariesClassLoader;
         }
     }
 
@@ -316,23 +301,19 @@ public abstract class BukkitPlugin extends JavaPlugin {
         pluginEnabled = false;
         afterDisable();
 
-        if (librariesClassLoader != null) try {
-            List<Driver> toRemove = new ArrayList<>();
-            Enumeration<Driver> drivers = DriverManager.getDrivers();
-            while (drivers.hasMoreElements()) {
-                Driver driver = drivers.nextElement();
-                if (driver.getClass().getClassLoader().equals(librariesClassLoader)) {
-                    toRemove.add(driver);
-                }
+        List<Driver> toRemove = new ArrayList<>();
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            Driver driver = drivers.nextElement();
+            if (driver.getClass().getClassLoader().equals(getClassLoader())) {
+                toRemove.add(driver);
             }
-            for (Driver driver : toRemove) try {
-                DriverManager.deregisterDriver(driver);
-            } catch (SQLException ignored) {
-            }
-            toRemove.clear();
-            librariesClassLoader.close();
-        } catch (IOException ignored) {
         }
+        for (Driver driver : toRemove) try {
+            DriverManager.deregisterDriver(driver);
+        } catch (SQLException ignored) {
+        }
+        toRemove.clear();
     }
 
     @Override
@@ -350,6 +331,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
 
         reloadAllConfig(config);
+    }
+
+    public void info(String msg) {
+        getLogger().log(Level.INFO, msg);
     }
 
     public void warn(String msg, Throwable t) {

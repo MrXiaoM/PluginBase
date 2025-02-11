@@ -12,9 +12,9 @@ import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.List;
 
+import static top.mrxiaom.pluginbase.utils.Util.isPresent;
 import static top.mrxiaom.pluginbase.utils.Util.stackTraceToString;
 
 public class DatabaseHolder {
@@ -70,14 +70,6 @@ public class DatabaseHolder {
             plugin.saveResource("database.yml", true);
         }
         reloadFromFile(file);
-    }
-    private boolean isPresent(String className) {
-        try {
-            plugin.classLoader().loadClass(className);
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
     }
     private void reloadFromFile(File file) {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -164,25 +156,10 @@ public class DatabaseHolder {
     private String checkDriver(String type, String driver) {
         if (!isPresent(driver)) {
             plugin.warn("预料中的错误: 未找到 " + type + " JDBC Driver: " + driver);
-            plugin.warn("正在卸载插件，请使用最新版 Spigot 或其衍生服务端");
             Bukkit.getPluginManager().disablePlugin(plugin);
             return null;
         }
-        Enumeration<Driver> drivers = DriverManager.getDrivers();
-        while (drivers.hasMoreElements()) {
-            Driver d = drivers.nextElement();
-            if (d.getClass().getName().equals(driver)) {
-                return driver;
-            }
-        }
-        try {
-            Class<?> clazz = plugin.classLoader().loadClass(driver);
-            clazz.getConstructor().newInstance();
-            return driver;
-        } catch (Throwable t) {
-            plugin.warn("数据库驱动 " + driver + " 注册失败!", t);
-            return null;
-        }
+        return driver;
     }
 
     public void reconnect() {
