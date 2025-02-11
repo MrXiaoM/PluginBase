@@ -6,15 +6,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.database.IDatabase;
-import top.mrxiaom.pluginbase.utils.Util;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.lang.reflect.Field;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 
 import static top.mrxiaom.pluginbase.utils.Util.stackTraceToString;
@@ -49,7 +47,7 @@ public class DatabaseHolder {
     }
 
     public boolean isMySQL() {
-        return "com.mysql.cj.jdbc.Driver".equals(getDriver());
+        return "com.mysql.cj.jdbc.Driver".equals(getDriver()) || "com.mysql.jdbc.Driver".equals(getDriver());
     }
 
     public String getVersion() {
@@ -73,6 +71,14 @@ public class DatabaseHolder {
         }
         reloadFromFile(file);
     }
+    private boolean isPresent(String className) {
+        try {
+            plugin.classLoader().loadClass(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
     private void reloadFromFile(File file) {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         if (config.contains("goto")) {
@@ -86,7 +92,24 @@ public class DatabaseHolder {
         String type = config.getString("type", "sqlite").toLowerCase();
         switch (type) {
             case "mysql":
-                driver = checkDriver("MySQL", "com.mysql.cj.jdbc.Driver");
+                int mysqlVersion = config.getInt("mysql.version", 8);
+                if (mysqlVersion == 8 && isPresent("com.mysql.cj.jdbc.Driver")) {
+                    driver = checkDriver("MySQL", "com.mysql.cj.jdbc.Driver");
+                } else {
+                    driver = checkDriver("MySQL", "com.mysql.jdbc.Driver");
+                    if (driver != null) {
+                        if (mysqlVersion == 8) {
+                            driver = null;
+                            plugin.warn("你在数据库配置中指定了 MySQL 版本为 8，但插件只找到了 MySQL 5 的数据库驱动");
+                            plugin.warn("请从以下链接下载 MySQL JDBC 8，放入插件配置的 libraries 文件夹，并重启服务器");
+                            plugin.warn("https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.0.33/mysql-connector-j-8.0.33.jar");
+                        }
+                    } else if (mysqlVersion == 5) {
+                        plugin.warn("你在数据库配置中指定了 MySQL 版本为 5，但插件未找到相应的数据库驱动");
+                        plugin.warn("请从以下链接下载 MySQL JDBC 5，放入插件配置的 libraries 文件夹，并重启服务器");
+                        plugin.warn("https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.49/mysql-connector-java-5.1.49.jar");
+                    }
+                }
                 break;
             case "sqlite":
             default:
@@ -100,7 +123,15 @@ public class DatabaseHolder {
         hikariConfig.setAutoCommit(true);
         hikariConfig.setMaxLifetime(config.getLong("hikari.max_lifetime", 120000L));
         hikariConfig.setConnectionTimeout(config.getLong("hikari.connection_timeout", 5000L));
-        hikariConfig.setDriverClassName(driver);
+        try {
+            Class<?> clazz = hikariConfig.getClass();
+            Field field = clazz.getDeclaredField("driverClassName");
+            field.setAccessible(true);
+            field.set(hikariConfig, driver);
+        } catch (ReflectiveOperationException e) {
+            plugin.warn("设置数据库驱动时出现一个异常", e);
+            return;
+        }
         if (type.equals("sqlite")) {
             hikariConfig.setMinimumIdle(1);
             hikariConfig.setMaximumPoolSize(1);
@@ -131,13 +162,27 @@ public class DatabaseHolder {
     }
 
     private String checkDriver(String type, String driver) {
-        if (!Util.isPresent(driver)) {
+        if (!isPresent(driver)) {
             plugin.warn("预料中的错误: 未找到 " + type + " JDBC Driver: " + driver);
             plugin.warn("正在卸载插件，请使用最新版 Spigot 或其衍生服务端");
             Bukkit.getPluginManager().disablePlugin(plugin);
             return null;
         }
-        return driver;
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            Driver d = drivers.nextElement();
+            if (d.getClass().getName().equals(driver)) {
+                return driver;
+            }
+        }
+        try {
+            Class<?> clazz = plugin.classLoader().loadClass(driver);
+            clazz.getConstructor().newInstance();
+            return driver;
+        } catch (Throwable t) {
+            plugin.warn("数据库驱动 " + driver + " 注册失败!", t);
+            return null;
+        }
     }
 
     public void reconnect() {

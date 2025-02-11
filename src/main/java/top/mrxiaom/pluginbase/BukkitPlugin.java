@@ -16,7 +16,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -32,6 +37,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         protected String scanPackage;
         protected List<String> scanIgnore;
         protected boolean adventure;
+        protected boolean libraries;
 
         protected DatabaseHolder databaseHolder;
         protected EconomyHolder economyHolder;
@@ -69,6 +75,9 @@ public abstract class BukkitPlugin extends JavaPlugin {
         public boolean adventure() {
             return adventure;
         }
+        public boolean libraries() {
+            return libraries;
+        }
     }
     public static class OptionsBuilder {
         protected boolean bungee;
@@ -78,6 +87,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         protected String scanPackage = null;
         protected List<String> scanIgnore = new ArrayList<>();
         protected boolean adventure;
+        protected boolean libraries;
         private Options build() {
             return new Options() {{
                 OptionsBuilder builder = OptionsBuilder.this;
@@ -88,6 +98,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
                 scanPackage = builder.scanPackage;
                 scanIgnore = builder.scanIgnore;
                 adventure = builder.adventure;
+                libraries = builder.libraries;
             }};
         }
         public OptionsBuilder bungee(boolean value) {
@@ -122,6 +133,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
             this.adventure = adventure;
             return this;
         }
+        public OptionsBuilder libraries(boolean libraries) {
+            this.libraries = libraries;
+            return this;
+        }
     }
     protected static OptionsBuilder options() {
         return new OptionsBuilder();
@@ -134,6 +149,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
     private final List<Class<? extends AbstractPluginHolder<?>>> modulesToRegister = new ArrayList<>();
     private boolean pluginEnabled = false;
     public final Options options;
+    private URLClassLoader librariesClassLoader;
     public BukkitPlugin(OptionsBuilder builder) {
         this(builder.build());
     }
@@ -142,6 +158,41 @@ public abstract class BukkitPlugin extends JavaPlugin {
             throw new IllegalStateException("PluginBase 依赖没有 relocate 到插件包，插件无法正常工作，请联系开发者解决该问题\n参考文档: https://github.com/MrXiaoM/PluginBase");
         }
         this.options = options;
+        if (this.options.libraries()) {
+            loadLibraries();
+        }
+    }
+
+    protected void loadLibraries() {
+        File librariesFolder = new File(getDataFolder(), "libraries");
+        if (!librariesFolder.exists()) {
+            Util.mkdirs(librariesFolder);
+            return;
+        }
+        List<URL> urls = new ArrayList<>();
+        File[] files = librariesFolder.listFiles();
+        if (files != null) for (File file : files) try {
+            urls.add(file.toURI().toURL());
+        } catch (Throwable ignored) {
+        }
+        if (urls.isEmpty()) {
+            librariesClassLoader = null;
+        } else {
+            URL[] array = new URL[urls.size()];
+            for (int i = 0; i < urls.size(); i++) {
+                array[i] = urls.get(i);
+            }
+            librariesClassLoader = new URLClassLoader(array, super.getClassLoader());
+            urls.clear();
+        }
+    }
+
+    public ClassLoader classLoader() {
+        if (librariesClassLoader == null) {
+            return super.getClassLoader();
+        } else {
+            return librariesClassLoader;
+        }
     }
 
     public Connection getConnection() {
@@ -260,6 +311,24 @@ public abstract class BukkitPlugin extends JavaPlugin {
         options.disable();
         pluginEnabled = false;
         afterDisable();
+
+        if (librariesClassLoader != null) try {
+            List<Driver> toRemove = new ArrayList<>();
+            Enumeration<Driver> drivers = DriverManager.getDrivers();
+            while (drivers.hasMoreElements()) {
+                Driver driver = drivers.nextElement();
+                if (driver.getClass().getClassLoader().equals(librariesClassLoader)) {
+                    toRemove.add(driver);
+                }
+            }
+            for (Driver driver : toRemove) try {
+                DriverManager.deregisterDriver(driver);
+            } catch (SQLException ignored) {
+            }
+            toRemove.clear();
+            librariesClassLoader.close();
+        } catch (IOException ignored) {
+        }
     }
 
     @Override

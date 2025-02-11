@@ -17,6 +17,7 @@ hikari:
   maximum_pool_size: 36
 # MySQL 设置
 mysql:
+  version: 8
   host: localhost
   port: 3306
   user: 'root'
