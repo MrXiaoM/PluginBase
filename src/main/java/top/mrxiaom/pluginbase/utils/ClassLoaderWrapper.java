@@ -40,14 +40,16 @@ public class ClassLoaderWrapper {
             Class<?> clazz = ucp.getClass();
             Field fieldUrls = defineUrlsField(clazz);
             Field fieldPath = clazz.getDeclaredField("path");
-            Collection<URL> urls = (Collection<URL>) unsafe.getObject(ucp, unsafe.objectFieldOffset(fieldUrls));
-            Collection<URL> path = (Collection<URL>) unsafe.getObject(ucp, unsafe.objectFieldOffset(fieldPath));
-            return url -> {
-                synchronized (urls) {
-                    urls.add(url);
-                    path.add(url);
-                }
-            };
+            if (fieldUrls != null) {
+                Collection<URL> urls = (Collection<URL>) unsafe.getObject(ucp, unsafe.objectFieldOffset(fieldUrls));
+                Collection<URL> path = (Collection<URL>) unsafe.getObject(ucp, unsafe.objectFieldOffset(fieldPath));
+                return url -> {
+                    synchronized (urls) {
+                        urls.add(url);
+                        path.add(url);
+                    }
+                };
+            }
         } catch (Exception ignored) {
         }
         return url -> {
