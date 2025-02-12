@@ -50,7 +50,7 @@ public class ClassLoaderWrapper {
                     }
                 };
             }
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
         return url -> {
             throw new UnsupportedOperationException("当前环境不支持 addURL");
