@@ -33,7 +33,7 @@ dependencies {
     compileOnly("net.kyori:adventure-api:4.17.0")
     compileOnly("net.kyori:adventure-platform-bukkit:4.3.4")
     compileOnly("net.kyori:adventure-text-minimessage:4.17.0")
-    compileOnly("de.tr7zw:item-nbt-api:2.13.2")
+    compileOnly("de.tr7zw:item-nbt-api:2.14.1")
 
     implementation("org.jetbrains:annotations:21.0.0")
 }
