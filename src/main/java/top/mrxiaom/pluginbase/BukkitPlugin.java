@@ -158,6 +158,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         if (className.equals("group.pluginbase.BukkitPlugin".replace("group", "top.mrxiaom"))) {
             throw new IllegalStateException("PluginBase 依赖没有 relocate 到插件包，插件无法正常工作，请联系开发者解决该问题\n参考文档: https://github.com/MrXiaoM/PluginBase");
         }
+        instance = this;
         this.options = options;
         this.classLoader = new ClassLoaderWrapper((URLClassLoader) getClassLoader());
         if (this.options.libraries() || this.options.database) {
@@ -245,7 +246,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
     @Deprecated
     @SuppressWarnings({"unchecked"})
     public void onEnable() {
-        Util.init(instance = this);
+        Util.init(this);
         options.enable(this);
 
         if (options.vaultEconomy && options.economyHolder != null) {
@@ -318,12 +319,18 @@ public abstract class BukkitPlugin extends JavaPlugin {
         toRemove.clear();
     }
 
+    protected void beforeReloadConfig(FileConfiguration config) {
+
+    }
+
     @Override
     public void reloadConfig() {
         this.saveDefaultConfig();
         super.reloadConfig();
 
         FileConfiguration config = getConfig();
+
+        beforeReloadConfig(config);
 
         if (options.database && options.databaseHolder != null) {
             options.databaseHolder.reloadConfig();
@@ -345,6 +352,18 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     public void warn(String msg) {
         getLogger().log(Level.WARNING, msg);
+    }
+
+    public void error(String msg, Throwable t) {
+        getLogger().log(Level.SEVERE, msg, t);
+    }
+
+    public void error(String msg) {
+        getLogger().log(Level.SEVERE, msg);
+    }
+
+    public void saveResource(String path) {
+        saveResource(path, new File(getDataFolder(), path));
     }
     
     public void saveResource(String path, File file) {
