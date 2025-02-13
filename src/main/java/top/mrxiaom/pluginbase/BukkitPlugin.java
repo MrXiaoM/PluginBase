@@ -169,22 +169,40 @@ public abstract class BukkitPlugin extends JavaPlugin {
     protected void loadLibraries() {
         File librariesFolder = new File(getDataFolder(), "libraries");
         if (!librariesFolder.exists()) {
-            if (options.libraries()) {
-                Util.mkdirs(librariesFolder);
-            }
-            return;
+            createLibrariesFolder(librariesFolder);
         }
-        File[] files = librariesFolder.listFiles();
-        if (files != null) for (File file : files) {
+        List<File> files = listLibraries(librariesFolder);
+        for (File file : files) {
             if (file.isDirectory()) continue;
             try {
                 URL url = file.toURI().toURL();
                 this.classLoader.addURL(url);
                 info("已加载依赖库 " + file.getName());
+                afterLoadLib(file);
             } catch (Throwable t) {
                 warn("无法加载依赖库 " + file.getName(), t);
             }
         }
+    }
+
+    protected void createLibrariesFolder(File folder) {
+        if (options.libraries()) {
+            Util.mkdirs(folder);
+        }
+    }
+
+    protected List<File> listLibraries(File folder) {
+        List<File> list = new ArrayList<>();
+        File[] files = folder.isDirectory() ? folder.listFiles() : null;
+        if (files != null) for (File file : files) {
+            if (file.isDirectory() || !file.getName().endsWith(".jar")) continue;
+            list.add(file);
+        }
+        return list;
+    }
+
+    protected void afterLoadLib(File file) {
+
     }
 
     public Connection getConnection() {
