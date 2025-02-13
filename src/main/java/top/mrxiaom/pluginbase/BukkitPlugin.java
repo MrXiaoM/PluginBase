@@ -168,7 +168,9 @@ public abstract class BukkitPlugin extends JavaPlugin {
     protected void loadLibraries() {
         File librariesFolder = new File(getDataFolder(), "libraries");
         if (!librariesFolder.exists()) {
-            Util.mkdirs(librariesFolder);
+            if (options.libraries()) {
+                Util.mkdirs(librariesFolder);
+            }
             return;
         }
         File[] files = librariesFolder.listFiles();
