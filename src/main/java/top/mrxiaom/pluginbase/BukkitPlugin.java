@@ -160,7 +160,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
         this.options = options;
         this.classLoader = new ClassLoaderWrapper((URLClassLoader) getClassLoader());
-        if (this.options.libraries()) {
+        if (this.options.libraries() || this.options.database) {
             loadLibraries();
         }
     }
