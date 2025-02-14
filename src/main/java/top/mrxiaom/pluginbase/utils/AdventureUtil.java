@@ -26,6 +26,10 @@ public class AdventureUtil {
         miniMessage = MiniMessage.builder()
                 .postProcessor(it -> it.decoration(TextDecoration.ITALIC, false))
                 .build();
+        try {
+            AdventureItemStack.init();
+        } catch (Throwable ignored) {
+        }
     }
 
     public static BukkitAudiences adventure() {
