@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 
@@ -228,9 +229,18 @@ public class ItemStackUtil {
         item.setItemMeta(meta);
     }
 
+    @NotNull
+    @SuppressWarnings("DataFlowIssue")
     public static ItemStack getItem(String str) {
+        return getItem(str, false);
+    }
+
+    @Nullable
+    public static ItemStack getItem(String str, boolean defNull) {
         if (str.startsWith("itemsadder-")) {
-            return IA.get(str.substring(11)).orElseThrow(
+            Optional<ItemStack> item = IA.get(str.substring(11));
+            if (defNull && !item.isPresent()) return null;
+            return item.orElseThrow(
                     () -> new IllegalStateException("找不到 IA 物品 " + str.substring(11))
             );
         } else {
@@ -238,20 +248,136 @@ public class ItemStackUtil {
             String material = str;
             if (str.contains("#")) {
                 String customModel = str.substring(str.indexOf("#") + 1);
-                customModelData = Util.parseInt(customModel).orElseThrow(
-                        () -> new IllegalStateException("无法解析 " + customModel + " 为整数")
-                );
+                customModelData = Util.parseInt(customModel).orElse(null);
                 material = str.replace("#" + customModelData, "");
             }
-            Material m = Util.valueOr(Material.class, material, null);
-            if (m == null) throw new IllegalStateException("找不到物品 " + str);
-            ItemStack item = new ItemStack(m);
-            if (customModelData != null) {
+            Pair<Material, Integer> pair = parseMaterial(material);
+            if (pair == null) {
+                if (defNull) return null;
+                throw new IllegalStateException("找不到物品 " + material);
+            }
+            ItemStack item = legacy(pair);
+            if (customModelData != null) try  {
                 ItemMeta meta = ItemStackUtil.getItemMeta(item);
                 meta.setCustomModelData(customModelData);
                 item.setItemMeta(meta);
+            } catch (Throwable ignored) {
             }
             return item;
+        }
+    }
+
+    private static final String[] materialColors = new String[] {
+            "STAINED_GLASS", "STAINED_GLASS_PANE", "WOOL", "CARPET"
+    };
+    private static final String[] dataValueColors = new String[] {
+            "WHITE", "ORANGE", "MAGENTA", "LIGHT_BLUE", "YELLOW", "LIME", "PINK", "GRAY",
+            "LIGHT_GRAY", "CYAN", "PURPLE", "BLUE", "BROWN", "GREEN", "RED", "BLACK"
+    };
+    private static final String[] dataValueSkulls = new String[] {
+            "SKELETON_SKULL", "WITHER_SKELETON_SKULL", "ZOMBIE_HEAD", "PLAYER_HEAD", "CREEPER_HEAD",
+            "SKELETON_WALL_SKULL", "WITHER_SKELETON_WALL_SKULL", "ZOMBIE_WALL_HEAD", "PLAYER_WALL_HEAD", "CREEPER_WALL_HEAD",
+    };
+    @Nullable
+    public static Pair<Material, Integer> parseMaterial(String input) {
+        String str;
+        Integer dataValue;
+        if (input.contains(":")) {
+            String[] split = input.split(":", 2);
+            str = split[0];
+            dataValue = Util.parseInt(split[1]).orElse(null);
+        } else {
+            str = input;
+            dataValue = null;
+        }
+        // 可正常处理的物品优先
+        Material material = parseOrNull(str);
+        if (dataValue != null) {
+            if (material == null) return null;
+            return Pair.of(material, dataValue);
+        }
+        if (material != null) {
+            return Pair.of(material, null);
+        }
+        // 以下均为 1.13+ 物品ID转为 1.12 及以下物品ID
+        // 带颜色的物品
+        if (str.endsWith("_CONCRETE") || str.endsWith("_TERRACOTTA")) {
+            // 混凝土、陶瓦 -> 硬化粘土
+            material = parseOrNull("STAINED_HARDENED_CLAY");
+        } else if (str.contains("BANNER") && !str.contains("PATTERN")) {
+            // 旗帜
+            material = parseOrNull("BANNER");
+        } else if (str.endsWith("DYE")) {
+            // 染料
+            material = parseOrNull("INK_SACK");
+        } else for (String mc : materialColors) {
+            // 其它ID比较规则的有颜色方块
+            if (str.endsWith(mc)) {
+                material = parseOrNull(mc);
+                break;
+            }
+        }
+        // 如果ID符合以上规则，则读取颜色，并返回
+        if (material != null) {
+            Integer data = null;
+            boolean reverse = str.endsWith("DYE");
+            for (int i = 0; i < dataValueColors.length; i++) {
+                if (str.startsWith(dataValueColors[i])) {
+                    data = reverse ? (15 - i) : i;
+                    break;
+                }
+            }
+            return Pair.of(material, data);
+        }
+        // 头颅
+        int skullData = 3;
+        for (int i = 0; i < dataValueSkulls.length; i++) {
+            if (str.equals(dataValueSkulls[i])) {
+                material = parseOrNull("SKULL_ITEM");
+                skullData = i % 5;
+                break;
+            }
+        }
+        if (material != null) {
+            return Pair.of(material, skullData);
+        }
+        // 其它杂项物品
+        Integer data = null;
+        if (str.contains("_HEAD")) { // 旧版没有的头颅，一律转为玩家头颅
+            material = parseOrNull("SKULL_ITEM");
+            if (material != null) data = 3;
+        }
+        if (material == null && str.equals("CLOCK")) material = parseOrNull("WATCH");
+        if (material == null && str.contains("BED")) material = parseOrNull("BED");
+        if (material == null && str.equals("CRAFT_TABLE")) material = parseOrNull("WORKBENCH");
+        if (material == null && str.contains("_DOOR") && !str.contains("IRON")) material = parseOrNull("WOODEN_DOOR");
+        if (material == null && str.startsWith("WOODEN_")) material = parseOrNull(str.replace("WOODEN_", "WOOD_"));
+        if (material == null && str.equals("IRON_BARS")) material = parseOrNull("IRON_FENCE");
+        if (material == null && str.equals("BUNDLE")) material = parseOrNull("FEATHER");
+        if (material == null && str.equals("ENDER_EYE")) material = parseOrNull("EYE_OF_ENDER");
+        if (material == null && str.equals("COMMAND_BLOCK")) material = parseOrNull("COMMAND");
+        if (material == null && str.equals("COMMAND_BLOCK_MINECART")) material = parseOrNull("COMMAND_MINECART");
+        if (material == null && str.equals("CHAIN_COMMAND_BLOCK")) material = parseOrNull("COMMAND_CHAIN");
+        if (material == null && str.equals("REPEATING_COMMAND_BLOCK")) material = parseOrNull("COMMAND_REPEATING");
+        // TODO: 支持更多新旧版本的物品转换
+        if (material != null) {
+            return Pair.of(material, data);
+        }
+        return null;
+    }
+    @Nullable
+    public static Material parseOrNull(String str) {
+        return Util.valueOr(Material.class, str, null);
+    }
+
+    @SuppressWarnings({"deprecation"})
+    public static ItemStack legacy(Pair<Material, Integer> pair) {
+        Material material = pair.getKey();
+        Integer dataValue = pair.getValue();
+        if (dataValue != null) {
+            return new ItemStack(material, 1, dataValue.shortValue());
+        } else {
+            return new ItemStack(material);
         }
     }
 
