@@ -20,8 +20,7 @@ import static top.mrxiaom.pluginbase.func.gui.IModifier.fit;
 public class LoadedIcon {
     private static final List<ITagProvider> tagProviders = new ArrayList<>();
     private final boolean adventure;
-    public final Material material;
-    public final int data;
+    public final String material;
     public final int amount;
     public final String display;
     public final List<String> lore;
@@ -36,10 +35,9 @@ public class LoadedIcon {
     public final List<IAction> dropCommands;
     public final Object tag;
 
-    LoadedIcon(boolean adventure, Material material, int data, int amount, String display, List<String> lore, boolean glow, Integer customModelData, Map<String, String> nbtStrings, Map<String, String> nbtInts, List<IAction> leftClickCommands, List<IAction> rightClickCommands, List<IAction> shiftLeftClickCommands, List<IAction> shiftRightClickCommands, List<IAction> dropCommands, Object tag) {
+    LoadedIcon(boolean adventure, String material, int amount, String display, List<String> lore, boolean glow, Integer customModelData, Map<String, String> nbtStrings, Map<String, String> nbtInts, List<IAction> leftClickCommands, List<IAction> rightClickCommands, List<IAction> shiftLeftClickCommands, List<IAction> shiftRightClickCommands, List<IAction> dropCommands, Object tag) {
         this.adventure = adventure;
-        this.material = material;
-        this.data = data;
+        this.material = material.toUpperCase();
         this.amount = amount;
         this.display = display;
         this.lore = lore;
@@ -58,10 +56,12 @@ public class LoadedIcon {
     public ItemStack generateIcon(Player player) {
         return generateIcon(player, null, null);
     }
-    @SuppressWarnings({"deprecation"})
+
     public ItemStack generateIcon(Player player, @Nullable IModifier<String> displayNameModifier, @Nullable IModifier<List<String>> loreModifier) {
-        if (material.equals(Material.AIR) || amount == 0) return new ItemStack(Material.AIR);
-        ItemStack item = data == 0 ? new ItemStack(material, amount) : new ItemStack(material, amount, (short) data);
+        if (material.equals("AIR") || amount == 0) return new ItemStack(Material.AIR);
+        Pair<Material, Integer> pair = ItemStackUtil.parseMaterial(this.material);
+        ItemStack item = pair == null ? new ItemStack(Material.PAPER) : ItemStackUtil.legacy(pair);
+        item.setAmount(amount);
         if (!display.isEmpty()) {
             String displayName = PAPI.setPlaceholders(player, fit(displayNameModifier, display));
             if (adventure) AdventureItemStack.setItemDisplayName(item, displayName);
@@ -121,9 +121,14 @@ public class LoadedIcon {
     }
 
     public static LoadedIcon load(ConfigurationSection section, String id) {
-        Material material = Util.valueOr(Material.class, section.getString(id + ".material"), Material.PAPER);
+        String material, materialStr = section.getString(id + ".material");
+        if (materialStr != null) {
+            if (section.contains(id + ".data")) { // 兼容旧的选项
+                material = materialStr + ":" + section.getInt(id + ".data");
+            } else material = "PAPER";
+        } else material = "PAPER";
+
         int amount = section.getInt(id + ".amount", 1);
-        int data = section.getInt(id + ".data");
         String display = section.getString(id + ".display", "");
         List<String> lore = section.getStringList(id + ".lore");
         boolean glow = section.getBoolean(id + ".glow");
@@ -149,7 +154,7 @@ public class LoadedIcon {
                 break;
             }
         }
-        return new LoadedIcon(BukkitPlugin.getInstance().options.adventure(), material, data, amount, display, lore, glow, customModelData, nbtStrings, nbtInts, leftClickCommands, rightClickCommands, shiftLeftClickCommands, shiftRightClickCommands, dropCommands, tag);
+        return new LoadedIcon(BukkitPlugin.getInstance().options.adventure(), material, amount, display, lore, glow, customModelData, nbtStrings, nbtInts, leftClickCommands, rightClickCommands, shiftLeftClickCommands, shiftRightClickCommands, dropCommands, tag);
     }
 
     public static void registerTagProvider(ITagProvider provider) {
