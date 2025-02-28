@@ -92,7 +92,7 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
         return applyMainIcon(instance, player, id, index, appearTimes);
     }
 
-    public static char[] getInventory(MemorySection config, String key) {
+    public static char[] getInventory(ConfigurationSection config, String key) {
         return String.join("", config.getStringList(key)).toCharArray();
     }
 
