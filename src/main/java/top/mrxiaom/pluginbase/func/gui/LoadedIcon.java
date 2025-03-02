@@ -123,9 +123,9 @@ public class LoadedIcon {
     public static LoadedIcon load(ConfigurationSection section, String id) {
         String material, materialStr = section.getString(id + ".material");
         if (materialStr != null) {
-            if (section.contains(id + ".data")) { // 兼容旧的选项
+            if (!materialStr.contains(":") && section.contains(id + ".data")) { // 兼容旧的选项
                 material = materialStr + ":" + section.getInt(id + ".data");
-            } else material = "PAPER";
+            } else material = materialStr;
         } else material = "PAPER";
 
         int amount = section.getInt(id + ".amount", 1);
