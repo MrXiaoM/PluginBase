@@ -14,6 +14,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -76,26 +77,14 @@ public class AdventureItemStack {
     }
 
     public static void setItemDisplayName(ItemStack item, String name) {
-        if (item == null || !item.hasItemMeta()) return;
+        if (isEmpty(item)) return;
         Component displayName = miniMessage(name);
-        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_13_R1)) {
-            String json = GsonComponentSerializer.gson().serialize(displayName);
-            setItemDisplayNameByJson(item, json);
-        } else {
-            String legacy = LegacyComponentSerializer.legacySection().serialize(displayName);
-            setItemDisplayNameByJson(item, legacy);
-        }
+        setItemDisplayNameByJson(item, serializer().serialize(displayName));
     }
 
     public static void setItemDisplayName(ItemStack item, Component name) {
-        if (item == null || !item.hasItemMeta()) return;
-        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_13_R1)) {
-            String json = GsonComponentSerializer.gson().serialize(name);
-            setItemDisplayNameByJson(item, json);
-        } else {
-            String legacy = LegacyComponentSerializer.legacySection().serialize(name);
-            setItemDisplayNameByJson(item, legacy);
-        }
+        if (isEmpty(item)) return;
+        setItemDisplayNameByJson(item, serializer().serialize(name));
     }
 
     @Nullable
@@ -114,7 +103,7 @@ public class AdventureItemStack {
 
     @Nullable
     public static String getItemDisplayNameAsJson(ItemStack item) {
-        if (item == null || !item.hasItemMeta()) return null;
+        if (isEmpty(item)) return null;
         if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
             ReadWriteNBT nbtItem = NBT.itemStackToNBT(item);
             ReadWriteNBT nbt = nbtItem.getCompound("components");
@@ -149,7 +138,7 @@ public class AdventureItemStack {
     }
 
     public static void setItemLoreMiniMessage(ItemStack item, List<String> lore) {
-        if (item == null || !item.hasItemMeta()) return;
+        if (isEmpty(item)) return;
         List<String> json = new ArrayList<>();
         for (String s : lore) {
             Component line = miniMessage(s);
@@ -159,7 +148,7 @@ public class AdventureItemStack {
     }
 
     public static void setItemLore(ItemStack item, List<Component> lore) {
-        if (item == null || !item.hasItemMeta()) return;
+        if (isEmpty(item)) return;
         List<String> json = new ArrayList<>();
         for (Component component : lore) {
             json.add(serializer().serialize(component));
@@ -193,7 +182,7 @@ public class AdventureItemStack {
 
     @Nullable
     public static List<String> getItemLoreAsJson(ItemStack item) {
-        if (item == null || !item.hasItemMeta()) return null;
+        if (isEmpty(item)) return null;
         if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
             ReadWriteNBT nbtItem = NBT.itemStackToNBT(item);
             ReadWriteNBT nbt = nbtItem.getCompound("components");
@@ -234,5 +223,10 @@ public class AdventureItemStack {
             meta.setCustomModelData(customModelData);
             item.setItemMeta(meta);
         }
+    }
+
+    @Contract("null -> true")
+    public static boolean isEmpty(ItemStack item) {
+        return item == null || item.getType().equals(Material.AIR);
     }
 }
