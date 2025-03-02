@@ -1,3 +1,5 @@
+import java.util.*
+
 plugins {
     java
     signing
@@ -10,7 +12,9 @@ version = "1.3.2"
 
 repositories {
     mavenCentral()
-    maven("https://maven.fastmirror.net/repositories/minecraft/")
+    if (Locale.getDefault().country == "CN") {
+        maven("https://maven.fastmirror.net/repositories/minecraft/")
+    }
     maven("https://repo.codemc.io/repository/maven-public/")
 
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
