@@ -5,11 +5,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import top.mrxiaom.pluginbase.api.IScheduler;
 import top.mrxiaom.pluginbase.database.IDatabase;
 import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
 import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.func.GuiManager;
 import top.mrxiaom.pluginbase.func.LanguageManager;
+import top.mrxiaom.pluginbase.utils.BukkitScheduler;
 import top.mrxiaom.pluginbase.utils.ClassLoaderWrapper;
 import top.mrxiaom.pluginbase.utils.Util;
 
@@ -151,6 +153,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
     private boolean pluginEnabled = false;
     public final Options options;
     protected final ClassLoaderWrapper classLoader;
+    protected IScheduler scheduler = new BukkitScheduler(this);
     public BukkitPlugin(OptionsBuilder builder) {
         this(builder.build());
     }
@@ -203,6 +206,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     protected void afterLoadLib(File file) {
 
+    }
+
+    public IScheduler getScheduler() {
+        return scheduler;
     }
 
     public Connection getConnection() {
@@ -317,7 +324,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
             this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
         }
         HandlerList.unregisterAll(this);
-        Bukkit.getScheduler().cancelTasks(this);
+        scheduler.cancelTasks();
         options.disable();
         pluginEnabled = false;
         afterDisable();

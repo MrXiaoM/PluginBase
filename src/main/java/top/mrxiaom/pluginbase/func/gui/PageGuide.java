@@ -1,6 +1,5 @@
 package top.mrxiaom.pluginbase.func.gui;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -10,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.utils.Pair;
+import top.mrxiaom.pluginbase.utils.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,7 +70,7 @@ public class PageGuide<T> {
         HumanEntity player = view.getPlayer();
         if (player instanceof Player) {
             // 下一 tick 再发送玩家背包更新
-            Bukkit.getScheduler().runTaskLater(BukkitPlugin.getInstance(), ((Player) player)::updateInventory, 1L);
+            BukkitPlugin.getInstance().getScheduler().runTaskLater(() -> Util.submitInvUpdate((Player) player), 1L);
         }
     }
 

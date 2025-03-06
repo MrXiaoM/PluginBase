@@ -40,7 +40,7 @@ public class Util {
     public static Map<UUID, OfflinePlayer> playersByUUID = new TreeMap<>();
 
     public static void init(BukkitPlugin plugin) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        plugin.getScheduler().runTaskAsync(() -> {
             for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
                 if (player.getName() != null) {
                     players.put(player.getName(), player);
