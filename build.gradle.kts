@@ -29,10 +29,10 @@ dependencies {
     testImplementation("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
     
     compileOnly("net.milkbowl.vault:VaultAPI:1.7")
-    // compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")
-    compileOnly(files("libs/api-itemsadder-3.6.3-beta-14.jar"))
+    compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.zaxxer:HikariCP:4.0.3")
+    compileOnly(files("libs/stub-rt.jar"))
 
     compileOnly("net.kyori:adventure-api:4.17.0")
     compileOnly("net.kyori:adventure-platform-bukkit:4.3.4")
