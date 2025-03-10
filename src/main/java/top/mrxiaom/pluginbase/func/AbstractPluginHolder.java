@@ -62,10 +62,19 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         }
     }
 
+    /**
+     * 模块优先级。主要用于重载配置等操作
+     * @return 优先级，数值越小越先执行
+     */
     public int priority() {
         return 1000;
     }
 
+    /**
+     * 接收来自 BungeeCord 的 Forward 消息
+     * @param subChannel 子频道
+     * @param in 消息流
+     */
     public void receiveBungee(String subChannel, DataInputStream in) throws IOException {
 
     }
@@ -83,6 +92,10 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         holders.clear();
     }
 
+    /**
+     * 接收插件配置文件重载操作
+     * @param config 配置文件 config.yml
+     */
     public void reloadConfig(MemoryConfiguration config) {
 
     }
@@ -101,6 +114,9 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         return s == null ? new HashSet<>() : s.getKeys(false);
     }
 
+    /**
+     * 接收插件卸载时执行操作
+     */
     public void onDisable() {
 
     }
@@ -116,12 +132,18 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         registeredBungeeHolders.clear();
     }
 
+    /**
+     * 注册事件监听器
+     */
     protected void registerEvents() {
         if (this instanceof Listener) {
             registerEvents((Listener) this);
         }
     }
 
+    /**
+     * 注册事件监听器
+     */
     protected void registerEvents(Listener listener) {
         try {
             Bukkit.getPluginManager().registerEvents(listener, plugin);
@@ -130,6 +152,11 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         }
     }
 
+    /**
+     * 注册命令
+     * @param label 命令名
+     * @param inst 命令实例
+     */
     protected void registerCommand(String label, Object inst) {
         PluginCommand command = plugin.getCommand(label);
         if (command != null) {
@@ -191,12 +218,18 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         plugin.getLogger().warning(stackTraceToString(t));
     }
 
+    /**
+     * 从已注册的模块列表中寻找模块，找不到模块时，将返回 null
+     */
     @Nullable
     @SuppressWarnings({"unchecked"})
     public static <T extends AbstractPluginHolder<?>> T getOrNull(Class<T> clazz) {
         return (T) registeredHolders.get(clazz);
     }
 
+    /**
+     * 从已注册的模块列表中寻找模块
+     */
     @SuppressWarnings({"unchecked"})
     public static <T extends AbstractPluginHolder<?>> Optional<T> get(Class<T> clazz) {
         T inst = (T) registeredHolders.get(clazz);
@@ -204,6 +237,9 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         return Optional.of(inst);
     }
 
+    /**
+     * 从已注册的模块列表中寻找模块，找不到模块时，将抛出一个异常
+     */
     @SuppressWarnings({"unchecked", "SameParameterValue"})
     protected static <T extends AbstractPluginHolder<?>> T instanceOf(Class<T> clazz) {
         T inst = (T) registeredHolders.get(clazz);
@@ -211,6 +247,10 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         return inst;
     }
 
+    /**
+     * 向玩家或控制台发送消息
+     * @return 恒为 <code>true</code>
+     */
     public static boolean t(CommandSender sender, String... msg) {
         ColorHelper.parseAndSend(sender, String.join("\n&r", msg));
         return true;
