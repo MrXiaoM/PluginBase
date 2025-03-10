@@ -2,6 +2,7 @@ package top.mrxiaom.pluginbase;
 
 import com.google.common.collect.Lists;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import top.mrxiaom.pluginbase.actions.*;
@@ -41,6 +42,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         protected List<String> scanIgnore;
         protected boolean adventure;
         protected boolean libraries;
+        protected boolean disableDefaultConfig;
 
         protected DatabaseHolder databaseHolder;
         protected EconomyHolder economyHolder;
@@ -91,6 +93,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         protected List<String> scanIgnore = new ArrayList<>();
         protected boolean adventure;
         protected boolean libraries;
+        protected boolean disableDefaultConfig;
         private Options build() {
             return new Options() {{
                 OptionsBuilder builder = OptionsBuilder.this;
@@ -102,6 +105,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
                 scanIgnore = builder.scanIgnore;
                 adventure = builder.adventure;
                 libraries = builder.libraries;
+                disableDefaultConfig = builder.disableDefaultConfig;
             }};
         }
         public OptionsBuilder bungee(boolean value) {
@@ -138,6 +142,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
         public OptionsBuilder libraries(boolean libraries) {
             this.libraries = libraries;
+            return this;
+        }
+        public OptionsBuilder disableDefaultConfig(boolean disableDefaultConfig) {
+            this.disableDefaultConfig = disableDefaultConfig;
             return this;
         }
     }
@@ -362,10 +370,14 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     @Override
     public void reloadConfig() {
-        this.saveDefaultConfig();
-        super.reloadConfig();
-
-        FileConfiguration config = getConfig();
+        FileConfiguration config;
+        if (!options.disableDefaultConfig) {
+            this.saveDefaultConfig();
+            super.reloadConfig();
+            config = getConfig();
+        } else {
+            config = new YamlConfiguration();
+        }
 
         beforeReloadConfig(config);
 
