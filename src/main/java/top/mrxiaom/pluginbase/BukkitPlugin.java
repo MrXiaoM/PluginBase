@@ -43,6 +43,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         protected boolean adventure;
         protected boolean libraries;
         protected boolean disableDefaultConfig;
+        protected boolean enableConfigGotoFlag;
 
         protected DatabaseHolder databaseHolder;
         protected EconomyHolder economyHolder;
@@ -94,6 +95,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         protected boolean adventure;
         protected boolean libraries;
         protected boolean disableDefaultConfig;
+        protected boolean enableConfigGotoFlag;
         private Options build() {
             return new Options() {{
                 OptionsBuilder builder = OptionsBuilder.this;
@@ -106,6 +108,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
                 adventure = builder.adventure;
                 libraries = builder.libraries;
                 disableDefaultConfig = builder.disableDefaultConfig;
+                enableConfigGotoFlag = builder.enableConfigGotoFlag;
             }};
         }
         public OptionsBuilder bungee(boolean value) {
@@ -146,6 +149,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
         public OptionsBuilder disableDefaultConfig(boolean disableDefaultConfig) {
             this.disableDefaultConfig = disableDefaultConfig;
+            return this;
+        }
+        public OptionsBuilder enableConfigGotoFlag(boolean enableConfigGotoFlag) {
+            this.enableConfigGotoFlag = enableConfigGotoFlag;
             return this;
         }
     }
@@ -368,6 +375,20 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     }
 
+    private FileConfiguration resolveGotoFlag(FileConfiguration last, int times) {
+        if (times > 64) {
+            warn("配置文件中的 goto 跳转次数过多，请自行检查 goto 标签是否有循环调用问题");
+            return last;
+        }
+        String gotoFlag = last.getString("goto", null);
+        if (gotoFlag != null) {
+            File file = resolve(gotoFlag);
+            YamlConfiguration newConfig = YamlConfiguration.loadConfiguration(file);
+            return resolveGotoFlag(newConfig, times + 1);
+        }
+        return last;
+    }
+
     @Override
     public void reloadConfig() {
         FileConfiguration config;
@@ -375,6 +396,9 @@ public abstract class BukkitPlugin extends JavaPlugin {
             this.saveDefaultConfig();
             super.reloadConfig();
             config = getConfig();
+            if (options.enableConfigGotoFlag) {
+                config = resolveGotoFlag(config, 0);
+            }
         } else {
             config = new YamlConfiguration();
         }
