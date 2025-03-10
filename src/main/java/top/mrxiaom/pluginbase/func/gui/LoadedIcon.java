@@ -9,12 +9,12 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
-import top.mrxiaom.pluginbase.func.gui.actions.IAction;
+import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.utils.*;
 
 import java.util.*;
 
-import static top.mrxiaom.pluginbase.func.AbstractGuiModule.loadActions;
+import static top.mrxiaom.pluginbase.actions.ActionProviders.loadActions;
 import static top.mrxiaom.pluginbase.func.gui.IModifier.fit;
 
 public class LoadedIcon {

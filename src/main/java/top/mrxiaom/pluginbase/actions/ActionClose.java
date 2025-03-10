@@ -1,7 +1,9 @@
-package top.mrxiaom.pluginbase.func.gui.actions;
+package top.mrxiaom.pluginbase.actions;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.api.IAction;
+import top.mrxiaom.pluginbase.api.IActionProvider;
 import top.mrxiaom.pluginbase.utils.Pair;
 
 import java.util.List;

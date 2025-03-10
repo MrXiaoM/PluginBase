@@ -1,10 +1,10 @@
 package top.mrxiaom.pluginbase;
 
 import com.google.common.collect.Lists;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import top.mrxiaom.pluginbase.actions.*;
 import top.mrxiaom.pluginbase.api.IScheduler;
 import top.mrxiaom.pluginbase.database.IDatabase;
 import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
@@ -260,6 +260,18 @@ public abstract class BukkitPlugin extends JavaPlugin {
         try {
             Class<GuiManager> guiManagerClass = GuiManager.class;
             earlyLoadModules.add(guiManagerClass);
+        } catch (Throwable ignored) {
+        }
+        try {
+            ActionProviders.registerActionProvider(ActionConsole.PROVIDER);
+            ActionProviders.registerActionProvider(ActionPlayer.PROVIDER);
+            if (options.adventure) {
+                ActionProviders.registerActionProvider(ActionActionBar.PROVIDER);
+                ActionProviders.registerActionProvider(ActionMessageAdventure.PROVIDER);
+            } else {
+                ActionProviders.registerActionProvider(ActionMessage.PROVIDER);
+            }
+            ActionProviders.registerActionProvider(ActionClose.PROVIDER);
         } catch (Throwable ignored) {
         }
 

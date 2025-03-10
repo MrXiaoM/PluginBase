@@ -1,4 +1,4 @@
-package top.mrxiaom.pluginbase.func.gui.actions;
+package top.mrxiaom.pluginbase.api;
 
 import org.jetbrains.annotations.Nullable;
 
