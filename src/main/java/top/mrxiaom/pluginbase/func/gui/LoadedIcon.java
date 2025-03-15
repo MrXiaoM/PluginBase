@@ -61,6 +61,15 @@ public class LoadedIcon {
         if (material.equals("AIR") || amount == 0) return new ItemStack(Material.AIR);
         Pair<Material, Integer> pair = ItemStackUtil.parseMaterial(this.material);
         ItemStack item = pair == null ? new ItemStack(Material.PAPER) : ItemStackUtil.legacy(pair);
+        return generateIcon(item, player, displayNameModifier, loreModifier);
+    }
+
+    public ItemStack generateIcon(ItemStack item, Player player) {
+        return generateIcon(item, player, null, null);
+    }
+
+    public ItemStack generateIcon(ItemStack item, Player player, @Nullable IModifier<String> displayNameModifier, @Nullable IModifier<List<String>> loreModifier) {
+        if (item == null || amount == 0) return new ItemStack(Material.AIR);
         item.setAmount(amount);
         if (!display.isEmpty()) {
             String displayName = PAPI.setPlaceholders(player, fit(displayNameModifier, display));
