@@ -11,5 +11,14 @@ public interface IScheduler {
     IRunTask runTaskAsync(Runnable runnable);
     IRunTask runTaskLaterAsync(Runnable runnable, long delay);
     IRunTask runTaskTimerAsync(Runnable runnable, long delay, long period);
+    default IRunTask runTaskAsynchronously(Runnable runnable) {
+        return runTaskAsync(runnable);
+    }
+    default IRunTask runTaskLaterAsynchronously(Runnable runnable, long delay) {
+        return runTaskLaterAsync(runnable, delay);
+    }
+    default IRunTask runTaskTimerAsynchronously(Runnable runnable, long delay, long period) {
+        return runTaskTimerAsync(runnable, delay, period);
+    }
     void cancelTasks();
 }
