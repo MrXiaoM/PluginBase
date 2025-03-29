@@ -104,4 +104,8 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
             remove.onClose(event.getView());
         }
     }
+
+    public static GuiManager inst() {
+        return instanceOf(GuiManager.class);
+    }
 }
