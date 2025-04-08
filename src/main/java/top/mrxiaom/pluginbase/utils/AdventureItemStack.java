@@ -98,7 +98,7 @@ public class AdventureItemStack {
     public Component getItemDisplayName(ItemStack item) {
         String nameAsJson = getItemDisplayNameAsJson(item);
         if (nameAsJson == null) return null;
-        return GsonComponentSerializer.gson().deserialize(nameAsJson);
+        return serializer().deserialize(nameAsJson);
     }
 
     @Nullable
@@ -174,7 +174,7 @@ public class AdventureItemStack {
         if (loreAsJson == null) return null;
         List<Component> lore = new ArrayList<>();
         for (String line : loreAsJson) {
-            Component component = GsonComponentSerializer.gson().deserialize(line);
+            Component component = serializer().deserialize(line);
             lore.add(component);
         }
         return lore;
