@@ -3,7 +3,9 @@ package top.mrxiaom.pluginbase.utils;
 import com.google.common.collect.Lists;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTType;
+import de.tr7zw.changeme.nbtapi.handler.NBTHandlers;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTCompoundList;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList;
 import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
@@ -23,34 +25,44 @@ import java.util.List;
 import static top.mrxiaom.pluginbase.utils.AdventureUtil.miniMessage;
 
 public class AdventureItemStack {
-    private static boolean itemUseComponent;
+    private static boolean textUseComponent;
+    private static boolean itemNbtUseComponentsFormat;
+    private static boolean componentUseNBT;
     protected static void init() {
-        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
-            itemUseComponent = true;
+        itemNbtUseComponentsFormat = MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4);
+        ItemStack item = new ItemStack(Material.STONE);
+        ItemMeta meta = item.getItemMeta();
+        String testDisplayName = "§a§l测试§e§l文本";
+        if (meta == null) { // 预料之外的情况
+            textUseComponent = false;
+            componentUseNBT = false;
         } else {
-            // 测试物品是否支持使用 component
-            ItemStack item = new ItemStack(Material.STONE);
-            ItemMeta meta = item.getItemMeta();
-            if (meta != null) {
-                String testDisplayName = "§a§l测试§e§l文本";
-                meta.setDisplayName(testDisplayName);
-                item.setItemMeta(meta);
+            meta.setDisplayName(testDisplayName);
+            item.setItemMeta(meta);
+            if (itemNbtUseComponentsFormat) {
+                textUseComponent = true;
+                componentUseNBT = NBT.getComponents(item, nbt -> { // 1.21.5 开始，文本组件从 JSON 字符串改为了 NBT 组件
+                    NBTType type = nbt.getType("minecraft:custom_name");
+                    return !type.equals(NBTType.NBTTagString);
+                });
+            } else {
+                // 测试物品是否支持使用 component
                 NBT.get(item, nbt -> {
                     ReadableNBT display = nbt.getCompound("display");
                     if (display == null) {
-                        itemUseComponent = false;
+                        textUseComponent = false;
                         return;
                     }
                     String name = display.getString("Name");
-                    itemUseComponent = !name.equals(testDisplayName);
+                    // 旧版本文本组件不支持 JSON 字符串，设置旧版颜色符之后，物品名会跟之前一样
+                    textUseComponent = !name.equals(testDisplayName);
                 });
-            } else {
-                itemUseComponent = false;
+                componentUseNBT = false;
             }
         }
     }
     public static ComponentSerializer<Component, ?, String> serializer() {
-        if (itemUseComponent) {
+        if (textUseComponent) {
             return GsonComponentSerializer.gson();
         } else {
             return LegacyComponentSerializer.legacySection();
@@ -104,12 +116,22 @@ public class AdventureItemStack {
     @Nullable
     public static String getItemDisplayNameAsJson(ItemStack item) {
         if (isEmpty(item)) return null;
-        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+        if (itemNbtUseComponentsFormat) {
             ReadWriteNBT nbtItem = NBT.itemStackToNBT(item);
             ReadWriteNBT nbt = nbtItem.getCompound("components");
-            return nbt != null && nbt.hasTag("minecraft:custom_name", NBTType.NBTTagString)
-                    ? nbt.getString("minecraft:custom_name")
-                    : null;
+            if (nbt == null) return null;
+            if (componentUseNBT) {
+                ReadWriteNBT component = nbt.hasTag("minecraft:custom_name")
+                        ? nbt.getCompound("minecraft:custom_name")
+                        : null;
+                return component != null
+                        ? component.toString()
+                        : null;
+            } else {
+                return nbt.hasTag("minecraft:custom_name", NBTType.NBTTagString)
+                        ? nbt.getString("minecraft:custom_name")
+                        : null;
+            }
         } else {
             return NBT.get(item, nbt -> {
                 ReadableNBT display = nbt.getCompound("display");
@@ -121,9 +143,14 @@ public class AdventureItemStack {
     }
 
     public static void setItemDisplayNameByJson(ItemStack item, String json) {
-        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+        if (itemNbtUseComponentsFormat) {
             NBT.modifyComponents(item, nbt -> {
-                nbt.setString("minecraft:custom_name", json);
+                if (componentUseNBT) {
+                    ReadWriteNBT component = NBT.parseNBT(json);
+                    nbt.set("minecraft:custom_name", component, NBTHandlers.STORE_READWRITE_TAG);
+                } else {
+                    nbt.setString("minecraft:custom_name", json);
+                }
             });
         } else {
             NBT.modify(item, nbt -> {
@@ -183,12 +210,25 @@ public class AdventureItemStack {
     @Nullable
     public static List<String> getItemLoreAsJson(ItemStack item) {
         if (isEmpty(item)) return null;
-        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+        if (itemNbtUseComponentsFormat) {
             ReadWriteNBT nbtItem = NBT.itemStackToNBT(item);
             ReadWriteNBT nbt = nbtItem.getCompound("components");
-            return nbt != null && nbt.hasTag("minecraft:custom_name", NBTType.NBTTagList)
-                    ? nbt.getStringList("minecraft:lore").toListCopy()
-                    : null;
+            if (nbt == null) return null;
+            if (componentUseNBT) {
+                ReadWriteNBTCompoundList components = nbt.hasTag("minecraft:custom_name")
+                        ? nbt.getCompoundList("minecraft:custom_name")
+                        : null;
+                if (components == null) return null;
+                List<String> list = new ArrayList<>();
+                for (ReadWriteNBT component : components) {
+                    list.add(component.toString());
+                }
+                return list;
+            } else {
+                return nbt.hasTag("minecraft:custom_name", NBTType.NBTTagList)
+                        ? nbt.getStringList("minecraft:lore").toListCopy()
+                        : null;
+            }
         } else {
             return NBT.get(item, nbt -> {
                 ReadableNBT display = nbt.getCompound("display");
@@ -200,11 +240,20 @@ public class AdventureItemStack {
     }
 
     public static void setItemLoreByJson(ItemStack item, List<String> json) {
-        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+        if (itemNbtUseComponentsFormat) {
             NBT.modifyComponents(item, nbt -> {
-                ReadWriteNBTList<String> list = nbt.getStringList("minecraft:lore");
-                if (!list.isEmpty()) list.clear();
-                list.addAll(json);
+                if (componentUseNBT) {
+                    ReadWriteNBTCompoundList list = nbt.getCompoundList("minecraft:lore");
+                    if (!list.isEmpty()) list.clear();
+                    for (String s : json) {
+                        ReadWriteNBT component = NBT.parseNBT(s);
+                        list.addCompound(component);
+                    }
+                } else {
+                    ReadWriteNBTList<String> list = nbt.getStringList("minecraft:lore");
+                    if (!list.isEmpty()) list.clear();
+                    list.addAll(json);
+                }
             });
         } else {
             NBT.modify(item, nbt -> {
