@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "top.mrxiaom"
-version = "1.3.6"
+version = "1.3.7"
 
 repositories {
     mavenCentral()
@@ -16,6 +16,9 @@ repositories {
         maven("https://maven.fastmirror.net/repositories/minecraft/")
     }
     maven("https://repo.codemc.io/repository/maven-public/")
+    maven("https://repo.papermc.io/repository/maven-public/") {
+        mavenContent { includeGroup("com.mojang") }
+    }
 
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
