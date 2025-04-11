@@ -17,7 +17,8 @@ PluginBase 附带了一些好用的工具
 + 快速构造一个物品
 + 以特定格式解析物品  
 `itemsadder-物品名` 使用 ItemsAdder 物品，如 `itemsadder-example`  
-`物品#CMD` 使用原版物品并添加 CustomModelData，如 `DIAMOND_SWORD#10001`
+`物品#CMD` 使用原版物品并添加 CustomModelData，如 `DIAMOND_SWORD#10001`  
+`head-base64-头颅值` 使用 base64 格式头颅物品，可以从 [Minecraft Heads](https://minecraft-heads.com/custom-heads) 获取头颅 (`For Developers: Value`)
 + 快捷修改物品名、Lore
 + 快捷获取附魔书物品 (同时避免把附魔存错位置)
 + 快捷给予玩家物品，背包满时掉落到玩家附近

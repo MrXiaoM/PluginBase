@@ -60,6 +60,10 @@ public class Util {
             PAPI.init();
         } catch (Throwable ignored) {
         }
+        try {
+            SkullsUtil.init();
+        } catch (Throwable ignored) {
+        }
         if (plugin.options.adventure()) {
             AdventureUtil.init(plugin);
         }

@@ -243,6 +243,14 @@ public class ItemStackUtil {
             return item.orElseThrow(
                     () -> new IllegalStateException("找不到 IA 物品 " + str.substring(11))
             );
+        } else if (str.startsWith("head-base64-")) {
+            ItemStack item = SkullsUtil.createHeadItem();
+            String base64 = str.substring(12);
+            ItemMeta meta = SkullsUtil.setSkullBase64(item.getItemMeta(), base64);
+            if (meta != null) {
+                item.setItemMeta(meta);
+            }
+            return item;
         } else {
             Integer customModelData = null;
             String material = str;

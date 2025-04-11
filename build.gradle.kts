@@ -33,6 +33,7 @@ dependencies {
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.zaxxer:HikariCP:4.0.3")
+    compileOnly("com.mojang:authlib:2.1.28")
     compileOnly(files("libs/stub-rt.jar"))
 
     compileOnly("net.kyori:adventure-api:4.17.0")
