@@ -1,3 +1,6 @@
+import java.net.HttpURLConnection
+import java.net.URL
+import java.net.URLConnection
 import java.util.*
 
 plugins {
@@ -12,8 +15,13 @@ version = "1.3.7"
 
 repositories {
     mavenCentral()
-    if (Locale.getDefault().country == "CN") {
-        maven("https://maven.fastmirror.net/repositories/minecraft/")
+    if (Locale.getDefault().country == "CN") runCatching {
+        val url = "https://maven.fastmirror.net/repositories/minecraft/"
+        val conn = URL(url).openConnection().apply { connect() } as HttpURLConnection
+        if (conn.responseCode == 200) maven(url)
+        else {
+            println("镜像仓库错误 (${conn.responseCode} ${conn.responseMessage})，不使用镜像")
+        }
     }
     maven("https://repo.codemc.io/repository/maven-public/")
     maven("https://repo.papermc.io/repository/maven-public/") {
@@ -43,6 +51,7 @@ dependencies {
     compileOnly("net.kyori:adventure-platform-bukkit:4.3.4")
     compileOnly("net.kyori:adventure-text-minimessage:4.17.0")
     compileOnly("de.tr7zw:item-nbt-api:2.14.1")
+    compileOnly("com.github.technicallycoded:FoliaLib:0.4.4")
 
     implementation("org.jetbrains:annotations:21.0.0")
 }
