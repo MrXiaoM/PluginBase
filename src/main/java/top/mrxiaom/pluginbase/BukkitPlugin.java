@@ -12,7 +12,7 @@ import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
 import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.func.GuiManager;
 import top.mrxiaom.pluginbase.func.LanguageManager;
-import top.mrxiaom.pluginbase.utils.BukkitScheduler;
+import top.mrxiaom.pluginbase.utils.scheduler.BukkitScheduler;
 import top.mrxiaom.pluginbase.utils.ClassLoaderWrapper;
 import top.mrxiaom.pluginbase.utils.Util;
 

@@ -1,4 +1,4 @@
-package top.mrxiaom.pluginbase.utils;
+package top.mrxiaom.pluginbase.utils.scheduler;
 
 import com.tcoded.folialib.FoliaLib;
 import com.tcoded.folialib.wrapper.task.WrappedTask;

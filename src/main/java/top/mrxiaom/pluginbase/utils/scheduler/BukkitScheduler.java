@@ -1,4 +1,4 @@
-package top.mrxiaom.pluginbase.utils;
+package top.mrxiaom.pluginbase.utils.scheduler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
