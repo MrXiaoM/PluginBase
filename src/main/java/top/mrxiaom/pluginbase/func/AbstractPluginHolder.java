@@ -35,10 +35,29 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         if (register) register();
     }
 
+    private static class HolderConstructor {
+        private final Class<?> type;
+        private final Constructor<?> constructor;
+        private final int priority;
+        public HolderConstructor(Class<?> type, Constructor<?> constructor, int priority) {
+            this.type = type;
+            this.constructor = constructor;
+            this.priority = priority;
+        }
+        int priority() {
+            return priority;
+        }
+        void execute(BukkitPlugin plugin) throws ReflectiveOperationException {
+            constructor.newInstance(plugin);
+        }
+    }
+
     public static void loadModules(BukkitPlugin plugin, List<Class<? extends AbstractPluginHolder<?>>> classList) {
-        for (Class<?> clazz : classList) {
+        List<HolderConstructor> list = new ArrayList<>();
+        for (Class<?> type : classList) {
             try {
-                AutoRegister meta = clazz.getAnnotation(AutoRegister.class);
+                AutoRegister meta = type.getAnnotation(AutoRegister.class);
+                int priority;
                 if (meta != null) {
                     boolean load = true;
                     for (String s : meta.requirePlugins()) {
@@ -48,16 +67,27 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
                         }
                     }
                     if (!load) continue;
+                    priority = meta.priority();
+                } else {
+                    priority = 1000;
                 }
                 Constructor<?> constructor;
                 try {
-                    constructor = clazz.getDeclaredConstructor(BukkitPlugin.class);
+                    constructor = type.getDeclaredConstructor(BukkitPlugin.class);
                 } catch (Throwable t) {
-                    constructor = clazz.getDeclaredConstructor(plugin.getClass());
+                    constructor = type.getDeclaredConstructor(plugin.getClass());
                 }
-                constructor.newInstance(plugin);
+                list.add(new HolderConstructor(type, constructor, priority));
             } catch (Throwable t) {
-                plugin.warn("加载 " + clazz.getName() + "时出现异常:", t);
+                plugin.warn("读取模块 " + type.getName() + "时出现异常:", t);
+            }
+        }
+        list.sort(Comparator.comparingInt(HolderConstructor::priority));
+        for (HolderConstructor constructor : list) {
+            try {
+                constructor.execute(plugin);
+            } catch (Throwable t) {
+                plugin.warn("加载模块 " + constructor.type.getName() + "时出现异常:", t);
             }
         }
     }

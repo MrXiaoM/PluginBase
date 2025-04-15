@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutoRegister {
     String[] requirePlugins() default {};
+    int priority() default 1000;
 }
