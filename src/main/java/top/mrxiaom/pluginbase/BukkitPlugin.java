@@ -287,6 +287,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
                 ActionProviders.registerActionProvider(ActionMessage.PROVIDER);
             }
             ActionProviders.registerActionProvider(ActionClose.PROVIDER);
+            ActionProviders.registerActionProvider(ActionDelay.PROVIDER);
         } catch (Throwable ignored) {
         }
 

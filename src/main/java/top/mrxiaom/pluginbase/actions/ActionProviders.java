@@ -1,6 +1,8 @@
 package top.mrxiaom.pluginbase.actions;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.api.IActionProvider;
 
@@ -33,5 +35,22 @@ public class ActionProviders {
     public static void registerActionProvider(IActionProvider provider) {
         actionProviders.add(provider);
         actionProviders.sort(Comparator.comparingInt(IActionProvider::priority));
+    }
+
+    public static void run(BukkitPlugin plugin, Player player, List<IAction> actions) {
+        run0(plugin, player, actions, 0);
+    }
+
+    private static void run0(BukkitPlugin plugin, Player player, List<IAction> actions, int startIndex) {
+        for (int i = startIndex; i < actions.size(); i++) {
+            IAction action = actions.get(i);
+            action.run(player);
+            long delay = action.delayAfterRun();
+            if (delay > 0) {
+                int index = i + 1;
+                plugin.getScheduler().runTaskLater(() -> run0(plugin, player, actions, index), delay);
+                return;
+            }
+        }
     }
 }

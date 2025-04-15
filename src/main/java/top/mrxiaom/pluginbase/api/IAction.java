@@ -7,6 +7,9 @@ import top.mrxiaom.pluginbase.utils.Pair;
 import java.util.List;
 
 public interface IAction {
+    default long delayAfterRun() {
+        return 0L;
+    }
     default void run(Player player) {
         run(player, null);
     }
