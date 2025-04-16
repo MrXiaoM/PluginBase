@@ -1,13 +1,21 @@
 package top.mrxiaom.pluginbase;
 
 import com.google.common.collect.Lists;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.actions.*;
 import top.mrxiaom.pluginbase.api.IScheduler;
 import top.mrxiaom.pluginbase.database.IDatabase;
+import top.mrxiaom.pluginbase.economy.EnumEconomy;
+import top.mrxiaom.pluginbase.economy.IEconomy;
+import top.mrxiaom.pluginbase.economy.NoEconomy;
+import top.mrxiaom.pluginbase.economy.VaultEconomy;
 import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
 import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.func.GuiManager;
@@ -37,7 +45,8 @@ public abstract class BukkitPlugin extends JavaPlugin {
         protected boolean bungee;
         protected boolean database;
         protected boolean reconnectDatabaseWhenReloadConfig;
-        protected boolean vaultEconomy;
+        protected EnumEconomy economyOption;
+        protected boolean allowNoEconomy;
         protected String scanPackage;
         protected List<String> scanIgnore;
         protected boolean adventure;
@@ -46,16 +55,52 @@ public abstract class BukkitPlugin extends JavaPlugin {
         protected boolean enableConfigGotoFlag;
 
         protected DatabaseHolder databaseHolder;
-        protected EconomyHolder economyHolder;
+        protected IEconomy economy;
         private Options() {}
 
-        private void enable(BukkitPlugin plugin) {
+        /**
+         * @return 如果出现需要禁用插件的错误情况，返回 <code>true</code>
+         */
+        private boolean enable(BukkitPlugin plugin) {
             if (database) {
                 databaseHolder = new DatabaseHolder(plugin);
             }
-            if (vaultEconomy) {
-                economyHolder = new EconomyHolder(plugin);
+            switch (economyOption) {
+                case VAULT: {
+                    RegisteredServiceProvider<Economy> service = Bukkit.getServicesManager().getRegistration(Economy.class);
+                    Economy provider = service == null ? null : service.getProvider();
+                    if (provider != null) {
+                        economy = new VaultEconomy(provider);
+                    } else {
+                        if (allowNoEconomy) {
+                            economy = NoEconomy.INSTANCE;
+                        } else {
+                            plugin.warnNoEconomy();
+                            return true;
+                        }
+                    }
+                    break;
+                }
+                case CUSTOM: {
+                    IEconomy custom = plugin.initCustomEconomy();
+                    if (custom != null) {
+                        economy = custom;
+                    } else {
+                        if (allowNoEconomy) {
+                            economy = NoEconomy.INSTANCE;
+                        } else {
+                            plugin.warnNoEconomy();
+                            return true;
+                        }
+                    }
+                    break;
+                }
+                default: {
+                    economy = NoEconomy.INSTANCE;
+                    break;
+                }
             }
+            return false;
         }
 
         private void disable() {
@@ -70,8 +115,8 @@ public abstract class BukkitPlugin extends JavaPlugin {
             }
         }
 
-        public EconomyHolder economy() {
-            return vaultEconomy ? economyHolder : null;
+        public IEconomy economy() {
+            return economy;
         }
 
         public DatabaseHolder database() {
@@ -89,7 +134,8 @@ public abstract class BukkitPlugin extends JavaPlugin {
         protected boolean bungee;
         protected boolean database;
         protected boolean reconnectDatabaseWhenReloadConfig;
-        protected boolean vaultEconomy;
+        protected EnumEconomy economy = EnumEconomy.NONE;
+        protected boolean allowNoEconomy;
         protected String scanPackage = null;
         protected List<String> scanIgnore = new ArrayList<>();
         protected boolean adventure;
@@ -102,7 +148,8 @@ public abstract class BukkitPlugin extends JavaPlugin {
                 bungee = builder.bungee;
                 database = builder.database;
                 reconnectDatabaseWhenReloadConfig = builder.reconnectDatabaseWhenReloadConfig;
-                vaultEconomy = builder.vaultEconomy;
+                economyOption = builder.economy;
+                allowNoEconomy = builder.allowNoEconomy;
                 scanPackage = builder.scanPackage;
                 scanIgnore = builder.scanIgnore;
                 adventure = builder.adventure;
@@ -123,8 +170,13 @@ public abstract class BukkitPlugin extends JavaPlugin {
             this.reconnectDatabaseWhenReloadConfig = value;
             return this;
         }
-        public OptionsBuilder vaultEconomy(boolean value) {
-            this.vaultEconomy = value;
+        public OptionsBuilder economy(EnumEconomy value) {
+            this.economy = value;
+            return this;
+        }
+        public OptionsBuilder economy(EnumEconomy value, boolean allowNoEconomy) {
+            this.economy = value;
+            this.allowNoEconomy = allowNoEconomy;
             return this;
         }
         public OptionsBuilder scanPackage(String packageName) {
@@ -182,6 +234,15 @@ public abstract class BukkitPlugin extends JavaPlugin {
         if (this.options.libraries() || this.options.database) {
             loadLibraries();
         }
+    }
+
+    @Nullable
+    protected IEconomy initCustomEconomy() {
+        return null;
+    }
+
+    protected void warnNoEconomy() {
+        warn("未发现经济接口实现，插件将卸载");
     }
 
     protected void loadLibraries() {
@@ -300,10 +361,9 @@ public abstract class BukkitPlugin extends JavaPlugin {
     @SuppressWarnings({"unchecked"})
     public void onEnable() {
         Util.init(this);
-        options.enable(this);
-
-        if (options.vaultEconomy && options.economyHolder != null) {
-            options.economyHolder.load();
+        if (options.enable(this)) {
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
 
         String packageName = options.scanPackage != null ? options.scanPackage : getClass().getPackage().getName();
