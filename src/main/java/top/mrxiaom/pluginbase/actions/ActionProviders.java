@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.api.IActionProvider;
+import top.mrxiaom.pluginbase.utils.Pair;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,17 +39,21 @@ public class ActionProviders {
     }
 
     public static void run(BukkitPlugin plugin, Player player, List<IAction> actions) {
-        run0(plugin, player, actions, 0);
+        run0(plugin, player, actions, null, 0);
     }
 
-    private static void run0(BukkitPlugin plugin, Player player, List<IAction> actions, int startIndex) {
+    public static void run(BukkitPlugin plugin, Player player, List<IAction> actions, List<Pair<String, Object>> replacements) {
+        run0(plugin, player, actions, replacements, 0);
+    }
+
+    private static void run0(BukkitPlugin plugin, Player player, List<IAction> actions, List<Pair<String, Object>> replacements, int startIndex) {
         for (int i = startIndex; i < actions.size(); i++) {
             IAction action = actions.get(i);
             action.run(player);
             long delay = action.delayAfterRun();
             if (delay > 0) {
                 int index = i + 1;
-                plugin.getScheduler().runTaskLater(() -> run0(plugin, player, actions, index), delay);
+                plugin.getScheduler().runTaskLater(() -> run0(plugin, player, actions, replacements, index), delay);
                 return;
             }
         }
