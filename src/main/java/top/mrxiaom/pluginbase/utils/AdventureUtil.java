@@ -5,6 +5,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 
+import java.lang.reflect.Field;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +23,34 @@ public class AdventureUtil {
     private static BukkitAudiences adventure;
     private static MiniMessage miniMessage;
 
-    protected static void init(BukkitPlugin plugin) {
-        adventure = BukkitAudiences.builder(plugin).build();
-        miniMessage = MiniMessage.builder()
+    @SuppressWarnings({"unchecked", "CallToPrintStackTrace"})
+    private static void remove(TagResolver.Builder builder, String... tags) {
+        Class<?> type = builder.getClass();
+        try {
+            Field field = type.getDeclaredField("resolvers");
+            field.setAccessible(true);
+            List<TagResolver> list = (List<TagResolver>) field.get(builder);
+            list.removeIf(it -> {
+                for (String tag : tags) {
+                    if (it.has(tag)) return true;
+                }
+                return false;
+            });
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    private static MiniMessage create() {
+        return MiniMessage.builder()
+                .editTags(it -> remove(it, "pride"))
                 .postProcessor(it -> it.decoration(TextDecoration.ITALIC, false))
                 .build();
+    }
+
+    protected static void init(BukkitPlugin plugin) {
+        adventure = BukkitAudiences.builder(plugin).build();
+        miniMessage = create();
         try {
             AdventureItemStack.init();
         } catch (Throwable ignored) {
