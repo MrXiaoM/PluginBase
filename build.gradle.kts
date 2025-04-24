@@ -1,8 +1,10 @@
+import moe.karla.maven.publishing.MavenPublishingExtension.PublishingType
+
 plugins {
     java
     signing
     `maven-publish`
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
+    id("moe.karla.maven-publishing")
 }
 
 group = "top.mrxiaom"
@@ -16,7 +18,7 @@ repositories {
     }
 
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    maven("https://repo.helpch.at/releases/")
     maven("https://repo.rosewooddev.io/repository/public/")
     maven("https://jitpack.io/")
 
@@ -71,6 +73,10 @@ tasks {
         }
     }
 }
+mavenPublishing {
+    publishingType = PublishingType.USER_MANAGED
+    url = "https://github.com/MrXiaoM/PluginBase"
+}
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -110,15 +116,5 @@ signing {
     if (signingKey != null && signingPassword != null) {
         useInMemoryPgpKeys(signingKey, signingPassword)
         sign(publishing.publications.getByName("maven"))
-    }
-}
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-            username.set(findProperty("MAVEN_USERNAME")?.toString())
-            password.set(findProperty("MAVEN_PASSWORD")?.toString())
-        }
     }
 }
