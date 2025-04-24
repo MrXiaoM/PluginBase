@@ -48,10 +48,6 @@ class MavenPublishingPlugin implements Plugin<Project> {
                 }
             }
             rootProject.allprojects {
-                if (ext.automaticSourcesAndJavadoc) {
-                    apply plugin: PublishingStubsSetupPlugin.class
-                }
-
                 pluginManager.withPlugin('maven-publish') {
                     def currentProject = project
                     def publishing = currentProject.extensions.findByName('publishing') as PublishingExtension
