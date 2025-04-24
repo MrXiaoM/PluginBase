@@ -74,7 +74,7 @@ tasks {
     }
 }
 mavenPublishing {
-    publishingType = PublishingType.USER_MANAGED
+    publishingType = PublishingType.AUTOMATIC
     url = "https://github.com/MrXiaoM/PluginBase"
 }
 publishing {
