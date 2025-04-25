@@ -4,13 +4,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.api.IActionProvider;
-import top.mrxiaom.pluginbase.utils.PAPI;
 import top.mrxiaom.pluginbase.utils.Pair;
 import top.mrxiaom.pluginbase.utils.Util;
 
 import java.util.List;
-
-import static top.mrxiaom.pluginbase.func.AbstractPluginHolder.t;
 
 public class ActionDelay implements IAction {
     public static final IActionProvider PROVIDER = s -> {

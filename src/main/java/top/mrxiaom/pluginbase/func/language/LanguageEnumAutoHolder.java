@@ -3,7 +3,6 @@ package top.mrxiaom.pluginbase.func.language;
 import com.google.common.collect.Lists;
 import top.mrxiaom.pluginbase.func.LanguageManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LanguageEnumAutoHolder<T extends Enum<T>> extends AbstractLanguageHolder {
