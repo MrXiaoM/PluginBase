@@ -16,7 +16,15 @@ public class ActionProviders {
     private ActionProviders() {}
 
     public static List<IAction> loadActions(ConfigurationSection section, String key) {
-        List<String> list = section.getStringList(key);
+        return loadActions(section, new String[]{key});
+    }
+
+    public static List<IAction> loadActions(ConfigurationSection section, String... keys) {
+        List<String> list = new ArrayList<>();
+        for (String key : keys) {
+            list.addAll(section.getStringList(key));
+        }
+        if (list.isEmpty()) return new ArrayList<>();
         return loadActions(list);
     }
 

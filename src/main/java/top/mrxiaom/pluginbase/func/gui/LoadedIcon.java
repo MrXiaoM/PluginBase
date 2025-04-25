@@ -130,6 +130,9 @@ public class LoadedIcon {
     }
 
     public static LoadedIcon load(ConfigurationSection section, String id) {
+        ConfigurationSection current = section.getConfigurationSection(id);
+        assert current != null;
+
         String material, materialStr = section.getString(id + ".material");
         if (materialStr != null) {
             if (!materialStr.contains(":") && section.contains(id + ".data")) { // 兼容旧的选项
@@ -152,11 +155,11 @@ public class LoadedIcon {
         if (section1 != null) for (String key : section1.getKeys(false)) {
             nbtInts.put(key, section1.getString(key, ""));
         }
-        List<IAction> leftClickCommands = loadActions(section, id + ".left-click-commands");
-        List<IAction> rightClickCommands = loadActions(section, id + ".right-click-commands");
-        List<IAction> shiftLeftClickCommands = loadActions(section, id + ".shift-left-click-commands");
-        List<IAction> shiftRightClickCommands = loadActions(section, id + ".shift-left-click-commands");
-        List<IAction> dropCommands = loadActions(section, id + ".drop-commands");
+        List<IAction> leftClickCommands = loadActions(current, "left-click-commands", "left_click_commands");
+        List<IAction> rightClickCommands = loadActions(current, "right-click-commands", "right_click_commands");
+        List<IAction> shiftLeftClickCommands = loadActions(current, "shift-left-click-commands", "shift_left_click_commands");
+        List<IAction> shiftRightClickCommands = loadActions(current, "shift-left-click-commands", "shift_left_click_commands");
+        List<IAction> dropCommands = loadActions(current, "drop-commands", "drop_commands");
         Object tag = null;
         for (ITagProvider provider : tagProviders) {
             if ((tag = provider.provide(section, id)) != null) {
