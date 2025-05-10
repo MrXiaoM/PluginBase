@@ -21,6 +21,13 @@ public interface IGui {
     Inventory newInventory();
 
     /**
+     * 是否允许创建物品栏界面 (newInventory) 返回 null。返回 null 时不会为玩家打开界面
+     */
+    default boolean allowNullInventory() {
+        return false;
+    }
+
+    /**
      * 界面物品点击时执行
      * @param action 玩家进行的物品栏操作
      * @param click 玩家进行的点击操作
