@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "top.mrxiaom"
-version = "1.4.0"
+version = "1.4.1"
 
 repositories {
     mavenCentral()
@@ -23,6 +23,7 @@ repositories {
     maven("https://jitpack.io/")
 }
 
+@Suppress("VulnerableLibrariesLocal")
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.5-R0.1-SNAPSHOT")
     testImplementation("org.spigotmc:spigot-api:1.21.5-R0.1-SNAPSHOT")
@@ -60,7 +61,6 @@ tasks {
     }
     javadoc {
         (options as StandardJavadocDocletOptions).apply {
-            links("https://docs.oracle.com/javase/8/docs/api/")
             links("https://hub.spigotmc.org/javadocs/spigot/")
 
             locale("zh_CN")
