@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class ConfigUpdater extends AbstractPluginHolder<BukkitPlugin> {
@@ -39,7 +40,9 @@ public class ConfigUpdater extends AbstractPluginHolder<BukkitPlugin> {
     private static boolean notEquals(List<String> list1, List<String> list2) {
         if (list1.size() != list2.size()) return true;
         for (int i = 0; i < list1.size(); i++) {
-            if (!list1.get(i).equals(list2.get(i))) {
+            String str1 = list1.get(i);
+            String str2 = list2.get(i);
+            if (!Objects.equals(str1, str2)) {
                 return true;
             }
         }
