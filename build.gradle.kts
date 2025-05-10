@@ -21,8 +21,6 @@ repositories {
     maven("https://repo.helpch.at/releases/")
     maven("https://repo.rosewooddev.io/repository/public/")
     maven("https://jitpack.io/")
-
-    maven("https://oss.sonatype.org/content/groups/public/")
 }
 
 dependencies {
