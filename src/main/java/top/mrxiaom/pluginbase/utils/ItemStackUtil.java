@@ -223,10 +223,13 @@ public class ItemStackUtil {
     }
 
     public static void setGlow(ItemStack item) {
-        ItemMeta meta = getItemMeta(item);
-        meta.addEnchant(Enchantment.DURABILITY, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        item.setItemMeta(meta);
+        Enchantment enchant = Util.valueOrNull(Enchantment.class, "DURABILITY", "UNBREAKING");
+        if (enchant != null) {
+            ItemMeta meta = getItemMeta(item);
+            meta.addEnchant(enchant, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            item.setItemMeta(meta);
+        }
     }
 
     @NotNull

@@ -412,6 +412,14 @@ public class Util {
         return def;
     }
 
+    public static <T> T valueOrNull(Class<T> type, String... s) {
+        for (String str : s) {
+            T value = valueOr(type, str, null);
+            if (value != null) return value;
+        }
+        return null;
+    }
+
     public static <T> List<List<T>> chunk(List<T> list, int size) {
         List<List<T>> result = new ArrayList<>();
         List<T> temp = new ArrayList<>();
