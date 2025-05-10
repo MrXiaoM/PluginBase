@@ -26,8 +26,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
-    testImplementation("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.21.5-R0.1-SNAPSHOT")
+    testImplementation("org.spigotmc:spigot-api:1.21.5-R0.1-SNAPSHOT")
     
     compileOnly("net.milkbowl.vault:VaultAPI:1.7")
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")
@@ -39,10 +39,10 @@ dependencies {
     compileOnly("net.kyori:adventure-api:4.20.0")
     compileOnly("net.kyori:adventure-platform-bukkit:4.3.4")
     compileOnly("net.kyori:adventure-text-minimessage:4.20.0")
-    compileOnly("de.tr7zw:item-nbt-api:2.14.1")
+    compileOnly("de.tr7zw:item-nbt-api:2.15.0")
     compileOnly("com.github.technicallycoded:FoliaLib:0.4.4")
 
-    implementation("org.jetbrains:annotations:21.0.0")
+    implementation("org.jetbrains:annotations:24.0.0")
 }
 val targetJavaVersion = 8
 java {

@@ -1,0 +1,152 @@
+package top.mrxiaom.pluginbase.utils;
+
+import org.bukkit.*;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Biome;
+import org.bukkit.block.BlockType;
+import org.bukkit.block.banner.PatternType;
+import org.bukkit.boss.KeyedBossBar;
+import org.bukkit.damage.DamageType;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.*;
+import org.bukkit.entity.memory.MemoryKey;
+import org.bukkit.generator.structure.Structure;
+import org.bukkit.generator.structure.StructureType;
+import org.bukkit.inventory.ItemType;
+import org.bukkit.inventory.MenuType;
+import org.bukkit.inventory.meta.trim.TrimMaterial;
+import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.bukkit.loot.LootTables;
+import org.bukkit.map.MapCursor;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class RegistryConverter {
+    private static final Map<String, Registry<?>> registries = new HashMap<>();
+    @SuppressWarnings({"deprecation", "UnstableApiUsage"})
+    protected static void init() {
+        try {
+            add(Advancement.class, Registry.ADVANCEMENT);
+        } catch (Throwable ignored) {}
+        try {
+            add(Art.class, Registry.ART);
+        } catch (Throwable ignored) {}
+        try {
+            add(Attribute.class, Registry.ATTRIBUTE);
+        } catch (Throwable ignored) {}
+        try {
+            add(PatternType.class, Registry.BANNER_PATTERN);
+        } catch (Throwable ignored) {}
+        try {
+            add(Biome.class, Registry.BIOME);
+        } catch (Throwable ignored) {}
+        try {
+            add(BlockType.class, Registry.BLOCK);
+        } catch (Throwable ignored) {}
+        try {
+            add(KeyedBossBar.class, Registry.BOSS_BARS);
+        } catch (Throwable ignored) {}
+        try {
+            add(Cat.Type.class, Registry.CAT_VARIANT);
+        } catch (Throwable ignored) {}
+        try {
+            add(Chicken.Variant.class, Registry.CHICKEN_VARIANT);
+        } catch (Throwable ignored) {}
+        try {
+            add(Cow.Variant.class, Registry.COW_VARIANT);
+        } catch (Throwable ignored) {}
+        try {
+            add(DamageType.class, Registry.DAMAGE_TYPE);
+        } catch (Throwable ignored) {}
+        try {
+            add(PotionEffectType.class, Registry.EFFECT);
+        } catch (Throwable ignored) {}
+        try {
+            add(Enchantment.class, Registry.ENCHANTMENT);
+        } catch (Throwable ignored) {}
+        try {
+            add(EntityType.class, Registry.ENTITY_TYPE);
+        } catch (Throwable ignored) {}
+        try {
+            add(Fluid.class, Registry.FLUID);
+        } catch (Throwable ignored) {}
+        try {
+            add(Frog.Variant.class, Registry.FROG_VARIANT);
+        } catch (Throwable ignored) {}
+        try {
+            add(GameEvent.class, Registry.GAME_EVENT);
+        } catch (Throwable ignored) {}
+        try {
+            add(MusicInstrument.class, Registry.INSTRUMENT);
+        } catch (Throwable ignored) {}
+        try {
+            add(ItemType.class, Registry.ITEM);
+        } catch (Throwable ignored) {}
+        try {
+            add(JukeboxSong.class, Registry.JUKEBOX_SONG);
+        } catch (Throwable ignored) {}
+        try {
+            add(LootTables.class, Registry.LOOT_TABLES);
+        } catch (Throwable ignored) {}
+        try {
+            add(MapCursor.Type.class, Registry.MAP_DECORATION_TYPE);
+        } catch (Throwable ignored) {}
+        try {
+            add(Material.class, Registry.MATERIAL);
+        } catch (Throwable ignored) {}
+        try {
+            add(MemoryKey.class, Registry.MEMORY_MODULE_TYPE);
+        } catch (Throwable ignored) {}
+        try {
+            add(MenuType.class, Registry.MENU);
+        } catch (Throwable ignored) {}
+        try {
+            add(Particle.class, Registry.PARTICLE_TYPE);
+        } catch (Throwable ignored) {}
+        try {
+            add(Pig.Variant.class, Registry.PIG_VARIANT);
+        } catch (Throwable ignored) {}
+        try {
+            add(PotionType.class, Registry.POTION);
+        } catch (Throwable ignored) {}
+        try {
+            add(Sound.class, Registry.SOUNDS);
+        } catch (Throwable ignored) {}
+        try {
+            add(Statistic.class, Registry.STATISTIC);
+        } catch (Throwable ignored) {}
+        try {
+            add(Structure.class, Registry.STRUCTURE);
+        } catch (Throwable ignored) {}
+        try {
+            add(StructureType.class, Registry.STRUCTURE_TYPE);
+        } catch (Throwable ignored) {}
+        try {
+            add(TrimMaterial.class, Registry.TRIM_MATERIAL);
+        } catch (Throwable ignored) {}
+        try {
+            add(TrimPattern.class, Registry.TRIM_PATTERN);
+        } catch (Throwable ignored) {}
+        try {
+            add(Villager.Profession.class, Registry.VILLAGER_PROFESSION);
+        } catch (Throwable ignored) {}
+        try {
+            add(Villager.Type.class, Registry.VILLAGER_TYPE);
+        } catch (Throwable ignored) {}
+        try {
+            add(Wolf.Variant.class, Registry.WOLF_VARIANT);
+        } catch (Throwable ignored) {}
+    }
+
+    private static <T extends Keyed> void add(Class<T> type, Registry<T> registry) {
+        registries.put(type.getName(), registry);
+    }
+
+    public static Registry<?> fromType(Class<?> type) {
+        return registries.get(type.getName());
+    }
+}

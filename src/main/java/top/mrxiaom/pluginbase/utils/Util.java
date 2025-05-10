@@ -1,10 +1,7 @@
 package top.mrxiaom.pluginbase.utils;
 
 import com.google.common.collect.Lists;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
@@ -62,6 +59,10 @@ public class Util {
         }
         try {
             SkullsUtil.init();
+        } catch (Throwable ignored) {
+        }
+        try {
+            RegistryConverter.init();
         } catch (Throwable ignored) {
         }
         if (plugin.options.adventure()) {
@@ -250,6 +251,7 @@ public class Util {
     public static boolean createNewFile(File file) throws IOException {
         return file.createNewFile();
     }
+    @SuppressWarnings("UnusedReturnValue")
     public static boolean mkdirs(File file) {
         return file.mkdirs();
     }
@@ -393,10 +395,19 @@ public class Util {
         }
     }
 
-    public static <T extends Enum<?>> T valueOr(Class<T> c, String s, T def) {
-        if (s == null) return def;
-        for (T t : c.getEnumConstants()) {
-            if (t.name().equalsIgnoreCase(s)) return t;
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static <T> T valueOr(Class<T> type, String s, T def) {
+        if (s == null || s.isEmpty()) return def;
+        if (type.isEnum()) {
+            for (T t : type.getEnumConstants()) {
+                if (((Enum) t).name().equalsIgnoreCase(s)) return t;
+            }
+        } else {
+            Registry<?> registry = RegistryConverter.fromType(type);
+            Keyed matched = registry.match(s);
+            if (/*matched != null && */type.isInstance(matched)) {
+                return (T) matched;
+            }
         }
         return def;
     }
