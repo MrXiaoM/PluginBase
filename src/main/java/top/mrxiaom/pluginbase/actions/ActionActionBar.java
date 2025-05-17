@@ -28,6 +28,8 @@ public class ActionActionBar implements IAction {
     @Override
     public void run(Player player, @Nullable List<Pair<String, Object>> replacements) {
         String s = Pair.replace(message, replacements);
-        AdventureUtil.sendActionBar(player, PAPI.setPlaceholders(player, s));
+        if (player != null) {
+            AdventureUtil.sendActionBar(player, PAPI.setPlaceholders(player, s));
+        }
     }
 }

@@ -29,6 +29,8 @@ public class ActionPlayer implements IAction {
     @Override
     public void run(Player player, @Nullable List<Pair<String, Object>> replacements) {
         String s = Pair.replace(command, replacements);
-        Bukkit.dispatchCommand(player, PAPI.setPlaceholders(player, s));
+        if (player != null) {
+            Bukkit.dispatchCommand(player, PAPI.setPlaceholders(player, s));
+        }
     }
 }

@@ -20,6 +20,8 @@ public class ActionClose implements IAction {
 
     @Override
     public void run(Player player, @Nullable List<Pair<String, Object>> replacements) {
-        player.closeInventory();
+        if (player != null) {
+            player.closeInventory();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package top.mrxiaom.pluginbase.actions;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.api.IAction;
@@ -28,6 +29,10 @@ public class ActionMessageAdventure implements IAction {
     @Override
     public void run(Player player, @Nullable List<Pair<String, Object>> replacements) {
         String s = Pair.replace(message, replacements);
-        AdventureUtil.sendMessage(player, PAPI.setPlaceholders(player, s));
+        if (player != null) {
+            AdventureUtil.sendMessage(player, PAPI.setPlaceholders(player, s));
+        } else {
+            AdventureUtil.sendMessage(Bukkit.getConsoleSender(), s);
+        }
     }
 }
