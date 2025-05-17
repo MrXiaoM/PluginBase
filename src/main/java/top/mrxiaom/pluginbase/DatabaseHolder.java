@@ -85,6 +85,7 @@ public class DatabaseHolder {
         }
         tablePrefix = config.getString("table_prefix", "");
         String type = config.getString("type", "sqlite").toLowerCase();
+        driver = null;
         switch (type) {
             case "mysql":
                 int mysqlVersion = config.getInt("mysql.version", 8);
@@ -107,12 +108,13 @@ public class DatabaseHolder {
                 }
                 break;
             case "sqlite":
-            default:
                 driver = checkDriver("SQLite", "org.sqlite.JDBC");
                 if (driver == null) {
                     plugin.warn("请从以下链接下载 SQLite JDBC，放入 plugins/" + plugin.getDescription().getName() + "/libraries 文件夹，并重启服务器");
                     plugin.warn("https://mirrors.huaweicloud.com/repository/maven/org/xerial/sqlite-jdbc/3.49.0.0/sqlite-jdbc-3.49.0.0.jar");
                 }
+                break;
+            default:
                 break;
         }
         if (driver == null) return;
