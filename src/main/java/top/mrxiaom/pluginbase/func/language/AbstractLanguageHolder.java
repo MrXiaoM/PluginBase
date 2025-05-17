@@ -8,6 +8,7 @@ import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.ColorHelper;
 import top.mrxiaom.pluginbase.utils.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,14 +47,29 @@ public abstract class AbstractLanguageHolder {
         }
     }
     public String str(Object... args) {
-        return String.format(str(), args);
+        Object[] arguments = new Object[args.length];
+        ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
+        for (int i = 0; i < args.length; i++) {
+            arguments[i] = processor.execute(this, null, args[i]);
+        }
+        return String.format(str(), arguments);
     }
     @SafeVarargs
     public final String str(Pair<String, Object>... replacements) {
-        return replace(str(), replacements);
+        List<Pair<String, Object>> list = new ArrayList<>();
+        ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
+        for (Pair<String, Object> pair : replacements) {
+            list.add(Pair.of(pair.key(), processor.execute(this, pair.key(), pair.value())));
+        }
+        return replace(str(), list);
     }
     public String str(Iterable<Pair<String, Object>> replacements) {
-        return replace(str(), replacements);
+        List<Pair<String, Object>> list = new ArrayList<>();
+        ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
+        for (Pair<String, Object> pair : replacements) {
+            list.add(Pair.of(pair.key(), processor.execute(this, pair.key(), pair.value())));
+        }
+        return replace(str(), list);
     }
     public List<String> list() {
         LanguageManager lang = getLanguageManager();
@@ -65,19 +81,34 @@ public abstract class AbstractLanguageHolder {
         }
     }
     public List<String> list(Object... args) {
+        Object[] arguments = new Object[args.length];
+        ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
+        for (int i = 0; i < args.length; i++) {
+            arguments[i] = processor.execute(this, null, args[i]);
+        }
         return list().stream()
-                .map(it -> String.format(it, args))
+                .map(it -> String.format(it, arguments))
                 .collect(Collectors.toList());
     }
     @SafeVarargs
     public final List<String> list(Pair<String, Object>... replacements) {
+        List<Pair<String, Object>> list = new ArrayList<>();
+        ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
+        for (Pair<String, Object> pair : replacements) {
+            list.add(Pair.of(pair.key(), processor.execute(this, pair.key(), pair.value())));
+        }
         return list().stream()
-                .map(it -> replace(it, replacements))
+                .map(it -> replace(it, list))
                 .collect(Collectors.toList());
     }
     public List<String> list(Iterable<Pair<String, Object>> replacements) {
+        List<Pair<String, Object>> list = new ArrayList<>();
+        ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
+        for (Pair<String, Object> pair : replacements) {
+            list.add(Pair.of(pair.key(), processor.execute(this, pair.key(), pair.value())));
+        }
         return list().stream()
-                .map(it -> replace(it, replacements))
+                .map(it -> replace(it, list))
                 .collect(Collectors.toList());
     }
 

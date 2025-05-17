@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.language.AbstractLanguageHolder;
+import top.mrxiaom.pluginbase.func.language.ILanguageArgumentProcessor;
 import top.mrxiaom.pluginbase.func.language.LanguageEnumAutoHolder;
 
 import java.io.File;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @SuppressWarnings("UnusedReturnValue")
@@ -21,6 +23,7 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
     private final Map<String, Function> holderGetters = new HashMap<>();
     private final Map<String, Object> holderValues = new HashMap<>();
     private final Map<String, AbstractLanguageHolder> holders = new HashMap<>();
+    private ILanguageArgumentProcessor processor = (holder, key, value) -> value;
     private File file = null;
     /**
      * 是否禁止在重载配置文件时重载语言文件
@@ -59,6 +62,18 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
      */
     public LanguageManager setLangFile(@Nullable File file) {
         this.file = file;
+        return this;
+    }
+
+    public ILanguageArgumentProcessor getProcessor() {
+        return processor;
+    }
+
+    /**
+     * 设置变量参数处理器
+     */
+    public LanguageManager setProcessor(ILanguageArgumentProcessor processor) {
+        this.processor = processor;
         return this;
     }
 
