@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "top.mrxiaom"
-version = "1.4.2"
+version = "1.4.3"
 
 repositories {
     mavenCentral()
@@ -35,9 +35,9 @@ dependencies {
     compileOnly("com.mojang:authlib:2.1.28")
     compileOnly(files("libs/stub-rt.jar"))
 
-    compileOnly("net.kyori:adventure-api:4.20.0")
-    compileOnly("net.kyori:adventure-platform-bukkit:4.3.4")
-    compileOnly("net.kyori:adventure-text-minimessage:4.20.0")
+    compileOnly("net.kyori:adventure-api:4.21.0")
+    compileOnly("net.kyori:adventure-platform-bukkit:4.4.0")
+    compileOnly("net.kyori:adventure-text-minimessage:4.21.0")
     compileOnly("de.tr7zw:item-nbt-api:2.15.0")
     compileOnly("com.github.technicallycoded:FoliaLib:0.4.4")
 
