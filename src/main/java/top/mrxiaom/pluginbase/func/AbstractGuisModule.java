@@ -17,6 +17,7 @@ import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.gui.IModel;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.gui.IGui;
+import top.mrxiaom.pluginbase.utils.Util;
 
 import java.io.File;
 import java.util.*;
@@ -131,8 +132,8 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
         }
 
         public void updateInventory(InventoryView view) {
-            updateInventory(view::setItem);
-            player.updateInventory();
+            updateInventory(view.getTopInventory()::setItem);
+            Util.submitInvUpdate(player);
         }
 
         @Override
