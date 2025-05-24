@@ -2,6 +2,8 @@ package top.mrxiaom.pluginbase.actions;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.api.IActionProvider;
@@ -15,10 +17,12 @@ public class ActionProviders {
     private static final List<IActionProvider> actionProviders = new ArrayList<>();
     private ActionProviders() {}
 
+    @NotNull
     public static List<IAction> loadActions(ConfigurationSection section, String key) {
         return loadActions(section, new String[]{key});
     }
 
+    @NotNull
     public static List<IAction> loadActions(ConfigurationSection section, String... keys) {
         List<String> list = new ArrayList<>();
         for (String key : keys) {
@@ -28,17 +32,25 @@ public class ActionProviders {
         return loadActions(list);
     }
 
+    @NotNull
     public static List<IAction> loadActions(List<String> list) {
         List<IAction> actions = new ArrayList<>();
         for (String s : list) {
-            for (IActionProvider provider : actionProviders) {
-                IAction action = provider.provide(s);
-                if (action != null) {
-                    actions.add(action);
-                }
+            IAction action = loadAction(s);
+            if (action != null) {
+                actions.add(action);
             }
         }
         return actions;
+    }
+
+    @Nullable
+    public static IAction loadAction(String s) {
+        for (IActionProvider provider : actionProviders) {
+            IAction action = provider.provide(s);
+            if (action != null) return action;
+        }
+        return null;
     }
 
     public static void registerActionProvider(IActionProvider provider) {
