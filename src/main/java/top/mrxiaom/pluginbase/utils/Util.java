@@ -23,6 +23,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.MatchResult;
@@ -418,6 +419,24 @@ public class Util {
             if (value != null) return value;
         }
         return null;
+    }
+
+    @NotNull
+    public static <K, V> V getOrPut(Map<K, V> map, K key, Function<K, V> creator) {
+        V value = map.get(key);
+        if (value != null) return value;
+        V newValue = creator.apply(key);
+        map.put(key, newValue);
+        return newValue;
+    }
+
+    @NotNull
+    public static <K, V> V getOrPut(Map<K, V> map, K key, Supplier<V> creator) {
+        V value = map.get(key);
+        if (value != null) return value;
+        V newValue = creator.get();
+        map.put(key, newValue);
+        return newValue;
     }
 
     public static <T> List<List<T>> chunk(List<T> list, int size) {
