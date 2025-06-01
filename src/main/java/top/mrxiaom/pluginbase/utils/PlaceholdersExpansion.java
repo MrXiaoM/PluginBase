@@ -1,5 +1,6 @@
 package top.mrxiaom.pluginbase.utils;
 
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -31,5 +32,9 @@ public abstract class PlaceholdersExpansion<T extends JavaPlugin> extends Placeh
     @Override
     public @NotNull String getVersion() {
         return plugin.getDescription().getVersion();
+    }
+
+    public static String bool(boolean value) {
+        return value ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
     }
 }
