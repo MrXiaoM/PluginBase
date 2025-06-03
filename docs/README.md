@@ -10,7 +10,7 @@
 4. 一些工具 [ColorHelper, ItemStackUtil, Util 等等](/docs/utils.md)
 5. (可选) 菜单 [GuiManager](/docs/gui.md)
 6. (可选) 菜单配置文件 [AbstractGuiModule](/docs/gui.config.md)
-7. (可选) Vault 经济 [EconomyHolder](/docs/vault.md)
+7. (可选) Vault 经济 [IEconomy](/docs/vault.md)
 8. (可选) HikariCP 数据库连接池 [IDatabase](/docs/database.md)
 9. (可选) Adventure 在非 Paper 服务端的富文本支持 [AdventureUtil](/docs/adventure.md)
 10. (可选) 本地化（语言文件）系统 [LanguageManager](/docs/language.md)
@@ -69,7 +69,7 @@ buildscript {
     }
 }
 ```
-shadow 7.1.2 的工具链有点老了，发布不到 Gradle Plugin Portal，升级工具链又不支持 gradle 7.x，干脆就发 Maven Central 了。反正这样添加起来也不麻烦，多几行代码不碍事，能解决问题就行。
+shadow 7.1.2 的工具链有点老了，发布不到 Gradle Plugin Portal，升级工具链又不支持 gradle 7.x，干脆就发 Maven Central 了。反正这样添加起来也不麻烦，多几行代码不碍事，能解决问题就行。也测试了支持在 Gradle 8.5 跑，不求在太高的 Gradle 版本能用，目前能兼容 Java 21 就行。
 ```kotlin
 // build.gradle.kts
 plugins {
@@ -88,4 +88,4 @@ tasks {
 
 我的需求比较简单，所以现用 String 通过 mini message 转 Component。如果复杂一点，可以用 `GsonComponentSerializer` 作桥梁，沟通打包到你插件里的 adventure 和 paper 的 adventure。
 
-顺带一提，可以加 ProtocolLib、packetevents 之类的依赖来解决 spigot 不支持在容器标题使用 adventure 的问题。不过，要加依赖插件的东西就不写到这个框架里了。
+顺带一提，可以加 ProtocolLib、packetevents 之类的依赖来解决 spigot 不支持在容器标题使用 adventure 的问题。不过，要加依赖插件的东西就不写到这个框架里了。如有需要，请参见 [SweetMail 的实现](https://github.com/MrXiaoM/SweetMail/blob/58a6ae0c0db1cde1fa9751cd911f0f963b72e3cf/src/main/java/top/mrxiaom/sweetmail/depend/protocollib/PLComponentTitle.java)。

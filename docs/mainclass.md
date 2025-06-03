@@ -77,8 +77,8 @@ package top.mrxiaom.example.func;
 
 import top.mrxiaom.example.PluginMain;
 
-public abstract class AbstractModule extends top.mrxiaom.pluginbase.func.AbstractModule<SweetRiceBase> {
-    public AbstractModule(SweetRiceBase plugin) {
+public abstract class AbstractModule extends top.mrxiaom.pluginbase.func.AbstractModule<PluginMain> {
+    public AbstractModule(PluginMain plugin) {
         super(plugin);
     }
 }

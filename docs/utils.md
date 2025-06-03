@@ -2,13 +2,15 @@
 
 # 一些工具
 
-PluginBase 附带了一些好用的工具
+PluginBase 附带了一些好用的工具。
 
 ## ColorHelper
 
-用于替换彩色字、十六进制颜色、渐变色
+用于替换彩色字、十六进制颜色、渐变色。
 
 用法为 `ColorHelper.parseColor("");`
+
+更建议使用 `AdventureUtil` 作为替代。
 
 ## ItemStackUtil
 
@@ -34,12 +36,12 @@ PlaceholderAPI 兼容接口，在服务器安装了 PlaceholderAPI 时正常替�
 大杂烩工具集合
 
 + 将 stackTrace 打印到字符串，跟 kotlin 用法类似
-+ 快捷执行命令列表，支持 PAPI 变量  
++ 快捷执行命令列表，支持 PAPI 变量（推荐使用 `ActionProviders` 作为替代）  
 `[console]` 开头为管理员命令  
 `[player]` 开头为玩家命令  
 `[message]` 开头为聊天框输出消息
 + Location 的快捷序列化与反序列化，格式为 `x,y,z,yaw,pitch`，保留两位小数
-+ 提前储存玩家列表，快捷高效获取 OfflinePlayer (离线玩家) 与 Player (在线玩家) 实例，避免同步频繁获取离线玩家时卡服
++ 提前储存玩家列表，快捷高效获取 OfflinePlayer (离线玩家) 与 Player (在线玩家) 实例，避免同步频繁获取离线玩家 (读取文件进行IO操作) 时卡服
 + 字符串反序列化为 `Optional<数字类型>` (`double`, `float`, `long`, `int`)
 + 字符串反序列化为枚举 带默认值 (`valueOr(Material.class, "PAPER", null)` 为读取 `Material.PAPER` (不分大小写)，读不到就返回默认值 `null`)
 + 列表分割 `chunk(List<T>, int)`，将一个列表分割成多个长度一样的子列表，与 kotlin 用法类似，最后一个列表可能长度不够

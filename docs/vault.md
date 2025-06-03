@@ -8,7 +8,7 @@
 public class PluginMain extends BukkitPlugin {
     public PluginMain() {
         super(options() // ...
-                .vaultEconomy(true)
+                .economy(EnumEconomy.VAULT)
                 // ...
         );
     }
@@ -19,7 +19,7 @@ public class PluginMain extends BukkitPlugin {
 ```java
 public class PluginMain extends BukkitPlugin {
     void foo() { // 使用示例
-        EconomyHolder economy = options.economy(); // 未启用 vaultEconomy 时为 null，请记得一定要启用
+        IEconomy economy = options.economy(); // 未启用 economy 时为 null，请记得一定要启用
         OfflinePlayer player = Bukkit.getOfflinePlayer("LittleCatX");
         double money = economy.get(player);
         if (economy.has(player, 100.0)) {

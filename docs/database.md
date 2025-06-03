@@ -45,10 +45,12 @@ public class PluginMain extends BukkitPlugin {
     //
     //    像这样放在主类比较容易调用，无论在哪里都有 plugin 实例可以使用
     //    想把它注册成模块也行，看个人喜好
-    public final ExampleDatabase exampleDatabase = new ExampleDatabase(this);
+    public final ExampleDatabase exampleDatabase;
     @Override
     protected void beforeEnable() {
-        options.registerDatabase(exampleDatabase);
+        options.registerDatabase(
+                exampleDatabase = new ExampleDatabase(this)
+        );
 
         // 3. 如需重新连接数据库，可用 options.database().reconnect();
         // 4. 如需从线程池拉取数据库连接，可用 this.getConnection();

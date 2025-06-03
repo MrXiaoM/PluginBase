@@ -86,7 +86,7 @@ public class GuiExample implements IGui {
         pageGuide.add("石头", new ItemStack(Material.STONE));
         // 更新到 Inventory
         pageGuide.updateInventory(inv);
-        return null;
+        return inv;
     }
 
     @Override
