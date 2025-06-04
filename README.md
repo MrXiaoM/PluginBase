@@ -11,7 +11,7 @@ Minecraft 插件开发前置
 
 ## 开始使用
 
-详见 [文档](/docs)
+详见 [MCIO Plugins 文档](https://plugins.mcio.dev/elopers/base/intro)。
 
 插件模板生成器详见 https://bukkit.mcio.dev
 
