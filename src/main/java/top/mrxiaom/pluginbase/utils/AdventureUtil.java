@@ -153,7 +153,7 @@ public class AdventureUtil {
                 stringBuilder.append(chars[i]);
                 continue;
             }
-            switch (chars[i+1]) {
+            switch (Character.toLowerCase(chars[i+1])) {
                 case '0': stringBuilder.append("<black>"); break;
                 case '1': stringBuilder.append("<dark_blue>"); break;
                 case '2': stringBuilder.append("<dark_green>"); break;
