@@ -100,14 +100,14 @@ public class AdventureItemStack {
     }
 
     @Nullable
-    public String getItemDisplayNameAsMiniMessage(ItemStack item) {
+    public static String getItemDisplayNameAsMiniMessage(ItemStack item) {
         Component component = getItemDisplayName(item);
         if (component == null) return null;
         return AdventureUtil.miniMessage(component);
     }
 
     @Nullable
-    public Component getItemDisplayName(ItemStack item) {
+    public static Component getItemDisplayName(ItemStack item) {
         String nameAsJson = getItemDisplayNameAsJson(item);
         if (nameAsJson == null) return null;
         return serializer().deserialize(nameAsJson);
