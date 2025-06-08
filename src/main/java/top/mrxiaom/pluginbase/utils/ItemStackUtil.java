@@ -302,7 +302,10 @@ public class ItemStackUtil {
             dataValue = null;
         }
         // 可正常处理的物品优先
-        Material material = parseOrNull(str);
+        Material material = Material.getMaterial(str.toUpperCase());
+        if (material == null) {
+            material = parseOrNull(str);
+        }
         if (dataValue != null) {
             if (material == null) return null;
             return Pair.of(material, dataValue);
@@ -361,8 +364,8 @@ public class ItemStackUtil {
         if (material == null && str.equals("CLOCK")) material = parseOrNull("WATCH");
         if (material == null && str.contains("BED")) material = parseOrNull("BED");
         if (material == null && str.equals("CRAFT_TABLE")) material = parseOrNull("WORKBENCH");
-        if (material == null && str.contains("_DOOR") && !str.contains("IRON")) material = parseOrNull("WOODEN_DOOR");
         if (material == null && str.startsWith("WOODEN_")) material = parseOrNull(str.replace("WOODEN_", "WOOD_"));
+        if (material == null && str.contains("_DOOR") && !str.contains("IRON")) material = parseOrNull("WOOD_DOOR");
         if (material == null && str.equals("IRON_BARS")) material = parseOrNull("IRON_FENCE");
         if (material == null && str.equals("BUNDLE")) material = parseOrNull("FEATHER");
         if (material == null && str.equals("ENDER_EYE")) material = parseOrNull("EYE_OF_ENDER");
