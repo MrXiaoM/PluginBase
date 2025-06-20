@@ -1,6 +1,8 @@
 package top.mrxiaom.pluginbase.utils;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,11 +30,11 @@ public class ConfigUpdater extends AbstractPluginHolder<BukkitPlugin> {
         }
     }
     public static final Function<String, Boolean> ALL_MATCHER = (s) -> true;
-    private final YamlConfiguration defaultConfig;
+    private final ConfigurationSection defaultConfig;
     private final List<String> autoSaveFullMatch = new ArrayList<>();
     private final List<String> autoSavePrefixMatch = new ArrayList<>();
     private final List<Function<String, Boolean>> autoSaveCustomMatch = new ArrayList<>();
-    private ConfigUpdater(BukkitPlugin plugin, YamlConfiguration defaultConfig) {
+    private ConfigUpdater(BukkitPlugin plugin, ConfigurationSection defaultConfig) {
         super(plugin);
         this.defaultConfig = defaultConfig;
     }
@@ -91,7 +93,7 @@ public class ConfigUpdater extends AbstractPluginHolder<BukkitPlugin> {
      * @param config 目标配置
      * @param saveFile 保存到文件
      */
-    public ConfigUpdater apply(@NotNull YamlConfiguration config, @Nullable File saveFile) {
+    public ConfigUpdater apply(@NotNull FileConfiguration config, @Nullable File saveFile) {
         boolean modified = false;
 
         // 遍历默认配置的所有键
@@ -158,7 +160,7 @@ public class ConfigUpdater extends AbstractPluginHolder<BukkitPlugin> {
     }
 
     @NotNull
-    public static ConfigUpdater create(BukkitPlugin plugin, YamlConfiguration defaultConfig) {
+    public static ConfigUpdater create(BukkitPlugin plugin, ConfigurationSection defaultConfig) {
         return new ConfigUpdater(plugin, defaultConfig);
     }
 }
