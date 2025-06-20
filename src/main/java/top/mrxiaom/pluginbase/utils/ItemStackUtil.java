@@ -23,6 +23,7 @@ import java.util.*;
 import static top.mrxiaom.pluginbase.func.AbstractPluginHolder.t;
 
 public class ItemStackUtil {
+    private static final boolean is1_13 = parseOrNull("BLUE_ICE") != null;
     private static final Integer[] frameSlots54 = new Integer[]{
             0, 1, 2, 3, 4, 5, 6, 7, 8,
             9,/* 10, 11, 12, 13, 14, 15, 16, */17,
@@ -295,16 +296,22 @@ public class ItemStackUtil {
         Integer dataValue;
         if (input.contains(":")) {
             String[] split = input.split(":", 2);
-            str = split[0];
+            str = split[0].toUpperCase();
             dataValue = Util.parseInt(split[1]).orElse(null);
         } else {
-            str = input;
+            str = input.toUpperCase();
             dataValue = null;
         }
         // 可正常处理的物品优先
-        Material material = Material.getMaterial(str.toUpperCase());
+        Material material = Material.getMaterial(str);
         if (material == null) {
             material = parseOrNull(str);
+        }
+        if (material != null) {
+            if (str.endsWith("_DOOR")) { // 修正高版本低版本的门物品不一致问题
+                Material item = parseOrNull(str + "_ITEM");
+                if (item != null) material = item;
+            }
         }
         if (dataValue != null) {
             if (material == null) return null;
@@ -361,11 +368,15 @@ public class ItemStackUtil {
             material = parseOrNull("SKULL_ITEM");
             if (material != null) data = 3;
         }
+        if (is1_13) {
+            if (material == null && str.equals("WOODEN_DOOR")) material = parseOrNull("OAK_DOOR");
+        } else {
+            if (material == null && str.contains("_DOOR") && !str.contains("IRON")) material = parseOrNull("WOODEN_DOOR");
+        }
         if (material == null && str.equals("CLOCK")) material = parseOrNull("WATCH");
         if (material == null && str.contains("BED")) material = parseOrNull("BED");
         if (material == null && str.equals("CRAFT_TABLE")) material = parseOrNull("WORKBENCH");
         if (material == null && str.startsWith("WOODEN_")) material = parseOrNull(str.replace("WOODEN_", "WOOD_"));
-        if (material == null && str.contains("_DOOR") && !str.contains("IRON")) material = parseOrNull("WOOD_DOOR");
         if (material == null && str.equals("IRON_BARS")) material = parseOrNull("IRON_FENCE");
         if (material == null && str.equals("BUNDLE")) material = parseOrNull("FEATHER");
         if (material == null && str.equals("ENDER_EYE")) material = parseOrNull("EYE_OF_ENDER");
