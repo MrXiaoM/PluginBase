@@ -67,17 +67,20 @@ public abstract class BukkitPlugin extends JavaPlugin {
             }
             switch (economyOption) {
                 case VAULT: {
-                    RegisteredServiceProvider<Economy> service = Bukkit.getServicesManager().getRegistration(Economy.class);
-                    Economy provider = service == null ? null : service.getProvider();
-                    if (provider != null) {
-                        economy = new VaultEconomy(provider);
-                    } else {
-                        if (allowNoEconomy) {
-                            economy = NoEconomy.INSTANCE;
-                        } else {
-                            plugin.warnNoEconomy();
-                            return true;
+                    try {
+                        RegisteredServiceProvider<Economy> service = Bukkit.getServicesManager().getRegistration(Economy.class);
+                        Economy provider = service == null ? null : service.getProvider();
+                        if (provider != null) {
+                            economy = new VaultEconomy(provider);
+                            break;
                         }
+                    } catch (NoClassDefFoundError ignored) {
+                    }
+                    if (allowNoEconomy) {
+                        economy = NoEconomy.INSTANCE;
+                    } else {
+                        plugin.warnNoEconomy();
+                        return true;
                     }
                     break;
                 }
@@ -85,13 +88,13 @@ public abstract class BukkitPlugin extends JavaPlugin {
                     IEconomy custom = plugin.initCustomEconomy();
                     if (custom != null) {
                         economy = custom;
+                        break;
+                    }
+                    if (allowNoEconomy) {
+                        economy = NoEconomy.INSTANCE;
                     } else {
-                        if (allowNoEconomy) {
-                            economy = NoEconomy.INSTANCE;
-                        } else {
-                            plugin.warnNoEconomy();
-                            return true;
-                        }
+                        plugin.warnNoEconomy();
+                        return true;
                     }
                     break;
                 }
