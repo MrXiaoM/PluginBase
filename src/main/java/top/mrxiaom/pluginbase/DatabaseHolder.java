@@ -97,21 +97,34 @@ public class DatabaseHolder {
                         if (mysqlVersion == 8) {
                             driver = null;
                             plugin.warn("你在数据库配置中指定了 MySQL 版本为 8，但插件只找到了 MySQL 5 的数据库驱动");
-                            plugin.warn("请从以下链接下载 MySQL JDBC 8，放入 plugins/" + plugin.getDescription().getName() + "/libraries 文件夹，并重启服务器");
-                            plugin.warn("https://mirrors.huaweicloud.com/repository/maven/com/mysql/mysql-connector-j/8.4.0/mysql-connector-j-8.4.0.jar");
+                            if (plugin.options.libraries) {
+                                plugin.warn("请从以下链接下载 MySQL JDBC 8，放入 plugins/" + plugin.getDescription().getName() + "/libraries 文件夹，并重启服务器");
+                                plugin.warn("https://mirrors.huaweicloud.com/repository/maven/com/mysql/mysql-connector-j/8.4.0/mysql-connector-j-8.4.0.jar");
+                            } else {
+                                plugin.warn("插件作者未开启依赖库功能，请选择其它可用的数据库类型");
+                            }
                         }
                     } else if (mysqlVersion == 5) {
                         plugin.warn("你在数据库配置中指定了 MySQL 版本为 5，但插件未找到相应的数据库驱动");
-                        plugin.warn("请从以下链接下载 MySQL JDBC 5，放入 plugins/" + plugin.getDescription().getName() + "/libraries 文件夹，并重启服务器");
-                        plugin.warn("https://mirrors.huaweicloud.com/repository/maven/mysql/mysql-connector-java/5.1.49/mysql-connector-java-5.1.49.jar");
+                        if (plugin.options.libraries) {
+                            plugin.warn("请从以下链接下载 MySQL JDBC 5，放入 plugins/" + plugin.getDescription().getName() + "/libraries 文件夹，并重启服务器");
+                            plugin.warn("https://mirrors.huaweicloud.com/repository/maven/mysql/mysql-connector-java/5.1.49/mysql-connector-java-5.1.49.jar");
+                        } else {
+                            plugin.warn("插件作者未开启依赖库功能，请选择其它可用的数据库类型");
+                        }
                     }
                 }
                 break;
             case "sqlite":
                 driver = checkDriver("SQLite", "org.sqlite.JDBC");
                 if (driver == null) {
-                    plugin.warn("请从以下链接下载 SQLite JDBC，放入 plugins/" + plugin.getDescription().getName() + "/libraries 文件夹，并重启服务器");
-                    plugin.warn("https://mirrors.huaweicloud.com/repository/maven/org/xerial/sqlite-jdbc/3.49.0.0/sqlite-jdbc-3.49.0.0.jar");
+                    plugin.warn("插件在服务器中未找到 SQLite 数据库驱动");
+                    if (plugin.options.libraries) {
+                        plugin.warn("请从以下链接下载 SQLite JDBC，放入 plugins/" + plugin.getDescription().getName() + "/libraries 文件夹，并重启服务器");
+                        plugin.warn("https://mirrors.huaweicloud.com/repository/maven/org/xerial/sqlite-jdbc/3.49.0.0/sqlite-jdbc-3.49.0.0.jar");
+                    } else {
+                        plugin.warn("插件作者未开启依赖库功能，请选择其它可用的数据库类型");
+                    }
                 }
                 break;
             default:
