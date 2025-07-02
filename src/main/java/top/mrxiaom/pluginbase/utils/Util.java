@@ -405,9 +405,11 @@ public class Util {
             }
         } else {
             Registry<?> registry = RegistryConverter.fromType(type);
-            Keyed matched = registry.match(s);
-            if (/*matched != null && */type.isInstance(matched)) {
-                return (T) matched;
+            if (registry != null) {
+                Keyed matched = registry.match(s);
+                if (/*matched != null && */type.isInstance(matched)) {
+                    return (T) matched;
+                }
             }
         }
         return def;
