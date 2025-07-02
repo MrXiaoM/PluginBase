@@ -86,9 +86,8 @@ public abstract class AbstractLanguageHolder {
         for (int i = 0; i < args.length; i++) {
             arguments[i] = processor.execute(this, null, args[i]);
         }
-        return list().stream()
-                .map(it -> String.format(it, arguments))
-                .collect(Collectors.toList());
+        String formatted = String.format(String.join("\n", list()), arguments);
+        return Lists.newArrayList(formatted.split("\n"));
     }
     @SafeVarargs
     public final List<String> list(Pair<String, Object>... replacements) {
