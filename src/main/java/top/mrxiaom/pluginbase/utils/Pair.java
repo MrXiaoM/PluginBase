@@ -89,6 +89,11 @@ public class Pair<K, V> {
         return result;
     }
 
+    @SafeVarargs
+    public static List<String> replace0(List<String> list, Pair<String, Object>... replacements) {
+        return replace(list, replacements);
+    }
+
     public static String replace(String s, @Nullable Iterable<Pair<String, Object>> replacements) {
         if (replacements == null) return s;
         for (Pair<String, Object> replacement : replacements) {
@@ -105,6 +110,11 @@ public class Pair<K, V> {
             s = s.replace(replacement.key, String.valueOf(replacement.value));
         }
         return s;
+    }
+
+    @SafeVarargs
+    public static String replace0(String s, Pair<String, Object>... replacements) {
+        return replace(s, replacements);
     }
 
     @Nullable
