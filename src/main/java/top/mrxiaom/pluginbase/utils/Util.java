@@ -538,7 +538,7 @@ public class Util {
                 }
                 try {
                     classes.add(Class.forName(className));
-                } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
+                } catch (ClassNotFoundException | LinkageError ignored) {
                 }
             } else if (file.isDirectory()) {
                 findAnnotatedClassesInDirectory(file, packageName + "." + file.getName(), ignorePackages, classes);
@@ -565,7 +565,7 @@ public class Util {
                 if (flag) continue;
                 try {
                     classes.add(Class.forName(className));
-                } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
+                } catch (ClassNotFoundException | LinkageError ignored) {
                 }
             }
         }
