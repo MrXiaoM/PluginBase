@@ -359,6 +359,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
         earlyLoadModules.clear();
     }
 
+    public Class<?> getConstructorType() {
+        return getClass();
+    }
+
     @Override
     @Deprecated
     @SuppressWarnings({"unchecked"})

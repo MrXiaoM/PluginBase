@@ -75,7 +75,7 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
                 try {
                     constructor = type.getDeclaredConstructor(BukkitPlugin.class);
                 } catch (Throwable t) {
-                    constructor = type.getDeclaredConstructor(plugin.getClass());
+                    constructor = type.getDeclaredConstructor(plugin.getConstructorType());
                 }
                 list.add(new HolderConstructor(type, constructor, priority));
             } catch (Throwable t) {
