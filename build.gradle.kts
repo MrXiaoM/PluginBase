@@ -5,10 +5,19 @@ plugins {
     signing
     `maven-publish`
     id("moe.karla.maven-publishing")
+    id("com.github.gmazzo.buildconfig") version "3.1.0"
 }
 
 group = "top.mrxiaom"
 version = "1.5.4"
+
+buildConfig {
+    className("BuildConstants")
+    packageName("top.mrxiaom.pluginbase")
+
+    buildConfigField("String", "VERSION", "\"${project.version}\"")
+    buildConfigField("java.time.Instant", "BUILD_TIME", "java.time.Instant.ofEpochSecond(${System.currentTimeMillis() / 1000L}L)")
+}
 
 repositories {
     mavenCentral()
