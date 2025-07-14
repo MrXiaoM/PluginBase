@@ -25,8 +25,8 @@ repositories {
 
 @Suppress("VulnerableLibrariesLocal")
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.21.5-R0.1-SNAPSHOT")
-    testImplementation("org.spigotmc:spigot-api:1.21.5-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
+    testImplementation("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
     
     compileOnly("net.milkbowl.vault:VaultAPI:1.7")
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")

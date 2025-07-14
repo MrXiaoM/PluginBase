@@ -4,7 +4,6 @@ import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
-import org.bukkit.block.BlockType;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.damage.DamageType;
@@ -13,21 +12,19 @@ import org.bukkit.entity.*;
 import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.generator.structure.Structure;
 import org.bukkit.generator.structure.StructureType;
-import org.bukkit.inventory.ItemType;
-import org.bukkit.inventory.MenuType;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.bukkit.loot.LootTables;
-import org.bukkit.map.MapCursor;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegistryConverter {
     private static final Map<String, Registry<?>> registries = new HashMap<>();
-    @SuppressWarnings({"deprecation", "UnstableApiUsage"})
+    @SuppressWarnings({"UnstableApiUsage"})
     protected static void init() {
         try {
             add(Advancement.class, Registry.ADVANCEMENT);
@@ -45,7 +42,7 @@ public class RegistryConverter {
             add(Biome.class, Registry.BIOME);
         } catch (Throwable ignored) {}
         try {
-            add(BlockType.class, Registry.BLOCK);
+            add("org.bukkit.block.BlockType", "BLOCK");
         } catch (Throwable ignored) {}
         try {
             add(KeyedBossBar.class, Registry.BOSS_BARS);
@@ -54,10 +51,10 @@ public class RegistryConverter {
             add(Cat.Type.class, Registry.CAT_VARIANT);
         } catch (Throwable ignored) {}
         try {
-            add(Chicken.Variant.class, Registry.CHICKEN_VARIANT);
+            add("org.bukkit.entity.Chicken.Variant", "CHICKEN_VARIANT");
         } catch (Throwable ignored) {}
         try {
-            add(Cow.Variant.class, Registry.COW_VARIANT);
+            add("org.bukkit.entity.Cow.Variant", "COW_VARIANT");
         } catch (Throwable ignored) {}
         try {
             add(DamageType.class, Registry.DAMAGE_TYPE);
@@ -84,16 +81,16 @@ public class RegistryConverter {
             add(MusicInstrument.class, Registry.INSTRUMENT);
         } catch (Throwable ignored) {}
         try {
-            add(ItemType.class, Registry.ITEM);
+            add("org.bukkit.inventory.ItemType", "ITEM");
         } catch (Throwable ignored) {}
         try {
-            add(JukeboxSong.class, Registry.JUKEBOX_SONG);
+            add("org.bukkit.JukeboxSong", "JUKEBOX_SONG");
         } catch (Throwable ignored) {}
         try {
             add(LootTables.class, Registry.LOOT_TABLES);
         } catch (Throwable ignored) {}
         try {
-            add(MapCursor.Type.class, Registry.MAP_DECORATION_TYPE);
+            add("org.bukkit.map.MapCursor.Type", "MAP_DECORATION_TYPE");
         } catch (Throwable ignored) {}
         try {
             add(Material.class, Registry.MATERIAL);
@@ -102,13 +99,13 @@ public class RegistryConverter {
             add(MemoryKey.class, Registry.MEMORY_MODULE_TYPE);
         } catch (Throwable ignored) {}
         try {
-            add(MenuType.class, Registry.MENU);
+            add("org.bukkit.inventory.MenuType", "MENU");
         } catch (Throwable ignored) {}
         try {
             add(Particle.class, Registry.PARTICLE_TYPE);
         } catch (Throwable ignored) {}
         try {
-            add(Pig.Variant.class, Registry.PIG_VARIANT);
+            add("org.bukkit.entity.Pig.Variant", "PIG_VARIANT");
         } catch (Throwable ignored) {}
         try {
             add(PotionType.class, Registry.POTION);
@@ -138,8 +135,15 @@ public class RegistryConverter {
             add(Villager.Type.class, Registry.VILLAGER_TYPE);
         } catch (Throwable ignored) {}
         try {
-            add(Wolf.Variant.class, Registry.WOLF_VARIANT);
+            add("org.bukkit.entity.Wolf.Variant", "WOLF_VARIANT");
         } catch (Throwable ignored) {}
+    }
+
+    private static void add(String classType, String registry) throws Throwable {
+        Class<?> type = Class.forName(classType);
+        Field field = Registry.class.getDeclaredField(registry);
+        Registry<?> object = (Registry<?>) field.get(null);
+        registries.put(type.getName(), object);
     }
 
     private static <T extends Keyed> void add(Class<T> type, Registry<T> registry) {
