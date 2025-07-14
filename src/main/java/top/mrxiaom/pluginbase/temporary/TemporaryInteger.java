@@ -6,7 +6,7 @@ import top.mrxiaom.pluginbase.utils.Util;
 import java.util.function.Supplier;
 
 public class TemporaryInteger extends TemporaryData<Integer> {
-    protected TemporaryInteger(Period period, Supplier<Integer> defaultValue) {
+    public TemporaryInteger(Period period, Supplier<Integer> defaultValue) {
         super(period, defaultValue);
     }
 

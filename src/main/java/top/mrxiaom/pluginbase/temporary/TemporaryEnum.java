@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 public class TemporaryEnum<T> extends TemporaryData<T> {
     private final Class<T> type;
-    protected TemporaryEnum(Period period, Class<T> type, Supplier<T> defaultValue) {
+    public TemporaryEnum(Period period, Class<T> type, Supplier<T> defaultValue) {
         super(period, defaultValue);
         this.type = type;
     }

@@ -6,7 +6,7 @@ import top.mrxiaom.pluginbase.utils.Util;
 import java.util.function.Supplier;
 
 public class TemporaryDouble extends TemporaryData<Double> {
-    protected TemporaryDouble(Period period, Supplier<Double> defaultValue) {
+    public TemporaryDouble(Period period, Supplier<Double> defaultValue) {
         super(period, defaultValue);
     }
 

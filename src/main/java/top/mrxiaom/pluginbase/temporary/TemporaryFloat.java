@@ -6,7 +6,7 @@ import top.mrxiaom.pluginbase.utils.Util;
 import java.util.function.Supplier;
 
 public class TemporaryFloat extends TemporaryData<Float> {
-    protected TemporaryFloat(Period period, Supplier<Float> defaultValue) {
+    public TemporaryFloat(Period period, Supplier<Float> defaultValue) {
         super(period, defaultValue);
     }
 

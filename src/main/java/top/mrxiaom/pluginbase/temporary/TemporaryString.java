@@ -5,7 +5,7 @@ import top.mrxiaom.pluginbase.temporary.period.Period;
 import java.util.function.Supplier;
 
 public class TemporaryString extends TemporaryData<String> {
-    protected TemporaryString(Period period, Supplier<String> defaultValue) {
+    public TemporaryString(Period period, Supplier<String> defaultValue) {
         super(period, defaultValue);
     }
 
