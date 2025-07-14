@@ -96,11 +96,15 @@ public abstract class TemporaryData<T> {
         setValue(getDefaultValue());
     }
 
+    public LocalDateTime getNextOutdateTime() {
+        return nextOutdateTime;
+    }
+
     /**
      * 获取数值是否已过期
      */
     public boolean isOutdated() {
-        return LocalDateTime.now().isAfter(nextOutdateTime);
+        return nextOutdateTime != null && LocalDateTime.now().isAfter(nextOutdateTime);
     }
 
     public abstract String serializeData();
