@@ -16,11 +16,38 @@ public abstract class TemporaryData<T> {
     protected T value;
     protected LocalDateTime nextOutdateTime;
     protected Period period;
-    protected final Supplier<T> defaultValue;
+    protected Supplier<T> defaultValue;
     protected TemporaryData(Period period, Supplier<T> defaultValue) {
         this.period = period;
         this.defaultValue = defaultValue;
         this.value = defaultValue.get();
+    }
+
+    /**
+     * 设置数值重置周期，并自动检查更新数值
+     * @param period 周期
+     */
+    public void setPeriod(Period period) {
+        setPeriod(period, true);
+    }
+
+    /**
+     * 设置数值重置周期，决定是否更新数值
+     * @param period 周期
+     * @param update 是否更新数值
+     */
+    public void setPeriod(Period period, boolean update) {
+        this.period = period;
+        if (update && isOutdated()) {
+            applyDefaultValue();
+        }
+    }
+
+    /**
+     * 获取数值重置周期
+     */
+    public Period getPeriod() {
+        return period;
     }
 
     /**
@@ -36,7 +63,7 @@ public abstract class TemporaryData<T> {
      */
     public T getValue() {
         if (this.isOutdated()) {
-            this.setDefaultValue();
+            this.applyDefaultValue();
         }
         return value;
     }
@@ -49,9 +76,23 @@ public abstract class TemporaryData<T> {
     }
 
     /**
+     * 设置默认数值
+     */
+    public void setDefaultValue(Supplier<T> def) {
+        this.defaultValue = def;
+    }
+
+    /**
+     * 设置默认数值
+     */
+    public void setDefaultValue(T def) {
+        this.defaultValue = () -> def;
+    }
+
+    /**
      * 将数值设为默认数值，并更新上次更新时间
      */
-    public void setDefaultValue() {
+    public void applyDefaultValue() {
         setValue(getDefaultValue());
     }
 
@@ -78,7 +119,7 @@ public abstract class TemporaryData<T> {
         List<String> arguments = Util.split(split.get(0), ',');
         this.nextOutdateTime = dateTime(arguments.get(0));
         if (this.isOutdated()) {
-            this.setDefaultValue();
+            this.applyDefaultValue();
         } else {
             this.value = deserializeData(split.get(1));
         }
