@@ -12,7 +12,8 @@ import java.util.TreeMap;
 public class IA {
     private static final Map<String, CustomStack> cache = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-    public static Optional<ItemStack> get(@NotNull String id) {
+    public static Optional<ItemStack> get(@Nullable String id) {
+        if (id == null) return Optional.empty();
         if (cache.containsKey(id)) return Optional.ofNullable(cache.get(id).getItemStack()).map(ItemStack::clone);
         CustomStack stack = CustomStack.getInstance(id);
         if (stack == null) return Optional.empty();
