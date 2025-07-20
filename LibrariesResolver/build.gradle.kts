@@ -64,7 +64,7 @@ publishing {
             pom {
                 name.set(artifactId)
                 description.set("MrXiaoM's Bukkit plugin libraries resolver")
-                url.set("https://github.com/MrXiaoM/PluginBase")
+                url.set("https://github.com/MrXiaoM/PluginBase/tree/main/LibrariesResolver")
                 licenses {
                     license {
                         name.set("MIT License")
@@ -78,7 +78,7 @@ publishing {
                     }
                 }
                 scm {
-                    url.set("https://github.com/MrXiaoM/PluginBase")
+                    url.set("https://github.com/MrXiaoM/PluginBase/tree/main/LibrariesResolver")
                     connection.set("scm:git:https://github.com/MrXiaoM/PluginBase.git")
                     developerConnection.set("scm:git:https://github.com/MrXiaoM/PluginBase.git")
                 }

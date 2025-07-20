@@ -4,9 +4,11 @@
 
 ## 使用
 
+获取版本：https://central.sonatype.com/artifact/top.mrxiaom/LibrariesResolver/versions  
+(LibrariesResolver 与 PluginBase 版本号同步)
 ```kotlin
 dependencies {
-    implementation("top.mrxiaom:LibrariesResolver:1.5.4:all") { isTransitive = false }
+    implementation("top.mrxiaom:LibrariesResolver:$VERSION:all") { isTransitive = false }
 }
 ```
 
@@ -28,6 +30,85 @@ public static void resolveLibraries(Logger logger) {
     // TODO: 将 libraries 添加到 URLClassLoader 中即可
 }
 ```
+
+推荐与 `buildconfig` 一同使用，同步构建脚本与运行时插件的依赖信息。
+
+```kotlin
+plugins {
+    id("java")
+    id("com.github.gmazzo.buildconfig") version "3.1.0"
+}
+
+val libraries = arrayListOf<String>()
+fun DependencyHandlerScope.library(dependencyNotation: String) {
+    compileOnly(dependencyNotation)
+    libraries.add(dependencyNotation)
+}
+
+dependencies {
+    library("net.kyori:adventure-api:4.22.0")
+    library("net.kyori:adventure-platform-bukkit:4.4.0")
+    library("net.kyori:adventure-text-serializer-gson:4.22.0")
+    library("net.kyori:adventure-text-minimessage:4.22.0")
+    implementation("top.mrxiaom:LibrariesResolver:$VERSION:all") { isTransitive = false }
+}
+
+buildConfig {
+    className("BuildConstants")
+    packageName("com.example.your.plugin")
+
+    val librariesVararg = libraries.joinToString(", ") { "\"$it\"" }
+    
+    // buildConfigField("String", "VERSION", "\"${project.version}\"")
+    // buildConfigField("java.time.Instant", "BUILD_TIME", "java.time.Instant.ofEpochSecond(${System.currentTimeMillis() / 1000L}L)")
+    buildConfigField("java.util.List<String>", "LIBRARIES", "java.util.Arrays.asList($librariesVararg)")
+}
+```
+
+```java
+package com.example.your.plugin;
+
+import top.mrxiaom.pluginbase.resolver.DefaultLibraryResolver;
+import top.mrxiaom.pluginbase.resolver.aether.repository.RemoteRepository;
+import top.mrxiaom.pluginbase.resolver.utils.ClassLoaderWrapper;
+
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
+import java.util.logging.Logger;
+
+/**
+ * 插件主类
+ */
+public class ExamplePlugin extends JavaPlugin {
+    private final ClassLoaderWrapper classLoader;
+    public ExamplePlugin() throws Exception {
+        this.classLoader = new ClassLoaderWrapper((URLClassLoader) getClassLoader());
+
+        Logger logger = this.getLogger();
+        File librariesDir = new File(this.getDataFolder(), "libraries");
+        DefaultLibraryResolver resolver = new DefaultLibraryResolver(logger, librariesDir);
+        // 也可以使用其它仓库。为了精简本项目大小，不支持需要身份验证的仓库，只支持公开仓库
+        // List<RemoteRepository> repositories = Arrays.asList(
+        //         new RemoteRepository.Builder("papermc", "default", "https://repo.papermc.io/repository/maven-public").build(),
+        //         new RemoteRepository.Builder("codemc", "default", "https://repo.codemc.io/repository/maven-public").build()
+        // );
+        // DefaultLibraryResolver resolver = new DefaultLibraryResolver(logger, librariesDir, repositories);
+
+        resolver.addLibraries(BuildConstants.LIBRARIES);
+
+        List<URL> libraries = resolver.doResolve();
+        for (URL library : libraries) {
+            this.classLoader.addURL(library);
+        }
+    }
+}
+```
+
+## 注意事项
+
+请将需要使用依赖库的类的引用，给放到其它类，而不是放在插件主类。以免在依赖开始下载之前，因为找不到类报错导致无法正常初始化。
 
 ## 修改明细
 
