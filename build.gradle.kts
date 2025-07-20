@@ -6,10 +6,8 @@ plugins {
     `maven-publish`
     id("moe.karla.maven-publishing")
     id("com.github.gmazzo.buildconfig") version "3.1.0"
+    id("com.gradleup.shadow") version "8.3.0" apply false
 }
-
-group = "top.mrxiaom"
-version = "1.5.4"
 
 buildConfig {
     className("BuildConstants")
@@ -18,20 +16,23 @@ buildConfig {
     buildConfigField("String", "VERSION", "\"${project.version}\"")
     buildConfigField("java.time.Instant", "BUILD_TIME", "java.time.Instant.ofEpochSecond(${System.currentTimeMillis() / 1000L}L)")
 }
+allprojects {
+    group = "top.mrxiaom"
+    version = "1.5.4"
 
-repositories {
-    mavenCentral()
-    maven("https://repo.codemc.io/repository/maven-public/")
-    maven("https://repo.papermc.io/repository/maven-public/") {
-        mavenContent { includeGroup("com.mojang") }
+    repositories {
+        mavenCentral()
+        maven("https://repo.codemc.io/repository/maven-public/")
+        maven("https://repo.papermc.io/repository/maven-public/") {
+            mavenContent { includeGroup("com.mojang") }
+        }
+
+        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        maven("https://repo.helpch.at/releases/")
+        maven("https://repo.rosewooddev.io/repository/public/")
+        maven("https://jitpack.io/")
     }
-
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://repo.helpch.at/releases/")
-    maven("https://repo.rosewooddev.io/repository/public/")
-    maven("https://jitpack.io/")
 }
-
 @Suppress("VulnerableLibrariesLocal")
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")

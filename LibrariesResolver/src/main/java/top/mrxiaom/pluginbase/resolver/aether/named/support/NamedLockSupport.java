@@ -1,0 +1,132 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package top.mrxiaom.pluginbase.resolver.aether.named.support;
+
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+
+import top.mrxiaom.pluginbase.resolver.aether.named.NamedLock;
+
+/**
+ * Support class for {@link NamedLock} implementations providing reference counting.
+ */
+public abstract class NamedLockSupport implements NamedLock {
+
+    private final String name;
+
+    private final NamedLockFactorySupport factory;
+
+    private final ConcurrentHashMap<Thread, Deque<String>> diagnosticState; // non-null only if diag enabled
+
+    public NamedLockSupport(final String name, final NamedLockFactorySupport factory) {
+        this.name = name;
+        this.factory = factory;
+        this.diagnosticState = factory.isDiagnosticEnabled() ? new ConcurrentHashMap<>() : null;
+    }
+
+    @Override
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public boolean lockShared(long time, TimeUnit unit) throws InterruptedException {
+        Deque<String> steps = null;
+        if (diagnosticState != null) {
+            steps = diagnosticState.computeIfAbsent(Thread.currentThread(), k -> new ArrayDeque<>());
+        }
+        if (steps != null) {
+            steps.push("wait-shared");
+        }
+        boolean result = doLockShared(time, unit);
+        if (steps != null) {
+            steps.pop();
+            if (result) {
+                steps.push("shared");
+            }
+        }
+        return result;
+    }
+
+    protected abstract boolean doLockShared(long time, TimeUnit unit) throws InterruptedException;
+
+    @Override
+    public boolean lockExclusively(long time, TimeUnit unit) throws InterruptedException {
+        Deque<String> steps = null;
+        if (diagnosticState != null) {
+            steps = diagnosticState.computeIfAbsent(Thread.currentThread(), k -> new ArrayDeque<>());
+        }
+        if (steps != null) {
+            steps.push("wait-exclusive");
+        }
+        boolean result = doLockExclusively(time, unit);
+        if (steps != null) {
+            steps.pop();
+            if (result) {
+                steps.push("exclusive");
+            }
+        }
+        return result;
+    }
+
+    protected abstract boolean doLockExclusively(long time, TimeUnit unit) throws InterruptedException;
+
+    @Override
+    public void unlock() {
+        doUnlock();
+        if (diagnosticState != null) {
+            diagnosticState
+                    .computeIfAbsent(Thread.currentThread(), k -> new ArrayDeque<>())
+                    .pop();
+        }
+    }
+
+    protected abstract void doUnlock();
+
+    @Override
+    public void close() {
+        doClose();
+    }
+
+    protected void doClose() {
+        factory.closeLock(name);
+    }
+
+    /**
+     * Returns the diagnostic state (if collected) or empty map, never {@code null}.
+     *
+     * @since 1.9.11
+     */
+    public Map<Thread, Deque<String>> diagnosticState() {
+        if (diagnosticState != null) {
+            return diagnosticState;
+        } else {
+            return Collections.emptyMap();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" + "name='" + name + '\'' + '}';
+    }
+}

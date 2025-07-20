@@ -15,6 +15,7 @@ public class ClassLoaderWrapper {
     }
     private final URLClassLoader classLoader;
     private final DelegateAddURL addURL;
+    private boolean supported;
     public ClassLoaderWrapper(URLClassLoader classLoader) {
         this.classLoader = classLoader;
         this.addURL = defineAddURLMethod();
@@ -26,6 +27,7 @@ public class ClassLoaderWrapper {
             // 反射方法，直接调用 addURL
             Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
             method.setAccessible(true);
+            supported = true;
             return url -> method.invoke(classLoader, url);
         } catch (Exception ignored) {
         }
@@ -43,6 +45,7 @@ public class ClassLoaderWrapper {
             if (fieldUrls != null) {
                 Collection<URL> urls = (Collection<URL>) unsafe.getObject(ucp, unsafe.objectFieldOffset(fieldUrls));
                 Collection<URL> path = (Collection<URL>) unsafe.getObject(ucp, unsafe.objectFieldOffset(fieldPath));
+                supported = true;
                 return url -> {
                     synchronized (urls) {
                         urls.add(url);
@@ -52,6 +55,7 @@ public class ClassLoaderWrapper {
             }
         } catch (Throwable ignored) {
         }
+        supported = false;
         return url -> {
             throw new UnsupportedOperationException("当前环境不支持 addURL");
         };
@@ -76,5 +80,9 @@ public class ClassLoaderWrapper {
 
     public void addURL(URL url) throws Exception {
         addURL.run(url);
+    }
+
+    public boolean isSupported() {
+        return supported;
     }
 }
