@@ -36,7 +36,7 @@ public static void resolveLibraries(Logger logger) {
 ```kotlin
 plugins {
     id("java")
-    id("com.github.gmazzo.buildconfig") version "3.1.0"
+    id("com.github.gmazzo.buildconfig") version "5.6.7"
 }
 
 val libraries = arrayListOf<String>()
@@ -61,7 +61,7 @@ buildConfig {
     
     // buildConfigField("String", "VERSION", "\"${project.version}\"")
     // buildConfigField("java.time.Instant", "BUILD_TIME", "java.time.Instant.ofEpochSecond(${System.currentTimeMillis() / 1000L}L)")
-    buildConfigField("java.util.List<String>", "LIBRARIES", "java.util.Arrays.asList($librariesVararg)")
+    buildConfigField("String[]", "LIBRARIES", "new String[] { $librariesVararg }")
 }
 ```
 
@@ -87,6 +87,7 @@ public class ExamplePlugin extends JavaPlugin {
         this.classLoader = new ClassLoaderWrapper((URLClassLoader) getClassLoader());
 
         Logger logger = this.getLogger();
+        logger.info("正在检查依赖库状态");
         File librariesDir = new File(this.getDataFolder(), "libraries");
         DefaultLibraryResolver resolver = new DefaultLibraryResolver(logger, librariesDir);
         // 也可以使用其它仓库。为了精简本项目大小，不支持需要身份验证的仓库，只支持公开仓库
@@ -96,9 +97,10 @@ public class ExamplePlugin extends JavaPlugin {
         // );
         // DefaultLibraryResolver resolver = new DefaultLibraryResolver(logger, librariesDir, repositories);
 
-        resolver.addLibraries(BuildConstants.LIBRARIES);
+        resolver.addLibrary(BuildConstants.LIBRARIES);
 
         List<URL> libraries = resolver.doResolve();
+        logger.info("正在添加 " + libraries.size() + " 个依赖库到类加载器");
         for (URL library : libraries) {
             this.classLoader.addURL(library);
         }
