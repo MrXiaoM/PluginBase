@@ -5,7 +5,7 @@ plugins {
     signing
     `maven-publish`
     id("moe.karla.maven-publishing")
-    id("com.github.gmazzo.buildconfig") version "3.1.0"
+    id("com.github.gmazzo.buildconfig") version "5.6.7"
     id("com.gradleup.shadow") version "8.3.0" apply false
 }
 
@@ -18,7 +18,7 @@ buildConfig {
 }
 allprojects {
     group = "top.mrxiaom"
-    version = "1.5.4"
+    version = "1.5.5"
 
     repositories {
         mavenCentral()
