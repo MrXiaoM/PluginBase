@@ -18,7 +18,7 @@ buildConfig {
 }
 allprojects {
     group = "top.mrxiaom"
-    version = "1.5.5"
+    version = "1.5.6"
 
     repositories {
         mavenCentral()
