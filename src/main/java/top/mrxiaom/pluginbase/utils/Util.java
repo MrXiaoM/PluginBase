@@ -410,6 +410,10 @@ public class Util {
                 if (/*matched != null && */type.isInstance(matched)) {
                     return (T) matched;
                 }
+                Keyed newerMatched = registry.match(s.replace('_', '.'));
+                if (/*newerMatched != null && */type.isInstance(matched)) {
+                    return (T) newerMatched;
+                }
             }
         }
         return def;
