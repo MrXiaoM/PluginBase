@@ -61,16 +61,23 @@ public class AdventureUtil {
         return adventure;
     }
 
+    public static Audience of(CommandSender sender) {
+        if (sender instanceof Audience) {
+            return (Audience) sender;
+        }
+        return adventure.sender(sender);
+    }
+
     public static Audience of(Player player) {
-        return adventure.player(player);
+        return of((CommandSender) player);
     }
 
     public static Audience of(UUID player) {
-        return adventure.player(player);
+        return Util.getOnlinePlayer(player).map(AdventureUtil::of).orElseGet(() -> adventure.player(player));
     }
 
     public static Audience console() {
-        return adventure.sender(Bukkit.getConsoleSender());
+        return of(Bukkit.getConsoleSender());
     }
 
     public static MiniMessage miniMessage() {
@@ -116,7 +123,7 @@ public class AdventureUtil {
     }
 
     public static void sendTitle(Player player, String title, String subTitle, int fadeIn, int stay, int fadeOut) {
-        adventure.player(player).showTitle(Title.title(
+        of(player).showTitle(Title.title(
                 miniMessage(title), miniMessage(subTitle), Title.Times.times(
                         Duration.ofMillis(fadeIn * 50L),
                         Duration.ofMillis(stay * 50L),
@@ -126,19 +133,19 @@ public class AdventureUtil {
     }
 
     public static void resetTitle(Player player) {
-        adventure.player(player).resetTitle();
+        of(player).resetTitle();
     }
 
     public static void clearTitle(Player player) {
-        adventure.player(player).clearTitle();
+        of(player).clearTitle();
     }
 
     public static void sendMessage(CommandSender sender, String message) {
-        adventure.sender(sender).sendMessage(miniMessage(message));
+        of(sender).sendMessage(miniMessage(message));
     }
 
     public static void sendActionBar(Player player, String actionBar) {
-        adventure.player(player).sendActionBar(miniMessage(actionBar));
+        of(player).sendActionBar(miniMessage(actionBar));
     }
 
     public static String legacyToMiniMessage(String legacy) {
