@@ -52,7 +52,7 @@ public class AdventureUtil {
         adventure = BukkitAudiences.builder(plugin).build();
         miniMessage = create();
         try {
-            AdventureItemStack.init();
+            AdventureItemStack.init(plugin);
         } catch (Throwable ignored) {
         }
     }

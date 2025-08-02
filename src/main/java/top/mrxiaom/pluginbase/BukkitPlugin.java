@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.actions.*;
 import top.mrxiaom.pluginbase.api.IScheduler;
@@ -22,6 +23,8 @@ import top.mrxiaom.pluginbase.func.GuiManager;
 import top.mrxiaom.pluginbase.func.LanguageManager;
 import top.mrxiaom.pluginbase.utils.ClassLoaderWrapper;
 import top.mrxiaom.pluginbase.utils.Util;
+import top.mrxiaom.pluginbase.utils.item.ItemEditor;
+import top.mrxiaom.pluginbase.utils.item.LegacyItemEditor;
 import top.mrxiaom.pluginbase.utils.scheduler.BukkitScheduler;
 
 import java.io.File;
@@ -242,6 +245,11 @@ public abstract class BukkitPlugin extends JavaPlugin {
     @Nullable
     protected IEconomy initCustomEconomy() {
         return null;
+    }
+
+    @NotNull
+    public ItemEditor initItemEditor() {
+        return new LegacyItemEditor();
     }
 
     protected void warnNoEconomy() {
