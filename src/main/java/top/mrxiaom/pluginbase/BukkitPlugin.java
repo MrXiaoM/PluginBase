@@ -417,6 +417,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
     }
 
+    protected final boolean hasScheduledRegisterModule(Class<? extends AbstractPluginHolder<?>> type) {
+        return modulesToRegister.contains(type);
+    }
+
     @Override
     @Deprecated
     public void onDisable() {
