@@ -40,7 +40,7 @@ public abstract class AbstractLibraryResolver {
     protected final Logger logger;
     protected final RepositorySystem repository;
     protected final DefaultRepositorySystemSession session;
-    protected final List<RemoteRepository> repositories;
+    protected List<RemoteRepository> repositories;
     protected final List<String> libraries = new ArrayList<>();
 
     public AbstractLibraryResolver(Logger logger, File librariesDir, List<RemoteRepository> repositories) {
@@ -81,6 +81,10 @@ public abstract class AbstractLibraryResolver {
         } else {
             logger.log(Level.INFO, "正在下载依赖 {0}", event.getResource().getRepositoryUrl() + resourceName);
         }
+    }
+
+    public void setRepositories(List<RemoteRepository> repositories) {
+        this.repositories = repository.newResolutionRepositories(session, repositories);
     }
 
     /**
