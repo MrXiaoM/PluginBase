@@ -5,14 +5,18 @@ import top.mrxiaom.pluginbase.func.LanguageManager;
 
 import java.util.List;
 
-public class LanguageEnumAutoHolder<T extends Enum<T>> extends AbstractLanguageHolder {
+/**
+ * 为 enum 储存语言元数据
+ */
+public class LanguageEnumAutoHolder<T extends Enum<T>> extends Message {
     private static <T extends Enum<T>> String key(Enum<T> enumValue) {
         String name = enumValue.name().replace("__", ".").replace("_", "-");
         Language lang = enumValue.getClass().getAnnotation(Language.class);
         return lang == null ? name : (lang.prefix() + name);
     }
     public final Enum<T> enumValue;
-    public LanguageEnumAutoHolder(Enum<T> enumValue, List<String> defaultValue) {
+    private LanguageManager manager;
+    private LanguageEnumAutoHolder(Enum<T> enumValue, List<String> defaultValue) {
         super(key(enumValue), defaultValue);
         this.enumValue = enumValue;
     }
@@ -23,7 +27,10 @@ public class LanguageEnumAutoHolder<T extends Enum<T>> extends AbstractLanguageH
 
     @Override
     public LanguageManager getLanguageManager() {
-        return LanguageManager.inst();
+        if (manager != null) {
+            return manager;
+        }
+        return manager = LanguageManager.inst();
     }
 
     public static <T extends Enum<T>> LanguageEnumAutoHolder<T> wrap(Enum<T> e, String defaultValue) {

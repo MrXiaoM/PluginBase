@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import static top.mrxiaom.pluginbase.utils.Pair.replace;
 
 public abstract class AbstractLanguageHolder {
-    public final String key;
+    private String key;
     public final boolean isList;
     public final Object defaultValue;
 
@@ -28,6 +28,14 @@ public abstract class AbstractLanguageHolder {
         this.key = key;
         this.isList = false;
         this.defaultValue = defaultValue;
+    }
+
+    protected void key(String key) {
+        this.key = key;
+    }
+
+    public String key() {
+        return key;
     }
 
     public abstract LanguageManager getLanguageManager();

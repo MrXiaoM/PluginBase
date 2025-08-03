@@ -8,9 +8,12 @@ import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.language.AbstractLanguageHolder;
 import top.mrxiaom.pluginbase.func.language.ILanguageArgumentProcessor;
 import top.mrxiaom.pluginbase.func.language.LanguageEnumAutoHolder;
+import top.mrxiaom.pluginbase.func.language.LanguageFieldAutoHolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +54,7 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
     public LanguageManager setLangFile(@Nullable String langFile) {
         if (langFile == null) {
             return setLangFile((File) null);
-        }
-        else {
+        } else {
             return setLangFile(new File(plugin.getDataFolder(), langFile));
         }
     }
@@ -104,7 +106,24 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
         holderGetters.put(enumType.getName(), getter);
         for (T value : enumType.getEnumConstants()) {
             LanguageEnumAutoHolder<T> holder = getter.apply(value);
-            holders.put(holder.key, holder);
+            holders.put(holder.key(), holder);
+        }
+        return this;
+    }
+
+    public LanguageManager register(Class<?> anyType) {
+        if (anyType.isAssignableFrom(Enum.class)) {
+            throw new IllegalArgumentException("应该使用 register(Class, Function) 来注册 enum");
+        }
+        for (Field field : anyType.getDeclaredFields()) {
+            int modifiers = field.getModifiers();
+            if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) {
+                LanguageFieldAutoHolder holder = getOrNull(field, null);
+                if (holder != null) {
+                    holder.lateInitFromField(anyType, field);
+                    holders.put(holder.key(), holder);
+                }
+            }
         }
         return this;
     }
@@ -152,14 +171,14 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.setDefaults(new YamlConfiguration());
         for (AbstractLanguageHolder holder : holders.values()) {
-            if (!config.contains(holder.key)) {
-                config.set(keyPrefix + holder.key, holder.defaultValue);
+            if (!config.contains(holder.key())) {
+                config.set(keyPrefix + holder.key(), holder.defaultValue);
                 continue;
             }
             if (holder.isList) {
-                holderValues.put(keyPrefix + holder.key, config.getStringList(holder.key));
+                holderValues.put(keyPrefix + holder.key(), config.getStringList(holder.key()));
             } else {
-                holderValues.put(keyPrefix + holder.key, config.getString(holder.key));
+                holderValues.put(keyPrefix + holder.key(), config.getString(holder.key()));
             }
         }
         try {
@@ -172,5 +191,15 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
 
     public static LanguageManager inst() {
         return instanceOf(LanguageManager.class);
+    }
+
+    @SuppressWarnings({"unchecked", "SameParameterValue"})
+    private static <T> T getOrNull(Field field, Object instance) {
+        try {
+            Object object = field.get(instance);
+            return (T) object;
+        } catch (Throwable ignored) {
+            return null;
+        }
     }
 }
