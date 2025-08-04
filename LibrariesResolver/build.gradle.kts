@@ -5,9 +5,14 @@ plugins {
     id("com.gradleup.shadow")
 }
 
+val shadowLink = configurations.create("shadowLink")
+fun DependencyHandlerScope.shadowLink(dependencyNotation: String) {
+    compileOnly(dependencyNotation)
+    add("shadowLink", dependencyNotation)
+}
 dependencies {
-    implementation("org.codehaus.plexus:plexus-utils:3.5.1")
-    implementation("org.codehaus.plexus:plexus-interpolation:1.26")
+    shadowLink("org.codehaus.plexus:plexus-utils:3.5.1")
+    shadowLink("org.codehaus.plexus:plexus-interpolation:1.26")
 
     compileOnly(files("../libs/stub-rt.jar"))
     compileOnly("org.jetbrains:annotations:24.0.0")
@@ -26,6 +31,7 @@ tasks {
     shadowJar {
         minimize()
         exclude("licenses/*", "META-INF/LICENSE*", "META-INF/NOTICE*")
+        configurations.add(shadowLink)
         mapOf(
             "org.codehaus.plexus" to "plexus",
         ).forEach { (original, target) ->
