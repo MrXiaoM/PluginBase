@@ -1,5 +1,6 @@
 package top.mrxiaom.pluginbase.resolver;
 
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.resolver.aether.DefaultRepositorySystemSession;
 import top.mrxiaom.pluginbase.resolver.aether.RepositorySystem;
 import top.mrxiaom.pluginbase.resolver.aether.artifact.Artifact;
@@ -42,6 +43,7 @@ public abstract class AbstractLibraryResolver {
     protected final DefaultRepositorySystemSession session;
     protected List<RemoteRepository> repositories;
     protected final List<String> libraries = new ArrayList<>();
+    protected List<URL> lastResolve = null;
 
     public AbstractLibraryResolver(Logger logger, File librariesDir, List<RemoteRepository> repositories) {
         this.logger = logger;
@@ -151,6 +153,11 @@ public abstract class AbstractLibraryResolver {
                 throw new AssertionError(ex);
             }
         }
-        return jarFiles;
+        return lastResolve = Collections.unmodifiableList(jarFiles);
+    }
+
+    @Nullable
+    public List<URL> getLastResolve() {
+        return lastResolve;
     }
 }
