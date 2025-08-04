@@ -56,7 +56,6 @@ import top.mrxiaom.pluginbase.resolver.http.impl.io.ChunkedOutputStream;
 import top.mrxiaom.pluginbase.resolver.http.impl.io.ContentLengthInputStream;
 import top.mrxiaom.pluginbase.resolver.http.impl.io.ContentLengthOutputStream;
 import top.mrxiaom.pluginbase.resolver.http.impl.io.EmptyInputStream;
-import top.mrxiaom.pluginbase.resolver.http.impl.io.HttpTransportMetricsImpl;
 import top.mrxiaom.pluginbase.resolver.http.impl.io.IdentityInputStream;
 import top.mrxiaom.pluginbase.resolver.http.impl.io.IdentityOutputStream;
 import top.mrxiaom.pluginbase.resolver.http.impl.io.SessionInputBufferImpl;
@@ -78,7 +77,6 @@ public class BHttpConnectionBase implements HttpInetConnection {
     private final SessionInputBufferImpl inBuffer;
     private final SessionOutputBufferImpl outbuffer;
     private final MessageConstraints messageConstraints;
-    private final HttpConnectionMetricsImpl connMetrics;
     private final ContentLengthStrategy incomingContentStrategy;
     private final ContentLengthStrategy outgoingContentStrategy;
     private final AtomicReference<Socket> socketHolder;
@@ -109,14 +107,11 @@ public class BHttpConnectionBase implements HttpInetConnection {
             final ContentLengthStrategy outgoingContentStrategy) {
         super();
         Args.positive(bufferSize, "Buffer size");
-        final HttpTransportMetricsImpl inTransportMetrics = new HttpTransportMetricsImpl();
-        final HttpTransportMetricsImpl outTransportMetrics = new HttpTransportMetricsImpl();
-        this.inBuffer = new SessionInputBufferImpl(inTransportMetrics, bufferSize, -1,
+        this.inBuffer = new SessionInputBufferImpl(bufferSize, -1,
                 messageConstraints != null ? messageConstraints : MessageConstraints.DEFAULT, charDecoder);
-        this.outbuffer = new SessionOutputBufferImpl(outTransportMetrics, bufferSize, fragmentSizeHint,
+        this.outbuffer = new SessionOutputBufferImpl(bufferSize, fragmentSizeHint,
                 charEncoder);
         this.messageConstraints = messageConstraints;
-        this.connMetrics = new HttpConnectionMetricsImpl(inTransportMetrics, outTransportMetrics);
         this.incomingContentStrategy = incomingContentStrategy != null ? incomingContentStrategy :
             LaxContentLengthStrategy.INSTANCE;
         this.outgoingContentStrategy = outgoingContentStrategy != null ? outgoingContentStrategy :
@@ -354,19 +349,6 @@ public class BHttpConnectionBase implements HttpInetConnection {
         } catch (final IOException ex) {
             return true;
         }
-    }
-
-    protected void incrementRequestCount() {
-        this.connMetrics.incrementRequestCount();
-    }
-
-    protected void incrementResponseCount() {
-        this.connMetrics.incrementResponseCount();
-    }
-
-    @Override
-    public HttpConnectionMetrics getMetrics() {
-        return this.connMetrics;
     }
 
     @Override

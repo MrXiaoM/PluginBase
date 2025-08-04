@@ -11,7 +11,6 @@ package top.mrxiaom.pluginbase.resolver.maven.artifact.repository.metadata;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class SnapshotVersion
     implements java.io.Serializable, java.lang.Cloneable
 {
@@ -58,14 +57,12 @@ public class SnapshotVersion
     {
         try
         {
-            SnapshotVersion copy = (SnapshotVersion) super.clone();
-
-            return copy;
+            return (SnapshotVersion) super.clone();
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- SnapshotVersion clone()
 
@@ -88,9 +85,9 @@ public class SnapshotVersion
         }
 
         SnapshotVersion that = (SnapshotVersion) other;
-        boolean result = true;
+        boolean result;
 
-        result = result && ( getClassifier() == null ? that.getClassifier() == null : getClassifier().equals( that.getClassifier() ) );
+        result = getClassifier() == null ? that.getClassifier() == null : getClassifier().equals( that.getClassifier() );
         result = result && ( getExtension() == null ? that.getExtension() == null : getExtension().equals( that.getExtension() ) );
         result = result && ( getVersion() == null ? that.getVersion() == null : getVersion().equals( that.getVersion() ) );
         result = result && ( getUpdated() == null ? that.getUpdated() == null : getUpdated().equals( that.getUpdated() ) );
@@ -210,25 +207,21 @@ public class SnapshotVersion
      */
     public java.lang.String toString()
     {
-        StringBuilder buf = new StringBuilder( 128 );
-
-        buf.append( "classifier = '" );
-        buf.append( getClassifier() );
-        buf.append( "'" );
-        buf.append( "\n" ); 
-        buf.append( "extension = '" );
-        buf.append( getExtension() );
-        buf.append( "'" );
-        buf.append( "\n" ); 
-        buf.append( "version = '" );
-        buf.append( getVersion() );
-        buf.append( "'" );
-        buf.append( "\n" ); 
-        buf.append( "updated = '" );
-        buf.append( getUpdated() );
-        buf.append( "'" );
-
-        return buf.toString();
+        return "classifier = '" +
+                getClassifier() +
+                "'" +
+                "\n" +
+                "extension = '" +
+                getExtension() +
+                "'" +
+                "\n" +
+                "version = '" +
+                getVersion() +
+                "'" +
+                "\n" +
+                "updated = '" +
+                getUpdated() +
+                "'";
     } //-- java.lang.String toString()
 
 }

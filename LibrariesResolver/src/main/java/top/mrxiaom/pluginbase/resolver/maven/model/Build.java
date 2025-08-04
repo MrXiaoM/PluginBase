@@ -16,7 +16,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Build
     extends BuildBase
     implements java.io.Serializable, java.lang.Cloneable
@@ -98,16 +97,6 @@ public class Build
     //-----------/
 
     /**
-     * Method addExtension.
-     * 
-     * @param extension a extension object.
-     */
-    public void addExtension( Extension extension )
-    {
-        getExtensions().add( extension );
-    } //-- void addExtension( Extension )
-
-    /**
      * Method clone.
      * 
      * @return Build
@@ -120,10 +109,10 @@ public class Build
 
             if ( this.extensions != null )
             {
-                copy.extensions = new java.util.ArrayList<Extension>();
+                copy.extensions = new java.util.ArrayList<>();
                 for ( Extension item : this.extensions )
                 {
-                    copy.extensions.add( ( (Extension) item).clone() );
+                    copy.extensions.add( item.clone() );
                 }
             }
 
@@ -131,8 +120,8 @@ public class Build
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Build clone()
 
@@ -145,7 +134,7 @@ public class Build
     {
         if ( this.extensions == null )
         {
-            this.extensions = new java.util.ArrayList<Extension>();
+            this.extensions = new java.util.ArrayList<>();
         }
 
         return this.extensions;
@@ -225,16 +214,6 @@ public class Build
     {
         return this.testSourceDirectory;
     } //-- String getTestSourceDirectory()
-
-    /**
-     * Method removeExtension.
-     * 
-     * @param extension a extension object.
-     */
-    public void removeExtension( Extension extension )
-    {
-        getExtensions().remove( extension );
-    } //-- void removeExtension( Extension )
 
     /**
      * Set a set of build extensions to use from this project.

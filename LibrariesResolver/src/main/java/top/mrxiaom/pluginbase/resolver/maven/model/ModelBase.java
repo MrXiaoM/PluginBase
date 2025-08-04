@@ -15,7 +15,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class ModelBase
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -156,36 +155,6 @@ public class ModelBase
     //-----------/
 
     /**
-     * Method addDependency.
-     * 
-     * @param dependency a dependency object.
-     */
-    public void addDependency( Dependency dependency )
-    {
-        getDependencies().add( dependency );
-    } //-- void addDependency( Dependency )
-
-    /**
-     * Method addModule.
-     * 
-     * @param string a string object.
-     */
-    public void addModule( String string )
-    {
-        getModules().add( string );
-    } //-- void addModule( String )
-
-    /**
-     * Method addPluginRepository.
-     * 
-     * @param repository a repository object.
-     */
-    public void addPluginRepository( Repository repository )
-    {
-        getPluginRepositories().add( repository );
-    } //-- void addPluginRepository( Repository )
-
-    /**
      * Method addProperty.
      * 
      * @param key a key object.
@@ -219,13 +188,13 @@ public class ModelBase
 
             if ( this.modules != null )
             {
-                copy.modules = new java.util.ArrayList<String>();
+                copy.modules = new java.util.ArrayList<>();
                 copy.modules.addAll( this.modules );
             }
 
             if ( this.distributionManagement != null )
             {
-                copy.distributionManagement = (DistributionManagement) this.distributionManagement.clone();
+                copy.distributionManagement = this.distributionManagement.clone();
             }
 
             if ( this.properties != null )
@@ -235,33 +204,33 @@ public class ModelBase
 
             if ( this.dependencyManagement != null )
             {
-                copy.dependencyManagement = (DependencyManagement) this.dependencyManagement.clone();
+                copy.dependencyManagement = this.dependencyManagement.clone();
             }
 
             if ( this.dependencies != null )
             {
-                copy.dependencies = new java.util.ArrayList<Dependency>();
+                copy.dependencies = new java.util.ArrayList<>();
                 for ( Dependency item : this.dependencies )
                 {
-                    copy.dependencies.add( ( (Dependency) item).clone() );
+                    copy.dependencies.add( item.clone() );
                 }
             }
 
             if ( this.repositories != null )
             {
-                copy.repositories = new java.util.ArrayList<Repository>();
+                copy.repositories = new java.util.ArrayList<>();
                 for ( Repository item : this.repositories )
                 {
-                    copy.repositories.add( ( (Repository) item).clone() );
+                    copy.repositories.add( item.clone() );
                 }
             }
 
             if ( this.pluginRepositories != null )
             {
-                copy.pluginRepositories = new java.util.ArrayList<Repository>();
+                copy.pluginRepositories = new java.util.ArrayList<>();
                 for ( Repository item : this.pluginRepositories )
                 {
-                    copy.pluginRepositories.add( ( (Repository) item).clone() );
+                    copy.pluginRepositories.add( item.clone() );
                 }
             }
 
@@ -272,20 +241,20 @@ public class ModelBase
 
             if ( this.reporting != null )
             {
-                copy.reporting = (Reporting) this.reporting.clone();
+                copy.reporting = this.reporting.clone();
             }
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- ModelBase clone()
 
@@ -298,7 +267,7 @@ public class ModelBase
     {
         if ( this.dependencies == null )
         {
-            this.dependencies = new java.util.ArrayList<Dependency>();
+            this.dependencies = new java.util.ArrayList<>();
         }
 
         return this.dependencies;
@@ -408,7 +377,7 @@ public class ModelBase
     {
         if ( this.modules == null )
         {
-            this.modules = new java.util.ArrayList<String>();
+            this.modules = new java.util.ArrayList<>();
         }
 
         return this.modules;
@@ -479,7 +448,6 @@ public class ModelBase
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -501,7 +469,7 @@ public class ModelBase
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -527,7 +495,7 @@ public class ModelBase
     {
         if ( this.pluginRepositories == null )
         {
-            this.pluginRepositories = new java.util.ArrayList<Repository>();
+            this.pluginRepositories = new java.util.ArrayList<>();
         }
 
         return this.pluginRepositories;
@@ -584,51 +552,11 @@ public class ModelBase
     {
         if ( this.repositories == null )
         {
-            this.repositories = new java.util.ArrayList<Repository>();
+            this.repositories = new java.util.ArrayList<>();
         }
 
         return this.repositories;
     } //-- java.util.List<Repository> getRepositories()
-
-    /**
-     * Method removeDependency.
-     * 
-     * @param dependency a dependency object.
-     */
-    public void removeDependency( Dependency dependency )
-    {
-        getDependencies().remove( dependency );
-    } //-- void removeDependency( Dependency )
-
-    /**
-     * Method removeModule.
-     * 
-     * @param string a string object.
-     */
-    public void removeModule( String string )
-    {
-        getModules().remove( string );
-    } //-- void removeModule( String )
-
-    /**
-     * Method removePluginRepository.
-     * 
-     * @param repository a repository object.
-     */
-    public void removePluginRepository( Repository repository )
-    {
-        getPluginRepositories().remove( repository );
-    } //-- void removePluginRepository( Repository )
-
-    /**
-     * Method removeRepository.
-     * 
-     * @param repository a repository object.
-     */
-    public void removeRepository( Repository repository )
-    {
-        getRepositories().remove( repository );
-    } //-- void removeRepository( Repository )
 
     /**
      * Set this element describes all of the dependencies

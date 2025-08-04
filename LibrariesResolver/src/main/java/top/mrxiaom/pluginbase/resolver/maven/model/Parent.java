@@ -18,7 +18,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Parent
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -119,15 +118,15 @@ public class Parent
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Parent clone()
 
@@ -235,7 +234,6 @@ public class Parent
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -257,7 +255,7 @@ public class Parent
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -381,17 +379,13 @@ public class Parent
      */
     public String getId()
     {
-        StringBuilder id = new StringBuilder( 64 );
-
-        id.append( getGroupId() );
-        id.append( ":" );
-        id.append( getArtifactId() );
-        id.append( ":" );
-        id.append( "pom" );
-        id.append( ":" );
-        id.append( getVersion() );
-
-        return id.toString();
+        return getGroupId() +
+                ":" +
+                getArtifactId() +
+                ":" +
+                "pom" +
+                ":" +
+                getVersion();
     }
 
     @Override

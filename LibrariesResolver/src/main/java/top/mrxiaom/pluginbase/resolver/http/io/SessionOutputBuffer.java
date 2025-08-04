@@ -109,12 +109,4 @@ public interface SessionOutputBuffer {
      * @throws  IOException  if an I/O error occurs.
      */
     void flush() throws IOException;
-
-    /**
-     * Returns {@link HttpTransportMetrics} for this session buffer.
-     *
-     * @return transport metrics.
-     */
-    HttpTransportMetrics getMetrics();
-
 }

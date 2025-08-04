@@ -10,7 +10,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class FileSet
     extends PatternSet
     implements java.io.Serializable, java.lang.Cloneable
@@ -41,14 +40,12 @@ public class FileSet
     {
         try
         {
-            FileSet copy = (FileSet) super.clone();
-
-            return copy;
+            return (FileSet) super.clone();
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- FileSet clone()
 

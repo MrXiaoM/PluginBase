@@ -5,12 +5,13 @@
 
 package top.mrxiaom.pluginbase.resolver.maven.model;
 
+import java.util.Objects;
+
 /**
  * Describes a build extension to utilise.
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Extension
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -77,15 +78,15 @@ public class Extension
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Extension clone()
 
@@ -184,7 +185,6 @@ public class Extension
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -206,7 +206,7 @@ public class Extension
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -290,16 +290,12 @@ public class Extension
         {
             return false;
         }
-        else if ( !equal( e.getVersion(), getVersion() ) )
-        {
-            return false;
-        }
-        return true;
+        else return equal(e.getVersion(), getVersion());
     }
 
     private static <T> boolean equal( T obj1, T obj2 )
     {
-        return ( obj1 != null ) ? obj1.equals( obj2 ) : obj2 == null;
+        return Objects.equals(obj1, obj2);
     }
 
     /**

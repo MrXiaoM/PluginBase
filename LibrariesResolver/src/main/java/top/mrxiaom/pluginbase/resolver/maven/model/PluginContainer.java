@@ -10,7 +10,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class PluginContainer
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -67,24 +66,24 @@ public class PluginContainer
 
             if ( this.plugins != null )
             {
-                copy.plugins = new java.util.ArrayList<Plugin>();
+                copy.plugins = new java.util.ArrayList<>();
                 for ( Plugin item : this.plugins )
                 {
-                    copy.plugins.add( ( (Plugin) item).clone() );
+                    copy.plugins.add( item.clone() );
                 }
             }
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- PluginContainer clone()
 
@@ -145,7 +144,6 @@ public class PluginContainer
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -167,7 +165,7 @@ public class PluginContainer
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -193,21 +191,11 @@ public class PluginContainer
     {
         if ( this.plugins == null )
         {
-            this.plugins = new java.util.ArrayList<Plugin>();
+            this.plugins = new java.util.ArrayList<>();
         }
 
         return this.plugins;
     } //-- java.util.List<Plugin> getPlugins()
-
-    /**
-     * Method removePlugin.
-     * 
-     * @param plugin a plugin object.
-     */
-    public void removePlugin( Plugin plugin )
-    {
-        getPlugins().remove( plugin );
-    } //-- void removePlugin( Plugin )
 
     /**
      * Set the list of plugins to use.
@@ -219,48 +207,9 @@ public class PluginContainer
         this.plugins = plugins;
     } //-- void setPlugins( java.util.List )
 
-    
-            
-    java.util.Map<String, Plugin> pluginMap;
-
-    /**
-     * Reset the <code>pluginsMap</code> field to <code>null</code>
-     */
-    public synchronized void flushPluginMap()
-    {
-        this.pluginMap = null;
-    }
-
-    /**
-     * @return a Map of plugins field with <code>Plugins#getKey()</code> as key
-     * @see Plugin#getKey()
-     */
-    public synchronized java.util.Map<String, Plugin> getPluginsAsMap()
-    {
-        if ( pluginMap == null )
-        {
-            pluginMap = new java.util.LinkedHashMap<String, Plugin>();
-            if ( plugins != null )
-            {
-                for ( java.util.Iterator<Plugin> it = plugins.iterator(); it.hasNext(); )
-                {
-                    Plugin plugin = (Plugin) it.next();
-                    pluginMap.put( plugin.getKey(), plugin );
-                }
-            }
-        }
-
-        return pluginMap;
-    }
-            
-          
-    
-            
      @Override
      public String toString()
      {
          return "PluginContainer {}";
      }
-            
-          
 }

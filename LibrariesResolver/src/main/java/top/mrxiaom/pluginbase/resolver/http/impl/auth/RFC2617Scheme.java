@@ -40,7 +40,6 @@ import top.mrxiaom.pluginbase.resolver.http.Consts;
 import top.mrxiaom.pluginbase.resolver.http.HeaderElement;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.auth.ChallengeState;
-import top.mrxiaom.pluginbase.resolver.http.auth.params.AuthPNames;
 import top.mrxiaom.pluginbase.resolver.http.message.BasicHeaderValueParser;
 import top.mrxiaom.pluginbase.resolver.http.message.HeaderValueParser;
 import top.mrxiaom.pluginbase.resolver.http.message.ParserCursor;

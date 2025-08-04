@@ -11,7 +11,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class ConfigurationContainer
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -109,15 +108,15 @@ public class ConfigurationContainer
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- ConfigurationContainer clone()
 
@@ -235,7 +234,6 @@ public class ConfigurationContainer
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -257,7 +255,7 @@ public class ConfigurationContainer
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -326,7 +324,7 @@ public class ConfigurationContainer
             
     public boolean isInherited()
     {
-        return ( inherited != null ) ? Boolean.parseBoolean( inherited ) : true;
+        return inherited == null || Boolean.parseBoolean(inherited);
     }
 
     public void setInherited( boolean inherited )
@@ -334,17 +332,4 @@ public class ConfigurationContainer
         this.inherited = String.valueOf( inherited );
     }
 
-    private boolean inheritanceApplied = true;
-
-    public void unsetInheritanceApplied()
-    {
-        this.inheritanceApplied = false;
-    }
-
-    public boolean isInheritanceApplied()
-    {
-        return inheritanceApplied;
-    }
-            
-          
 }

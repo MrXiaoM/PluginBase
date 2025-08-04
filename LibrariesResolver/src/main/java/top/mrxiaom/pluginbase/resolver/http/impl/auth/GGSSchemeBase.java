@@ -125,22 +125,9 @@ public abstract class GGSSchemeBase extends AuthSchemeBase {
         gssContext.requestMutualAuth(true);
         return gssContext;
     }
-    /**
-     * @deprecated (4.4) Use {@link #generateToken(byte[], String, top.mrxiaom.pluginbase.resolver.http.auth.Credentials)}.
-     */
-    @Deprecated
-    protected byte[] generateToken(final byte[] input, final String authServer) throws GSSException {
-        return null;
-    }
-
-    /**
-     * @since 4.4
-     */
-    //TODO: make this method abstract
-    @SuppressWarnings("deprecation")
     protected byte[] generateToken(
             final byte[] input, final String authServer, final Credentials credentials) throws GSSException {
-        return generateToken(input, authServer);
+        return null;
     }
 
     @Override

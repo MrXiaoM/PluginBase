@@ -16,7 +16,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Dependency
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -243,24 +242,24 @@ public class Dependency
 
             if ( this.exclusions != null )
             {
-                copy.exclusions = new java.util.ArrayList<Exclusion>();
+                copy.exclusions = new java.util.ArrayList<>();
                 for ( Exclusion item : this.exclusions )
                 {
-                    copy.exclusions.add( ( (Exclusion) item).clone() );
+                    copy.exclusions.add( item.clone() );
                 }
             }
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Dependency clone()
 
@@ -308,7 +307,7 @@ public class Dependency
     {
         if ( this.exclusions == null )
         {
-            this.exclusions = new java.util.ArrayList<Exclusion>();
+            this.exclusions = new java.util.ArrayList<>();
         }
 
         return this.exclusions;
@@ -473,7 +472,6 @@ public class Dependency
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -495,7 +493,7 @@ public class Dependency
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -582,16 +580,6 @@ public class Dependency
     {
         return this.version;
     } //-- String getVersion()
-
-    /**
-     * Method removeExclusion.
-     * 
-     * @param exclusion a exclusion object.
-     */
-    public void removeExclusion( Exclusion exclusion )
-    {
-        getExclusions().remove( exclusion );
-    } //-- void removeExclusion( Exclusion )
 
     /**
      * Set the unique id for an artifact produced by the project
@@ -746,7 +734,7 @@ public class Dependency
             
     public boolean isOptional()
     {
-        return ( optional != null ) ? Boolean.parseBoolean( optional ) : false;
+        return Boolean.parseBoolean(optional);
     }
 
     public void setOptional( boolean optional )

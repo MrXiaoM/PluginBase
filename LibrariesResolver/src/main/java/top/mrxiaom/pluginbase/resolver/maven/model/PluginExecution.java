@@ -16,7 +16,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class PluginExecution
     extends ConfigurationContainer
     implements java.io.Serializable, java.lang.Cloneable
@@ -68,16 +67,6 @@ public class PluginExecution
     //-----------/
 
     /**
-     * Method addGoal.
-     * 
-     * @param string a string object.
-     */
-    public void addGoal( String string )
-    {
-        getGoals().add( string );
-    } //-- void addGoal( String )
-
-    /**
      * Method clone.
      * 
      * @return PluginExecution
@@ -90,7 +79,7 @@ public class PluginExecution
 
             if ( this.goals != null )
             {
-                copy.goals = new java.util.ArrayList<String>();
+                copy.goals = new java.util.ArrayList<>();
                 copy.goals.addAll( this.goals );
             }
 
@@ -98,8 +87,8 @@ public class PluginExecution
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- PluginExecution clone()
 
@@ -112,7 +101,7 @@ public class PluginExecution
     {
         if ( this.goals == null )
         {
-            this.goals = new java.util.ArrayList<String>();
+            this.goals = new java.util.ArrayList<>();
         }
 
         return this.goals;
@@ -159,16 +148,6 @@ public class PluginExecution
     {
         return this.priority;
     } //-- int getPriority()
-
-    /**
-     * Method removeGoal.
-     * 
-     * @param string a string object.
-     */
-    public void removeGoal( String string )
-    {
-        getGoals().remove( string );
-    } //-- void removeGoal( String )
 
     /**
      * Set the goals to execute with the given configuration.
@@ -222,15 +201,9 @@ public class PluginExecution
         this.priority = priority;
     } //-- void setPriority( int )
 
-    
-            
-    public static final String DEFAULT_EXECUTION_ID = "default";
-
     @Override
     public String toString()
     {
         return getId();
     }
-            
-          
 }

@@ -15,7 +15,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Plugin
     extends ConfigurationContainer
     implements java.io.Serializable, java.lang.Cloneable
@@ -82,26 +81,6 @@ public class Plugin
     //-----------/
 
     /**
-     * Method addDependency.
-     * 
-     * @param dependency a dependency object.
-     */
-    public void addDependency( Dependency dependency )
-    {
-        getDependencies().add( dependency );
-    } //-- void addDependency( Dependency )
-
-    /**
-     * Method addExecution.
-     * 
-     * @param pluginExecution a pluginExecution object.
-     */
-    public void addExecution( PluginExecution pluginExecution )
-    {
-        getExecutions().add( pluginExecution );
-    } //-- void addExecution( PluginExecution )
-
-    /**
      * Method clone.
      * 
      * @return Plugin
@@ -114,19 +93,19 @@ public class Plugin
 
             if ( this.executions != null )
             {
-                copy.executions = new java.util.ArrayList<PluginExecution>();
+                copy.executions = new java.util.ArrayList<>();
                 for ( PluginExecution item : this.executions )
                 {
-                    copy.executions.add( ( (PluginExecution) item).clone() );
+                    copy.executions.add( item.clone() );
                 }
             }
 
             if ( this.dependencies != null )
             {
-                copy.dependencies = new java.util.ArrayList<Dependency>();
+                copy.dependencies = new java.util.ArrayList<>();
                 for ( Dependency item : this.dependencies )
                 {
-                    copy.dependencies.add( ( (Dependency) item).clone() );
+                    copy.dependencies.add( item.clone() );
                 }
             }
 
@@ -139,8 +118,8 @@ public class Plugin
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Plugin clone()
 
@@ -163,7 +142,7 @@ public class Plugin
     {
         if ( this.dependencies == null )
         {
-            this.dependencies = new java.util.ArrayList<Dependency>();
+            this.dependencies = new java.util.ArrayList<>();
         }
 
         return this.dependencies;
@@ -178,7 +157,7 @@ public class Plugin
     {
         if ( this.executions == null )
         {
-            this.executions = new java.util.ArrayList<PluginExecution>();
+            this.executions = new java.util.ArrayList<>();
         }
 
         return this.executions;
@@ -202,16 +181,6 @@ public class Plugin
     } //-- String getExtensions()
 
     /**
-     * Get <b>Deprecated</b>. Unused by Maven.
-     * 
-     * @return Object
-     */
-    public Object getGoals()
-    {
-        return this.goals;
-    } //-- Object getGoals()
-
-    /**
      * Get the group ID of the plugin in the repository.
      * 
      * @return String
@@ -231,26 +200,6 @@ public class Plugin
     {
         return this.version;
     } //-- String getVersion()
-
-    /**
-     * Method removeDependency.
-     * 
-     * @param dependency a dependency object.
-     */
-    public void removeDependency( Dependency dependency )
-    {
-        getDependencies().remove( dependency );
-    } //-- void removeDependency( Dependency )
-
-    /**
-     * Method removeExecution.
-     * 
-     * @param pluginExecution a pluginExecution object.
-     */
-    public void removeExecution( PluginExecution pluginExecution )
-    {
-        getExecutions().remove( pluginExecution );
-    } //-- void removeExecution( PluginExecution )
 
     /**
      * Set the artifact ID of the plugin in the repository.
@@ -339,50 +288,12 @@ public class Plugin
             
     public boolean isExtensions()
     {
-        return ( extensions != null ) ? Boolean.parseBoolean( extensions ) : false;
+        return Boolean.parseBoolean(extensions);
     }
 
     public void setExtensions( boolean extensions )
     {
         this.extensions = String.valueOf( extensions );
-    }
-
-    private java.util.Map<String, PluginExecution> executionMap = null;
-
-    /**
-     * Reset the <code>executionMap</code> field to <code>null</code>
-     */
-    public void flushExecutionMap()
-    {
-        this.executionMap = null;
-    }
-
-    /**
-     * @return a Map of executions field with <code>PluginExecution#getId()</code> as key
-     * @see PluginExecution#getId()
-     */
-    public java.util.Map<String, PluginExecution> getExecutionsAsMap()
-    {
-        if ( executionMap == null )
-        {
-            executionMap = new java.util.LinkedHashMap<String, PluginExecution>();
-            if ( getExecutions() != null )
-            {
-                for ( java.util.Iterator<PluginExecution> i = getExecutions().iterator(); i.hasNext(); )
-                {
-                    PluginExecution exec = (PluginExecution) i.next();
-
-                    if ( executionMap.containsKey( exec.getId() ) )
-                    {
-                        throw new IllegalStateException( "You cannot have two plugin executions with the same (or missing) <id/> elements.\nOffending execution\n\nId: \'" + exec.getId() + "\'\nPlugin:\'" + getKey() + "\'\n\n" );
-                    }
-
-                    executionMap.put( exec.getId(), exec );
-                }
-            }
-        }
-
-        return executionMap;
     }
 
     /**
@@ -392,15 +303,11 @@ public class Plugin
      */
     public String getId()
     {
-        StringBuilder id = new StringBuilder( 128 );
-
-        id.append( ( getGroupId() == null ) ? "[unknown-group-id]" : getGroupId() );
-        id.append( ":" );
-        id.append( ( getArtifactId() == null ) ? "[unknown-artifact-id]" : getArtifactId() );
-        id.append( ":" );
-        id.append( ( getVersion() == null ) ? "[unknown-version]" : getVersion() );
-
-        return id.toString();
+        return ((getGroupId() == null) ? "[unknown-group-id]" : getGroupId()) +
+                ":" +
+                ((getArtifactId() == null) ? "[unknown-artifact-id]" : getArtifactId()) +
+                ":" +
+                ((getVersion() == null) ? "[unknown-version]" : getVersion());
     }
 
     /**

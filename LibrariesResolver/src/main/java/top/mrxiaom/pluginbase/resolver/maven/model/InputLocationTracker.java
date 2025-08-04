@@ -10,7 +10,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public interface InputLocationTracker
 {
 
@@ -27,7 +26,7 @@ public interface InputLocationTracker
      * @return The location of the field in the input source or
      * <code>null</code> if unknown.
      */
-    public InputLocation getLocation( Object field );
+    InputLocation getLocation(Object field);
     /**
      * Sets the location of the specified field.
      * 
@@ -36,5 +35,5 @@ public interface InputLocationTracker
      * @param location The location of the field, may be
      * <code>null</code>.
      */
-    public void setLocation( Object field, InputLocation location );
+    void setLocation(Object field, InputLocation location);
 }

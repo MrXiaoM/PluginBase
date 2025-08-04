@@ -17,7 +17,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Model
     extends ModelBase
     implements java.io.Serializable, java.lang.Cloneable
@@ -132,8 +131,6 @@ public class Model
      *             <code>Boolean</code>
      *             <br><b>Default value is</b>: <code>true</code>
      *             <br><b>Since</b>: Maven 3.6.1
-     *             
-     *           .
      */
     private String childProjectUrlInheritAppendPath;
 
@@ -217,56 +214,6 @@ public class Model
     //-----------/
 
     /**
-     * Method addContributor.
-     * 
-     * @param contributor a contributor object.
-     */
-    public void addContributor( Contributor contributor )
-    {
-        getContributors().add( contributor );
-    } //-- void addContributor( Contributor )
-
-    /**
-     * Method addDeveloper.
-     * 
-     * @param developer a developer object.
-     */
-    public void addDeveloper( Developer developer )
-    {
-        getDevelopers().add( developer );
-    } //-- void addDeveloper( Developer )
-
-    /**
-     * Method addLicense.
-     * 
-     * @param license a license object.
-     */
-    public void addLicense( License license )
-    {
-        getLicenses().add( license );
-    } //-- void addLicense( License )
-
-    /**
-     * Method addMailingList.
-     * 
-     * @param mailingList a mailingList object.
-     */
-    public void addMailingList( MailingList mailingList )
-    {
-        getMailingLists().add( mailingList );
-    } //-- void addMailingList( MailingList )
-
-    /**
-     * Method addProfile.
-     * 
-     * @param profile a profile object.
-     */
-    public void addProfile( Profile profile )
-    {
-        getProfiles().add( profile );
-    } //-- void addProfile( Profile )
-
-    /**
      * Method clone.
      * 
      * @return Model
@@ -279,81 +226,81 @@ public class Model
 
             if ( this.parent != null )
             {
-                copy.parent = (Parent) this.parent.clone();
+                copy.parent = this.parent.clone();
             }
 
             if ( this.organization != null )
             {
-                copy.organization = (Organization) this.organization.clone();
+                copy.organization = this.organization.clone();
             }
 
             if ( this.licenses != null )
             {
-                copy.licenses = new java.util.ArrayList<License>();
+                copy.licenses = new java.util.ArrayList<>();
                 for ( License item : this.licenses )
                 {
-                    copy.licenses.add( ( (License) item).clone() );
+                    copy.licenses.add( item.clone() );
                 }
             }
 
             if ( this.developers != null )
             {
-                copy.developers = new java.util.ArrayList<Developer>();
+                copy.developers = new java.util.ArrayList<>();
                 for ( Developer item : this.developers )
                 {
-                    copy.developers.add( ( (Developer) item).clone() );
+                    copy.developers.add( item.clone() );
                 }
             }
 
             if ( this.contributors != null )
             {
-                copy.contributors = new java.util.ArrayList<Contributor>();
+                copy.contributors = new java.util.ArrayList<>();
                 for ( Contributor item : this.contributors )
                 {
-                    copy.contributors.add( ( (Contributor) item).clone() );
+                    copy.contributors.add( item.clone() );
                 }
             }
 
             if ( this.mailingLists != null )
             {
-                copy.mailingLists = new java.util.ArrayList<MailingList>();
+                copy.mailingLists = new java.util.ArrayList<>();
                 for ( MailingList item : this.mailingLists )
                 {
-                    copy.mailingLists.add( ( (MailingList) item).clone() );
+                    copy.mailingLists.add( item.clone() );
                 }
             }
 
             if ( this.prerequisites != null )
             {
-                copy.prerequisites = (Prerequisites) this.prerequisites.clone();
+                copy.prerequisites = this.prerequisites.clone();
             }
 
             if ( this.scm != null )
             {
-                copy.scm = (Scm) this.scm.clone();
+                copy.scm = this.scm.clone();
             }
 
             if ( this.issueManagement != null )
             {
-                copy.issueManagement = (IssueManagement) this.issueManagement.clone();
+                copy.issueManagement = this.issueManagement.clone();
             }
 
             if ( this.ciManagement != null )
             {
-                copy.ciManagement = (CiManagement) this.ciManagement.clone();
+                copy.ciManagement = this.ciManagement.clone();
             }
 
             if ( this.build != null )
             {
-                copy.build = (Build) this.build.clone();
+                copy.build = this.build.clone();
             }
 
             if ( this.profiles != null )
             {
-                copy.profiles = new java.util.ArrayList<Profile>();
+                copy.profiles = new java.util.ArrayList<>();
                 for ( Profile item : this.profiles )
                 {
-                    copy.profiles.add( ( (Profile) item).clone() );
+                    copy.profiles.add( item.clone() );
                 }
             }
 
@@ -363,8 +310,8 @@ public class Model
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Model clone()
 
@@ -429,7 +376,7 @@ public class Model
     {
         if ( this.contributors == null )
         {
-            this.contributors = new java.util.ArrayList<Contributor>();
+            this.contributors = new java.util.ArrayList<>();
         }
 
         return this.contributors;
@@ -463,7 +410,7 @@ public class Model
     {
         if ( this.developers == null )
         {
-            this.developers = new java.util.ArrayList<Developer>();
+            this.developers = new java.util.ArrayList<>();
         }
 
         return this.developers;
@@ -516,7 +463,7 @@ public class Model
     {
         if ( this.licenses == null )
         {
-            this.licenses = new java.util.ArrayList<License>();
+            this.licenses = new java.util.ArrayList<>();
         }
 
         return this.licenses;
@@ -531,21 +478,11 @@ public class Model
     {
         if ( this.mailingLists == null )
         {
-            this.mailingLists = new java.util.ArrayList<MailingList>();
+            this.mailingLists = new java.util.ArrayList<>();
         }
 
         return this.mailingLists;
     } //-- java.util.List<MailingList> getMailingLists()
-
-    /**
-     * Get the modelEncoding field.
-     * 
-     * @return String
-     */
-    public String getModelEncoding()
-    {
-        return this.modelEncoding;
-    } //-- String getModelEncoding()
 
     /**
      * Get declares to which version of project descriptor this POM
@@ -634,7 +571,7 @@ public class Model
     {
         if ( this.profiles == null )
         {
-            this.profiles = new java.util.ArrayList<Profile>();
+            this.profiles = new java.util.ArrayList<>();
         }
 
         return this.profiles;
@@ -676,56 +613,6 @@ public class Model
     {
         return this.version;
     } //-- String getVersion()
-
-    /**
-     * Method removeContributor.
-     * 
-     * @param contributor a contributor object.
-     */
-    public void removeContributor( Contributor contributor )
-    {
-        getContributors().remove( contributor );
-    } //-- void removeContributor( Contributor )
-
-    /**
-     * Method removeDeveloper.
-     * 
-     * @param developer a developer object.
-     */
-    public void removeDeveloper( Developer developer )
-    {
-        getDevelopers().remove( developer );
-    } //-- void removeDeveloper( Developer )
-
-    /**
-     * Method removeLicense.
-     * 
-     * @param license a license object.
-     */
-    public void removeLicense( License license )
-    {
-        getLicenses().remove( license );
-    } //-- void removeLicense( License )
-
-    /**
-     * Method removeMailingList.
-     * 
-     * @param mailingList a mailingList object.
-     */
-    public void removeMailingList( MailingList mailingList )
-    {
-        getMailingLists().remove( mailingList );
-    } //-- void removeMailingList( MailingList )
-
-    /**
-     * Method removeProfile.
-     * 
-     * @param profile a profile object.
-     */
-    public void removeProfile( Profile profile )
-    {
-        getProfiles().remove( profile );
-    } //-- void removeProfile( Profile )
 
     /**
      * Set the identifier for this artifact that is unique within
@@ -1069,17 +956,13 @@ public class Model
      */
     public String getId()
     {
-        StringBuilder id = new StringBuilder( 64 );
-
-        id.append( ( getGroupId() == null ) ? "[inherited]" : getGroupId() );
-        id.append( ":" );
-        id.append( getArtifactId() );
-        id.append( ":" );
-        id.append( getPackaging() );
-        id.append( ":" );
-        id.append( ( getVersion() == null ) ? "[inherited]" : getVersion() );
-
-        return id.toString();
+        return ((getGroupId() == null) ? "[inherited]" : getGroupId()) +
+                ":" +
+                getArtifactId() +
+                ":" +
+                getPackaging() +
+                ":" +
+                ((getVersion() == null) ? "[inherited]" : getVersion());
     }
 
     @Override
@@ -1087,21 +970,9 @@ public class Model
     {
         return getId();
     }
-            
-          
-    
-            
 
     public boolean isChildProjectUrlInheritAppendPath()
     {
-        return ( childProjectUrlInheritAppendPath != null ) ? Boolean.parseBoolean( childProjectUrlInheritAppendPath ) : true;
+        return childProjectUrlInheritAppendPath == null || Boolean.parseBoolean(childProjectUrlInheritAppendPath);
     }
-
-    public void setChildProjectUrlInheritAppendPath( boolean childProjectUrlInheritAppendPath )
-    {
-        this.childProjectUrlInheritAppendPath = String.valueOf( childProjectUrlInheritAppendPath );
-    }
-
-            
-          
 }

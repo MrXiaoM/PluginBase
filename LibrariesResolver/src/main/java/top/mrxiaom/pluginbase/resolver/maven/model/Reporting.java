@@ -10,7 +10,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Reporting
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -82,16 +81,6 @@ public class Reporting
     //-----------/
 
     /**
-     * Method addPlugin.
-     * 
-     * @param reportPlugin a reportPlugin object.
-     */
-    public void addPlugin( ReportPlugin reportPlugin )
-    {
-        getPlugins().add( reportPlugin );
-    } //-- void addPlugin( ReportPlugin )
-
-    /**
      * Method clone.
      * 
      * @return Reporting
@@ -104,24 +93,24 @@ public class Reporting
 
             if ( this.plugins != null )
             {
-                copy.plugins = new java.util.ArrayList<ReportPlugin>();
+                copy.plugins = new java.util.ArrayList<>();
                 for ( ReportPlugin item : this.plugins )
                 {
-                    copy.plugins.add( ( (ReportPlugin) item).clone() );
+                    copy.plugins.add( item.clone() );
                 }
             }
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Reporting clone()
 
@@ -217,7 +206,6 @@ public class Reporting
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -239,7 +227,7 @@ public class Reporting
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -277,21 +265,11 @@ public class Reporting
     {
         if ( this.plugins == null )
         {
-            this.plugins = new java.util.ArrayList<ReportPlugin>();
+            this.plugins = new java.util.ArrayList<>();
         }
 
         return this.plugins;
     } //-- java.util.List<ReportPlugin> getPlugins()
-
-    /**
-     * Method removePlugin.
-     * 
-     * @param reportPlugin a reportPlugin object.
-     */
-    public void removePlugin( ReportPlugin reportPlugin )
-    {
-        getPlugins().remove( reportPlugin );
-    } //-- void removePlugin( ReportPlugin )
 
     /**
      * Set if true, then the default reports are not included in
@@ -336,45 +314,6 @@ public class Reporting
             
     public boolean isExcludeDefaults()
     {
-        return ( excludeDefaults != null ) ? Boolean.parseBoolean( excludeDefaults ) : false;
+        return Boolean.parseBoolean(excludeDefaults);
     }
-
-    public void setExcludeDefaults( boolean excludeDefaults )
-    {
-        this.excludeDefaults = String.valueOf( excludeDefaults );
-    }
-
-    java.util.Map<String, ReportPlugin> reportPluginMap;
-
-    /**
-     * Reset the <code>reportPluginMap</code> field to <code>null</code>
-     */
-    public synchronized void flushReportPluginMap()
-    {
-        this.reportPluginMap = null;
-    }
-
-    /**
-     * @return a Map of plugins field with <code>ReportPlugin#getKey()</code> as key
-     * @see ReportPlugin#getKey()
-     */
-    public synchronized java.util.Map<String, ReportPlugin> getReportPluginsAsMap()
-    {
-        if ( reportPluginMap == null )
-        {
-            reportPluginMap = new java.util.LinkedHashMap<String, ReportPlugin>();
-            if ( getPlugins() != null )
-            {
-                for ( java.util.Iterator<ReportPlugin> it = getPlugins().iterator(); it.hasNext(); )
-                {
-                    ReportPlugin reportPlugin = (ReportPlugin) it.next();
-                    reportPluginMap.put( reportPlugin.getKey(), reportPlugin );
-                }
-            }
-        }
-
-        return reportPluginMap;
-    }
-            
-          
 }

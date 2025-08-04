@@ -10,7 +10,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class BuildBase
     extends PluginConfiguration
     implements java.io.Serializable, java.lang.Cloneable
@@ -75,36 +74,6 @@ public class BuildBase
     //-----------/
 
     /**
-     * Method addFilter.
-     * 
-     * @param string a string object.
-     */
-    public void addFilter( String string )
-    {
-        getFilters().add( string );
-    } //-- void addFilter( String )
-
-    /**
-     * Method addResource.
-     * 
-     * @param resource a resource object.
-     */
-    public void addResource( Resource resource )
-    {
-        getResources().add( resource );
-    } //-- void addResource( Resource )
-
-    /**
-     * Method addTestResource.
-     * 
-     * @param resource a resource object.
-     */
-    public void addTestResource( Resource resource )
-    {
-        getTestResources().add( resource );
-    } //-- void addTestResource( Resource )
-
-    /**
      * Method clone.
      * 
      * @return BuildBase
@@ -117,25 +86,25 @@ public class BuildBase
 
             if ( this.resources != null )
             {
-                copy.resources = new java.util.ArrayList<Resource>();
+                copy.resources = new java.util.ArrayList<>();
                 for ( Resource item : this.resources )
                 {
-                    copy.resources.add( ( (Resource) item).clone() );
+                    copy.resources.add( item.clone() );
                 }
             }
 
             if ( this.testResources != null )
             {
-                copy.testResources = new java.util.ArrayList<Resource>();
+                copy.testResources = new java.util.ArrayList<>();
                 for ( Resource item : this.testResources )
                 {
-                    copy.testResources.add( ( (Resource) item).clone() );
+                    copy.testResources.add( item.clone() );
                 }
             }
 
             if ( this.filters != null )
             {
-                copy.filters = new java.util.ArrayList<String>();
+                copy.filters = new java.util.ArrayList<>();
                 copy.filters.addAll( this.filters );
             }
 
@@ -143,8 +112,8 @@ public class BuildBase
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- BuildBase clone()
 
@@ -186,7 +155,7 @@ public class BuildBase
     {
         if ( this.filters == null )
         {
-            this.filters = new java.util.ArrayList<String>();
+            this.filters = new java.util.ArrayList<>();
         }
 
         return this.filters;
@@ -215,7 +184,7 @@ public class BuildBase
     {
         if ( this.resources == null )
         {
-            this.resources = new java.util.ArrayList<Resource>();
+            this.resources = new java.util.ArrayList<>();
         }
 
         return this.resources;
@@ -230,41 +199,11 @@ public class BuildBase
     {
         if ( this.testResources == null )
         {
-            this.testResources = new java.util.ArrayList<Resource>();
+            this.testResources = new java.util.ArrayList<>();
         }
 
         return this.testResources;
     } //-- java.util.List<Resource> getTestResources()
-
-    /**
-     * Method removeFilter.
-     * 
-     * @param string a string object.
-     */
-    public void removeFilter( String string )
-    {
-        getFilters().remove( string );
-    } //-- void removeFilter( String )
-
-    /**
-     * Method removeResource.
-     * 
-     * @param resource a resource object.
-     */
-    public void removeResource( Resource resource )
-    {
-        getResources().remove( resource );
-    } //-- void removeResource( Resource )
-
-    /**
-     * Method removeTestResource.
-     * 
-     * @param resource a resource object.
-     */
-    public void removeTestResource( Resource resource )
-    {
-        getTestResources().remove( resource );
-    } //-- void removeTestResource( Resource )
 
     /**
      * Set the default goal (or phase in Maven 2) to execute when

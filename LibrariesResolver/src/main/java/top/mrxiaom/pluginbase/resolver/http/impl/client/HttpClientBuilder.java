@@ -260,21 +260,6 @@ public class HttpClientBuilder {
      *   top.mrxiaom.pluginbase.resolver.http.conn.HttpClientConnectionManager)} and the {@link #setSSLSocketFactory(
      *   top.mrxiaom.pluginbase.resolver.http.conn.socket.LayeredConnectionSocketFactory)} methods.
      * </p>
-     *
-     * @deprecated (4.5) use {@link #setSSLContext(SSLContext)}
-     */
-    @Deprecated
-    public final HttpClientBuilder setSslcontext(final SSLContext sslcontext) {
-        return setSSLContext(sslcontext);
-    }
-
-    /**
-     * Assigns {@link SSLContext} instance.
-     * <p>
-     * Please note this value can be overridden by the {@link #setConnectionManager(
-     *   top.mrxiaom.pluginbase.resolver.http.conn.HttpClientConnectionManager)} and the {@link #setSSLSocketFactory(
-     *   top.mrxiaom.pluginbase.resolver.http.conn.socket.LayeredConnectionSocketFactory)} methods.
-     * </p>
      */
     public final HttpClientBuilder setSSLContext(final SSLContext sslContext) {
         this.sslContext = sslContext;

@@ -37,7 +37,6 @@ import java.nio.charset.CoderResult;
 import top.mrxiaom.pluginbase.resolver.http.MessageConstraintException;
 import top.mrxiaom.pluginbase.resolver.http.config.MessageConstraints;
 import top.mrxiaom.pluginbase.resolver.http.io.BufferInfo;
-import top.mrxiaom.pluginbase.resolver.http.io.HttpTransportMetrics;
 import top.mrxiaom.pluginbase.resolver.http.io.SessionInputBuffer;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HTTP;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
@@ -58,7 +57,6 @@ import top.mrxiaom.pluginbase.resolver.http.util.CharArrayBuffer;
  */
 public class SessionInputBufferImpl implements SessionInputBuffer, BufferInfo {
 
-    private final HttpTransportMetricsImpl metrics;
     private final byte[] buffer;
     private final ByteArrayBuffer lineBuffer;
     private final int minChunkLimit;
@@ -73,7 +71,6 @@ public class SessionInputBufferImpl implements SessionInputBuffer, BufferInfo {
     /**
      * Creates new instance of SessionInputBufferImpl.
      *
-     * @param metrics HTTP transport metrics.
      * @param bufferSize buffer size. Must be a positive number.
      * @param minChunkLimit size limit below which data chunks should be buffered in memory
      *   in order to minimize native method invocations on the underlying network socket.
@@ -86,14 +83,11 @@ public class SessionInputBufferImpl implements SessionInputBuffer, BufferInfo {
      *   If {@code null} simple type cast will be used for byte to char conversion.
      */
     public SessionInputBufferImpl(
-            final HttpTransportMetricsImpl metrics,
             final int bufferSize,
             final int minChunkLimit,
             final MessageConstraints constraints,
             final CharsetDecoder charDecoder) {
-        Args.notNull(metrics, "HTTP transport metrcis");
         Args.positive(bufferSize, "Buffer size");
-        this.metrics = metrics;
         this.buffer = new byte[bufferSize];
         this.bufferPos = 0;
         this.bufferLen = 0;
@@ -101,12 +95,6 @@ public class SessionInputBufferImpl implements SessionInputBuffer, BufferInfo {
         this.constraints = constraints != null ? constraints : MessageConstraints.DEFAULT;
         this.lineBuffer = new ByteArrayBuffer(bufferSize);
         this.decoder = charDecoder;
-    }
-
-    public SessionInputBufferImpl(
-            final HttpTransportMetricsImpl metrics,
-            final int bufferSize) {
-        this(metrics, bufferSize, bufferSize, null, null);
     }
 
     public void bind(final InputStream inputStream) {
@@ -155,7 +143,6 @@ public class SessionInputBufferImpl implements SessionInputBuffer, BufferInfo {
             return -1;
         }
         this.bufferLen = off + readLen;
-        this.metrics.incrementBytesTransferred(readLen);
         return readLen;
     }
 
@@ -194,11 +181,7 @@ public class SessionInputBufferImpl implements SessionInputBuffer, BufferInfo {
         // If the remaining capacity is big enough, read directly from the
         // underlying input stream bypassing the buffer.
         if (len > this.minChunkLimit) {
-            final int readLen = streamRead(b, off, len);
-            if (readLen > 0) {
-                this.metrics.incrementBytesTransferred(readLen);
-            }
-            return readLen;
+            return streamRead(b, off, len);
         }
         // otherwise read to the buffer first
         while (!hasBufferedData()) {
@@ -390,15 +373,4 @@ public class SessionInputBufferImpl implements SessionInputBuffer, BufferInfo {
         final int readLen = readLine(charbuffer);
         return readLen != -1 ? charbuffer.toString() : null;
     }
-
-    @Override
-    public boolean isDataAvailable(final int timeout) {
-        return hasBufferedData();
-    }
-
-    @Override
-    public HttpTransportMetrics getMetrics() {
-        return this.metrics;
-    }
-
 }

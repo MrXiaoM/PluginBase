@@ -299,21 +299,6 @@ public interface ModelBuildingRequest {
     ModelBuildingRequest setModelResolver(ModelResolver modelResolver);
 
     /**
-     * Gets the model building listener to notify during the build process.
-     *
-     * @return The model building listener to notify or {@code null} if none.
-     */
-    ModelBuildingListener getModelBuildingListener();
-
-    /**
-     * Sets the model building listener to notify during the build process.
-     *
-     * @param modelBuildingListener The model building listener to notify, may be {@code null}.
-     * @return This request, never {@code null}.
-     */
-    ModelBuildingRequest setModelBuildingListener(ModelBuildingListener modelBuildingListener);
-
-    /**
      * Gets the model cache to use for reuse of previously built models.
      *
      * @return The model cache or {@code null} if not set.

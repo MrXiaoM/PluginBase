@@ -49,17 +49,6 @@ import top.mrxiaom.pluginbase.resolver.http.util.CharArrayBuffer;
 @Contract(threading = ThreadingBehavior.IMMUTABLE)
 public class BasicHeaderValueParser implements HeaderValueParser {
 
-    /**
-     * A default instance of this class, for use as default or fallback.
-     * Note that {@link BasicHeaderValueParser} is not a singleton, there
-     * can be many instances of the class itself and of derived classes.
-     * The instance here provides non-customized, default behavior.
-     *
-     * @deprecated (4.3) use {@link #INSTANCE}
-     */
-    @Deprecated
-    public final static BasicHeaderValueParser DEFAULT = new BasicHeaderValueParser();
-
     public final static BasicHeaderValueParser INSTANCE = new BasicHeaderValueParser();
 
     private final static char PARAM_DELIMITER                = ';';
@@ -114,28 +103,6 @@ public class BasicHeaderValueParser implements HeaderValueParser {
         return elements.toArray(new HeaderElement[0]);
     }
 
-
-    /**
-     * Parses an element with the given parser.
-     *
-     * @param value     the header element to parse
-     * @param parser    the parser to use, or {@code null} for default
-     *
-     * @return  the parsed header element
-     */
-    public static
-        HeaderElement parseHeaderElement(final String value,
-                                         final HeaderValueParser parser) throws ParseException {
-        Args.notNull(value, "Value");
-
-        final CharArrayBuffer buffer = new CharArrayBuffer(value.length());
-        buffer.append(value);
-        final ParserCursor cursor = new ParserCursor(0, value.length());
-        return (parser != null ? parser : BasicHeaderValueParser.INSTANCE)
-                .parseHeaderElement(buffer, cursor);
-    }
-
-
     // non-javadoc, see interface HeaderValueParser
     @Override
     public HeaderElement parseHeaderElement(final CharArrayBuffer buffer,
@@ -167,29 +134,6 @@ public class BasicHeaderValueParser implements HeaderValueParser {
         return new BasicHeaderElement(name, value, params);
     }
 
-
-    /**
-     * Parses parameters with the given parser.
-     *
-     * @param value     the parameter list to parse
-     * @param parser    the parser to use, or {@code null} for default
-     *
-     * @return  array holding the parameters, never {@code null}
-     */
-    public static
-        NameValuePair[] parseParameters(final String value,
-                                        final HeaderValueParser parser) throws ParseException {
-        Args.notNull(value, "Value");
-
-        final CharArrayBuffer buffer = new CharArrayBuffer(value.length());
-        buffer.append(value);
-        final ParserCursor cursor = new ParserCursor(0, value.length());
-        return (parser != null ? parser : BasicHeaderValueParser.INSTANCE)
-                .parseParameters(buffer, cursor);
-    }
-
-
-
     // non-javadoc, see interface HeaderValueParser
     @Override
     public NameValuePair[] parseParameters(final CharArrayBuffer buffer,
@@ -208,27 +152,6 @@ public class BasicHeaderValueParser implements HeaderValueParser {
         }
         return params.toArray(new NameValuePair[0]);
     }
-
-    /**
-     * Parses a name-value-pair with the given parser.
-     *
-     * @param value     the NVP to parse
-     * @param parser    the parser to use, or {@code null} for default
-     *
-     * @return  the parsed name-value pair
-     */
-    public static
-       NameValuePair parseNameValuePair(final String value,
-                                        final HeaderValueParser parser) throws ParseException {
-        Args.notNull(value, "Value");
-
-        final CharArrayBuffer buffer = new CharArrayBuffer(value.length());
-        buffer.append(value);
-        final ParserCursor cursor = new ParserCursor(0, value.length());
-        return (parser != null ? parser : BasicHeaderValueParser.INSTANCE)
-                .parseNameValuePair(buffer, cursor);
-    }
-
 
     // non-javadoc, see interface HeaderValueParser
     @Override
@@ -254,42 +177,7 @@ public class BasicHeaderValueParser implements HeaderValueParser {
     }
 
     /**
-     * @deprecated (4.4) use {@link top.mrxiaom.pluginbase.resolver.http.message.TokenParser}
-     */
-    @Deprecated
-    public NameValuePair parseNameValuePair(final CharArrayBuffer buffer,
-                                            final ParserCursor cursor,
-                                            final char[] delimiters) {
-        Args.notNull(buffer, "Char array buffer");
-        Args.notNull(cursor, "Parser cursor");
-
-        final BitSet delimSet = new BitSet();
-        if (delimiters != null) {
-            for (final char delimiter: delimiters) {
-                delimSet.set(delimiter);
-            }
-        }
-        delimSet.set('=');
-        final String name = tokenParser.parseToken(buffer, cursor, delimSet);
-        if (cursor.atEnd()) {
-            return new BasicNameValuePair(name, null);
-        }
-        final int delim = buffer.charAt(cursor.getPos());
-        cursor.updatePos(cursor.getPos() + 1);
-        if (delim != '=') {
-            return createNameValuePair(name, null);
-        }
-        delimSet.clear('=');
-        final String value = tokenParser.parseValue(buffer, cursor, delimSet);
-        if (!cursor.atEnd()) {
-            cursor.updatePos(cursor.getPos() + 1);
-        }
-        return createNameValuePair(name, value);
-    }
-
-    /**
      * Creates a name-value pair.
-     * Called from {@link #parseNameValuePair}.
      *
      * @param name      the name
      * @param value     the value, or {@code null}
@@ -299,6 +187,4 @@ public class BasicHeaderValueParser implements HeaderValueParser {
     protected NameValuePair createNameValuePair(final String name, final String value) {
         return new BasicNameValuePair(name, value);
     }
-
 }
-

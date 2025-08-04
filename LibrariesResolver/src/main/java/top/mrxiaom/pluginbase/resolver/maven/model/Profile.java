@@ -12,7 +12,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Profile
     extends ModelBase
     implements java.io.Serializable, java.lang.Cloneable
@@ -61,20 +60,20 @@ public class Profile
 
             if ( this.activation != null )
             {
-                copy.activation = (Activation) this.activation.clone();
+                copy.activation = this.activation.clone();
             }
 
             if ( this.build != null )
             {
-                copy.build = (BuildBase) this.build.clone();
+                copy.build = this.build.clone();
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Profile clone()
 
@@ -151,8 +150,6 @@ public class Profile
     
             
     public static final String SOURCE_POM = "pom";
-
-    public static final String SOURCE_SETTINGS = "settings.xml";
 
     // We don't want this to be parseable...it's sort of 'hidden'
     // default source for this profile is in the pom itself.

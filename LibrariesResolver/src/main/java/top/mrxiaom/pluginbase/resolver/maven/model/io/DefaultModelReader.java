@@ -23,7 +23,6 @@ import org.codehaus.plexus.util.xml.XmlStreamReader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import top.mrxiaom.pluginbase.resolver.maven.model.InputSource;
 import top.mrxiaom.pluginbase.resolver.maven.model.Model;
-import top.mrxiaom.pluginbase.resolver.maven.model.io.xpp3.MavenXpp3Reader;
 import top.mrxiaom.pluginbase.resolver.maven.model.io.xpp3.MavenXpp3ReaderEx;
 
 import java.io.File;
@@ -82,11 +81,7 @@ public class DefaultModelReader implements ModelReader {
 
     private Model read(Reader reader, boolean strict, InputSource source) throws IOException {
         try {
-            if (source != null) {
-                return new MavenXpp3ReaderEx().read(reader, strict, source);
-            } else {
-                return new MavenXpp3Reader().read(reader, strict);
-            }
+            return new MavenXpp3ReaderEx().read(reader, strict, source);
         } catch (XmlPullParserException e) {
             throw new ModelParseException(e.getMessage(), e.getLineNumber(), e.getColumnNumber(), e);
         }

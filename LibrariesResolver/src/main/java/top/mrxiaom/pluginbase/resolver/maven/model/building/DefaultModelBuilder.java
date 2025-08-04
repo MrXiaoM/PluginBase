@@ -401,8 +401,6 @@ public class DefaultModelBuilder implements ModelBuilder {
         // plugin management injection
         pluginManagementInjector.injectManagement(resultModel, request, problems);
 
-        fireEvent(resultModel, request, problems, ModelBuildingEventCatapult.BUILD_EXTENSIONS_ASSEMBLED);
-
         if (request.isProcessPlugins()) {
             if (lifecycleBindingsInjector == null) {
                 throw new IllegalStateException("lifecycle bindings injector is missing");
@@ -1138,20 +1136,6 @@ public class DefaultModelBuilder implements ModelBuilder {
             }
         }
         return null;
-    }
-
-    private void fireEvent(
-            Model model,
-            ModelBuildingRequest request,
-            ModelProblemCollector problems,
-            ModelBuildingEventCatapult catapult) {
-        ModelBuildingListener listener = request.getModelBuildingListener();
-
-        if (listener != null) {
-            ModelBuildingEvent event = new DefaultModelBuildingEvent(model, request, problems);
-
-            catapult.fire(listener, event);
-        }
     }
 
     private boolean isNotContainsCoordinates(String message, String groupId, String artifactId, String version) {

@@ -12,7 +12,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Repository
     extends RepositoryBase
     implements java.io.Serializable, java.lang.Cloneable
@@ -50,20 +49,20 @@ public class Repository
 
             if ( this.releases != null )
             {
-                copy.releases = (RepositoryPolicy) this.releases.clone();
+                copy.releases = this.releases.clone();
             }
 
             if ( this.snapshots != null )
             {
-                copy.snapshots = (RepositoryPolicy) this.snapshots.clone();
+                copy.snapshots = this.snapshots.clone();
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Repository clone()
 

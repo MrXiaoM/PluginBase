@@ -12,7 +12,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class MailingList
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -132,16 +131,6 @@ public class MailingList
     //-----------/
 
     /**
-     * Method addOtherArchive.
-     * 
-     * @param string a string object.
-     */
-    public void addOtherArchive( String string )
-    {
-        getOtherArchives().add( string );
-    } //-- void addOtherArchive( String )
-
-    /**
      * Method clone.
      * 
      * @return MailingList
@@ -154,21 +143,21 @@ public class MailingList
 
             if ( this.otherArchives != null )
             {
-                copy.otherArchives = new java.util.ArrayList<String>();
+                copy.otherArchives = new java.util.ArrayList<>();
                 copy.otherArchives.addAll( this.otherArchives );
             }
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- MailingList clone()
 
@@ -246,21 +235,6 @@ public class MailingList
     } //-- String getName()
 
     /**
-     * Method getOtherArchives.
-     * 
-     * @return List
-     */
-    public java.util.List<String> getOtherArchives()
-    {
-        if ( this.otherArchives == null )
-        {
-            this.otherArchives = new java.util.ArrayList<String>();
-        }
-
-        return this.otherArchives;
-    } //-- java.util.List<String> getOtherArchives()
-
-    /**
      * 
      * 
      * @param key a key object.
@@ -310,7 +284,6 @@ public class MailingList
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -332,7 +305,7 @@ public class MailingList
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -395,16 +368,6 @@ public class MailingList
     {
         return this.unsubscribe;
     } //-- String getUnsubscribe()
-
-    /**
-     * Method removeOtherArchive.
-     * 
-     * @param string a string object.
-     */
-    public void removeOtherArchive( String string )
-    {
-        getOtherArchives().remove( string );
-    } //-- void removeOtherArchive( String )
 
     /**
      * Set the link to a URL where you can browse the mailing list

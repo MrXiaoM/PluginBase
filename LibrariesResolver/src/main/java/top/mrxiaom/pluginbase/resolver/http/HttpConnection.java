@@ -94,12 +94,4 @@ public interface HttpConnection extends Closeable {
      * internal buffer prior to closing the underlying socket.
      */
     void shutdown() throws IOException;
-
-    /**
-     * Returns a collection of connection metrics.
-     *
-     * @return HttpConnectionMetrics
-     */
-    HttpConnectionMetrics getMetrics();
-
 }

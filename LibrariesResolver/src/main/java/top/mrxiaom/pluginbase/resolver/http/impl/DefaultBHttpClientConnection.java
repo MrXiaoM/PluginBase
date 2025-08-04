@@ -128,7 +128,6 @@ public class DefaultBHttpClientConnection extends BHttpConnectionBase
         ensureOpen();
         this.requestWriter.write(request);
         onRequestSubmitted(request);
-        incrementRequestCount();
     }
 
     @Override
@@ -151,7 +150,6 @@ public class DefaultBHttpClientConnection extends BHttpConnectionBase
         final HttpResponse response = this.responseParser.parse();
         onResponseReceived(response);
         if (response.getStatusLine().getStatusCode() >= HttpStatus.SC_OK) {
-            incrementResponseCount();
         }
         return response;
     }

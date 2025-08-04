@@ -127,12 +127,6 @@ class RequestEntityProxy implements HttpEntity  {
     }
 
     @Override
-    public void consumeContent() throws IOException {
-        consumed = true;
-        original.consumeContent();
-    }
-
-    @Override
     public String toString() {
         return "RequestEntityProxy{" + original +
                 '}';

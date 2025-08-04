@@ -159,44 +159,6 @@ public class BasicScheme extends RFC2617Scheme {
         return new BufferedHeader(buffer);
     }
 
-    /**
-     * Returns a basic {@code Authorization} header value for the given
-     * {@link Credentials} and charset.
-     *
-     * @param credentials The credentials to encode.
-     * @param charset The charset to use for encoding the credentials
-     *
-     * @return a basic authorization header
-     *
-     * @deprecated (4.3) use {@link #authenticate(Credentials, HttpRequest, HttpContext)}.
-     */
-    @Deprecated
-    public static Header authenticate(
-            final Credentials credentials,
-            final String charset,
-            final boolean proxy) {
-        Args.notNull(credentials, "Credentials");
-        Args.notNull(charset, "charset");
-
-        String tmp = credentials.getUserPrincipal().getName() +
-                ":" +
-                ((credentials.getPassword() == null) ? "null" : credentials.getPassword());
-
-        final byte[] base64password = Base64.encodeBase64(
-                EncodingUtils.getBytes(tmp, charset), false);
-
-        final CharArrayBuffer buffer = new CharArrayBuffer(32);
-        if (proxy) {
-            buffer.append(AUTH.PROXY_AUTH_RESP);
-        } else {
-            buffer.append(AUTH.WWW_AUTH_RESP);
-        }
-        buffer.append(": Basic ");
-        buffer.append(base64password, 0, base64password.length);
-
-        return new BufferedHeader(buffer);
-    }
-
     @Override
     public String toString() {
         return "BASIC [complete=" + complete +

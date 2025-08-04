@@ -13,7 +13,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class DistributionManagement
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -147,35 +146,35 @@ public class DistributionManagement
 
             if ( this.repository != null )
             {
-                copy.repository = (DeploymentRepository) this.repository.clone();
+                copy.repository = this.repository.clone();
             }
 
             if ( this.snapshotRepository != null )
             {
-                copy.snapshotRepository = (DeploymentRepository) this.snapshotRepository.clone();
+                copy.snapshotRepository = this.snapshotRepository.clone();
             }
 
             if ( this.site != null )
             {
-                copy.site = (Site) this.site.clone();
+                copy.site = this.site.clone();
             }
 
             if ( this.relocation != null )
             {
-                copy.relocation = (Relocation) this.relocation.clone();
+                copy.relocation = this.relocation.clone();
             }
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- DistributionManagement clone()
 
@@ -297,7 +296,6 @@ public class DistributionManagement
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -319,7 +317,7 @@ public class DistributionManagement
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }

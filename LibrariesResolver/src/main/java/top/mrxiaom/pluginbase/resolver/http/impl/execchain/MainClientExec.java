@@ -197,15 +197,6 @@ public class MainClientExec implements ClientExecChain {
 
         context.setAttribute(HttpCoreContext.HTTP_CONNECTION, managedConn);
 
-        if (config.isStaleConnectionCheckEnabled()) {
-            // validate connection
-            if (managedConn.isOpen()) {
-                if (managedConn.isStale()) {
-                    managedConn.close();
-                }
-            }
-        }
-
         final ConnectionHolder connHolder = new ConnectionHolder(this.connManager, managedConn);
         try {
             if (execAware != null) {

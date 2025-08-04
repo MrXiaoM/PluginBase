@@ -121,21 +121,6 @@ public abstract class PoolEntry<T, C> {
         return this.created;
     }
 
-    /**
-     * @since 4.4
-     */
-    public long getValidityDeadline() {
-        return this.validityDeadline;
-    }
-
-    /**
-     * @deprecated use {@link #getValidityDeadline()}
-     */
-    @Deprecated
-    public long getValidUnit() {
-        return this.validityDeadline;
-    }
-
     public Object getState() {
         return this.state;
     }
@@ -146,10 +131,6 @@ public abstract class PoolEntry<T, C> {
 
     public synchronized long getUpdated() {
         return this.updated;
-    }
-
-    public synchronized long getExpiry() {
-        return this.expiry;
     }
 
     public synchronized void updateExpiry(final long time, final TimeUnit timeUnit) {

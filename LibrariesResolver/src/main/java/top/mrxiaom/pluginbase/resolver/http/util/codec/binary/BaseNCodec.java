@@ -107,12 +107,6 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
      */
     static final byte[] CHUNK_SEPARATOR = {'\r', '\n'};
 
-    /**
-     * @deprecated Use {@link #pad}. Will be removed in 2.0.
-     */
-    @Deprecated
-    protected final byte PAD = PAD_DEFAULT; // instance variable just in case it needs to vary later
-
     /** Pad byte. Instance variable just in case it needs to vary later. */
     protected final byte pad;
 
@@ -249,19 +243,6 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
     }
 
     /**
-     * Checks if a byte value is whitespace or not.
-     * @param byteToCheck
-     *            the byte to check
-     * @return true if byte is whitespace, false otherwise
-     * @see Character#isWhitespace(int)
-     * @deprecated Use {@link Character#isWhitespace(int)}.
-     */
-    @Deprecated
-    protected static boolean isWhiteSpace(final byte byteToCheck) {
-        return Character.isWhitespace(byteToCheck);
-    }
-
-    /**
      * Increases our buffer by the {@link #DEFAULT_BUFFER_RESIZE_FACTOR}.
      * @param context the context to be used
      * @param minCapacity the minimum required capacity
@@ -361,17 +342,6 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
 
     // package protected for access from I/O streams
     abstract void decode(byte[] pArray, int i, int length, Context context);
-
-    /**
-     * Decodes a String containing characters in the Base-N alphabet.
-     *
-     * @param pArray
-     *            A String containing Base-N character data
-     * @return a byte array containing binary data
-     */
-    public byte[] decode(final String pArray) {
-        return decode(StringUtils.getBytesUtf8(pArray));
-    }
 
     /**
      * Encodes a byte[] containing binary data, into a byte[] containing characters in the alphabet.
@@ -526,17 +496,12 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
      * Package private for access from I/O streams.
      * </p>
      *
-     * @param b
-     *            byte[] array to extract the buffered data into.
-     * @param bPos
-     *            position in byte[] array to start extraction at.
-     * @param bAvail
-     *            amount of bytes we're allowed to extract. We may extract fewer (if fewer are available).
-     * @param context
-     *            the context to be used
-     * @return The number of bytes successfully extracted into the provided byte[] array.
+     * @param b       byte[] array to extract the buffered data into.
+     * @param bPos    position in byte[] array to start extraction at.
+     * @param bAvail  amount of bytes we're allowed to extract. We may extract fewer (if fewer are available).
+     * @param context the context to be used
      */
-    int readResults(final byte[] b, final int bPos, final int bAvail, final Context context) {
+    void readResults(final byte[] b, final int bPos, final int bAvail, final Context context) {
         if (hasData(context)) {
             final int len = Math.min(available(context), bAvail);
             System.arraycopy(context.buffer, context.readPos, b, bPos, len);
@@ -548,8 +513,6 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
                 // more data is available, or -1 if EOF.
                 context.pos = context.readPos = 0;
             }
-            return len;
         }
-        return context.eof ? EOF : 0;
     }
 }

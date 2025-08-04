@@ -15,7 +15,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Activation
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -122,30 +121,30 @@ public class Activation
 
             if ( this.os != null )
             {
-                copy.os = (ActivationOS) this.os.clone();
+                copy.os = this.os.clone();
             }
 
             if ( this.property != null )
             {
-                copy.property = (ActivationProperty) this.property.clone();
+                copy.property = this.property.clone();
             }
 
             if ( this.file != null )
             {
-                copy.file = (ActivationFile) this.file.clone();
+                copy.file = this.file.clone();
             }
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Activation clone()
 
@@ -282,7 +281,6 @@ public class Activation
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -304,7 +302,7 @@ public class Activation
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }

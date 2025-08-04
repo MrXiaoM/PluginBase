@@ -10,7 +10,6 @@ package top.mrxiaom.pluginbase.resolver.maven.artifact.repository.metadata;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Metadata
     implements java.io.Serializable, java.lang.Cloneable
 {
@@ -87,15 +86,15 @@ public class Metadata
 
             if ( this.versioning != null )
             {
-                copy.versioning = (Versioning) this.versioning.clone();
+                copy.versioning = this.versioning.clone();
             }
 
             if ( this.plugins != null )
             {
-                copy.plugins = new java.util.ArrayList<Plugin>();
+                copy.plugins = new java.util.ArrayList<>();
                 for ( Plugin item : this.plugins )
                 {
-                    copy.plugins.add( ( (Plugin) item).clone() );
+                    copy.plugins.add( item.clone() );
                 }
             }
 
@@ -103,8 +102,8 @@ public class Metadata
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Metadata clone()
 
@@ -159,7 +158,7 @@ public class Metadata
     {
         if ( this.plugins == null )
         {
-            this.plugins = new java.util.ArrayList<Plugin>();
+            this.plugins = new java.util.ArrayList<>();
         }
 
         return this.plugins;
@@ -187,16 +186,6 @@ public class Metadata
     {
         return this.versioning;
     } //-- Versioning getVersioning()
-
-    /**
-     * Method removePlugin.
-     * 
-     * @param plugin a plugin object.
-     */
-    public void removePlugin( Plugin plugin )
-    {
-        getPlugins().remove( plugin );
-    } //-- void removePlugin( Plugin )
 
     /**
      * Set the artifactId when this directory represents
@@ -343,13 +332,13 @@ public class Metadata
                 v.setLastUpdated( null );
             }
 
-            if ( versioning.getLastUpdated() == null || versioning.getLastUpdated().length() == 0 )
+            if ( versioning.getLastUpdated() == null || versioning.getLastUpdated().isEmpty())
             {
                 // this should only be for historical reasons - we assume local is newer
                 versioning.setLastUpdated( v.getLastUpdated() );
             }
 
-            if ( v.getLastUpdated() == null || v.getLastUpdated().length() == 0
+            if ( v.getLastUpdated() == null || v.getLastUpdated().isEmpty()
                  || versioning.getLastUpdated().compareTo( v.getLastUpdated() ) >= 0 )
             {
                 changed = true;
@@ -357,12 +346,10 @@ public class Metadata
 
                 if ( versioning.getRelease() != null )
                 {
-                    changed = true;
                     v.setRelease( versioning.getRelease() );
                 }
                 if ( versioning.getLatest() != null )
                 {
-                    changed = true;
                     v.setLatest( versioning.getLatest() );
                 }
 
@@ -375,7 +362,6 @@ public class Metadata
                     {
                         s = new Snapshot();
                         v.setSnapshot( s );
-                        changed = true;
                         updateSnapshotVersions = true;
                     }
 
@@ -384,18 +370,15 @@ public class Metadata
                         : !s.getTimestamp().equals( snapshot.getTimestamp() ) )
                     {
                         s.setTimestamp( snapshot.getTimestamp() );
-                        changed = true;
                         updateSnapshotVersions = true;
                     }
                     if ( s.getBuildNumber() != snapshot.getBuildNumber() )
                     {
                         s.setBuildNumber( snapshot.getBuildNumber() );
-                        changed = true;
                     }
                     if ( s.isLocalCopy() != snapshot.isLocalCopy() )
                     {
                         s.setLocalCopy( snapshot.isLocalCopy() );
-                        changed = true;
                     }
                     if ( updateSnapshotVersions )
                     {
@@ -420,10 +403,9 @@ public class Metadata
                                     }
                                 }
                             }
-                            v.setSnapshotVersions( new java.util.ArrayList<SnapshotVersion>( versions.values() ) );
+                            v.setSnapshotVersions(new java.util.ArrayList<>(versions.values()) );
                         }
 
-                        changed = true;
                     }
                 }
             }

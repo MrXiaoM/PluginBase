@@ -12,7 +12,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Resource
     extends FileSet
     implements java.io.Serializable, java.lang.Cloneable
@@ -61,24 +60,6 @@ public class Resource
      */
     private String filtering;
 
-    /**
-     * 
-     *             
-     *             FOR INTERNAL USE ONLY. This is a unique
-     * identifier assigned to each
-     *             resource to allow Maven to merge changes to this
-     * resource that take
-     *             place during the execution of a plugin. This
-     * field must be managed
-     *             by the generated parser and formatter classes in
-     * order to allow it
-     *             to survive model interpolation.
-     *             
-     *           
-     */
-    private String mergeId;
-
-
       //-----------/
      //- Methods -/
     //-----------/
@@ -92,14 +73,12 @@ public class Resource
     {
         try
         {
-            Resource copy = (Resource) super.clone();
-
-            return copy;
+            return (Resource) super.clone();
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Resource clone()
 
@@ -121,24 +100,6 @@ public class Resource
     {
         return this.filtering;
     } //-- String getFiltering()
-
-    /**
-     * Get fOR INTERNAL USE ONLY. This is a unique identifier
-     * assigned to each
-     *             resource to allow Maven to merge changes to this
-     * resource that take
-     *             place during the execution of a plugin. This
-     * field must be managed
-     *             by the generated parser and formatter classes in
-     * order to allow it
-     *             to survive model interpolation.
-     * 
-     * @return String
-     */
-    public String getMergeId()
-    {
-        return this.mergeId;
-    } //-- String getMergeId()
 
     /**
      * Get describe the resource target path. The path is relative
@@ -182,24 +143,6 @@ public class Resource
     } //-- void setFiltering( String )
 
     /**
-     * Set fOR INTERNAL USE ONLY. This is a unique identifier
-     * assigned to each
-     *             resource to allow Maven to merge changes to this
-     * resource that take
-     *             place during the execution of a plugin. This
-     * field must be managed
-     *             by the generated parser and formatter classes in
-     * order to allow it
-     *             to survive model interpolation.
-     * 
-     * @param mergeId a mergeId object.
-     */
-    public void setMergeId( String mergeId )
-    {
-        this.mergeId = mergeId;
-    } //-- void setMergeId( String )
-
-    /**
      * Set describe the resource target path. The path is relative
      * to the target/classes
      *             directory (i.e.
@@ -221,21 +164,9 @@ public class Resource
         this.targetPath = targetPath;
     } //-- void setTargetPath( String )
 
-    
-            
-    private static int mergeIdCounter = 0;
-
-    public void initMergeId()
-    {
-        if ( getMergeId() == null )
-        {
-            setMergeId( "resource-" + (mergeIdCounter++) );
-        }
-    }
-
     public boolean isFiltering()
     {
-        return ( filtering != null ) ? Boolean.parseBoolean( filtering ) : false;
+        return Boolean.parseBoolean(filtering);
     }
 
     public void setFiltering( boolean filtering )
@@ -250,6 +181,4 @@ public class Resource
     {
         return "Resource {targetPath: " + getTargetPath() + ", filtering: " + isFiltering() + ", " + super.toString() + "}";
     }
-            
-          
 }

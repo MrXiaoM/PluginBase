@@ -12,7 +12,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class PluginManagement
     extends PluginContainer
     implements java.io.Serializable, java.lang.Cloneable
@@ -31,14 +30,12 @@ public class PluginManagement
     {
         try
         {
-            PluginManagement copy = (PluginManagement) super.clone();
-
-            return copy;
+            return (PluginManagement) super.clone();
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- PluginManagement clone()
 

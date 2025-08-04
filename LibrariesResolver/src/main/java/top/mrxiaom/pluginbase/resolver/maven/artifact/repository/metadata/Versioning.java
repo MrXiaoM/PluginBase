@@ -11,7 +11,6 @@ package top.mrxiaom.pluginbase.resolver.maven.artifact.repository.metadata;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Versioning
     implements java.io.Serializable, java.lang.Cloneable
 {
@@ -63,26 +62,6 @@ public class Versioning
     //-----------/
 
     /**
-     * Method addSnapshotVersion.
-     * 
-     * @param snapshotVersion a snapshotVersion object.
-     */
-    public void addSnapshotVersion( SnapshotVersion snapshotVersion )
-    {
-        getSnapshotVersions().add( snapshotVersion );
-    } //-- void addSnapshotVersion( SnapshotVersion )
-
-    /**
-     * Method addVersion.
-     * 
-     * @param string a string object.
-     */
-    public void addVersion( String string )
-    {
-        getVersions().add( string );
-    } //-- void addVersion( String )
-
-    /**
      * Method clone.
      * 
      * @return Versioning
@@ -95,21 +74,21 @@ public class Versioning
 
             if ( this.versions != null )
             {
-                copy.versions = new java.util.ArrayList<String>();
+                copy.versions = new java.util.ArrayList<>();
                 copy.versions.addAll( this.versions );
             }
 
             if ( this.snapshot != null )
             {
-                copy.snapshot = (Snapshot) this.snapshot.clone();
+                copy.snapshot = this.snapshot.clone();
             }
 
             if ( this.snapshotVersions != null )
             {
-                copy.snapshotVersions = new java.util.ArrayList<SnapshotVersion>();
+                copy.snapshotVersions = new java.util.ArrayList<>();
                 for ( SnapshotVersion item : this.snapshotVersions )
                 {
-                    copy.snapshotVersions.add( ( (SnapshotVersion) item).clone() );
+                    copy.snapshotVersions.add( item.clone() );
                 }
             }
 
@@ -117,8 +96,8 @@ public class Versioning
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Versioning clone()
 
@@ -178,7 +157,7 @@ public class Versioning
     {
         if ( this.snapshotVersions == null )
         {
-            this.snapshotVersions = new java.util.ArrayList<SnapshotVersion>();
+            this.snapshotVersions = new java.util.ArrayList<>();
         }
 
         return this.snapshotVersions;
@@ -193,21 +172,11 @@ public class Versioning
     {
         if ( this.versions == null )
         {
-            this.versions = new java.util.ArrayList<String>();
+            this.versions = new java.util.ArrayList<>();
         }
 
         return this.versions;
     } //-- java.util.List<String> getVersions()
-
-    /**
-     * Method removeSnapshotVersion.
-     * 
-     * @param snapshotVersion a snapshotVersion object.
-     */
-    public void removeSnapshotVersion( SnapshotVersion snapshotVersion )
-    {
-        getSnapshotVersions().remove( snapshotVersion );
-    } //-- void removeSnapshotVersion( SnapshotVersion )
 
     /**
      * Method removeVersion.
@@ -289,18 +258,4 @@ public class Versioning
         this.versions = versions;
     } //-- void setVersions( java.util.List )
 
-    
-    public void updateTimestamp()
-    {
-        setLastUpdatedTimestamp( new java.util.Date() );
-    }
-
-    public void setLastUpdatedTimestamp( java.util.Date date )
-    {
-        java.util.TimeZone timezone = java.util.TimeZone.getTimeZone( "UTC" );
-        java.text.DateFormat fmt = new java.text.SimpleDateFormat( "yyyyMMddHHmmss" );
-        fmt.setTimeZone( timezone );
-        setLastUpdated( fmt.format( date ) );
-    }
-          
 }

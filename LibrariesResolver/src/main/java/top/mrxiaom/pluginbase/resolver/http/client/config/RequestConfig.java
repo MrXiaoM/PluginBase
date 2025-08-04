@@ -47,7 +47,6 @@ public class RequestConfig implements Cloneable {
     private final boolean expectContinueEnabled;
     private final HttpHost proxy;
     private final InetAddress localAddress;
-    private final boolean staleConnectionCheckEnabled;
     private final String cookieSpec;
     private final boolean redirectsEnabled;
     private final boolean relativeRedirectsAllowed;
@@ -66,14 +65,13 @@ public class RequestConfig implements Cloneable {
      * Intended for CDI compatibility
     */
     protected RequestConfig() {
-        this(false, null, null, false, null, false, false, false, 0, false, null, null, 0, 0, 0, true, true);
+        this(false, null, null, null, false, false, false, 0, false, null, null, 0, 0, 0, true, true);
     }
 
     RequestConfig(
             final boolean expectContinueEnabled,
             final HttpHost proxy,
             final InetAddress localAddress,
-            final boolean staleConnectionCheckEnabled,
             final String cookieSpec,
             final boolean redirectsEnabled,
             final boolean relativeRedirectsAllowed,
@@ -91,7 +89,6 @@ public class RequestConfig implements Cloneable {
         this.expectContinueEnabled = expectContinueEnabled;
         this.proxy = proxy;
         this.localAddress = localAddress;
-        this.staleConnectionCheckEnabled = staleConnectionCheckEnabled;
         this.cookieSpec = cookieSpec;
         this.redirectsEnabled = redirectsEnabled;
         this.relativeRedirectsAllowed = relativeRedirectsAllowed;
@@ -156,23 +153,6 @@ public class RequestConfig implements Cloneable {
      */
     public InetAddress getLocalAddress() {
         return localAddress;
-    }
-
-    /**
-     * Determines whether stale connection check is to be used. The stale
-     * connection check can cause up to 30 millisecond overhead per request and
-     * should be used only when appropriate. For performance critical
-     * operations this check should be disabled.
-     * <p>
-     * Default: {@code false} since 4.4
-     * </p>
-     *
-     * @deprecated (4.4) Use {@link
-     *   top.mrxiaom.pluginbase.resolver.http.impl.conn.PoolingHttpClientConnectionManager#getValidateAfterInactivity()}
-     */
-    @Deprecated
-    public boolean isStaleConnectionCheckEnabled() {
-        return staleConnectionCheckEnabled;
     }
 
     /**
@@ -308,20 +288,6 @@ public class RequestConfig implements Cloneable {
     }
 
     /**
-     * Determines whether compressed entities should be decompressed automatically.
-     * <p>
-     * Default: {@code true}
-     * </p>
-     *
-     * @since 4.4
-     * @deprecated (4.5) Use {@link #isContentCompressionEnabled()}
-     */
-    @Deprecated
-    public boolean isDecompressionEnabled() {
-        return contentCompressionEnabled;
-    }
-
-    /**
      * Determines whether the target server is requested to compress content.
      * <p>
      * Default: {@code true}
@@ -376,35 +342,11 @@ public class RequestConfig implements Cloneable {
         return new Builder();
     }
 
-    @SuppressWarnings("deprecation")
-    public static RequestConfig.Builder copy(final RequestConfig config) {
-        return new Builder()
-            .setExpectContinueEnabled(config.isExpectContinueEnabled())
-            .setProxy(config.getProxy())
-            .setLocalAddress(config.getLocalAddress())
-            .setStaleConnectionCheckEnabled(config.isStaleConnectionCheckEnabled())
-            .setCookieSpec(config.getCookieSpec())
-            .setRedirectsEnabled(config.isRedirectsEnabled())
-            .setRelativeRedirectsAllowed(config.isRelativeRedirectsAllowed())
-            .setCircularRedirectsAllowed(config.isCircularRedirectsAllowed())
-            .setMaxRedirects(config.getMaxRedirects())
-            .setAuthenticationEnabled(config.isAuthenticationEnabled())
-            .setTargetPreferredAuthSchemes(config.getTargetPreferredAuthSchemes())
-            .setProxyPreferredAuthSchemes(config.getProxyPreferredAuthSchemes())
-            .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
-            .setConnectTimeout(config.getConnectTimeout())
-            .setSocketTimeout(config.getSocketTimeout())
-            .setDecompressionEnabled(config.isDecompressionEnabled())
-            .setContentCompressionEnabled(config.isContentCompressionEnabled())
-            .setNormalizeUri(config.isNormalizeUri());
-    }
-
     public static class Builder {
 
         private boolean expectContinueEnabled;
         private HttpHost proxy;
         private InetAddress localAddress;
-        private boolean staleConnectionCheckEnabled;
         private String cookieSpec;
         private boolean redirectsEnabled;
         private boolean relativeRedirectsAllowed;
@@ -421,7 +363,6 @@ public class RequestConfig implements Cloneable {
 
         Builder() {
             super();
-            this.staleConnectionCheckEnabled = false;
             this.redirectsEnabled = true;
             this.maxRedirects = 50;
             this.relativeRedirectsAllowed = true;
@@ -445,16 +386,6 @@ public class RequestConfig implements Cloneable {
 
         public Builder setLocalAddress(final InetAddress localAddress) {
             this.localAddress = localAddress;
-            return this;
-        }
-
-        /**
-         * @deprecated (4.4) Use {@link
-         *   top.mrxiaom.pluginbase.resolver.http.impl.conn.PoolingHttpClientConnectionManager#setValidateAfterInactivity(int)}
-         */
-        @Deprecated
-        public Builder setStaleConnectionCheckEnabled(final boolean staleConnectionCheckEnabled) {
-            this.staleConnectionCheckEnabled = staleConnectionCheckEnabled;
             return this;
         }
 
@@ -513,16 +444,6 @@ public class RequestConfig implements Cloneable {
             return this;
         }
 
-        /**
-         * @deprecated (4.5) Set {@link #setContentCompressionEnabled(boolean)} to {@code false} and
-         * add the {@code Accept-Encoding} request header.
-         */
-        @Deprecated
-        public Builder setDecompressionEnabled(final boolean decompressionEnabled) {
-            this.contentCompressionEnabled = decompressionEnabled;
-            return this;
-        }
-
         public Builder setContentCompressionEnabled(final boolean contentCompressionEnabled) {
             this.contentCompressionEnabled = contentCompressionEnabled;
             return this;
@@ -538,7 +459,6 @@ public class RequestConfig implements Cloneable {
                     expectContinueEnabled,
                     proxy,
                     localAddress,
-                    staleConnectionCheckEnabled,
                     cookieSpec,
                     redirectsEnabled,
                     relativeRedirectsAllowed,

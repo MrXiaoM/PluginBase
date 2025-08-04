@@ -11,7 +11,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class ReportSet
     extends ConfigurationContainer
     implements java.io.Serializable, java.lang.Cloneable
@@ -40,16 +39,6 @@ public class ReportSet
     //-----------/
 
     /**
-     * Method addReport.
-     * 
-     * @param string a string object.
-     */
-    public void addReport( String string )
-    {
-        getReports().add( string );
-    } //-- void addReport( String )
-
-    /**
      * Method clone.
      * 
      * @return ReportSet
@@ -62,7 +51,7 @@ public class ReportSet
 
             if ( this.reports != null )
             {
-                copy.reports = new java.util.ArrayList<String>();
+                copy.reports = new java.util.ArrayList<>();
                 copy.reports.addAll( this.reports );
             }
 
@@ -70,8 +59,8 @@ public class ReportSet
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- ReportSet clone()
 
@@ -96,21 +85,11 @@ public class ReportSet
     {
         if ( this.reports == null )
         {
-            this.reports = new java.util.ArrayList<String>();
+            this.reports = new java.util.ArrayList<>();
         }
 
         return this.reports;
     } //-- java.util.List<String> getReports()
-
-    /**
-     * Method removeReport.
-     * 
-     * @param string a string object.
-     */
-    public void removeReport( String string )
-    {
-        getReports().remove( string );
-    } //-- void removeReport( String )
 
     /**
      * Set the unique id for this report set, to be used during POM

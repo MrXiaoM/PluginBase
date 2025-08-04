@@ -12,7 +12,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class DependencyManagement
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -47,16 +46,6 @@ public class DependencyManagement
     //-----------/
 
     /**
-     * Method addDependency.
-     * 
-     * @param dependency a dependency object.
-     */
-    public void addDependency( Dependency dependency )
-    {
-        getDependencies().add( dependency );
-    } //-- void addDependency( Dependency )
-
-    /**
      * Method clone.
      * 
      * @return DependencyManagement
@@ -69,24 +58,24 @@ public class DependencyManagement
 
             if ( this.dependencies != null )
             {
-                copy.dependencies = new java.util.ArrayList<Dependency>();
+                copy.dependencies = new java.util.ArrayList<>();
                 for ( Dependency item : this.dependencies )
                 {
-                    copy.dependencies.add( ( (Dependency) item).clone() );
+                    copy.dependencies.add( item.clone() );
                 }
             }
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- DependencyManagement clone()
 
@@ -99,7 +88,7 @@ public class DependencyManagement
     {
         if ( this.dependencies == null )
         {
-            this.dependencies = new java.util.ArrayList<Dependency>();
+            this.dependencies = new java.util.ArrayList<>();
         }
 
         return this.dependencies;
@@ -162,7 +151,6 @@ public class DependencyManagement
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -184,7 +172,7 @@ public class DependencyManagement
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -200,16 +188,6 @@ public class DependencyManagement
     {
         return ( locations != null ) ? locations.get( key ) : null;
     } //-- InputLocation getOtherLocation( Object )
-
-    /**
-     * Method removeDependency.
-     * 
-     * @param dependency a dependency object.
-     */
-    public void removeDependency( Dependency dependency )
-    {
-        getDependencies().remove( dependency );
-    } //-- void removeDependency( Dependency )
 
     /**
      * Set the dependencies specified here are not used until they

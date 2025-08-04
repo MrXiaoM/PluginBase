@@ -37,32 +37,6 @@ public class ModelBuildingException extends Exception {
     private final ModelBuildingResult result;
 
     /**
-     * Creates a new exception with the specified problems.
-     *
-     * @param model The model that could not be built, may be {@code null}.
-     * @param modelId The identifier of the model that could not be built, may be {@code null}.
-     * @param problems The problems that causes this exception, may be {@code null}.
-     * @deprecated Use {@link #ModelBuildingException(ModelBuildingResult)} instead.
-     */
-    @Deprecated
-    public ModelBuildingException(Model model, String modelId, List<ModelProblem> problems) {
-        super(toMessage(modelId, problems));
-
-        if (model != null) {
-            DefaultModelBuildingResult tmp = new DefaultModelBuildingResult();
-            if (modelId == null) {
-                modelId = "";
-            }
-            tmp.addModelId(modelId);
-            tmp.setRawModel(modelId, model);
-            tmp.setProblems(problems);
-            result = tmp;
-        } else {
-            result = null;
-        }
-    }
-
-    /**
      * Creates a new exception from the specified interim result and its associated problems.
      *
      * @param result The interim result, may be {@code null}.

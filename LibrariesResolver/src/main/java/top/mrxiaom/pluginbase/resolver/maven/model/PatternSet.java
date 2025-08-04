@@ -10,7 +10,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class PatternSet
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -55,26 +54,6 @@ public class PatternSet
     //-----------/
 
     /**
-     * Method addExclude.
-     * 
-     * @param string a string object.
-     */
-    public void addExclude( String string )
-    {
-        getExcludes().add( string );
-    } //-- void addExclude( String )
-
-    /**
-     * Method addInclude.
-     * 
-     * @param string a string object.
-     */
-    public void addInclude( String string )
-    {
-        getIncludes().add( string );
-    } //-- void addInclude( String )
-
-    /**
      * Method clone.
      * 
      * @return PatternSet
@@ -87,27 +66,27 @@ public class PatternSet
 
             if ( this.includes != null )
             {
-                copy.includes = new java.util.ArrayList<String>();
+                copy.includes = new java.util.ArrayList<>();
                 copy.includes.addAll( this.includes );
             }
 
             if ( this.excludes != null )
             {
-                copy.excludes = new java.util.ArrayList<String>();
+                copy.excludes = new java.util.ArrayList<>();
                 copy.excludes.addAll( this.excludes );
             }
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- PatternSet clone()
 
@@ -120,7 +99,7 @@ public class PatternSet
     {
         if ( this.excludes == null )
         {
-            this.excludes = new java.util.ArrayList<String>();
+            this.excludes = new java.util.ArrayList<>();
         }
 
         return this.excludes;
@@ -135,7 +114,7 @@ public class PatternSet
     {
         if ( this.includes == null )
         {
-            this.includes = new java.util.ArrayList<String>();
+            this.includes = new java.util.ArrayList<>();
         }
 
         return this.includes;
@@ -207,7 +186,6 @@ public class PatternSet
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -229,7 +207,7 @@ public class PatternSet
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -245,26 +223,6 @@ public class PatternSet
     {
         return ( locations != null ) ? locations.get( key ) : null;
     } //-- InputLocation getOtherLocation( Object )
-
-    /**
-     * Method removeExclude.
-     * 
-     * @param string a string object.
-     */
-    public void removeExclude( String string )
-    {
-        getExcludes().remove( string );
-    } //-- void removeExclude( String )
-
-    /**
-     * Method removeInclude.
-     * 
-     * @param string a string object.
-     */
-    public void removeInclude( String string )
-    {
-        getIncludes().remove( string );
-    } //-- void removeInclude( String )
 
     /**
      * Set a list of patterns to exclude, e.g.
@@ -298,17 +256,13 @@ public class PatternSet
         StringBuilder sb = new StringBuilder( 128 );
 
         sb.append("PatternSet [includes: {");
-        for (java.util.Iterator i = getIncludes().iterator(); i.hasNext(); )
-        {
-            String str = (String) i.next();
+        for (String str : getIncludes()) {
             sb.append(str).append(", ");
         }
         if (sb.substring(sb.length() - 2).equals(", ")) sb.delete(sb.length() - 2, sb.length());
 
         sb.append("}, excludes: {");
-        for (java.util.Iterator i = getExcludes().iterator(); i.hasNext(); )
-        {
-            String str = (String) i.next();
+        for (String str : getExcludes()) {
             sb.append(str).append(", ");
         }
         if (sb.substring(sb.length() - 2).equals(", ")) sb.delete(sb.length() - 2, sb.length());

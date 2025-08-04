@@ -11,7 +11,6 @@ package top.mrxiaom.pluginbase.resolver.maven.artifact.repository.metadata;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Snapshot
     implements java.io.Serializable, java.lang.Cloneable
 {
@@ -51,14 +50,12 @@ public class Snapshot
     {
         try
         {
-            Snapshot copy = (Snapshot) super.clone();
-
-            return copy;
+            return (Snapshot) super.clone();
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Snapshot clone()
 

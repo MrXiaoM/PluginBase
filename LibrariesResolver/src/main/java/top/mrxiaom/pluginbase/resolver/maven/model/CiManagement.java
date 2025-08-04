@@ -16,7 +16,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class CiManagement
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -78,16 +77,6 @@ public class CiManagement
     //-----------/
 
     /**
-     * Method addNotifier.
-     * 
-     * @param notifier a notifier object.
-     */
-    public void addNotifier( Notifier notifier )
-    {
-        getNotifiers().add( notifier );
-    } //-- void addNotifier( Notifier )
-
-    /**
      * Method clone.
      * 
      * @return CiManagement
@@ -100,24 +89,24 @@ public class CiManagement
 
             if ( this.notifiers != null )
             {
-                copy.notifiers = new java.util.ArrayList<Notifier>();
+                copy.notifiers = new java.util.ArrayList<>();
                 for ( Notifier item : this.notifiers )
                 {
-                    copy.notifiers.add( ( (Notifier) item).clone() );
+                    copy.notifiers.add( item.clone() );
                 }
             }
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- CiManagement clone()
 
@@ -170,7 +159,7 @@ public class CiManagement
     {
         if ( this.notifiers == null )
         {
-            this.notifiers = new java.util.ArrayList<Notifier>();
+            this.notifiers = new java.util.ArrayList<>();
         }
 
         return this.notifiers;
@@ -211,7 +200,6 @@ public class CiManagement
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -233,7 +221,7 @@ public class CiManagement
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -272,16 +260,6 @@ public class CiManagement
     {
         return this.url;
     } //-- String getUrl()
-
-    /**
-     * Method removeNotifier.
-     * 
-     * @param notifier a notifier object.
-     */
-    public void removeNotifier( Notifier notifier )
-    {
-        getNotifiers().remove( notifier );
-    } //-- void removeNotifier( Notifier )
 
     /**
      * Set configuration for notifying developers/users when a

@@ -10,7 +10,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class InputSource
     implements java.io.Serializable, java.lang.Cloneable
 {
@@ -53,14 +52,12 @@ public class InputSource
     {
         try
         {
-            InputSource copy = (InputSource) super.clone();
-
-            return copy;
+            return (InputSource) super.clone();
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- InputSource clone()
 

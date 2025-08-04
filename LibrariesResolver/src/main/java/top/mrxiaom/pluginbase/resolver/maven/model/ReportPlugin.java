@@ -16,7 +16,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class ReportPlugin
     extends ConfigurationContainer
     implements java.io.Serializable, java.lang.Cloneable
@@ -60,16 +59,6 @@ public class ReportPlugin
     //-----------/
 
     /**
-     * Method addReportSet.
-     * 
-     * @param reportSet a reportSet object.
-     */
-    public void addReportSet( ReportSet reportSet )
-    {
-        getReportSets().add( reportSet );
-    } //-- void addReportSet( ReportSet )
-
-    /**
      * Method clone.
      * 
      * @return ReportPlugin
@@ -82,10 +71,10 @@ public class ReportPlugin
 
             if ( this.reportSets != null )
             {
-                copy.reportSets = new java.util.ArrayList<ReportSet>();
+                copy.reportSets = new java.util.ArrayList<>();
                 for ( ReportSet item : this.reportSets )
                 {
-                    copy.reportSets.add( ( (ReportSet) item).clone() );
+                    copy.reportSets.add( item.clone() );
                 }
             }
 
@@ -93,8 +82,8 @@ public class ReportPlugin
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- ReportPlugin clone()
 
@@ -128,7 +117,7 @@ public class ReportPlugin
     {
         if ( this.reportSets == null )
         {
-            this.reportSets = new java.util.ArrayList<ReportSet>();
+            this.reportSets = new java.util.ArrayList<>();
         }
 
         return this.reportSets;
@@ -147,16 +136,6 @@ public class ReportPlugin
     {
         return this.version;
     } //-- String getVersion()
-
-    /**
-     * Method removeReportSet.
-     * 
-     * @param reportSet a reportSet object.
-     */
-    public void removeReportSet( ReportSet reportSet )
-    {
-        getReportSets().remove( reportSet );
-    } //-- void removeReportSet( ReportSet )
 
     /**
      * Set the artifact ID of the reporting plugin in the
@@ -206,40 +185,6 @@ public class ReportPlugin
         this.version = version;
     } //-- void setVersion( String )
 
-    
-            
-    private java.util.Map<String, ReportSet> reportSetMap = null;
-
-    /**
-     * Reset the <code>reportSetMap</code> field to <code>null</code>
-     */
-    public void flushReportSetMap()
-    {
-        this.reportSetMap = null;
-    }
-
-    /**
-     * @return a Map of reportSets field with <code>ReportSet#getId()</code> as key
-     * @see ReportSet#getId()
-     */
-    public java.util.Map<String, ReportSet> getReportSetsAsMap()
-    {
-        if ( reportSetMap == null )
-        {
-            reportSetMap = new java.util.LinkedHashMap<String, ReportSet>();
-            if ( getReportSets() != null )
-            {
-                for ( java.util.Iterator<ReportSet> i = getReportSets().iterator(); i.hasNext(); )
-                {
-                    ReportSet reportSet = (ReportSet) i.next();
-                    reportSetMap.put( reportSet.getId(), reportSet );
-                }
-            }
-        }
-
-        return reportSetMap;
-    }
-
     /**
      * @return the key of the report plugin, ie <code>groupId:artifactId</code>
      */
@@ -257,6 +202,4 @@ public class ReportPlugin
     {
         return groupId + ":" + artifactId;
     }
-            
-          
 }

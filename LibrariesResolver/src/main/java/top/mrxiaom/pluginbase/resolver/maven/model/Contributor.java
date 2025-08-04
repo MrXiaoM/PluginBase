@@ -13,7 +13,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Contributor
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -51,23 +50,6 @@ public class Contributor
      * Field roles.
      */
     private java.util.List<String> roles;
-
-    /**
-     * 
-     *             
-     *               The timezone the contributor is in. Typically,
-     * this is a number in the range
-     *               <a
-     * href="http://en.wikipedia.org/wiki/UTC%E2%88%9212:00">-12</a>
-     * to <a
-     * href="http://en.wikipedia.org/wiki/UTC%2B14:00">+14</a>
-     *               or a valid time zone id like
-     * "America/Montreal" (UTC-05:00) or "Europe/Paris"
-     * (UTC+01:00).
-     *             
-     *           
-     */
-    private String timezone;
 
     /**
      * Field properties.
@@ -141,16 +123,6 @@ public class Contributor
     } //-- void addProperty( String, String )
 
     /**
-     * Method addRole.
-     * 
-     * @param string a string object.
-     */
-    public void addRole( String string )
-    {
-        getRoles().add( string );
-    } //-- void addRole( String )
-
-    /**
      * Method clone.
      * 
      * @return Contributor
@@ -163,7 +135,7 @@ public class Contributor
 
             if ( this.roles != null )
             {
-                copy.roles = new java.util.ArrayList<String>();
+                copy.roles = new java.util.ArrayList<>();
                 copy.roles.addAll( this.roles );
             }
 
@@ -174,15 +146,15 @@ public class Contributor
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Contributor clone()
 
@@ -346,7 +318,6 @@ public class Contributor
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -368,7 +339,7 @@ public class Contributor
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -409,29 +380,11 @@ public class Contributor
     {
         if ( this.roles == null )
         {
-            this.roles = new java.util.ArrayList<String>();
+            this.roles = new java.util.ArrayList<>();
         }
 
         return this.roles;
     } //-- java.util.List<String> getRoles()
-
-    /**
-     * Get the timezone the contributor is in. Typically, this is a
-     * number in the range
-     *               <a
-     * href="http://en.wikipedia.org/wiki/UTC%E2%88%9212:00">-12</a>
-     * to <a
-     * href="http://en.wikipedia.org/wiki/UTC%2B14:00">+14</a>
-     *               or a valid time zone id like
-     * "America/Montreal" (UTC-05:00) or "Europe/Paris"
-     * (UTC+01:00).
-     * 
-     * @return String
-     */
-    public String getTimezone()
-    {
-        return this.timezone;
-    } //-- String getTimezone()
 
     /**
      * Get the URL for the homepage of the contributor.
@@ -442,16 +395,6 @@ public class Contributor
     {
         return this.url;
     } //-- String getUrl()
-
-    /**
-     * Method removeRole.
-     * 
-     * @param string a string object.
-     */
-    public void removeRole( String string )
-    {
-        getRoles().remove( string );
-    } //-- void removeRole( String )
 
     /**
      * Set the email address of the contributor.
@@ -533,7 +476,6 @@ public class Contributor
      */
     public void setTimezone( String timezone )
     {
-        this.timezone = timezone;
     } //-- void setTimezone( String )
 
     /**

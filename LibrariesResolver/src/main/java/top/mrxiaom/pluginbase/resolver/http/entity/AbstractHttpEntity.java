@@ -176,18 +176,6 @@ public abstract class AbstractHttpEntity implements HttpEntity {
         this.chunked = b;
     }
 
-
-    /**
-     * The default implementation does not consume anything.
-     *
-     * @deprecated (4.1) Either use {@link #getContent()} and call {@link java.io.InputStream#close()} on that;
-     * otherwise call {@link #writeTo(java.io.OutputStream)} which is required to free the resources.
-     */
-    @Override
-    @Deprecated
-    public void consumeContent() {
-    }
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();

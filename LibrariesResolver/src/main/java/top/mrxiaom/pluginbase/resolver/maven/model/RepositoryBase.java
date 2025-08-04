@@ -12,7 +12,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class RepositoryBase
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -111,15 +110,15 @@ public class RepositoryBase
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- RepositoryBase clone()
 
@@ -142,9 +141,9 @@ public class RepositoryBase
         }
 
         RepositoryBase that = (RepositoryBase) other;
-        boolean result = true;
+        boolean result;
 
-        result = result && ( getId() == null ? that.getId() == null : getId().equals( that.getId() ) );
+        result = getId() == null ? that.getId() == null : getId().equals( that.getId() );
 
         return result;
     } //-- boolean equals( Object )
@@ -272,7 +271,6 @@ public class RepositoryBase
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -294,7 +292,7 @@ public class RepositoryBase
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -393,13 +391,9 @@ public class RepositoryBase
      */
     public java.lang.String toString()
     {
-        StringBuilder buf = new StringBuilder( 128 );
-
-        buf.append( "id = '" );
-        buf.append( getId() );
-        buf.append( "'" );
-
-        return buf.toString();
+        return "id = '" +
+                getId() +
+                "'";
     } //-- java.lang.String toString()
 
 }

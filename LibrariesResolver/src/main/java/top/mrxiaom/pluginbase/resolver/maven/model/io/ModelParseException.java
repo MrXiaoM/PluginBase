@@ -43,19 +43,6 @@ public class ModelParseException extends IOException {
      * @param message The error message, may be {@code null}.
      * @param lineNumber The one-based index of the line containing the error or {@code -1} if unknown.
      * @param columnNumber The one-based index of the column containing the error or {@code -1} if unknown.
-     */
-    public ModelParseException(String message, int lineNumber, int columnNumber) {
-        super(message);
-        this.lineNumber = lineNumber;
-        this.columnNumber = columnNumber;
-    }
-
-    /**
-     * Creates a new parser exception with the specified details.
-     *
-     * @param message The error message, may be {@code null}.
-     * @param lineNumber The one-based index of the line containing the error or {@code -1} if unknown.
-     * @param columnNumber The one-based index of the column containing the error or {@code -1} if unknown.
      * @param cause The nested cause of this error, may be {@code null}.
      */
     public ModelParseException(String message, int lineNumber, int columnNumber, Throwable cause) {

@@ -10,7 +10,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class RepositoryPolicy
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -108,15 +107,15 @@ public class RepositoryPolicy
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- RepositoryPolicy clone()
 
@@ -227,7 +226,6 @@ public class RepositoryPolicy
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -249,7 +247,7 @@ public class RepositoryPolicy
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -337,14 +335,11 @@ public class RepositoryPolicy
 
     public boolean isEnabled()
     {
-        return ( enabled != null ) ? Boolean.parseBoolean( enabled ) : true;
+        return enabled == null || Boolean.parseBoolean(enabled);
     }
 
     public void setEnabled( boolean enabled )
     {
         this.enabled = String.valueOf( enabled );
     }
-
-            
-          
 }

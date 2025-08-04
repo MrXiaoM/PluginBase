@@ -64,8 +64,6 @@ public class DefaultModelBuildingRequest implements ModelBuildingRequest {
 
     private ModelResolver modelResolver;
 
-    private ModelBuildingListener modelBuildingListener;
-
     private ModelCache modelCache;
 
     private WorkspaceModelResolver workspaceResolver;
@@ -276,18 +274,6 @@ public class DefaultModelBuildingRequest implements ModelBuildingRequest {
     @Override
     public DefaultModelBuildingRequest setModelResolver(ModelResolver modelResolver) {
         this.modelResolver = modelResolver;
-
-        return this;
-    }
-
-    @Override
-    public ModelBuildingListener getModelBuildingListener() {
-        return modelBuildingListener;
-    }
-
-    @Override
-    public ModelBuildingRequest setModelBuildingListener(ModelBuildingListener modelBuildingListener) {
-        this.modelBuildingListener = modelBuildingListener;
 
         return this;
     }

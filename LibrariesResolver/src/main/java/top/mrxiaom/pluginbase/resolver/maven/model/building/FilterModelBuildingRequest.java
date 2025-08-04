@@ -199,18 +199,6 @@ class FilterModelBuildingRequest implements ModelBuildingRequest {
     }
 
     @Override
-    public ModelBuildingListener getModelBuildingListener() {
-        return request.getModelBuildingListener();
-    }
-
-    @Override
-    public ModelBuildingRequest setModelBuildingListener(ModelBuildingListener modelBuildingListener) {
-        request.setModelBuildingListener(modelBuildingListener);
-
-        return this;
-    }
-
-    @Override
     public ModelCache getModelCache() {
         return request.getModelCache();
     }

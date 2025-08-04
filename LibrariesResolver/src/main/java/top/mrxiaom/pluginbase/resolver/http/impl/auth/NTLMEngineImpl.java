@@ -285,20 +285,6 @@ final class NTLMEngineImpl implements NTLMEngine {
         protected byte[] ntlm2SessionResponseUserSessionKey = null;
         protected byte[] lanManagerSessionKey = null;
 
-        /**
-         * @deprecated Use {@link CipherGen#CipherGen(Random, long, String, String, String, byte[], String, byte[], byte[], byte[], byte[], byte[])}
-         */
-        @Deprecated
-        public CipherGen(final String domain, final String user, final String password,
-            final byte[] challenge, final String target, final byte[] targetInformation,
-            final byte[] clientChallenge, final byte[] clientChallenge2,
-            final byte[] secondaryKey, final byte[] timestamp) {
-            this(RND_GEN, System.currentTimeMillis(),
-                domain, user, password, challenge, target, targetInformation,
-                clientChallenge, clientChallenge2,
-                secondaryKey, timestamp);
-        }
-
         public CipherGen(final Random random, final long currentTime,
             final String domain, final String user, final String password,
             final byte[] challenge, final String target, final byte[] targetInformation,
@@ -317,19 +303,6 @@ final class NTLMEngineImpl implements NTLMEngine {
             this.clientChallenge2 = clientChallenge2;
             this.secondaryKey = secondaryKey;
             this.timestamp = timestamp;
-        }
-
-        /**
-         * @deprecated Use {@link CipherGen#CipherGen(Random, long, String, String, String, byte[], String, byte[], byte[], byte[], byte[], byte[])}
-         */
-        @Deprecated
-        public CipherGen(final String domain,
-            final String user,
-            final String password,
-            final byte[] challenge,
-            final String target,
-            final byte[] targetInformation) {
-            this(RND_GEN, System.currentTimeMillis(), domain, user, password, challenge, target, targetInformation);
         }
 
         public CipherGen(final Random random, final long currentTime,

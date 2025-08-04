@@ -35,7 +35,6 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
 
 import top.mrxiaom.pluginbase.resolver.http.io.BufferInfo;
-import top.mrxiaom.pluginbase.resolver.http.io.HttpTransportMetrics;
 import top.mrxiaom.pluginbase.resolver.http.io.SessionOutputBuffer;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HTTP;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
@@ -57,7 +56,6 @@ public class SessionOutputBufferImpl implements SessionOutputBuffer, BufferInfo 
 
     private static final byte[] CRLF = new byte[] {HTTP.CR, HTTP.LF};
 
-    private final HttpTransportMetricsImpl metrics;
     private final ByteArrayBuffer buffer;
     private final int fragementSizeHint;
     private final CharsetEncoder encoder;
@@ -68,7 +66,6 @@ public class SessionOutputBufferImpl implements SessionOutputBuffer, BufferInfo 
     /**
      * Creates new instance of SessionOutputBufferImpl.
      *
-     * @param metrics HTTP transport metrics.
      * @param bufferSize buffer size. Must be a positive number.
      * @param fragementSizeHint fragment size hint defining a minimal size of a fragment
      *   that should be written out directly to the socket bypassing the session buffer.
@@ -77,23 +74,14 @@ public class SessionOutputBufferImpl implements SessionOutputBuffer, BufferInfo 
      *   If {@code null} simple type cast will be used for char to byte conversion.
      */
     public SessionOutputBufferImpl(
-            final HttpTransportMetricsImpl metrics,
             final int bufferSize,
             final int fragementSizeHint,
             final CharsetEncoder charEncoder) {
         super();
         Args.positive(bufferSize, "Buffer size");
-        Args.notNull(metrics, "HTTP transport metrcis");
-        this.metrics = metrics;
         this.buffer = new ByteArrayBuffer(bufferSize);
         this.fragementSizeHint = Math.max(fragementSizeHint, 0);
         this.encoder = charEncoder;
-    }
-
-    public SessionOutputBufferImpl(
-            final HttpTransportMetricsImpl metrics,
-            final int bufferSize) {
-        this(metrics, bufferSize, bufferSize, null);
     }
 
     public void bind(final OutputStream outStream) {
@@ -135,7 +123,6 @@ public class SessionOutputBufferImpl implements SessionOutputBuffer, BufferInfo 
         if (len > 0) {
             streamWrite(this.buffer.buffer(), 0, len);
             this.buffer.clear();
-            this.metrics.incrementBytesTransferred(len);
         }
     }
 
@@ -158,7 +145,6 @@ public class SessionOutputBufferImpl implements SessionOutputBuffer, BufferInfo 
             flushBuffer();
             // write directly to the out stream
             streamWrite(b, off, len);
-            this.metrics.incrementBytesTransferred(len);
         } else {
             // Do not let the buffer grow unnecessarily
             final int freecapacity = this.buffer.capacity() - this.buffer.length();
@@ -282,10 +268,4 @@ public class SessionOutputBufferImpl implements SessionOutputBuffer, BufferInfo 
         }
         this.bbuf.compact();
     }
-
-    @Override
-    public HttpTransportMetrics getMetrics() {
-        return this.metrics;
-    }
-
 }

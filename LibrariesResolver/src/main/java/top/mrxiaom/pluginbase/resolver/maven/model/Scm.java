@@ -16,7 +16,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Scm
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -96,8 +95,6 @@ public class Scm
      *             <code>Boolean</code>
      *             <br><b>Default value is</b>: <code>true</code>
      *             <br><b>Since</b>: Maven 3.6.1
-     *             
-     *           .
      */
     private String childScmConnectionInheritAppendPath;
 
@@ -111,8 +108,6 @@ public class Scm
      *             <code>Boolean</code>
      *             <br><b>Default value is</b>: <code>true</code>
      *             <br><b>Since</b>: Maven 3.6.1
-     *             
-     *           .
      */
     private String childScmDeveloperConnectionInheritAppendPath;
 
@@ -126,8 +121,6 @@ public class Scm
      *             <code>Boolean</code>
      *             <br><b>Default value is</b>: <code>true</code>
      *             <br><b>Since</b>: Maven 3.6.1
-     *             
-     *           .
      */
     private String childScmUrlInheritAppendPath;
 
@@ -194,15 +187,15 @@ public class Scm
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Scm clone()
 
@@ -407,7 +400,6 @@ public class Scm
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -429,7 +421,7 @@ public class Scm
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -598,38 +590,19 @@ public class Scm
 
     public boolean isChildScmConnectionInheritAppendPath()
     {
-        return ( childScmConnectionInheritAppendPath != null ) ? Boolean.parseBoolean( childScmConnectionInheritAppendPath ) : true;
-    }
-
-    public void setChildScmConnectionInheritAppendPath( boolean childScmConnectionInheritAppendPath )
-    {
-        this.childScmConnectionInheritAppendPath = String.valueOf( childScmConnectionInheritAppendPath );
+        return childScmConnectionInheritAppendPath == null || Boolean.parseBoolean(childScmConnectionInheritAppendPath);
     }
 
     public boolean isChildScmDeveloperConnectionInheritAppendPath()
     {
-        return ( childScmDeveloperConnectionInheritAppendPath != null ) ? Boolean.parseBoolean( childScmDeveloperConnectionInheritAppendPath ) : true;
-    }
-
-    public void setChildScmDeveloperConnectionInheritAppendPath( boolean childScmDeveloperConnectionInheritAppendPath )
-    {
-        this.childScmDeveloperConnectionInheritAppendPath = String.valueOf( childScmDeveloperConnectionInheritAppendPath );
+        return childScmDeveloperConnectionInheritAppendPath == null || Boolean.parseBoolean(childScmDeveloperConnectionInheritAppendPath);
     }
 
     public boolean isChildScmUrlInheritAppendPath()
     {
-        return ( childScmUrlInheritAppendPath != null ) ? Boolean.parseBoolean( childScmUrlInheritAppendPath ) : true;
+        return childScmUrlInheritAppendPath == null || Boolean.parseBoolean(childScmUrlInheritAppendPath);
     }
 
-    public void setChildScmUrlInheritAppendPath( boolean childScmUrlInheritAppendPath )
-    {
-        this.childScmUrlInheritAppendPath = String.valueOf( childScmUrlInheritAppendPath );
-    }
-
-            
-          
-    
-            
     /**
      * @see java.lang.Object#toString()
      */
@@ -637,6 +610,4 @@ public class Scm
     {
         return "Scm {connection=" + connection + "}";
     }
-            
-          
 }

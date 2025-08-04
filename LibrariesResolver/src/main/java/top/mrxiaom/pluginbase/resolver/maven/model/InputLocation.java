@@ -10,7 +10,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public final class InputLocation
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -23,13 +22,13 @@ public final class InputLocation
      * The one-based line number. The value will be non-positive if
      * unknown.
      */
-    private int lineNumber = -1;
+    private int lineNumber;
 
     /**
      * The one-based column number. The value will be non-positive
      * if unknown.
      */
-    private int columnNumber = -1;
+    private int columnNumber;
 
     /**
      * Field source.
@@ -82,15 +81,15 @@ public final class InputLocation
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- InputLocation clone()
 
@@ -122,26 +121,11 @@ public final class InputLocation
      * @param key a key object.
      * @return InputLocation
      */
-    public InputLocation getLocation( Object key )
-    {
-        if ( key instanceof String )
-        {
-            switch ( ( String ) key )
-            {
-                case "" :
-                {
-                    return this.location;
-                }
-                default :
-                {
-                    return getOtherLocation( key );
-                }
-                }
-            }
-            else
-            {
-                return getOtherLocation( key );
-            }
+    public InputLocation getLocation( Object key ) {
+        if (key instanceof String && key.equals("")) {
+            return this.location;
+        }
+        return getOtherLocation(key);
     } //-- InputLocation getLocation( Object )
 
     /**
@@ -160,28 +144,12 @@ public final class InputLocation
      * @param key a key object.
      * @param location a location object.
      */
-    public void setLocation( Object key, InputLocation location )
-    {
-        if ( key instanceof String )
-        {
-            switch ( ( String ) key )
-            {
-                case "" :
-                {
-                    this.location = location;
-                    return;
-                }
-                default :
-                {
-                    setOtherLocation( key, location );
-                    return;
-                }
-            }
+    public void setLocation( Object key, InputLocation location ) {
+        if (key instanceof String && key.equals("")) {
+            this.location = location;
+            return;
         }
-        else
-        {
-            setOtherLocation( key, location );
-        }
+        setOtherLocation(key, location);
     } //-- void setLocation( Object, InputLocation )
 
     /**
@@ -196,7 +164,7 @@ public final class InputLocation
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -258,7 +226,7 @@ public final class InputLocation
         }
         else
         {
-            locations = new java.util.LinkedHashMap();
+            locations = new java.util.LinkedHashMap<>();
             locations.putAll( sourceDominant ? targetLocations : sourceLocations );
             locations.putAll( sourceDominant ? sourceLocations : targetLocations );
         }
@@ -302,20 +270,15 @@ public final class InputLocation
         }
         else
         {
-            locations = new java.util.LinkedHashMap<Object, InputLocation>();
-            for ( java.util.Iterator<Integer> it = indices.iterator(); it.hasNext(); )
-            {
+            locations = new java.util.LinkedHashMap<>();
+            for (Integer integer : indices) {
                 InputLocation location;
-                Integer index = it.next();
-                if ( index.intValue() < 0 )
-                {
-                    location = sourceLocations.get( Integer.valueOf( ~index.intValue() ) );
+                if (integer < 0) {
+                    location = sourceLocations.get(~integer);
+                } else {
+                    location = targetLocations.get(integer);
                 }
-                else
-                {
-                    location = targetLocations.get( index );
-                }
-                locations.put( Integer.valueOf( locations.size() ), location );
+                locations.put(locations.size(), location);
             }
         }
         result.setLocations( locations );
@@ -338,36 +301,10 @@ public final class InputLocation
      //- Inner Classes -/
     //-----------------/
 
-    /**
-     * Class StringFormatter.
-     * 
-     * @version $Revision$ $Date$
-     */
-    public abstract static class StringFormatter
-    {
-
-          //-----------/
-         //- Methods -/
-        //-----------/
-
-        /**
-         * Method toString.
-         * 
-         * @param location a location object.
-         * @return String
-         */
-        public abstract String toString( InputLocation location );
-
-    }
-
-    
-            
-
     @Override
     public String toString()
     {
         return getLineNumber() + " : " + getColumnNumber() + ", " + getSource();
     }
-            
-          
+
 }

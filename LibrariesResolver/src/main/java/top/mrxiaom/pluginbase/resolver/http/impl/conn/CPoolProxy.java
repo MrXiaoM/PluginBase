@@ -168,11 +168,6 @@ class CPoolProxy implements ManagedHttpClientConnection, HttpContext {
     }
 
     @Override
-    public HttpConnectionMetrics getMetrics() {
-        return getValidConnection().getMetrics();
-    }
-
-    @Override
     public InetAddress getLocalAddress() {
         return getValidConnection().getLocalAddress();
     }

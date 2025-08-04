@@ -11,7 +11,6 @@ package top.mrxiaom.pluginbase.resolver.maven.model;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings( "all" )
 public class Notifier
     implements java.io.Serializable, java.lang.Cloneable, InputLocationTracker
 {
@@ -139,15 +138,15 @@ public class Notifier
 
             if ( copy.locations != null )
             {
-                copy.locations = new java.util.LinkedHashMap( copy.locations );
+                copy.locations = new java.util.LinkedHashMap<>( copy.locations );
             }
 
             return copy;
         }
         catch ( java.lang.Exception ex )
         {
-            throw (java.lang.RuntimeException) new java.lang.UnsupportedOperationException( getClass().getName()
-                + " does not support clone()" ).initCause( ex );
+            throw new UnsupportedOperationException( getClass().getName()
+                + " does not support clone()", ex);
         }
     } //-- Notifier clone()
 
@@ -288,7 +287,6 @@ public class Notifier
                 default :
                 {
                     setOtherLocation( key, location );
-                    return;
                 }
             }
         }
@@ -310,7 +308,7 @@ public class Notifier
         {
             if ( this.locations == null )
             {
-                this.locations = new java.util.LinkedHashMap<Object, InputLocation>();
+                this.locations = new java.util.LinkedHashMap<>();
             }
             this.locations.put( key, location );
         }
@@ -336,46 +334,6 @@ public class Notifier
     {
         return this.type;
     } //-- String getType()
-
-    /**
-     * Get whether to send notifications on error.
-     * 
-     * @return boolean
-     */
-    public boolean isSendOnError()
-    {
-        return this.sendOnError;
-    } //-- boolean isSendOnError()
-
-    /**
-     * Get whether to send notifications on failure.
-     * 
-     * @return boolean
-     */
-    public boolean isSendOnFailure()
-    {
-        return this.sendOnFailure;
-    } //-- boolean isSendOnFailure()
-
-    /**
-     * Get whether to send notifications on success.
-     * 
-     * @return boolean
-     */
-    public boolean isSendOnSuccess()
-    {
-        return this.sendOnSuccess;
-    } //-- boolean isSendOnSuccess()
-
-    /**
-     * Get whether to send notifications on warning.
-     * 
-     * @return boolean
-     */
-    public boolean isSendOnWarning()
-    {
-        return this.sendOnWarning;
-    } //-- boolean isSendOnWarning()
 
     /**
      * Set <b>Deprecated</b>. Where to send the notification to -
