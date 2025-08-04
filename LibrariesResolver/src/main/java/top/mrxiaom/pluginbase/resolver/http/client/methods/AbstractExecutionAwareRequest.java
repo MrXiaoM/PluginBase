@@ -33,7 +33,6 @@ import top.mrxiaom.pluginbase.resolver.http.client.utils.CloneUtils;
 import top.mrxiaom.pluginbase.resolver.http.concurrent.Cancellable;
 import top.mrxiaom.pluginbase.resolver.http.message.AbstractHttpMessage;
 
-@SuppressWarnings("deprecation")
 public abstract class AbstractExecutionAwareRequest extends AbstractHttpMessage implements
         HttpExecutionAware, Cloneable, HttpRequest {
 
@@ -41,7 +40,7 @@ public abstract class AbstractExecutionAwareRequest extends AbstractHttpMessage 
 
     protected AbstractExecutionAwareRequest() {
         super();
-        this.cancellableRef = new AtomicMarkableReference<Cancellable>(null, false);
+        this.cancellableRef = new AtomicMarkableReference<>(null, false);
     }
 
     public void abort() {
@@ -75,18 +74,7 @@ public abstract class AbstractExecutionAwareRequest extends AbstractHttpMessage 
     public Object clone() throws CloneNotSupportedException {
         final AbstractExecutionAwareRequest clone = (AbstractExecutionAwareRequest) super.clone();
         clone.headergroup = CloneUtils.cloneObject(this.headergroup);
-        clone.params = CloneUtils.cloneObject(this.params);
         return clone;
-    }
-
-    /**
-     * @since 4.2
-     *
-     * @deprecated Do not use.
-     */
-    @Deprecated
-    public void completed() {
-        this.cancellableRef.set(null, false);
     }
 
     /**

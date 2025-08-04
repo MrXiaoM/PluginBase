@@ -78,7 +78,6 @@ import top.mrxiaom.pluginbase.resolver.http.conn.socket.LayeredConnectionSocketF
 import top.mrxiaom.pluginbase.resolver.http.conn.socket.PlainConnectionSocketFactory;
 import top.mrxiaom.pluginbase.resolver.http.conn.ssl.DefaultHostnameVerifier;
 import top.mrxiaom.pluginbase.resolver.http.conn.ssl.SSLConnectionSocketFactory;
-import top.mrxiaom.pluginbase.resolver.http.conn.ssl.X509HostnameVerifier;
 import top.mrxiaom.pluginbase.resolver.http.conn.util.PublicSuffixMatcher;
 import top.mrxiaom.pluginbase.resolver.http.conn.util.PublicSuffixMatcherLoader;
 import top.mrxiaom.pluginbase.resolver.http.impl.NoConnectionReuseStrategy;
@@ -222,22 +221,6 @@ public class HttpClientBuilder {
      */
     public final HttpClientBuilder setRequestExecutor(final HttpRequestExecutor requestExec) {
         this.requestExec = requestExec;
-        return this;
-    }
-
-    /**
-     * Assigns {@link X509HostnameVerifier} instance.
-     * <p>
-     * Please note this value can be overridden by the {@link #setConnectionManager(
-     *   top.mrxiaom.pluginbase.resolver.http.conn.HttpClientConnectionManager)} and the {@link #setSSLSocketFactory(
-     *   top.mrxiaom.pluginbase.resolver.http.conn.socket.LayeredConnectionSocketFactory)} methods.
-     * </p>
-     *
-     *   @deprecated (4.4)
-     */
-    @Deprecated
-    public final HttpClientBuilder setHostnameVerifier(final X509HostnameVerifier hostnameVerifier) {
-        this.hostnameVerifier = hostnameVerifier;
         return this;
     }
 

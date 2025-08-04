@@ -45,8 +45,6 @@ import top.mrxiaom.pluginbase.resolver.http.conn.HttpClientConnectionManager;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.HttpRoute;
 import top.mrxiaom.pluginbase.resolver.http.impl.DefaultConnectionReuseStrategy;
 import top.mrxiaom.pluginbase.resolver.http.impl.execchain.MinimalClientExec;
-import top.mrxiaom.pluginbase.resolver.http.params.BasicHttpParams;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
 import top.mrxiaom.pluginbase.resolver.http.protocol.BasicHttpContext;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpContext;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpRequestExecutor;
@@ -58,12 +56,10 @@ import top.mrxiaom.pluginbase.resolver.http.util.Args;
  * @since 4.3
  */
 @Contract(threading = ThreadingBehavior.SAFE_CONDITIONAL)
-@SuppressWarnings("deprecation")
 class MinimalHttpClient extends CloseableHttpClient {
 
     private final HttpClientConnectionManager connManager;
     private final MinimalClientExec requestExecutor;
-    private final HttpParams params;
 
     public MinimalHttpClient(
             final HttpClientConnectionManager connManager) {
@@ -74,7 +70,6 @@ class MinimalHttpClient extends CloseableHttpClient {
                 connManager,
                 DefaultConnectionReuseStrategy.INSTANCE,
                 DefaultConnectionKeepAliveStrategy.INSTANCE);
-        this.params = new BasicHttpParams();
     }
 
     @Override
@@ -104,11 +99,6 @@ class MinimalHttpClient extends CloseableHttpClient {
         } catch (final HttpException httpException) {
             throw new ClientProtocolException(httpException);
         }
-    }
-
-    @Override
-    public HttpParams getParams() {
-        return this.params;
     }
 
     @Override

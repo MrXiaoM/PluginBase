@@ -30,9 +30,7 @@ package top.mrxiaom.pluginbase.resolver.http.impl.auth;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
 import top.mrxiaom.pluginbase.resolver.http.auth.AuthScheme;
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthSchemeFactory;
 import top.mrxiaom.pluginbase.resolver.http.auth.AuthSchemeProvider;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpContext;
 
 /**
@@ -43,13 +41,7 @@ import top.mrxiaom.pluginbase.resolver.http.protocol.HttpContext;
  * @since 4.1
  */
 @Contract(threading = ThreadingBehavior.IMMUTABLE)
-@SuppressWarnings("deprecation")
-public class NTLMSchemeFactory implements AuthSchemeFactory, AuthSchemeProvider {
-
-    @Override
-    public AuthScheme newInstance(final HttpParams params) {
-        return new NTLMScheme();
-    }
+public class NTLMSchemeFactory implements AuthSchemeProvider {
 
     @Override
     public AuthScheme create(final HttpContext context) {

@@ -30,6 +30,7 @@ package top.mrxiaom.pluginbase.resolver.http;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.Locale;
+import java.util.Objects;
 
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
@@ -304,7 +305,7 @@ public final class HttpHost implements Cloneable, Serializable {
             return this.lcHostname.equals(that.lcHostname)
                 && this.port == that.port
                 && this.schemeName.equals(that.schemeName)
-                && (this.address==null ? that.address== null : this.address.equals(that.address));
+                && (Objects.equals(this.address, that.address));
         }
         return false;
     }

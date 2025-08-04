@@ -67,10 +67,9 @@ public class MessageConstraints implements Cloneable {
 
     @Override
     public String toString() {
-        String builder = "[maxLineLength=" + maxLineLength +
+        return "[maxLineLength=" + maxLineLength +
                 ", maxHeaderCount=" + maxHeaderCount +
                 "]";
-        return builder;
     }
 
     public static MessageConstraints lineLen(final int max) {

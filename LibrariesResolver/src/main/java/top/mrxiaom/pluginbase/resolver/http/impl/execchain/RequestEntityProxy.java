@@ -134,9 +134,8 @@ class RequestEntityProxy implements HttpEntity  {
 
     @Override
     public String toString() {
-        String sb = "RequestEntityProxy{" + original +
+        return "RequestEntityProxy{" + original +
                 '}';
-        return sb;
     }
 
 }

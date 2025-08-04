@@ -78,9 +78,7 @@ public class DefaultLocalRepositoryProvider implements LocalRepositoryProvider, 
         List<NoLocalRepositoryManagerException> errors = new ArrayList<>();
         for (PrioritizedComponent<LocalRepositoryManagerFactory> factory : factories.getEnabled()) {
             try {
-                LocalRepositoryManager manager = factory.getComponent().newInstance(session, repository);
-
-                return manager;
+                return factory.getComponent().newInstance(session, repository);
             } catch (NoLocalRepositoryManagerException e) {
                 // continue and try next factory
                 errors.add(e);

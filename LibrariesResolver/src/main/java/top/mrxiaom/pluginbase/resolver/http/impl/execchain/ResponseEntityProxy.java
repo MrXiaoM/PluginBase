@@ -99,10 +99,7 @@ class ResponseEntityProxy extends HttpEntityWrapper implements EofSensorWatcher 
                 this.wrappedEntity.writeTo(outStream);
             }
             releaseConnection();
-        } catch (final IOException ex) {
-            abortConnection();
-            throw ex;
-        } catch (final RuntimeException ex) {
+        } catch (final IOException | RuntimeException ex) {
             abortConnection();
             throw ex;
         } finally {
@@ -119,10 +116,7 @@ class ResponseEntityProxy extends HttpEntityWrapper implements EofSensorWatcher 
                 wrapped.close();
             }
             releaseConnection();
-        } catch (final IOException ex) {
-            abortConnection();
-            throw ex;
-        } catch (final RuntimeException ex) {
+        } catch (final IOException | RuntimeException ex) {
             abortConnection();
             throw ex;
         } finally {
@@ -147,10 +141,7 @@ class ResponseEntityProxy extends HttpEntityWrapper implements EofSensorWatcher 
                     throw ex;
                 }
             }
-        } catch (final IOException ex) {
-            abortConnection();
-            throw ex;
-        } catch (final RuntimeException ex) {
+        } catch (final IOException | RuntimeException ex) {
             abortConnection();
             throw ex;
         } finally {
@@ -167,9 +158,8 @@ class ResponseEntityProxy extends HttpEntityWrapper implements EofSensorWatcher 
 
     @Override
     public String toString() {
-        String sb = "ResponseEntityProxy{" + wrappedEntity +
+        return "ResponseEntityProxy{" + wrappedEntity +
                 '}';
-        return sb;
     }
 
 }

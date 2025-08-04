@@ -312,7 +312,7 @@ public class DefaultUpdateCheckManager implements UpdateCheckManager, Service {
     private long getLastUpdated(Properties props, String key) {
         String value = props.getProperty(key + UPDATED_KEY_SUFFIX, "");
         try {
-            return (value.length() > 0) ? Long.parseLong(value) : TS_UNKNOWN;
+            return (!value.isEmpty()) ? Long.parseLong(value) : TS_UNKNOWN;
         } catch (NumberFormatException e) {
             return TS_UNKNOWN;
         }
@@ -381,7 +381,7 @@ public class DefaultUpdateCheckManager implements UpdateCheckManager, Service {
 
     private String normalizeRepoUrl(String url) {
         String result = url;
-        if (url != null && url.length() > 0 && !url.endsWith("/")) {
+        if (url != null && !url.isEmpty() && !url.endsWith("/")) {
             result = url + '/';
         }
         return result;

@@ -33,7 +33,6 @@ import java.nio.charset.CodingErrorAction;
 import top.mrxiaom.pluginbase.resolver.http.Consts;
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
-import top.mrxiaom.pluginbase.resolver.http.util.Args;
 
 /**
  * HTTP connection configuration.
@@ -99,29 +98,17 @@ public class ConnectionConfig implements Cloneable {
 
     @Override
     public String toString() {
-        String builder = "[bufferSize=" + this.bufferSize +
+        return "[bufferSize=" + this.bufferSize +
                 ", fragmentSizeHint=" + this.fragmentSizeHint +
                 ", charset=" + this.charset +
                 ", malformedInputAction=" + this.malformedInputAction +
                 ", unmappableInputAction=" + this.unmappableInputAction +
                 ", messageConstraints=" + this.messageConstraints +
                 "]";
-        return builder;
     }
 
     public static ConnectionConfig.Builder custom() {
         return new Builder();
-    }
-
-    public static ConnectionConfig.Builder copy(final ConnectionConfig config) {
-        Args.notNull(config, "Connection config");
-        return new Builder()
-            .setBufferSize(config.getBufferSize())
-            .setCharset(config.getCharset())
-            .setFragmentSizeHint(config.getFragmentSizeHint())
-            .setMalformedInputAction(config.getMalformedInputAction())
-            .setUnmappableInputAction(config.getUnmappableInputAction())
-            .setMessageConstraints(config.getMessageConstraints());
     }
 
     public static class Builder {

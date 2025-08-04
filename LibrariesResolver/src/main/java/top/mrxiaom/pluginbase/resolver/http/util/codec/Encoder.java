@@ -20,7 +20,7 @@ package top.mrxiaom.pluginbase.resolver.http.util.codec;
 /**
  * Provides the highest level of abstraction for Encoders.
  * <p>
- * This is the sister interface of {@link Decoder}.  Every implementation of Encoder provides this
+ * This is the sister interface of Decoder.  Every implementation of Encoder provides this
  * common generic interface which allows a user to pass a generic Object to any Encoder implementation
  * in the codec package.
  * </p>

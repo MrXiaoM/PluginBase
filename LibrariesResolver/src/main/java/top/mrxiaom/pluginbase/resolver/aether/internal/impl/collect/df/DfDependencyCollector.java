@@ -64,10 +64,7 @@ public class DfDependencyCollector extends DependencyCollectorDelegate implement
 
     /**
      * Default ctor for SL.
-     *
-     * @deprecated Will be dropped once SL gone.
      */
-    @Deprecated
     public DfDependencyCollector() {
         // enables default constructor
     }

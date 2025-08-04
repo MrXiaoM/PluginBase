@@ -61,10 +61,9 @@ public class NTUserPrincipal implements Principal, Serializable {
             this.domain = null;
         }
         if (this.domain != null && !this.domain.isEmpty()) {
-            String buffer = this.domain +
+            this.ntname = this.domain +
                     '\\' +
                     this.username;
-            this.ntname = buffer;
         } else {
             this.ntname = this.username;
         }

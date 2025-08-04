@@ -27,9 +27,6 @@
 
 package top.mrxiaom.pluginbase.resolver.http.protocol;
 
-import java.io.IOException;
-
-import top.mrxiaom.pluginbase.resolver.http.HttpException;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequestInterceptor;
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;

@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.resolver.aether.RepositorySystemSession;
 import top.mrxiaom.pluginbase.resolver.aether.collection.VersionFilter;
 import top.mrxiaom.pluginbase.resolver.aether.graph.Dependency;
@@ -90,7 +91,7 @@ public final class DefaultVersionFilterContext implements VersionFilter.VersionF
     }
 
     @Override
-    public Iterator<Version> iterator() {
+    public @NotNull Iterator<Version> iterator() {
         return versions.iterator();
     }
 

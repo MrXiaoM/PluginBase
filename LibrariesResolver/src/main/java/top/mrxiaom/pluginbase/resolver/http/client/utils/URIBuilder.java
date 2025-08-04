@@ -315,7 +315,7 @@ public class URIBuilder {
      * @since 4.5.8
      */
     public URIBuilder setPathSegments(final List<String> pathSegments) {
-        this.pathSegments = pathSegments != null && pathSegments.size() > 0 ? new ArrayList<String>(pathSegments) : null;
+        this.pathSegments = pathSegments != null && !pathSegments.isEmpty() ? new ArrayList<>(pathSegments) : null;
         this.encodedSchemeSpecificPart = null;
         this.encodedPath = null;
         return this;
@@ -362,7 +362,7 @@ public class URIBuilder {
      */
     public URIBuilder setParameters(final List <NameValuePair> nvps) {
         if (this.queryParams == null) {
-            this.queryParams = new ArrayList<NameValuePair>();
+            this.queryParams = new ArrayList<>();
         } else {
             this.queryParams.clear();
         }
@@ -385,7 +385,7 @@ public class URIBuilder {
      */
     public URIBuilder addParameters(final List <NameValuePair> nvps) {
         if (this.queryParams == null) {
-            this.queryParams = new ArrayList<NameValuePair>();
+            this.queryParams = new ArrayList<>();
         }
         this.queryParams.addAll(nvps);
         this.encodedQuery = null;
@@ -406,7 +406,7 @@ public class URIBuilder {
      */
     public URIBuilder setParameters(final NameValuePair... nvps) {
         if (this.queryParams == null) {
-            this.queryParams = new ArrayList<NameValuePair>();
+            this.queryParams = new ArrayList<>();
         } else {
             this.queryParams.clear();
         }
@@ -427,7 +427,7 @@ public class URIBuilder {
      */
     public URIBuilder addParameter(final String param, final String value) {
         if (this.queryParams == null) {
-            this.queryParams = new ArrayList<NameValuePair>();
+            this.queryParams = new ArrayList<>();
         }
         this.queryParams.add(new BasicNameValuePair(param, value));
         this.encodedQuery = null;
@@ -446,15 +446,10 @@ public class URIBuilder {
      */
     public URIBuilder setParameter(final String param, final String value) {
         if (this.queryParams == null) {
-            this.queryParams = new ArrayList<NameValuePair>();
+            this.queryParams = new ArrayList<>();
         }
         if (!this.queryParams.isEmpty()) {
-            for (final Iterator<NameValuePair> it = this.queryParams.iterator(); it.hasNext(); ) {
-                final NameValuePair nvp = it.next();
-                if (nvp.getName().equals(param)) {
-                    it.remove();
-                }
-            }
+            this.queryParams.removeIf(nvp -> nvp.getName().equals(param));
         }
         this.queryParams.add(new BasicNameValuePair(param, value));
         this.encodedQuery = null;
@@ -545,7 +540,7 @@ public class URIBuilder {
      * @since 4.5.8
      */
     public List<String> getPathSegments() {
-        return this.pathSegments != null ? new ArrayList<String>(this.pathSegments) : new ArrayList<String>();
+        return this.pathSegments != null ? new ArrayList<>(this.pathSegments) : new ArrayList<>();
     }
 
     public String getPath() {
@@ -567,7 +562,7 @@ public class URIBuilder {
     }
 
     public List<NameValuePair> getQueryParams() {
-        return this.queryParams != null ? new ArrayList<NameValuePair>(this.queryParams) : new ArrayList<NameValuePair>();
+        return this.queryParams != null ? new ArrayList<>(this.queryParams) : new ArrayList<>();
     }
 
     public String getFragment() {

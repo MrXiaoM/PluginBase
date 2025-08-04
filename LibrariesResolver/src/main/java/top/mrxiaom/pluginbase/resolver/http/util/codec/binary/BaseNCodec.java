@@ -363,28 +363,6 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
     abstract void decode(byte[] pArray, int i, int length, Context context);
 
     /**
-     * Decodes an Object using the Base-N algorithm. This method is provided in order to satisfy the requirements of
-     * the Decoder interface, and will throw a DecoderException if the supplied object is not of type byte[] or String.
-     *
-     * @param obj
-     *            Object to decode
-     * @return An object (of type byte[]) containing the binary data which corresponds to the byte[] or String
-     *         supplied.
-     * @throws DecoderException
-     *             if the parameter supplied is not of type byte[]
-     */
-    @Override
-    public Object decode(final Object obj) throws DecoderException {
-        if (obj instanceof byte[]) {
-            return decode((byte[]) obj);
-        }
-        if (obj instanceof String) {
-            return decode((String) obj);
-        }
-        throw new DecoderException("Parameter supplied to Base-N decode is not a byte[] or a String");
-    }
-
-    /**
      * Decodes a String containing characters in the Base-N alphabet.
      *
      * @param pArray

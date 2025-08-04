@@ -54,7 +54,7 @@ import top.mrxiaom.pluginbase.resolver.http.util.Args;
 
 /**
  * Default implementation of {@link HttpClientConnectionOperator} used as default in Http client,
- * when no instance provided by user to {@link BasicHttpClientConnectionManager} or {@link
+ * when no instance provided by user to {@link
  * PoolingHttpClientConnectionManager} constructor.
  *
  * @since 4.4

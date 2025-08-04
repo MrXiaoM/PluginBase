@@ -316,16 +316,7 @@ public class MainClientExec implements ClientExecChain {
         } catch (final HttpException ex) {
             connHolder.abortConnection();
             throw ex;
-        } catch (final IOException ex) {
-            connHolder.abortConnection();
-            if (proxyAuthState.isConnectionBased()) {
-                proxyAuthState.reset();
-            }
-            if (targetAuthState.isConnectionBased()) {
-                targetAuthState.reset();
-            }
-            throw ex;
-        } catch (final RuntimeException ex) {
+        } catch (final IOException | RuntimeException ex) {
             connHolder.abortConnection();
             if (proxyAuthState.isConnectionBased()) {
                 proxyAuthState.reset();

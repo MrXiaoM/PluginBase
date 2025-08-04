@@ -117,7 +117,7 @@ public class ManagedHttpClientConnectionFactory
             charEncoder.onMalformedInput(malformedInputAction);
             charEncoder.onUnmappableCharacter(unmappableInputAction);
         }
-        final String id = "http-outgoing-" + Long.toString(COUNTER.getAndIncrement());
+        final String id = "http-outgoing-" + COUNTER.getAndIncrement();
         return new LoggingManagedHttpClientConnection(
                 id,
                 cconfig.getBufferSize(),

@@ -78,10 +78,6 @@ public class InetAddressUtils {
         return IPV4_PATTERN.matcher(input).matches();
     }
 
-    public static boolean isIPv4MappedIPv64Address(final String input) {
-        return IPV4_MAPPED_IPV6_PATTERN.matcher(input).matches();
-    }
-
     /**
      * Checks whether the parameter is a valid standard (non-compressed) IPv6 address
      *

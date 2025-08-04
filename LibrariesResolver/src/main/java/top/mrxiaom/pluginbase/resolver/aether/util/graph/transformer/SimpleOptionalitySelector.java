@@ -20,7 +20,6 @@ package top.mrxiaom.pluginbase.resolver.aether.util.graph.transformer;
 
 import java.util.Collection;
 
-import top.mrxiaom.pluginbase.resolver.aether.RepositoryException;
 import top.mrxiaom.pluginbase.resolver.aether.util.graph.transformer.ConflictResolver.ConflictContext;
 import top.mrxiaom.pluginbase.resolver.aether.util.graph.transformer.ConflictResolver.ConflictItem;
 import top.mrxiaom.pluginbase.resolver.aether.util.graph.transformer.ConflictResolver.OptionalitySelector;

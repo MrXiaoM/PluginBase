@@ -55,15 +55,6 @@ public class EnhancedLocalRepositoryManagerFactory implements LocalRepositoryMan
         // no arg ctor for ServiceLocator
     }
 
-    public EnhancedLocalRepositoryManagerFactory(
-            final LocalPathComposer localPathComposer,
-            final TrackingFileManager trackingFileManager,
-            final LocalPathPrefixComposerFactory localPathPrefixComposerFactory) {
-        this.localPathComposer = requireNonNull(localPathComposer);
-        this.trackingFileManager = requireNonNull(trackingFileManager);
-        this.localPathPrefixComposerFactory = requireNonNull(localPathPrefixComposerFactory);
-    }
-
     @Override
     public void initService(final ServiceLocator locator) {
         this.localPathComposer = requireNonNull(locator.getService(LocalPathComposer.class));

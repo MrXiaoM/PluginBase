@@ -29,6 +29,7 @@ package top.mrxiaom.pluginbase.resolver.http.conn;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
 
 /**
@@ -85,14 +86,6 @@ public class EofSensorInputStream extends InputStream implements ConnectionRelea
         eofWatcher = watcher;
     }
 
-    boolean isSelfClosed() {
-        return selfClosed;
-    }
-
-    InputStream getWrappedStream() {
-        return wrappedStream;
-    }
-
     /**
      * Checks whether the underlying stream can be read from.
      *
@@ -127,7 +120,7 @@ public class EofSensorInputStream extends InputStream implements ConnectionRelea
     }
 
     @Override
-    public int read(final byte[] b, final int off, final int len) throws IOException {
+    public int read(final byte @NotNull [] b, final int off, final int len) throws IOException {
         int readLen = -1;
 
         if (isReadAllowed()) {
@@ -144,7 +137,7 @@ public class EofSensorInputStream extends InputStream implements ConnectionRelea
     }
 
     @Override
-    public int read(final byte[] b) throws IOException {
+    public int read(final byte @NotNull [] b) throws IOException {
         return read(b, 0, b.length);
     }
 

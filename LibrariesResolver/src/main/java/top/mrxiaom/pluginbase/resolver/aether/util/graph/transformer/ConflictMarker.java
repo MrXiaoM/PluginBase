@@ -26,7 +26,6 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import top.mrxiaom.pluginbase.resolver.aether.RepositoryException;
 import top.mrxiaom.pluginbase.resolver.aether.artifact.Artifact;
 import top.mrxiaom.pluginbase.resolver.aether.collection.DependencyGraphTransformationContext;
 import top.mrxiaom.pluginbase.resolver.aether.collection.DependencyGraphTransformer;

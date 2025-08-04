@@ -18,7 +18,6 @@
  */
 package top.mrxiaom.pluginbase.resolver.aether.util.graph.transformer;
 
-import top.mrxiaom.pluginbase.resolver.aether.RepositoryException;
 import top.mrxiaom.pluginbase.resolver.aether.collection.DependencyGraphTransformationContext;
 import top.mrxiaom.pluginbase.resolver.aether.collection.DependencyGraphTransformer;
 import top.mrxiaom.pluginbase.resolver.aether.graph.Dependency;

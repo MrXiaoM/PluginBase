@@ -34,7 +34,6 @@ import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequestInterceptor;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
-import top.mrxiaom.pluginbase.resolver.http.client.params.ClientPNames;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpContext;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
 
@@ -43,7 +42,6 @@ import top.mrxiaom.pluginbase.resolver.http.util.Args;
  *
  * @since 4.0
  */
-@SuppressWarnings("deprecation")
 @Contract(threading = ThreadingBehavior.IMMUTABLE_CONDITIONAL)
 public class RequestDefaultHeaders implements HttpRequestInterceptor {
 
@@ -71,12 +69,7 @@ public class RequestDefaultHeaders implements HttpRequestInterceptor {
         }
 
         // Add default headers
-        @SuppressWarnings("unchecked")
-        Collection<? extends Header> defHeaders = (Collection<? extends Header>)
-            request.getParams().getParameter(ClientPNames.DEFAULT_HEADERS);
-        if (defHeaders == null) {
-            defHeaders = this.defaultHeaders;
-        }
+        Collection<? extends Header> defHeaders = this.defaultHeaders;
 
         if (defHeaders != null) {
             for (final Header defHeader : defHeaders) {

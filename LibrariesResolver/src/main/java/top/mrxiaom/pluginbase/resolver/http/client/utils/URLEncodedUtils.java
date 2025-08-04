@@ -271,7 +271,7 @@ public class URLEncodedUtils {
             delimSet.set(separator);
         }
         final ParserCursor cursor = new ParserCursor(0, buf.length());
-        final List<NameValuePair> list = new ArrayList<NameValuePair>();
+        final List<NameValuePair> list = new ArrayList<>();
         while (!cursor.atEnd()) {
             delimSet.set('=');
             final String name = tokenParser.parseToken(buf, cursor, delimSet);
@@ -305,7 +305,7 @@ public class URLEncodedUtils {
         if (separators.get(s.charAt(cursor.getPos()))) {
             cursor.updatePos(cursor.getPos() + 1);
         }
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         final StringBuilder buf = new StringBuilder();
         for (;;) {
             if (cursor.atEnd()) {
@@ -566,7 +566,7 @@ public class URLEncodedUtils {
     private static final int RADIX = 16;
 
     private static List<NameValuePair> createEmptyList() {
-        return new ArrayList<NameValuePair>(0);
+        return new ArrayList<>(0);
     }
 
     private static String urlEncode(

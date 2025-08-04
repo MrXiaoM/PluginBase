@@ -114,10 +114,9 @@ public final class RepositoryPolicy {
 
     @Override
     public String toString() {
-        String buffer = "enabled=" + isEnabled() +
+        return "enabled=" + isEnabled() +
                 ", checksums=" + getChecksumPolicy() +
                 ", updates=" + getUpdatePolicy();
-        return buffer;
     }
 
     @Override

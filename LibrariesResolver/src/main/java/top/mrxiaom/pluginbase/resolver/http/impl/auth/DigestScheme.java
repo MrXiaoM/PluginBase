@@ -45,7 +45,6 @@ import top.mrxiaom.pluginbase.resolver.http.HttpEntityEnclosingRequest;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.auth.AUTH;
 import top.mrxiaom.pluginbase.resolver.http.auth.AuthenticationException;
-import top.mrxiaom.pluginbase.resolver.http.auth.ChallengeState;
 import top.mrxiaom.pluginbase.resolver.http.auth.Credentials;
 import top.mrxiaom.pluginbase.resolver.http.auth.MalformedChallengeException;
 import top.mrxiaom.pluginbase.resolver.http.message.BasicHeaderValueFormatter;
@@ -97,8 +96,6 @@ public class DigestScheme extends RFC2617Scheme {
     private String lastNonce;
     private long nounceCount;
     private String cnonce;
-    private String a1;
-    private String a2;
 
     /**
      * @since 4.3
@@ -106,19 +103,6 @@ public class DigestScheme extends RFC2617Scheme {
     public DigestScheme(final Charset credentialsCharset) {
         super(credentialsCharset);
         this.complete = false;
-    }
-
-    /**
-     * Creates an instance of {@code DigestScheme} with the given challenge
-     * state.
-     *
-     * @since 4.2
-     *
-     * @deprecated (4.3) do not use.
-     */
-    @Deprecated
-    public DigestScheme(final ChallengeState challengeState) {
-        super(challengeState);
     }
 
     public DigestScheme() {
@@ -173,10 +157,6 @@ public class DigestScheme extends RFC2617Scheme {
     @Override
     public boolean isConnectionBased() {
         return false;
-    }
-
-    public void overrideParamter(final String name, final String value) {
-        getParameters().put(name, value);
     }
 
     /**
@@ -260,7 +240,7 @@ public class DigestScheme extends RFC2617Scheme {
             algorithm = "MD5";
         }
 
-        final Set<String> qopset = new HashSet<String>(8);
+        final Set<String> qopset = new HashSet<>(8);
         int qop = QOP_UNKNOWN;
         final String qoplist = getParameter("qop");
         if (qoplist != null) {
@@ -319,8 +299,8 @@ public class DigestScheme extends RFC2617Scheme {
             cnonce = createCnonce();
         }
 
-        a1 = null;
-        a2 = null;
+        String a1;
+        String a2;
         // 3.2.2.2: Calculating digest
         if (algorithm.equalsIgnoreCase("MD5-sess")) {
             // H( unq(username-value) ":" unq(realm-value) ":" passwd )
@@ -404,7 +384,7 @@ public class DigestScheme extends RFC2617Scheme {
         }
         buffer.append(": Digest ");
 
-        final List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(20);
+        final List<BasicNameValuePair> params = new ArrayList<>(20);
         params.add(new BasicNameValuePair("username", uname));
         params.add(new BasicNameValuePair("realm", realm));
         params.add(new BasicNameValuePair("nonce", nonce));
@@ -433,18 +413,6 @@ public class DigestScheme extends RFC2617Scheme {
             BasicHeaderValueFormatter.INSTANCE.formatNameValuePair(buffer, param, !noQuotes);
         }
         return new BufferedHeader(buffer);
-    }
-
-    String getCnonce() {
-        return cnonce;
-    }
-
-    String getA1() {
-        return a1;
-    }
-
-    String getA2() {
-        return a2;
     }
 
     /**

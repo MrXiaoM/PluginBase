@@ -27,6 +27,7 @@
 package top.mrxiaom.pluginbase.resolver.http.auth;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import top.mrxiaom.pluginbase.resolver.http.HttpHost;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
@@ -236,14 +237,14 @@ public class AuthScope {
         if (LangUtils.equals(this.scheme, that.scheme)) {
             factor += 1;
         } else {
-            if (this.scheme != ANY_SCHEME && that.scheme != ANY_SCHEME) {
+            if (!Objects.equals(this.scheme, ANY_SCHEME) && !Objects.equals(that.scheme, ANY_SCHEME)) {
                 return -1;
             }
         }
         if (LangUtils.equals(this.realm, that.realm)) {
             factor += 2;
         } else {
-            if (this.realm != ANY_REALM && that.realm != ANY_REALM) {
+            if (!Objects.equals(this.realm, ANY_REALM) && !Objects.equals(that.realm, ANY_REALM)) {
                 return -1;
             }
         }
@@ -257,7 +258,7 @@ public class AuthScope {
         if (LangUtils.equals(this.host, that.host)) {
             factor += 8;
         } else {
-            if (this.host != ANY_HOST && that.host != ANY_HOST) {
+            if (!Objects.equals(this.host, ANY_HOST) && !Objects.equals(that.host, ANY_HOST)) {
                 return -1;
             }
         }

@@ -179,19 +179,6 @@ public final class ByteArrayBuffer implements Serializable {
     }
 
     /**
-     * Converts the content of this buffer to an array of bytes.
-     *
-     * @return byte array
-     */
-    public byte[] toByteArray() {
-        final byte[] b = new byte[this.len];
-        if (this.len > 0) {
-            System.arraycopy(this.buffer, 0, b, 0, this.len);
-        }
-        return b;
-    }
-
-    /**
      * Returns the {@code byte} value in this buffer at the specified
      * index. The index argument must be greater than or equal to
      * {@code 0}, and less than the length of this buffer.
@@ -226,49 +213,12 @@ public final class ByteArrayBuffer implements Serializable {
     }
 
     /**
-     * Ensures that the capacity is at least equal to the specified minimum.
-     * If the current capacity is less than the argument, then a new internal
-     * array is allocated with greater capacity. If the {@code required}
-     * argument is non-positive, this method takes no action.
-     *
-     * @param   required   the minimum required capacity.
-     *
-     * @since 4.1
-     */
-    public void ensureCapacity(final int required) {
-        if (required <= 0) {
-            return;
-        }
-        final int available = this.buffer.length - this.len;
-        if (required > available) {
-            expand(this.len + required);
-        }
-    }
-
-    /**
      * Returns reference to the underlying byte array.
      *
      * @return the byte array.
      */
     public byte[] buffer() {
         return this.buffer;
-    }
-
-    /**
-     * Sets the length of the buffer. The new length value is expected to be
-     * less than the current capacity and greater than or equal to
-     * {@code 0}.
-     *
-     * @param      len   the new length
-     * @throws     IndexOutOfBoundsException  if the
-     *               {@code len} argument is greater than the current
-     *               capacity of the buffer or less than {@code 0}.
-     */
-    public void setLength(final int len) {
-        if (len < 0 || len > this.buffer.length) {
-            throw new IndexOutOfBoundsException("len: "+len+" < 0 or > buffer len: "+this.buffer.length);
-        }
-        this.len = len;
     }
 
     /**
@@ -332,21 +282,5 @@ public final class ByteArrayBuffer implements Serializable {
             }
         }
         return -1;
-    }
-
-    /**
-     * Returns the index within this buffer of the first occurrence of the
-     * specified byte, starting the search at {@code 0} and finishing
-     * at {@link #length()}. If no such byte occurs in this buffer within
-     * those bounds, {@code -1} is returned.
-     *
-     * @param   b   the byte to search for.
-     * @return  the index of the first occurrence of the byte in the
-     *   buffer, or {@code -1} if the byte does not occur.
-     *
-     * @since 4.1
-     */
-    public int indexOf(final byte b) {
-        return indexOf(b, 0, this.len);
     }
 }

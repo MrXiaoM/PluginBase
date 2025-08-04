@@ -33,7 +33,6 @@ import top.mrxiaom.pluginbase.resolver.http.Header;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.auth.AUTH;
 import top.mrxiaom.pluginbase.resolver.http.auth.AuthenticationException;
-import top.mrxiaom.pluginbase.resolver.http.auth.ChallengeState;
 import top.mrxiaom.pluginbase.resolver.http.auth.Credentials;
 import top.mrxiaom.pluginbase.resolver.http.auth.MalformedChallengeException;
 import top.mrxiaom.pluginbase.resolver.http.message.BufferedHeader;
@@ -62,19 +61,6 @@ public class BasicScheme extends RFC2617Scheme {
     public BasicScheme(final Charset credentialsCharset) {
         super(credentialsCharset);
         this.complete = false;
-    }
-
-    /**
-     * Creates an instance of {@code BasicScheme} with the given challenge
-     * state.
-     *
-     * @since 4.2
-     *
-     * @deprecated (4.3) do not use.
-     */
-    @Deprecated
-    public BasicScheme(final ChallengeState challengeState) {
-        super(challengeState);
     }
 
     public BasicScheme() {
@@ -213,8 +199,7 @@ public class BasicScheme extends RFC2617Scheme {
 
     @Override
     public String toString() {
-        String builder = "BASIC [complete=" + complete +
+        return "BASIC [complete=" + complete +
                 "]";
-        return builder;
     }
 }

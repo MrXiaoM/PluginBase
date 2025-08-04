@@ -31,7 +31,6 @@ import top.mrxiaom.pluginbase.resolver.http.HttpHost;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.HttpResponse;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.HttpUriRequest;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpContext;
 
 import java.io.IOException;
@@ -45,20 +44,6 @@ import java.io.IOException;
  * @since 4.0
  */
 public interface HttpClient {
-
-
-    /**
-     * Obtains the parameters for this client.
-     * These parameters will become defaults for all requests being
-     * executed with this client, and for the parameters of
-     * dependent objects in this client.
-     *
-     * @return  the default parameters
-     *
-     * @deprecated (4.3) use
-     *   {@link top.mrxiaom.pluginbase.resolver.http.client.config.RequestConfig}.
-     */
-    HttpParams getParams();
 
     /**
      * Executes HTTP request using the default context.

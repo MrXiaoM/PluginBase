@@ -78,10 +78,9 @@ public final class BasicUserPrincipal implements Principal, Serializable {
 
     @Override
     public String toString() {
-        String buffer = "[principal: " +
+        return "[principal: " +
                 this.username +
                 "]";
-        return buffer;
     }
 
 }

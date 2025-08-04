@@ -20,7 +20,7 @@ package top.mrxiaom.pluginbase.resolver.http.util.codec;
 /**
  * Defines common decoding methods for byte array decoders.
  */
-public interface BinaryDecoder extends Decoder {
+public interface BinaryDecoder {
 
     /**
      * Decodes a byte array and returns the results as a byte array.

@@ -38,7 +38,6 @@ import top.mrxiaom.pluginbase.resolver.http.ProtocolVersion;
 import top.mrxiaom.pluginbase.resolver.http.RequestLine;
 import top.mrxiaom.pluginbase.resolver.http.message.AbstractHttpMessage;
 import top.mrxiaom.pluginbase.resolver.http.message.BasicRequestLine;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HTTP;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
 
@@ -48,7 +47,6 @@ import top.mrxiaom.pluginbase.resolver.http.util.Args;
  *
  * @since 4.3
  */
-@SuppressWarnings("deprecation")
 public class HttpRequestWrapper extends AbstractHttpMessage implements HttpUriRequest {
 
     private final HttpRequest original;
@@ -194,18 +192,4 @@ public class HttpRequestWrapper extends AbstractHttpMessage implements HttpUriRe
                                         (HttpEntityEnclosingRequest) request, target)
                         : new HttpRequestWrapper(request, target);
     }
-
-    /**
-     * @deprecated (4.3) use
-     *   {@link top.mrxiaom.pluginbase.resolver.http.client.config.RequestConfig}.
-     */
-    @Override
-    @Deprecated
-    public HttpParams getParams() {
-        if (this.params == null) {
-            this.params = original.getParams().copy();
-        }
-        return this.params;
-    }
-
 }

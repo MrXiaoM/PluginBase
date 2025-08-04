@@ -32,9 +32,7 @@ import java.nio.charset.Charset;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
 import top.mrxiaom.pluginbase.resolver.http.auth.AuthScheme;
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthSchemeFactory;
 import top.mrxiaom.pluginbase.resolver.http.auth.AuthSchemeProvider;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpContext;
 
 /**
@@ -44,8 +42,7 @@ import top.mrxiaom.pluginbase.resolver.http.protocol.HttpContext;
  * @since 4.0
  */
 @Contract(threading = ThreadingBehavior.IMMUTABLE)
-@SuppressWarnings("deprecation")
-public class BasicSchemeFactory implements AuthSchemeFactory, AuthSchemeProvider {
+public class BasicSchemeFactory implements AuthSchemeProvider {
 
     private final Charset charset;
 
@@ -59,11 +56,6 @@ public class BasicSchemeFactory implements AuthSchemeFactory, AuthSchemeProvider
 
     public BasicSchemeFactory() {
         this(null);
-    }
-
-    @Override
-    public AuthScheme newInstance(final HttpParams params) {
-        return new BasicScheme();
     }
 
     @Override

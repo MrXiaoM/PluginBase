@@ -109,15 +109,12 @@ public class BasicHttpEntity extends AbstractHttpEntity {
     @Override
     public void writeTo(final OutputStream outStream) throws IOException {
         Args.notNull(outStream, "Output stream");
-        final InputStream inStream = getContent();
-        try {
+        try (InputStream inStream = getContent()) {
             int l;
             final byte[] tmp = new byte[OUTPUT_BUFFER_SIZE];
             while ((l = inStream.read(tmp)) != -1) {
                 outStream.write(tmp, 0, l);
             }
-        } finally {
-            inStream.close();
         }
     }
 

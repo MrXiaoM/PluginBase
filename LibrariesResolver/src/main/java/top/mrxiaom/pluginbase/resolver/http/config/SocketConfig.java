@@ -189,7 +189,7 @@ public class SocketConfig implements Cloneable {
 
     @Override
     public String toString() {
-        String builder = "[soTimeout=" + this.soTimeout +
+        return "[soTimeout=" + this.soTimeout +
                 ", soReuseAddress=" + this.soReuseAddress +
                 ", soLinger=" + this.soLinger +
                 ", soKeepAlive=" + this.soKeepAlive +
@@ -198,7 +198,6 @@ public class SocketConfig implements Cloneable {
                 ", rcvBufSize=" + this.rcvBufSize +
                 ", backlogSize=" + this.backlogSize +
                 "]";
-        return builder;
     }
 
     public static SocketConfig.Builder custom() {

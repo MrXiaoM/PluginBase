@@ -758,172 +758,7 @@ final class NTLMEngineImpl implements NTLMEngine {
 
     enum Mode
     {
-        CLIENT, SERVER;
-    }
-
-    static class Handle
-    {
-        final private byte[] exportedSessionKey;
-        private byte[] signingKey;
-        private byte[] sealingKey;
-        private final Cipher rc4;
-        final Mode mode;
-        final private boolean isConnection;
-        int sequenceNumber = 0;
-
-
-        Handle( final byte[] exportedSessionKey, final Mode mode, final boolean isConnection )
-            throws NTLMEngineException
-        {
-            this.exportedSessionKey = exportedSessionKey;
-            this.isConnection = isConnection;
-            this.mode = mode;
-            try
-            {
-                final MessageDigest signMd5 = getMD5();
-                final MessageDigest sealMd5 = getMD5();
-                signMd5.update( exportedSessionKey );
-                sealMd5.update( exportedSessionKey );
-                if ( mode == Mode.CLIENT )
-                {
-                    signMd5.update( SIGN_MAGIC_CLIENT );
-                    sealMd5.update( SEAL_MAGIC_CLIENT );
-                }
-                else
-                {
-                    signMd5.update( SIGN_MAGIC_SERVER );
-                    sealMd5.update( SEAL_MAGIC_SERVER );
-                }
-                signingKey = signMd5.digest();
-                sealingKey = sealMd5.digest();
-            }
-            catch ( final Exception e )
-            {
-                throw new NTLMEngineException( e.getMessage(), e );
-            }
-            rc4 = initCipher();
-        }
-
-        public byte[] getSigningKey()
-        {
-            return signingKey;
-        }
-
-
-        public byte[] getSealingKey()
-        {
-            return sealingKey;
-        }
-
-        private Cipher initCipher() throws NTLMEngineException
-        {
-            final Cipher cipher;
-            try
-            {
-                cipher = Cipher.getInstance( "RC4" );
-                if ( mode == Mode.CLIENT )
-                {
-                    cipher.init( Cipher.ENCRYPT_MODE, new SecretKeySpec( sealingKey, "RC4" ) );
-                }
-                else
-                {
-                    cipher.init( Cipher.DECRYPT_MODE, new SecretKeySpec( sealingKey, "RC4" ) );
-                }
-            }
-            catch ( final Exception e )
-            {
-                throw new NTLMEngineException( e.getMessage(), e );
-            }
-            return cipher;
-        }
-
-
-        private void advanceMessageSequence() throws NTLMEngineException
-        {
-            if ( !isConnection )
-            {
-                final MessageDigest sealMd5 = getMD5();
-                sealMd5.update( sealingKey );
-                final byte[] seqNumBytes = new byte[4];
-                writeULong( seqNumBytes, sequenceNumber, 0 );
-                sealMd5.update( seqNumBytes );
-                sealingKey = sealMd5.digest();
-                initCipher();
-            }
-            sequenceNumber++;
-        }
-
-        private byte[] encrypt( final byte[] data )
-        {
-            return rc4.update( data );
-        }
-
-        private byte[] decrypt( final byte[] data )
-        {
-            return rc4.update( data );
-        }
-
-        private byte[] computeSignature( final byte[] message )
-        {
-            final byte[] sig = new byte[16];
-
-            // version
-            sig[0] = 0x01;
-            sig[1] = 0x00;
-            sig[2] = 0x00;
-            sig[3] = 0x00;
-
-            // HMAC (first 8 bytes)
-            final HMACMD5 hmacMD5 = new HMACMD5( signingKey );
-            hmacMD5.update( encodeLong( sequenceNumber ) );
-            hmacMD5.update( message );
-            final byte[] hmac = hmacMD5.getOutput();
-            final byte[] trimmedHmac = new byte[8];
-            System.arraycopy( hmac, 0, trimmedHmac, 0, 8 );
-            final byte[] encryptedHmac = encrypt( trimmedHmac );
-            System.arraycopy( encryptedHmac, 0, sig, 4, 8 );
-
-            // sequence number
-            encodeLong( sig, 12, sequenceNumber );
-
-            return sig;
-        }
-
-        private boolean validateSignature( final byte[] signature, final byte message[] )
-        {
-            final byte[] computedSignature = computeSignature( message );
-            //            log.info( "SSSSS validateSignature("+seqNumber+")\n"
-            //                + "  received: " + DebugUtil.dump( signature ) + "\n"
-            //                + "  computed: " + DebugUtil.dump( computedSignature ) );
-            return Arrays.equals( signature, computedSignature );
-        }
-
-        public byte[] signAndEncryptMessage( final byte[] cleartextMessage ) throws NTLMEngineException
-        {
-            final byte[] encryptedMessage = encrypt( cleartextMessage );
-            final byte[] signature = computeSignature( cleartextMessage );
-            final byte[] outMessage = new byte[signature.length + encryptedMessage.length];
-            System.arraycopy( signature, 0, outMessage, 0, signature.length );
-            System.arraycopy( encryptedMessage, 0, outMessage, signature.length, encryptedMessage.length );
-            advanceMessageSequence();
-            return outMessage;
-        }
-
-        public byte[] decryptAndVerifySignedMessage( final byte[] inMessage ) throws NTLMEngineException
-        {
-            final byte[] signature = new byte[16];
-            System.arraycopy( inMessage, 0, signature, 0, signature.length );
-            final byte[] encryptedMessage = new byte[inMessage.length - 16];
-            System.arraycopy( inMessage, 16, encryptedMessage, 0, encryptedMessage.length );
-            final byte[] cleartextMessage = decrypt( encryptedMessage );
-            if ( !validateSignature( signature, cleartextMessage ) )
-            {
-                throw new NTLMEngineException( "Wrong signature" );
-            }
-            advanceMessageSequence();
-            return cleartextMessage;
-        }
-
+        CLIENT, SERVER
     }
 
     private static byte[] encodeLong( final int value )
@@ -1098,8 +933,8 @@ final class NTLMEngineImpl implements NTLMEngine {
             // Check to be sure there's a type 2 message indicator next
             final int type = readULong(SIGNATURE.length);
             if (type != expectedType) {
-                throw new NTLMEngineException("NTLM type " + Integer.toString(expectedType)
-                        + " message expected - instead got type " + Integer.toString(type));
+                throw new NTLMEngineException("NTLM type " + expectedType
+                        + " message expected - instead got type " + type);
             }
 
             currentOutputPosition = messageContents.length;
@@ -1790,11 +1625,7 @@ final class NTLMEngineImpl implements NTLMEngine {
                 final MessageDigest md5 = getMD5();
                 channelBindingsHash = md5.digest( channelBindingStruct );
             }
-            catch ( final CertificateEncodingException e )
-            {
-                throw new NTLMEngineException( e.getMessage(), e );
-            }
-            catch ( final NoSuchAlgorithmException e )
+            catch ( final CertificateEncodingException | NoSuchAlgorithmException e )
             {
                 throw new NTLMEngineException( e.getMessage(), e );
             }

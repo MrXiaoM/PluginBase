@@ -27,7 +27,6 @@
 
 package top.mrxiaom.pluginbase.resolver.http.impl.conn;
 
-import top.mrxiaom.pluginbase.resolver.http.HttpException;
 import top.mrxiaom.pluginbase.resolver.http.HttpHost;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
@@ -50,10 +49,6 @@ public class DefaultProxyRoutePlanner extends DefaultRoutePlanner {
     public DefaultProxyRoutePlanner(final HttpHost proxy, final SchemePortResolver schemePortResolver) {
         super(schemePortResolver);
         this.proxy = Args.notNull(proxy, "Proxy host");
-    }
-
-    public DefaultProxyRoutePlanner(final HttpHost proxy) {
-        this(proxy, null);
     }
 
     @Override

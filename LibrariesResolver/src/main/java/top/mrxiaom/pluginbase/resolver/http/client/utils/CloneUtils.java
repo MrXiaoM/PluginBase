@@ -68,10 +68,6 @@ public class CloneUtils {
         throw new CloneNotSupportedException();
     }
 
-    public static Object clone(final Object obj) throws CloneNotSupportedException {
-        return cloneObject(obj);
-    }
-
     /**
      * This class should not be instantiated.
      */

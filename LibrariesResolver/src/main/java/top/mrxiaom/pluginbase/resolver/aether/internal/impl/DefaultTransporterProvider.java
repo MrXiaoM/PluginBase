@@ -77,9 +77,8 @@ public final class DefaultTransporterProvider implements TransporterProvider, Se
         List<NoTransporterException> errors = new ArrayList<>();
         for (PrioritizedComponent<TransporterFactory> factory : factories.getEnabled()) {
             try {
-                Transporter transporter = factory.getComponent().newInstance(session, repository);
 
-                return transporter;
+                return factory.getComponent().newInstance(session, repository);
             } catch (NoTransporterException e) {
                 // continue and try next factory
                 errors.add(e);

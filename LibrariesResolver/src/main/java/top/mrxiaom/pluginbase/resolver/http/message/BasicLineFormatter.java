@@ -52,17 +52,6 @@ import top.mrxiaom.pluginbase.resolver.http.util.CharArrayBuffer;
 @Contract(threading = ThreadingBehavior.IMMUTABLE)
 public class BasicLineFormatter implements LineFormatter {
 
-    /**
-     * A default instance of this class, for use as default or fallback.
-     * Note that {@link BasicLineFormatter} is not a singleton, there can
-     * be many instances of the class itself and of derived classes.
-     * The instance here provides non-customized, default behavior.
-     *
-     * @deprecated (4.3) use {@link #INSTANCE}
-     */
-    @Deprecated
-    public final static BasicLineFormatter DEFAULT = new BasicLineFormatter();
-
     public final static BasicLineFormatter INSTANCE = new BasicLineFormatter();
 
     public BasicLineFormatter() {

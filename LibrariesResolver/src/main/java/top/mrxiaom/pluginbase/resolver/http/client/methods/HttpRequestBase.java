@@ -29,18 +29,17 @@ package top.mrxiaom.pluginbase.resolver.http.client.methods;
 
 import java.net.URI;
 
+import top.mrxiaom.pluginbase.resolver.http.HttpVersion;
 import top.mrxiaom.pluginbase.resolver.http.ProtocolVersion;
 import top.mrxiaom.pluginbase.resolver.http.RequestLine;
 import top.mrxiaom.pluginbase.resolver.http.client.config.RequestConfig;
 import top.mrxiaom.pluginbase.resolver.http.message.BasicRequestLine;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpProtocolParams;
 
 /**
  * Base implementation of {@link HttpUriRequest}.
  *
  * @since 4.0
  */
-@SuppressWarnings("deprecation")
 public abstract class HttpRequestBase extends AbstractExecutionAwareRequest
     implements HttpUriRequest, Configurable {
 
@@ -60,7 +59,7 @@ public abstract class HttpRequestBase extends AbstractExecutionAwareRequest
 
     @Override
     public ProtocolVersion getProtocolVersion() {
-        return version != null ? version : HttpProtocolParams.getVersion(getParams());
+        return version != null ? version : HttpVersion.HTTP_1_1;
     }
 
     /**

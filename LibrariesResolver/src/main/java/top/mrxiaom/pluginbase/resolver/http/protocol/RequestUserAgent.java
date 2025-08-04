@@ -27,15 +27,10 @@
 
 package top.mrxiaom.pluginbase.resolver.http.protocol;
 
-import java.io.IOException;
-
-import top.mrxiaom.pluginbase.resolver.http.HttpException;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequestInterceptor;
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
-import top.mrxiaom.pluginbase.resolver.http.params.CoreProtocolPNames;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
 
 /**
@@ -44,7 +39,6 @@ import top.mrxiaom.pluginbase.resolver.http.util.Args;
  *
  * @since 4.0
  */
-@SuppressWarnings("deprecation")
 @Contract(threading = ThreadingBehavior.IMMUTABLE)
 public class RequestUserAgent implements HttpRequestInterceptor {
 
@@ -63,14 +57,7 @@ public class RequestUserAgent implements HttpRequestInterceptor {
     public void process(final HttpRequest request, final HttpContext context) {
         Args.notNull(request, "HTTP request");
         if (!request.containsHeader(HTTP.USER_AGENT)) {
-            String s = null;
-            final HttpParams params = request.getParams();
-            if (params != null) {
-                s = (String) params.getParameter(CoreProtocolPNames.USER_AGENT);
-            }
-            if (s == null) {
-                s = this.userAgent;
-            }
+            String s = this.userAgent;
             if (s != null) {
                 request.addHeader(HTTP.USER_AGENT, s);
             }

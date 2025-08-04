@@ -37,7 +37,6 @@ import top.mrxiaom.pluginbase.resolver.http.HttpResponse;
 import top.mrxiaom.pluginbase.resolver.http.ProtocolVersion;
 import top.mrxiaom.pluginbase.resolver.http.StatusLine;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.CloseableHttpResponse;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
 
 /**
  * A proxy class for {@link top.mrxiaom.pluginbase.resolver.http.HttpResponse} that can be used to release client connection
@@ -186,16 +185,6 @@ class HttpResponseProxy implements CloseableHttpResponse {
     @Override
     public HeaderIterator headerIterator(final String name) {
         return original.headerIterator(name);
-    }
-
-    @Override
-    public HttpParams getParams() {
-        return original.getParams();
-    }
-
-    @Override
-    public void setParams(final HttpParams params) {
-        original.setParams(params);
     }
 
     @Override

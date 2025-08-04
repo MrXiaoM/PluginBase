@@ -29,7 +29,6 @@ package top.mrxiaom.pluginbase.resolver.http.io;
 
 import java.io.IOException;
 
-import top.mrxiaom.pluginbase.resolver.http.HttpException;
 import top.mrxiaom.pluginbase.resolver.http.HttpMessage;
 
 /**

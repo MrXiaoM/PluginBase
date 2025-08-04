@@ -27,7 +27,6 @@
 
 package top.mrxiaom.pluginbase.resolver.http.protocol;
 
-import java.io.IOException;
 import java.net.InetAddress;
 
 import top.mrxiaom.pluginbase.resolver.http.HttpConnection;

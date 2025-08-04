@@ -27,7 +27,6 @@
 
 package top.mrxiaom.pluginbase.resolver.http.protocol;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -76,7 +75,8 @@ final class ChainBuilder<E> {
         return this;
     }
 
-    public ChainBuilder<E> addAllFirst(final Collection<E> c) {
+    @SafeVarargs
+    public final ChainBuilder<E> addAllFirst(final E... c) {
         if (c == null) {
             return this;
         }
@@ -86,27 +86,8 @@ final class ChainBuilder<E> {
         return this;
     }
 
-    public ChainBuilder<E> addAllFirst(final E... c) {
-        if (c == null) {
-            return this;
-        }
-        for (final E e: c) {
-            addFirst(e);
-        }
-        return this;
-    }
-
-    public ChainBuilder<E> addAllLast(final Collection<E> c) {
-        if (c == null) {
-            return this;
-        }
-        for (final E e: c) {
-            addLast(e);
-        }
-        return this;
-    }
-
-    public ChainBuilder<E> addAllLast(final E... c) {
+    @SafeVarargs
+    public final ChainBuilder<E> addAllLast(final E... c) {
         if (c == null) {
             return this;
         }

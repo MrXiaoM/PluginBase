@@ -32,7 +32,6 @@ import java.io.InputStream;
 
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.resolver.http.ConnectionClosedException;
-import top.mrxiaom.pluginbase.resolver.http.Header;
 import top.mrxiaom.pluginbase.resolver.http.HttpException;
 import top.mrxiaom.pluginbase.resolver.http.MalformedChunkCodingException;
 import top.mrxiaom.pluginbase.resolver.http.TruncatedChunkException;
@@ -85,8 +84,6 @@ public class ChunkedInputStream extends InputStream {
 
     /** True if this stream is closed */
     private boolean closed = false;
-
-    private Header[] footers = new Header[] {};
 
     /**
      * Wraps session input stream and reads chunk coded input.
@@ -285,7 +282,7 @@ public class ChunkedInputStream extends InputStream {
      */
     private void parseTrailerHeaders() throws IOException {
         try {
-            this.footers = AbstractMessageParser.parseHeaders(in,
+            AbstractMessageParser.parseHeaders(in,
                     constraints.getMaxHeaderCount(),
                     constraints.getMaxLineLength(),
                     null);
@@ -319,9 +316,4 @@ public class ChunkedInputStream extends InputStream {
             }
         }
     }
-
-    public Header[] getFooters() {
-        return this.footers.clone();
-    }
-
 }

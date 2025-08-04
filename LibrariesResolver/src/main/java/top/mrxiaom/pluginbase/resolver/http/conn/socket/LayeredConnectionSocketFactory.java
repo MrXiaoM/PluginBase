@@ -29,7 +29,6 @@ package top.mrxiaom.pluginbase.resolver.http.conn.socket;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpContext;
 

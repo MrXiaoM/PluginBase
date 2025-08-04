@@ -93,7 +93,6 @@ public class DefaultRemoteRepositoryManager implements RemoteRepositoryManager, 
                 RemoteRepository mirrorRepository = mirrorSelector.getMirror(recessiveRepository);
 
                 if (mirrorRepository != null) {
-                    logMirror(session, recessiveRepository, mirrorRepository);
                     repository = mirrorRepository;
                 }
             }
@@ -132,9 +131,6 @@ public class DefaultRemoteRepositoryManager implements RemoteRepositoryManager, 
         }
 
         return result;
-    }
-
-    private void logMirror(RepositorySystemSession session, RemoteRepository original, RemoteRepository mirror) {
     }
 
     private String getKey(RemoteRepository repository) {

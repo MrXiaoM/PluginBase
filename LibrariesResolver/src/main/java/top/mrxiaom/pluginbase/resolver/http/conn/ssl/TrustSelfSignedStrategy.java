@@ -26,7 +26,6 @@
  */
 package top.mrxiaom.pluginbase.resolver.http.conn.ssl;
 
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 /**

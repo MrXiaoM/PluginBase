@@ -328,14 +328,14 @@ public class RequestBuilder {
     }
 
     public List<NameValuePair> getParameters() {
-        return parameters != null ? new ArrayList<NameValuePair>(parameters) :
-            new ArrayList<NameValuePair>();
+        return parameters != null ? new ArrayList<>(parameters) :
+                new ArrayList<>();
     }
 
     public RequestBuilder addParameter(final NameValuePair nvp) {
         Args.notNull(nvp, "Name value pair");
         if (parameters == null) {
-            parameters = new LinkedList<NameValuePair>();
+            parameters = new LinkedList<>();
         }
         parameters.add(nvp);
         return this;

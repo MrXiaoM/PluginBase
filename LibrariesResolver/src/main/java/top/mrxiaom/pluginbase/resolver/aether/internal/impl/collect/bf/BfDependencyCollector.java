@@ -30,11 +30,9 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -106,10 +104,7 @@ public class BfDependencyCollector extends DependencyCollectorDelegate implement
 
     /**
      * Default ctor for SL.
-     *
-     * @deprecated Will be dropped once SL gone.
      */
-    @Deprecated
     public BfDependencyCollector() {
         // enables default constructor
     }

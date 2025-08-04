@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import top.mrxiaom.pluginbase.resolver.aether.RepositoryException;
 import top.mrxiaom.pluginbase.resolver.aether.util.artifact.JavaScopes;
 import top.mrxiaom.pluginbase.resolver.aether.util.graph.transformer.ConflictResolver.ConflictContext;
 import top.mrxiaom.pluginbase.resolver.aether.util.graph.transformer.ConflictResolver.ConflictItem;

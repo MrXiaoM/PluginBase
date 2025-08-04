@@ -177,7 +177,7 @@ public final class DateUtils {
     final static class DateFormatHolder {
 
         private static final ThreadLocal<SoftReference<Map<String, SimpleDateFormat>>>
-            THREADLOCAL_FORMATS = new ThreadLocal<SoftReference<Map<String, SimpleDateFormat>>>();
+            THREADLOCAL_FORMATS = new ThreadLocal<>();
 
         /**
          * creates a {@link SimpleDateFormat} for the requested format string.
@@ -195,9 +195,9 @@ public final class DateUtils {
             final SoftReference<Map<String, SimpleDateFormat>> ref = THREADLOCAL_FORMATS.get();
             Map<String, SimpleDateFormat> formats = ref == null ? null : ref.get();
             if (formats == null) {
-                formats = new HashMap<String, SimpleDateFormat>();
+                formats = new HashMap<>();
                 THREADLOCAL_FORMATS.set(
-                        new SoftReference<Map<String, SimpleDateFormat>>(formats));
+                        new SoftReference<>(formats));
             }
 
             SimpleDateFormat format = formats.get(pattern);

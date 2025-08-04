@@ -29,7 +29,6 @@ package top.mrxiaom.pluginbase.resolver.http.impl.io;
 
 import java.io.IOException;
 
-import top.mrxiaom.pluginbase.resolver.http.HttpException;
 import top.mrxiaom.pluginbase.resolver.http.HttpResponse;
 import top.mrxiaom.pluginbase.resolver.http.HttpResponseFactory;
 import top.mrxiaom.pluginbase.resolver.http.NoHttpResponseException;
@@ -40,8 +39,6 @@ import top.mrxiaom.pluginbase.resolver.http.impl.DefaultHttpResponseFactory;
 import top.mrxiaom.pluginbase.resolver.http.io.SessionInputBuffer;
 import top.mrxiaom.pluginbase.resolver.http.message.LineParser;
 import top.mrxiaom.pluginbase.resolver.http.message.ParserCursor;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
-import top.mrxiaom.pluginbase.resolver.http.util.Args;
 import top.mrxiaom.pluginbase.resolver.http.util.CharArrayBuffer;
 
 /**
@@ -50,35 +47,10 @@ import top.mrxiaom.pluginbase.resolver.http.util.CharArrayBuffer;
  *
  * @since 4.2
  */
-@SuppressWarnings("deprecation")
 public class DefaultHttpResponseParser extends AbstractMessageParser<HttpResponse> {
 
     private final HttpResponseFactory responseFactory;
     private final CharArrayBuffer lineBuf;
-
-    /**
-     * Creates an instance of this class.
-     *
-     * @param buffer the session input buffer.
-     * @param lineParser the line parser.
-     * @param responseFactory the factory to use to create
-     *    {@link HttpResponse}s.
-     * @param params HTTP parameters.
-     *
-     * @deprecated (4.3) use
-     *   {@link DefaultHttpResponseParser#DefaultHttpResponseParser(SessionInputBuffer, LineParser,
-     *     HttpResponseFactory, MessageConstraints)}
-     */
-    @Deprecated
-    public DefaultHttpResponseParser(
-            final SessionInputBuffer buffer,
-            final LineParser lineParser,
-            final HttpResponseFactory responseFactory,
-            final HttpParams params) {
-        super(buffer, lineParser, params);
-        this.responseFactory = Args.notNull(responseFactory, "Response factory");
-        this.lineBuf = new CharArrayBuffer(128);
-    }
 
     /**
      * Creates new instance of DefaultHttpResponseParser.
@@ -102,22 +74,6 @@ public class DefaultHttpResponseParser extends AbstractMessageParser<HttpRespons
         this.responseFactory = responseFactory != null ? responseFactory :
             DefaultHttpResponseFactory.INSTANCE;
         this.lineBuf = new CharArrayBuffer(128);
-    }
-
-    /**
-     * @since 4.3
-     */
-    public DefaultHttpResponseParser(
-            final SessionInputBuffer buffer,
-            final MessageConstraints constraints) {
-        this(buffer, null, null, constraints);
-    }
-
-    /**
-     * @since 4.3
-     */
-    public DefaultHttpResponseParser(final SessionInputBuffer buffer) {
-        this(buffer, null, null, MessageConstraints.DEFAULT);
     }
 
     @Override

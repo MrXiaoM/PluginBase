@@ -139,11 +139,7 @@ public class DefaultRepositoryEventDispatcher implements RepositoryEventDispatch
                 default:
                     throw new IllegalStateException("unknown repository event type " + event.getType());
             }
-        } catch (Exception | LinkageError e) {
-            logError(e, listener);
+        } catch (Exception | LinkageError ignored) {
         }
-    }
-
-    private void logError(Throwable e, Object listener) {
     }
 }

@@ -66,8 +66,4 @@ public final class DependencyManagerUtils {
      * @since 1.1.0
      */
     public static final String NODE_DATA_PREMANAGED_PROPERTIES = "premanaged.properties";
-
-    private static <T> T cast(Object obj, Class<T> type) {
-        return type.isInstance(obj) ? type.cast(obj) : null;
-    }
 }

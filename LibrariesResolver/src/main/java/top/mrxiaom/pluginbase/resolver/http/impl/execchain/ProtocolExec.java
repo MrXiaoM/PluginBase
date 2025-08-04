@@ -44,12 +44,10 @@ import top.mrxiaom.pluginbase.resolver.http.client.methods.CloseableHttpResponse
 import top.mrxiaom.pluginbase.resolver.http.client.methods.HttpExecutionAware;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.HttpRequestWrapper;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.HttpUriRequest;
-import top.mrxiaom.pluginbase.resolver.http.client.params.ClientPNames;
 import top.mrxiaom.pluginbase.resolver.http.client.protocol.HttpClientContext;
 import top.mrxiaom.pluginbase.resolver.http.client.utils.URIUtils;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.HttpRoute;
 import top.mrxiaom.pluginbase.resolver.http.impl.client.BasicCredentialsProvider;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpCoreContext;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpProcessor;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
@@ -124,24 +122,9 @@ public class ProtocolExec implements ClientExecChain {
         // Re-write request URI if needed
         rewriteRequestURI(request, route, context.getRequestConfig().isNormalizeUri());
 
-        final HttpParams params = request.getParams();
-        HttpHost virtualHost = (HttpHost) params.getParameter(ClientPNames.VIRTUAL_HOST);
-        // HTTPCLIENT-1092 - add the port if necessary
-        if (virtualHost != null && virtualHost.getPort() == -1) {
-            final int port = route.getTargetHost().getPort();
-            if (port != -1) {
-                virtualHost = new HttpHost(virtualHost.getHostName(), port,
-                    virtualHost.getSchemeName());
-            }
-        }
-
         HttpHost target = null;
-        if (virtualHost != null) {
-            target = virtualHost;
-        } else {
-            if (uri != null && uri.isAbsolute() && uri.getHost() != null) {
-                target = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
-            }
+        if (uri != null && uri.isAbsolute() && uri.getHost() != null) {
+            target = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
         }
         if (target == null) {
             target = request.getTarget();
@@ -179,13 +162,7 @@ public class ProtocolExec implements ClientExecChain {
             context.setAttribute(HttpCoreContext.HTTP_RESPONSE, response);
             this.httpProcessor.process(response, context);
             return response;
-        } catch (final RuntimeException ex) {
-            response.close();
-            throw ex;
-        } catch (final IOException ex) {
-            response.close();
-            throw ex;
-        } catch (final HttpException ex) {
+        } catch (final RuntimeException | HttpException | IOException ex) {
             response.close();
             throw ex;
         }

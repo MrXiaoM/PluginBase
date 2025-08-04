@@ -19,7 +19,6 @@ package top.mrxiaom.pluginbase.resolver.http.util.codec.binary;
 
 import top.mrxiaom.pluginbase.resolver.http.util.codec.BinaryDecoder;
 import top.mrxiaom.pluginbase.resolver.http.util.codec.BinaryEncoder;
-import top.mrxiaom.pluginbase.resolver.http.util.codec.DecoderException;
 import top.mrxiaom.pluginbase.resolver.http.util.codec.EncoderException;
 
 /**
@@ -90,7 +89,7 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
         for (int ii = 0, jj = asciiLength - 1; ii < raw.length; ii++, jj -= 8) {
             for (int bits = 0; bits < BITS.length; ++bits) {
                 if (ascii[jj - bits] == '1') {
-                    raw[ii] |= BITS[bits];
+                    raw[ii] |= (byte) BITS[bits];
                 }
             }
         }
@@ -123,7 +122,7 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
         for (int ii = 0, jj = asciiLength - 1; ii < raw.length; ii++, jj -= 8) {
             for (int bits = 0; bits < BITS.length; ++bits) {
                 if (ascii[jj - bits] == '1') {
-                    raw[ii] |= BITS[bits];
+                    raw[ii] |= (byte) BITS[bits];
                 }
             }
         }
@@ -203,17 +202,6 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     }
 
     /**
-     * Converts an array of raw binary data into a String of ASCII 0 and 1 characters.
-     *
-     * @param raw
-     *                  the raw binary data to convert
-     * @return a String of 0 and 1 characters representing the binary data
-     */
-    public static String toAsciiString(final byte[] raw) {
-        return new String(toAsciiChars(raw));
-    }
-
-    /**
      * Decodes a byte array where each byte represents an ASCII '0' or '1'.
      *
      * @param ascii
@@ -223,32 +211,6 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
     @Override
     public byte[] decode(final byte[] ascii) {
         return fromAscii(ascii);
-    }
-
-    /**
-     * Decodes a byte array where each byte represents an ASCII '0' or '1'.
-     *
-     * @param ascii
-     *                  each byte represents an ASCII '0' or '1'
-     * @return the raw encoded binary where each bit corresponds to a byte in the byte array argument
-     * @throws DecoderException
-     *                  if argument is not a byte[], char[] or String
-     */
-    @Override
-    public Object decode(final Object ascii) throws DecoderException {
-        if (ascii == null) {
-            return EMPTY_BYTE_ARRAY;
-        }
-        if (ascii instanceof byte[]) {
-            return fromAscii((byte[]) ascii);
-        }
-        if (ascii instanceof char[]) {
-            return fromAscii((char[]) ascii);
-        }
-        if (ascii instanceof String) {
-            return fromAscii(((String) ascii).toCharArray());
-        }
-        throw new DecoderException("argument not a byte array");
     }
 
     /**
@@ -278,19 +240,5 @@ public class BinaryCodec implements BinaryDecoder, BinaryEncoder {
             throw new EncoderException("argument not a byte array");
         }
         return toAsciiChars((byte[]) raw);
-    }
-
-    /**
-     * Decodes a String where each char of the String represents an ASCII '0' or '1'.
-     *
-     * @param ascii
-     *                  String of '0' and '1' characters
-     * @return the raw encoded binary where each bit corresponds to a byte in the byte array argument
-     */
-    public byte[] toByteArray(final String ascii) {
-        if (ascii == null) {
-            return EMPTY_BYTE_ARRAY;
-        }
-        return fromAscii(ascii.toCharArray());
     }
 }

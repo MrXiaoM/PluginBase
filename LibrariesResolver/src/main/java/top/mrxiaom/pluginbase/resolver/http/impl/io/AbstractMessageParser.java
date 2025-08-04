@@ -42,8 +42,6 @@ import top.mrxiaom.pluginbase.resolver.http.io.HttpMessageParser;
 import top.mrxiaom.pluginbase.resolver.http.io.SessionInputBuffer;
 import top.mrxiaom.pluginbase.resolver.http.message.BasicLineParser;
 import top.mrxiaom.pluginbase.resolver.http.message.LineParser;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParamConfig;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
 import top.mrxiaom.pluginbase.resolver.http.util.CharArrayBuffer;
 
@@ -53,7 +51,6 @@ import top.mrxiaom.pluginbase.resolver.http.util.CharArrayBuffer;
  *
  * @since 4.0
  */
-@SuppressWarnings("deprecation")
 public abstract class AbstractMessageParser<T extends HttpMessage> implements HttpMessageParser<T> {
 
     private static final int HEAD_LINE    = 0;
@@ -66,31 +63,6 @@ public abstract class AbstractMessageParser<T extends HttpMessage> implements Ht
 
     private int state;
     private T message;
-
-    /**
-     * Creates an instance of AbstractMessageParser.
-     *
-     * @param buffer the session input buffer.
-     * @param parser the line parser.
-     * @param params HTTP parameters.
-     *
-     * @deprecated (4.3) use {@link AbstractMessageParser#AbstractMessageParser(SessionInputBuffer,
-     *   LineParser, MessageConstraints)}
-     */
-    @Deprecated
-    public AbstractMessageParser(
-            final SessionInputBuffer buffer,
-            final LineParser parser,
-            final HttpParams params) {
-        super();
-        Args.notNull(buffer, "Session input buffer");
-        Args.notNull(params, "HTTP parameters");
-        this.sessionBuffer = buffer;
-        this.messageConstraints = HttpParamConfig.getMessageConstraints(params);
-        this.lineParser = (parser != null) ? parser : BasicLineParser.INSTANCE;
-        this.headerLines = new ArrayList<>();
-        this.state = HEAD_LINE;
-    }
 
     /**
      * Creates new instance of AbstractMessageParser.

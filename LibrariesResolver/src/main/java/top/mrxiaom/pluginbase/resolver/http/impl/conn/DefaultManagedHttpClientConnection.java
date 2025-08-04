@@ -78,12 +78,6 @@ public class DefaultManagedHttpClientConnection extends DefaultBHttpClientConnec
         this.attributes = new ConcurrentHashMap<>();
     }
 
-    public DefaultManagedHttpClientConnection(
-            final String id,
-            final int bufferSize) {
-        this(id, bufferSize, bufferSize, null, null, null, null, null, null, null);
-    }
-
     @Override
     public String getId() {
         return this.id;

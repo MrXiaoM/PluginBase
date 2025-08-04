@@ -27,7 +27,6 @@
 
 package top.mrxiaom.pluginbase.resolver.http.protocol;
 
-import top.mrxiaom.pluginbase.resolver.http.HttpException;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.HttpResponse;
 

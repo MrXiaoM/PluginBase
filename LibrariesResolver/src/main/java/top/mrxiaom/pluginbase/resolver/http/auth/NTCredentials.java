@@ -168,12 +168,11 @@ public class NTCredentials implements Credentials, Serializable {
 
     @Override
     public String toString() {
-        String buffer = "[principal: " +
+        return "[principal: " +
                 this.principal +
                 "][workstation: " +
                 this.workstation +
                 "]";
-        return buffer;
     }
 
 }

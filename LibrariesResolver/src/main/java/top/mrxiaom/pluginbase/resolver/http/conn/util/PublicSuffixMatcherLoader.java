@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import top.mrxiaom.pluginbase.resolver.http.Consts;
@@ -56,21 +57,15 @@ public final class PublicSuffixMatcherLoader {
 
     public static PublicSuffixMatcher load(final URL url) throws IOException {
         Args.notNull(url, "URL");
-        final InputStream in = url.openStream();
-        try {
+        try (InputStream in = url.openStream()) {
             return load(in);
-        } finally {
-            in.close();
         }
     }
 
     public static PublicSuffixMatcher load(final File file) throws IOException {
         Args.notNull(file, "File");
-        final InputStream in = new FileInputStream(file);
-        try {
+        try (InputStream in = new FileInputStream(file)) {
             return load(in);
-        } finally {
-            in.close();
         }
     }
 
@@ -89,7 +84,7 @@ public final class PublicSuffixMatcherLoader {
                             // Should never happen
                         }
                     } else {
-                        DEFAULT_INSTANCE = new PublicSuffixMatcher(DomainType.ICANN, Arrays.asList("com"), null);
+                        DEFAULT_INSTANCE = new PublicSuffixMatcher(DomainType.ICANN, Collections.singletonList("com"), null);
                     }
                 }
             }

@@ -352,7 +352,7 @@ public class RequestConfig implements Cloneable {
 
     @Override
     public String toString() {
-        String builder = "[" +
+        return "[" +
                 "expectContinueEnabled=" + expectContinueEnabled +
                 ", proxy=" + proxy +
                 ", localAddress=" + localAddress +
@@ -370,7 +370,6 @@ public class RequestConfig implements Cloneable {
                 ", contentCompressionEnabled=" + contentCompressionEnabled +
                 ", normalizeUri=" + normalizeUri +
                 "]";
-        return builder;
     }
 
     public static RequestConfig.Builder custom() {

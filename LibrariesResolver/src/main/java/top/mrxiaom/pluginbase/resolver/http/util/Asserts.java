@@ -52,17 +52,4 @@ public class Asserts {
             throw new IllegalStateException(name + " is null");
         }
     }
-
-    public static void notEmpty(final CharSequence s, final String name) {
-        if (TextUtils.isEmpty(s)) {
-            throw new IllegalStateException(name + " is empty");
-        }
-    }
-
-    public static void notBlank(final CharSequence s, final String name) {
-        if (TextUtils.isBlank(s)) {
-            throw new IllegalStateException(name + " is blank");
-        }
-    }
-
 }

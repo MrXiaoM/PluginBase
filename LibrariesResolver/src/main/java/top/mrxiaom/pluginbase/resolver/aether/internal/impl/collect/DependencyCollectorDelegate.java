@@ -82,10 +82,7 @@ public abstract class DependencyCollectorDelegate implements DependencyCollector
 
     /**
      * Default ctor for SL.
-     *
-     * @deprecated Will be dropped once SL gone.
      */
-    @Deprecated
     protected DependencyCollectorDelegate() {
         // enables default constructor
     }
@@ -230,8 +227,6 @@ public abstract class DependencyCollectorDelegate implements DependencyCollector
 
             errorPath = results.getErrorPath();
         }
-
-        long time2 = System.nanoTime();
 
         DependencyGraphTransformer transformer = session.getDependencyGraphTransformer();
         if (transformer != null) {

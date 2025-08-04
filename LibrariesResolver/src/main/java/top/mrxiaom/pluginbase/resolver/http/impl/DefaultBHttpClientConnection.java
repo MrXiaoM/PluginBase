@@ -100,18 +100,6 @@ public class DefaultBHttpClientConnection extends BHttpConnectionBase
             DefaultHttpResponseParserFactory.INSTANCE).create(getSessionInputBuffer(), constraints);
     }
 
-    public DefaultBHttpClientConnection(
-            final int bufferSize,
-            final CharsetDecoder charDecoder,
-            final CharsetEncoder charEncoder,
-            final MessageConstraints constraints) {
-        this(bufferSize, bufferSize, charDecoder, charEncoder, constraints, null, null, null, null);
-    }
-
-    public DefaultBHttpClientConnection(final int bufferSize) {
-        this(bufferSize, bufferSize, null, null, null, null, null, null, null);
-    }
-
     protected void onResponseReceived(final HttpResponse response) {
     }
 

@@ -30,8 +30,6 @@ package top.mrxiaom.pluginbase.resolver.http.message;
 import top.mrxiaom.pluginbase.resolver.http.Header;
 import top.mrxiaom.pluginbase.resolver.http.HeaderIterator;
 import top.mrxiaom.pluginbase.resolver.http.HttpMessage;
-import top.mrxiaom.pluginbase.resolver.http.params.BasicHttpParams;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
 
 /**
@@ -39,29 +37,12 @@ import top.mrxiaom.pluginbase.resolver.http.util.Args;
  *
  * @since 4.0
  */
-@SuppressWarnings("deprecation")
 public abstract class AbstractHttpMessage implements HttpMessage {
 
     protected HeaderGroup headergroup;
 
-    /**
-     * @deprecated Do not use.
-     */
-    @Deprecated
-    protected HttpParams params;
-
-    /**
-     * @deprecated (4.3) use {@link AbstractHttpMessage#AbstractHttpMessage()}
-     */
-    @Deprecated
-    protected AbstractHttpMessage(final HttpParams params) {
-        super();
-        this.headergroup = new HeaderGroup();
-        this.params = params;
-    }
-
     protected AbstractHttpMessage() {
-        this(null);
+        this.headergroup = new HeaderGroup();
     }
 
     // non-javadoc, see interface HttpMessage
@@ -158,24 +139,4 @@ public abstract class AbstractHttpMessage implements HttpMessage {
         return this.headergroup.iterator(name);
     }
 
-    /**
-     * @deprecated (4.3) use constructor parameters of configuration API provided by HttpClient
-     */
-    @Override
-    @Deprecated
-    public HttpParams getParams() {
-        if (this.params == null) {
-            this.params = new BasicHttpParams();
-        }
-        return this.params;
-    }
-
-    /**
-     * @deprecated (4.3) use constructor parameters of configuration API provided by HttpClient
-     */
-    @Override
-    @Deprecated
-    public void setParams(final HttpParams params) {
-        this.params = Args.notNull(params, "HTTP parameters");
-    }
 }

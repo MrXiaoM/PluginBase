@@ -18,8 +18,6 @@
  */
 package top.mrxiaom.pluginbase.resolver.aether.util.artifact;
 
-import java.util.Objects;
-
 import top.mrxiaom.pluginbase.resolver.aether.artifact.Artifact;
 
 /**
@@ -72,26 +70,6 @@ public final class ArtifactIdUtils {
     }
 
     /**
-     * Creates an artifact identifier of the form
-     * {@code <groupId>:<artifactId>:<extension>[:<classifier>]:<baseVersion>}.
-     *
-     * @param artifact The artifact to create an identifer for, may be {@code null}.
-     * @return The artifact identifier or {@code null} if the input was {@code null}.
-     */
-    public static String toBaseId(Artifact artifact) {
-        String id = null;
-        if (artifact != null) {
-            id = toId(
-                    artifact.getGroupId(),
-                    artifact.getArtifactId(),
-                    artifact.getExtension(),
-                    artifact.getClassifier(),
-                    artifact.getBaseVersion());
-        }
-        return id;
-    }
-
-    /**
      * Creates an artifact identifier of the form {@code <groupId>:<artifactId>:<extension>[:<classifier>]}.
      *
      * @param artifact The artifact to create an identifer for, may be {@code null}.
@@ -133,92 +111,10 @@ public final class ArtifactIdUtils {
         if (extension != null) {
             buffer.append(extension);
         }
-        if (classifier != null && classifier.length() > 0) {
+        if (classifier != null && !classifier.isEmpty()) {
             buffer.append(SEP).append(classifier);
         }
 
         return buffer;
-    }
-
-    /**
-     * Determines whether two artifacts have the same identifier. This method is equivalent to calling
-     * {@link String#equals(Object)} on the return values from {@link #toId(Artifact)} for the artifacts but does not
-     * incur the overhead of creating temporary strings.
-     *
-     * @param artifact1 The first artifact, may be {@code null}.
-     * @param artifact2 The second artifact, may be {@code null}.
-     * @return {@code true} if both artifacts are not {@code null} and have equal ids, {@code false} otherwise.
-     */
-    public static boolean equalsId(Artifact artifact1, Artifact artifact2) {
-        if (artifact1 == null || artifact2 == null) {
-            return false;
-        }
-        if (!Objects.equals(artifact1.getArtifactId(), artifact2.getArtifactId())) {
-            return false;
-        }
-        if (!Objects.equals(artifact1.getGroupId(), artifact2.getGroupId())) {
-            return false;
-        }
-        if (!Objects.equals(artifact1.getExtension(), artifact2.getExtension())) {
-            return false;
-        }
-        if (!Objects.equals(artifact1.getClassifier(), artifact2.getClassifier())) {
-            return false;
-        }
-        return Objects.equals(artifact1.getVersion(), artifact2.getVersion());
-    }
-
-    /**
-     * Determines whether two artifacts have the same base identifier. This method is equivalent to calling
-     * {@link String#equals(Object)} on the return values from {@link #toBaseId(Artifact)} for the artifacts but does
-     * not incur the overhead of creating temporary strings.
-     *
-     * @param artifact1 The first artifact, may be {@code null}.
-     * @param artifact2 The second artifact, may be {@code null}.
-     * @return {@code true} if both artifacts are not {@code null} and have equal base ids, {@code false} otherwise.
-     */
-    public static boolean equalsBaseId(Artifact artifact1, Artifact artifact2) {
-        if (artifact1 == null || artifact2 == null) {
-            return false;
-        }
-        if (!Objects.equals(artifact1.getArtifactId(), artifact2.getArtifactId())) {
-            return false;
-        }
-        if (!Objects.equals(artifact1.getGroupId(), artifact2.getGroupId())) {
-            return false;
-        }
-        if (!Objects.equals(artifact1.getExtension(), artifact2.getExtension())) {
-            return false;
-        }
-        if (!Objects.equals(artifact1.getClassifier(), artifact2.getClassifier())) {
-            return false;
-        }
-        return Objects.equals(artifact1.getBaseVersion(), artifact2.getBaseVersion());
-    }
-
-    /**
-     * Determines whether two artifacts have the same versionless identifier. This method is equivalent to calling
-     * {@link String#equals(Object)} on the return values from {@link #toVersionlessId(Artifact)} for the artifacts but
-     * does not incur the overhead of creating temporary strings.
-     *
-     * @param artifact1 The first artifact, may be {@code null}.
-     * @param artifact2 The second artifact, may be {@code null}.
-     * @return {@code true} if both artifacts are not {@code null} and have equal versionless ids, {@code false}
-     *         otherwise.
-     */
-    public static boolean equalsVersionlessId(Artifact artifact1, Artifact artifact2) {
-        if (artifact1 == null || artifact2 == null) {
-            return false;
-        }
-        if (!Objects.equals(artifact1.getArtifactId(), artifact2.getArtifactId())) {
-            return false;
-        }
-        if (!Objects.equals(artifact1.getGroupId(), artifact2.getGroupId())) {
-            return false;
-        }
-        if (!Objects.equals(artifact1.getExtension(), artifact2.getExtension())) {
-            return false;
-        }
-        return Objects.equals(artifact1.getClassifier(), artifact2.getClassifier());
     }
 }

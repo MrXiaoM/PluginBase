@@ -62,51 +62,6 @@ public class HttpRequestFutureTask<V> extends FutureTask<V> {
         return super.cancel(mayInterruptIfRunning);
     }
 
-    /**
-     * @return the time in millis the task was scheduled.
-     */
-    public long scheduledTime() {
-        return callable.getScheduled();
-    }
-
-    /**
-     * @return the time in millis the task was started.
-     */
-    public long startedTime() {
-        return callable.getStarted();
-    }
-
-    /**
-     * @return the time in millis the task was finished/cancelled.
-     */
-    public long endedTime() {
-        if (isDone()) {
-            return callable.getEnded();
-        }
-        throw new IllegalStateException("Task is not done yet");
-    }
-
-    /**
-     * @return the time in millis it took to make the request (excluding the time it was
-     * scheduled to be executed).
-     */
-    public long requestDuration() {
-        if (isDone()) {
-            return endedTime() - startedTime();
-        }
-        throw new IllegalStateException("Task is not done yet");
-    }
-
-    /**
-     * @return the time in millis it took to execute the task from the moment it was scheduled.
-     */
-    public long taskDuration() {
-        if (isDone()) {
-            return endedTime() - scheduledTime();
-        }
-        throw new IllegalStateException("Task is not done yet");
-    }
-
     @Override
     public String toString() {
         return request.getRequestLine().getUri();

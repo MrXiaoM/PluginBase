@@ -45,16 +45,12 @@ import top.mrxiaom.pluginbase.resolver.http.client.methods.CloseableHttpResponse
 import top.mrxiaom.pluginbase.resolver.http.client.methods.Configurable;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.HttpExecutionAware;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.HttpRequestWrapper;
-import top.mrxiaom.pluginbase.resolver.http.client.params.ClientPNames;
-import top.mrxiaom.pluginbase.resolver.http.client.params.HttpClientParamConfig;
 import top.mrxiaom.pluginbase.resolver.http.client.protocol.HttpClientContext;
 import top.mrxiaom.pluginbase.resolver.http.config.Lookup;
 import top.mrxiaom.pluginbase.resolver.http.conn.HttpClientConnectionManager;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.HttpRoute;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.HttpRoutePlanner;
 import top.mrxiaom.pluginbase.resolver.http.impl.execchain.ClientExecChain;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParamsNames;
 import top.mrxiaom.pluginbase.resolver.http.protocol.BasicHttpContext;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpContext;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
@@ -65,7 +61,6 @@ import top.mrxiaom.pluginbase.resolver.http.util.Args;
  * @since 4.3
  */
 @Contract(threading = ThreadingBehavior.SAFE_CONDITIONAL)
-@SuppressWarnings("deprecation")
 class InternalHttpClient extends CloseableHttpClient implements Configurable {
 
     private final ClientExecChain execChain;
@@ -101,11 +96,7 @@ class InternalHttpClient extends CloseableHttpClient implements Configurable {
             final HttpHost target,
             final HttpRequest request,
             final HttpContext context) throws HttpException {
-        HttpHost host = target;
-        if (host == null) {
-            host = (HttpHost) request.getParams().getParameter(ClientPNames.DEFAULT_HOST);
-        }
-        return this.routePlanner.determineRoute(host, request, context);
+        return this.routePlanner.determineRoute(target, request, context);
     }
 
     private void setupContext(final HttpClientContext context) {
@@ -144,16 +135,6 @@ class InternalHttpClient extends CloseableHttpClient implements Configurable {
             if (request instanceof Configurable) {
                 config = ((Configurable) request).getConfig();
             }
-            if (config == null) {
-                final HttpParams params = request.getParams();
-                if (params instanceof HttpParamsNames) {
-                    if (!((HttpParamsNames) params).getNames().isEmpty()) {
-                        config = HttpClientParamConfig.getRequestConfig(params, this.defaultConfig);
-                    }
-                } else {
-                    config = HttpClientParamConfig.getRequestConfig(params, this.defaultConfig);
-                }
-            }
             if (config != null) {
                 localcontext.setRequestConfig(config);
             }
@@ -181,10 +162,5 @@ class InternalHttpClient extends CloseableHttpClient implements Configurable {
             }
         }
         this.connManager.shutdown();
-    }
-
-    @Override
-    public HttpParams getParams() {
-        throw new UnsupportedOperationException();
     }
 }

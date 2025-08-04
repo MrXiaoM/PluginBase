@@ -61,11 +61,6 @@ public class DefaultHttpResponseParserFactory implements HttpMessageParserFactor
                 : DefaultHttpResponseFactory.INSTANCE;
     }
 
-    public DefaultHttpResponseParserFactory(
-            final HttpResponseFactory responseFactory) {
-        this(null, responseFactory);
-    }
-
     public DefaultHttpResponseParserFactory() {
         this(null, null);
     }

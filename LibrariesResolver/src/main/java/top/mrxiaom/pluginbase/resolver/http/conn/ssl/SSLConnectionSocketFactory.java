@@ -133,33 +133,11 @@ import top.mrxiaom.pluginbase.resolver.http.util.TextUtils;
  * @since 4.3
  */
 @Contract(threading = ThreadingBehavior.SAFE)
-@SuppressWarnings("deprecation")
 public class SSLConnectionSocketFactory implements LayeredConnectionSocketFactory {
 
     public static final String TLS   = "TLS";
     public static final String SSL   = "SSL";
     public static final String SSLV2 = "SSLv2";
-
-    /**
-     * @deprecated Use {@link AllowAllHostnameVerifier#INSTANCE}.
-     */
-    @Deprecated
-    public static final X509HostnameVerifier ALLOW_ALL_HOSTNAME_VERIFIER
-        = AllowAllHostnameVerifier.INSTANCE;
-
-    /**
-     * @deprecated Use {@link BrowserCompatHostnameVerifier#INSTANCE}.
-     */
-    @Deprecated
-    public static final X509HostnameVerifier BROWSER_COMPATIBLE_HOSTNAME_VERIFIER
-        = BrowserCompatHostnameVerifier.INSTANCE;
-
-    /**
-     * @deprecated Use {@link StrictHostnameVerifier#INSTANCE}.
-     */
-    @Deprecated
-    public static final X509HostnameVerifier STRICT_HOSTNAME_VERIFIER
-        = StrictHostnameVerifier.INSTANCE;
 
     private static final String WEAK_KEY_EXCHANGES
             = "^(TLS|SSL)_(NULL|ECDH_anon|DH_anon|DH_anon_EXPORT|DHE_RSA_EXPORT|DHE_DSS_EXPORT|"
@@ -227,55 +205,6 @@ public class SSLConnectionSocketFactory implements LayeredConnectionSocketFactor
 
     public SSLConnectionSocketFactory(final SSLContext sslContext) {
         this(sslContext, getDefaultHostnameVerifier());
-    }
-
-    /**
-     * @deprecated (4.4) Use {@link #SSLConnectionSocketFactory(javax.net.ssl.SSLContext,
-     *   javax.net.ssl.HostnameVerifier)}
-     */
-    @Deprecated
-    public SSLConnectionSocketFactory(
-            final SSLContext sslContext, final X509HostnameVerifier hostnameVerifier) {
-        this(Args.notNull(sslContext, "SSL context").getSocketFactory(),
-                null, null, hostnameVerifier);
-    }
-
-    /**
-     * @deprecated (4.4) Use {@link #SSLConnectionSocketFactory(javax.net.ssl.SSLContext,
-     *   String[], String[], javax.net.ssl.HostnameVerifier)}
-     */
-    @Deprecated
-    public SSLConnectionSocketFactory(
-            final SSLContext sslContext,
-            final String[] supportedProtocols,
-            final String[] supportedCipherSuites,
-            final X509HostnameVerifier hostnameVerifier) {
-        this(Args.notNull(sslContext, "SSL context").getSocketFactory(),
-                supportedProtocols, supportedCipherSuites, hostnameVerifier);
-    }
-
-    /**
-     * @deprecated (4.4) Use {@link #SSLConnectionSocketFactory(javax.net.ssl.SSLSocketFactory,
-     *   javax.net.ssl.HostnameVerifier)}
-     */
-    @Deprecated
-    public SSLConnectionSocketFactory(
-            final javax.net.ssl.SSLSocketFactory socketfactory,
-            final X509HostnameVerifier hostnameVerifier) {
-        this(socketfactory, null, null, hostnameVerifier);
-    }
-
-    /**
-     * @deprecated (4.4) Use {@link #SSLConnectionSocketFactory(javax.net.ssl.SSLSocketFactory,
-     *   String[], String[], javax.net.ssl.HostnameVerifier)}
-     */
-    @Deprecated
-    public SSLConnectionSocketFactory(
-            final javax.net.ssl.SSLSocketFactory socketfactory,
-            final String[] supportedProtocols,
-            final String[] supportedCipherSuites,
-            final X509HostnameVerifier hostnameVerifier) {
-        this(socketfactory, supportedProtocols, supportedCipherSuites, (HostnameVerifier) hostnameVerifier);
     }
 
     /**
@@ -389,14 +318,14 @@ public class SSLConnectionSocketFactory implements LayeredConnectionSocketFactor
         } else {
             // If supported protocols are not explicitly set, remove all SSL protocol versions
             final String[] allProtocols = sslsock.getEnabledProtocols();
-            final List<String> enabledProtocols = new ArrayList<String>(allProtocols.length);
+            final List<String> enabledProtocols = new ArrayList<>(allProtocols.length);
             for (final String protocol: allProtocols) {
                 if (!protocol.startsWith("SSL")) {
                     enabledProtocols.add(protocol);
                 }
             }
             if (!enabledProtocols.isEmpty()) {
-                sslsock.setEnabledProtocols(enabledProtocols.toArray(new String[enabledProtocols.size()]));
+                sslsock.setEnabledProtocols(enabledProtocols.toArray(new String[0]));
             }
         }
         if (supportedCipherSuites != null) {
@@ -404,14 +333,14 @@ public class SSLConnectionSocketFactory implements LayeredConnectionSocketFactor
         } else {
             // If cipher suites are not explicitly set, remove all insecure ones
             final String[] allCipherSuites = sslsock.getEnabledCipherSuites();
-            final List<String> enabledCipherSuites = new ArrayList<String>(allCipherSuites.length);
+            final List<String> enabledCipherSuites = new ArrayList<>(allCipherSuites.length);
             for (final String cipherSuite : allCipherSuites) {
                 if (!isWeakCipherSuite(cipherSuite)) {
                     enabledCipherSuites.add(cipherSuite);
                 }
             }
             if (!enabledCipherSuites.isEmpty()) {
-                sslsock.setEnabledCipherSuites(enabledCipherSuites.toArray(new String[enabledCipherSuites.size()]));
+                sslsock.setEnabledCipherSuites(enabledCipherSuites.toArray(new String[0]));
             }
         }
 

@@ -63,11 +63,11 @@ public final class PublicSuffixMatcher {
             final DomainType domainType, final Collection<String> rules, final Collection<String> exceptions) {
         Args.notNull(domainType,  "Domain type");
         Args.notNull(rules,  "Domain suffix rules");
-        this.rules = new ConcurrentHashMap<String, DomainType>(rules.size());
+        this.rules = new ConcurrentHashMap<>(rules.size());
         for (final String rule: rules) {
             this.rules.put(rule, domainType);
         }
-        this.exceptions = new ConcurrentHashMap<String, DomainType>();
+        this.exceptions = new ConcurrentHashMap<>();
         if (exceptions != null) {
             for (final String exception: exceptions) {
                 this.exceptions.put(exception, domainType);
@@ -80,8 +80,8 @@ public final class PublicSuffixMatcher {
      */
     public PublicSuffixMatcher(final Collection<PublicSuffixList> lists) {
         Args.notNull(lists,  "Domain suffix lists");
-        this.rules = new ConcurrentHashMap<String, DomainType>();
-        this.exceptions = new ConcurrentHashMap<String, DomainType>();
+        this.rules = new ConcurrentHashMap<>();
+        this.exceptions = new ConcurrentHashMap<>();
         for (final PublicSuffixList list: lists) {
             final DomainType domainType = list.getType();
             final List<String> rules = list.getRules();
@@ -136,8 +136,7 @@ public final class PublicSuffixMatcher {
         if (domain.startsWith(".")) {
             return null;
         }
-        final String normalized = DnsUtils.normalize(domain);
-        String segment = normalized;
+        String segment = DnsUtils.normalize(domain);
         String result = null;
         while (segment != null) {
             // An exception rule takes priority over any other matching rule.

@@ -27,8 +27,6 @@
 
 package top.mrxiaom.pluginbase.resolver.http.entity;
 
-import java.io.IOException;
-
 import top.mrxiaom.pluginbase.resolver.http.Header;
 import top.mrxiaom.pluginbase.resolver.http.HttpEntity;
 import top.mrxiaom.pluginbase.resolver.http.message.BasicHeader;

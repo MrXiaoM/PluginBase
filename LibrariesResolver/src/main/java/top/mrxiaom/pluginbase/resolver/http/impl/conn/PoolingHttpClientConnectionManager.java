@@ -61,7 +61,6 @@ import top.mrxiaom.pluginbase.resolver.http.conn.socket.PlainConnectionSocketFac
 import top.mrxiaom.pluginbase.resolver.http.conn.ssl.SSLConnectionSocketFactory;
 import top.mrxiaom.pluginbase.resolver.http.pool.ConnFactory;
 import top.mrxiaom.pluginbase.resolver.http.pool.ConnPoolControl;
-import top.mrxiaom.pluginbase.resolver.http.pool.PoolEntry;
 import top.mrxiaom.pluginbase.resolver.http.pool.PoolEntryCallback;
 import top.mrxiaom.pluginbase.resolver.http.pool.PoolStats;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpContext;
@@ -386,19 +385,14 @@ public class PoolingHttpClientConnectionManager
     @Override
     public void shutdown() {
         if (this.isShutDown.compareAndSet(false, true)) {
-            this.pool.enumLeased(new PoolEntryCallback<HttpRoute, ManagedHttpClientConnection>() {
-
-                @Override
-                public void process(final PoolEntry<HttpRoute, ManagedHttpClientConnection> entry) {
-                    final ManagedHttpClientConnection connection = entry.getConnection();
-                    if (connection != null) {
-                        try {
-                            connection.shutdown();
-                        } catch (IOException ignored) {
-                        }
+            this.pool.enumLeased(entry -> {
+                final ManagedHttpClientConnection connection = entry.getConnection();
+                if (connection != null) {
+                    try {
+                        connection.shutdown();
+                    } catch (IOException ignored) {
                     }
                 }
-
             });
             this.pool.shutdown();
         }

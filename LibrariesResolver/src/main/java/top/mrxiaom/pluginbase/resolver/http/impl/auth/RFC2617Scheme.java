@@ -54,28 +54,12 @@ import top.mrxiaom.pluginbase.resolver.http.util.CharsetUtils;
  *
  * @since 4.0
  */
-@SuppressWarnings("deprecation")
 public abstract class RFC2617Scheme extends AuthSchemeBase implements Serializable {
 
     private static final long serialVersionUID = -2845454858205884623L;
 
     private final Map<String, String> params;
     private transient Charset credentialsCharset;
-
-    /**
-     * Creates an instance of {@code RFC2617Scheme} with the given challenge
-     * state.
-     *
-     * @since 4.2
-     *
-     * @deprecated (4.3) do not use.
-     */
-    @Deprecated
-    public RFC2617Scheme(final ChallengeState challengeState) {
-        super(challengeState);
-        this.params = new HashMap<>();
-        this.credentialsCharset = Consts.ASCII;
-    }
 
     /**
      * @since 4.3
@@ -99,11 +83,7 @@ public abstract class RFC2617Scheme extends AuthSchemeBase implements Serializab
     }
 
     String getCredentialsCharset(final HttpRequest request) {
-        String charset = (String) request.getParams().getParameter(AuthPNames.CREDENTIAL_CHARSET);
-        if (charset == null) {
-            charset = getCredentialsCharset().name();
-        }
-        return charset;
+        return getCredentialsCharset().name();
     }
 
     @Override

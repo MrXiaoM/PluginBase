@@ -31,13 +31,11 @@ import java.io.IOException;
 
 import top.mrxiaom.pluginbase.resolver.http.Header;
 import top.mrxiaom.pluginbase.resolver.http.HeaderIterator;
-import top.mrxiaom.pluginbase.resolver.http.HttpException;
 import top.mrxiaom.pluginbase.resolver.http.HttpMessage;
 import top.mrxiaom.pluginbase.resolver.http.io.HttpMessageWriter;
 import top.mrxiaom.pluginbase.resolver.http.io.SessionOutputBuffer;
 import top.mrxiaom.pluginbase.resolver.http.message.BasicLineFormatter;
 import top.mrxiaom.pluginbase.resolver.http.message.LineFormatter;
-import top.mrxiaom.pluginbase.resolver.http.params.HttpParams;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
 import top.mrxiaom.pluginbase.resolver.http.util.CharArrayBuffer;
 
@@ -47,33 +45,11 @@ import top.mrxiaom.pluginbase.resolver.http.util.CharArrayBuffer;
  *
  * @since 4.0
  */
-@SuppressWarnings("deprecation")
 public abstract class AbstractMessageWriter<T extends HttpMessage> implements HttpMessageWriter<T> {
 
     protected final SessionOutputBuffer sessionBuffer;
     protected final CharArrayBuffer lineBuf;
     protected final LineFormatter lineFormatter;
-
-    /**
-     * Creates an instance of AbstractMessageWriter.
-     *
-     * @param buffer the session output buffer.
-     * @param formatter the line formatter.
-     * @param params HTTP parameters.
-     *
-     * @deprecated (4.3) use
-     *   {@link AbstractMessageWriter#AbstractMessageWriter(SessionOutputBuffer, LineFormatter)}
-     */
-    @Deprecated
-    public AbstractMessageWriter(final SessionOutputBuffer buffer,
-                                 final LineFormatter formatter,
-                                 final HttpParams params) {
-        super();
-        Args.notNull(buffer, "Session input buffer");
-        this.sessionBuffer = buffer;
-        this.lineBuf = new CharArrayBuffer(128);
-        this.lineFormatter = (formatter != null) ? formatter : BasicLineFormatter.INSTANCE;
-    }
 
     /**
      * Creates an instance of AbstractMessageWriter.

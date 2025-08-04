@@ -72,12 +72,6 @@ public class DefaultRedirectStrategy implements RedirectStrategy {
 
     public static final int SC_PERMANENT_REDIRECT = 308;
 
-    /**
-     * @deprecated (4.3) use {@link top.mrxiaom.pluginbase.resolver.http.client.protocol.HttpClientContext#REDIRECT_LOCATIONS}.
-     */
-    @Deprecated
-    public static final String REDIRECT_LOCATIONS = "http.protocol.redirect-locations";
-
     public static final DefaultRedirectStrategy INSTANCE = new DefaultRedirectStrategy();
 
     private final String[] redirectMethods;

@@ -30,7 +30,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
@@ -218,13 +217,8 @@ public class URIUtils {
         }
         if (flags.contains(UriFlag.NORMALIZE)) {
             final List<String> originalPathSegments = uribuilder.getPathSegments();
-            final List<String> pathSegments = new ArrayList<String>(originalPathSegments);
-            for (final Iterator<String> it = pathSegments.iterator(); it.hasNext(); ) {
-                final String pathSegment = it.next();
-                if (pathSegment.isEmpty() && it.hasNext()) {
-                    it.remove();
-                }
-            }
+            final List<String> pathSegments = new ArrayList<>(originalPathSegments);
+            pathSegments.removeIf(String::isEmpty);
             if (pathSegments.size() != originalPathSegments.size()) {
                 uribuilder.setPathSegments(pathSegments);
             }
@@ -355,7 +349,7 @@ public class URIUtils {
         }
         final URIBuilder builder = new URIBuilder(uri);
         final List<String> inputSegments = builder.getPathSegments();
-        final Stack<String> outputSegments = new Stack<String>();
+        final Stack<String> outputSegments = new Stack<>();
         for (final String inputSegment : inputSegments) {
             if (".".equals(inputSegment)) {
                 // Do nothing
@@ -429,52 +423,6 @@ public class URIUtils {
             }
         }
         return null;
-    }
-
-    /**
-     * Derives the interpreted (absolute) URI that was used to generate the last
-     * request. This is done by extracting the request-uri and target origin for
-     * the last request and scanning all the redirect locations for the last
-     * fragment identifier, then combining the result into a {@link URI}.
-     *
-     * @param originalURI
-     *            original request before any redirects
-     * @param target
-     *            if the last URI is relative, it is resolved against this target,
-     *            or {@code null} if not available.
-     * @param redirects
-     *            collection of redirect locations since the original request
-     *            or {@code null} if not available.
-     * @return interpreted (absolute) URI
-     */
-    public static URI resolve(
-            final URI originalURI,
-            final HttpHost target,
-            final List<URI> redirects) throws URISyntaxException {
-        Args.notNull(originalURI, "Request URI");
-        final URIBuilder uribuilder;
-        if (redirects == null || redirects.isEmpty()) {
-            uribuilder = new URIBuilder(originalURI);
-        } else {
-            uribuilder = new URIBuilder(redirects.get(redirects.size() - 1));
-            String frag = uribuilder.getFragment();
-            // read interpreted fragment identifier from redirect locations
-            for (int i = redirects.size() - 1; frag == null && i >= 0; i--) {
-                frag = redirects.get(i).getFragment();
-            }
-            uribuilder.setFragment(frag);
-        }
-        // read interpreted fragment identifier from original request
-        if (uribuilder.getFragment() == null) {
-            uribuilder.setFragment(originalURI.getFragment());
-        }
-        // last target origin
-        if (target != null && !uribuilder.isAbsolute()) {
-            uribuilder.setScheme(target.getSchemeName());
-            uribuilder.setHost(target.getHostName());
-            uribuilder.setPort(target.getPort());
-        }
-        return uribuilder.build();
     }
 
     /**
