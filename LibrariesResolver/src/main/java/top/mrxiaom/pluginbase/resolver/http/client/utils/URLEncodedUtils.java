@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
 import top.mrxiaom.pluginbase.resolver.http.Consts;
 import top.mrxiaom.pluginbase.resolver.http.HttpEntity;

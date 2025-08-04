@@ -82,7 +82,6 @@ import top.mrxiaom.pluginbase.resolver.http.util.EntityUtils;
  *
  * @since 4.3
  */
-@SuppressWarnings("deprecation")
 @Contract(threading = ThreadingBehavior.IMMUTABLE_CONDITIONAL)
 public class MainClientExec implements ClientExecChain {
 

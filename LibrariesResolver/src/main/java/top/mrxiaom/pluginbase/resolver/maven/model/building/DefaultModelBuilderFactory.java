@@ -181,28 +181,25 @@ public class DefaultModelBuilderFactory {
      * @return The new model builder instance, never {@code null}.
      */
     public DefaultModelBuilder newInstance() {
-        DefaultModelBuilder modelBuilder = new DefaultModelBuilder();
-
-        modelBuilder.setModelProcessor(newModelProcessor());
-        modelBuilder.setModelValidator(newModelValidator());
-        modelBuilder.setModelNormalizer(newModelNormalizer());
-        modelBuilder.setModelPathTranslator(newModelPathTranslator());
-        modelBuilder.setModelUrlNormalizer(newModelUrlNormalizer());
-        modelBuilder.setModelInterpolator(newModelInterpolator());
-        modelBuilder.setInheritanceAssembler(newInheritanceAssembler());
-        modelBuilder.setProfileInjector(newProfileInjector());
-        modelBuilder.setProfileSelector(newProfileSelector());
-        modelBuilder.setSuperPomProvider(newSuperPomProvider());
-        modelBuilder.setDependencyManagementImporter(newDependencyManagementImporter());
-        modelBuilder.setDependencyManagementInjector(newDependencyManagementInjector());
-        modelBuilder.setLifecycleBindingsInjector(newLifecycleBindingsInjector());
-        modelBuilder.setPluginManagementInjector(newPluginManagementInjector());
-        modelBuilder.setPluginConfigurationExpander(newPluginConfigurationExpander());
-        modelBuilder.setReportConfigurationExpander(newReportConfigurationExpander());
-        modelBuilder.setReportingConverter(newReportingConverter());
-        modelBuilder.setProfileActivationFilePathInterpolator(newProfileActivationFilePathInterpolator());
-
-        return modelBuilder;
+        return new DefaultModelBuilder()
+                .setModelProcessor(newModelProcessor())
+                .setModelValidator(newModelValidator())
+                .setModelNormalizer(newModelNormalizer())
+                .setModelPathTranslator(newModelPathTranslator())
+                .setModelUrlNormalizer(newModelUrlNormalizer())
+                .setModelInterpolator(newModelInterpolator())
+                .setInheritanceAssembler(newInheritanceAssembler())
+                .setProfileInjector(newProfileInjector())
+                .setProfileSelector(newProfileSelector())
+                .setSuperPomProvider(newSuperPomProvider())
+                .setDependencyManagementImporter(newDependencyManagementImporter())
+                .setDependencyManagementInjector(newDependencyManagementInjector())
+                .setLifecycleBindingsInjector(newLifecycleBindingsInjector())
+                .setPluginManagementInjector(newPluginManagementInjector())
+                .setPluginConfigurationExpander(newPluginConfigurationExpander())
+                .setReportConfigurationExpander(newReportConfigurationExpander())
+                .setReportingConverter(newReportingConverter())
+                .setProfileActivationFilePathInterpolator(newProfileActivationFilePathInterpolator());
     }
 
     private static class StubLifecycleBindingsInjector implements LifecycleBindingsInjector {

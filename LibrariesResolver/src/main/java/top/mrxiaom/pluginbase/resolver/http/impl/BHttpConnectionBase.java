@@ -41,7 +41,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import top.mrxiaom.pluginbase.resolver.http.ConnectionClosedException;
 import top.mrxiaom.pluginbase.resolver.http.Header;
-import top.mrxiaom.pluginbase.resolver.http.HttpConnectionMetrics;
 import top.mrxiaom.pluginbase.resolver.http.HttpEntity;
 import top.mrxiaom.pluginbase.resolver.http.HttpException;
 import top.mrxiaom.pluginbase.resolver.http.HttpInetConnection;

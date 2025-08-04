@@ -67,7 +67,6 @@ import top.mrxiaom.pluginbase.resolver.http.util.Args;
  * @since 4.3
  */
 @Contract(threading = ThreadingBehavior.IMMUTABLE_CONDITIONAL)
-@SuppressWarnings("deprecation")
 public class ProtocolExec implements ClientExecChain {
 
     private final ClientExecChain requestExecutor;

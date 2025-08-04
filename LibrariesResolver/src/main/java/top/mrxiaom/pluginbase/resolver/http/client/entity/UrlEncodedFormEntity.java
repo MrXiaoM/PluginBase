@@ -27,7 +27,6 @@
 package top.mrxiaom.pluginbase.resolver.http.client.entity;
 
 import java.nio.charset.Charset;
-import java.util.List;
 
 import top.mrxiaom.pluginbase.resolver.http.NameValuePair;
 import top.mrxiaom.pluginbase.resolver.http.client.utils.URLEncodedUtils;

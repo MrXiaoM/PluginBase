@@ -313,13 +313,12 @@ public class DigestScheme extends RFC2617Scheme {
             final String checksum = encode(digester.digest(EncodingUtils.getBytes(sb.toString(), charset)));
             sb.setLength(0);
             sb.append(checksum).append(':').append(nonce).append(':').append(cnonce);
-            a1 = sb.toString();
         } else {
             // unq(username-value) ":" unq(realm-value) ":" passwd
             sb.setLength(0);
             sb.append(uname).append(':').append(realm).append(':').append(pwd);
-            a1 = sb.toString();
         }
+        a1 = sb.toString();
 
         final String hasha1 = encode(digester.digest(EncodingUtils.getBytes(a1, charset)));
 
@@ -365,14 +364,13 @@ public class DigestScheme extends RFC2617Scheme {
         if (qop == QOP_MISSING) {
             sb.setLength(0);
             sb.append(hasha1).append(':').append(nonce).append(':').append(hasha2);
-            digestValue = sb.toString();
         } else {
             sb.setLength(0);
             sb.append(hasha1).append(':').append(nonce).append(':').append(nc).append(':')
                 .append(cnonce).append(':').append(qop == QOP_AUTH_INT ? "auth-int" : "auth")
                 .append(':').append(hasha2);
-            digestValue = sb.toString();
         }
+        digestValue = sb.toString();
 
         final String digest = encode(digester.digest(EncodingUtils.getAsciiBytes(digestValue)));
 

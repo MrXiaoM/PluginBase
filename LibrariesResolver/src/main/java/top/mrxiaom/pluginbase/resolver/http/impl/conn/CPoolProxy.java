@@ -33,7 +33,6 @@ import java.net.Socket;
 import javax.net.ssl.SSLSession;
 
 import top.mrxiaom.pluginbase.resolver.http.HttpClientConnection;
-import top.mrxiaom.pluginbase.resolver.http.HttpConnectionMetrics;
 import top.mrxiaom.pluginbase.resolver.http.HttpEntityEnclosingRequest;
 import top.mrxiaom.pluginbase.resolver.http.HttpException;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
