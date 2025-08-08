@@ -51,7 +51,7 @@ dependencies {
     compileOnly("de.tr7zw:item-nbt-api:2.15.0")
     compileOnly("com.github.technicallycoded:FoliaLib:0.4.4")
 
-    implementation("org.jetbrains:annotations:24.0.0")
+    compileOnly("org.jetbrains:annotations:24.0.0")
 }
 val targetJavaVersion = 8
 java {
