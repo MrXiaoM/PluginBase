@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
@@ -129,29 +130,33 @@ public class LoadedIcon {
         }
     }
 
-    public static LoadedIcon load(ConfigurationSection section, String id) {
-        ConfigurationSection current = section.getConfigurationSection(id);
+    public static LoadedIcon load(@NotNull ConfigurationSection section) {
+        return load(section, null);
+    }
+
+    public static LoadedIcon load(@NotNull ConfigurationSection section, @Nullable String id) {
+        ConfigurationSection current = id == null ? section : section.getConfigurationSection(id);
         assert current != null;
 
-        String material, materialStr = section.getString(id + ".material");
+        String material, materialStr = current.getString("material");
         if (materialStr != null) {
-            if (!materialStr.contains(":") && section.contains(id + ".data")) { // 兼容旧的选项
-                material = materialStr + ":" + section.getInt(id + ".data");
+            if (!materialStr.contains(":") && current.contains("data")) { // 兼容旧的选项
+                material = materialStr + ":" + current.getInt("data");
             } else material = materialStr;
         } else material = "PAPER";
 
-        int amount = section.getInt(id + ".amount", 1);
-        String display = section.getString(id + ".display", "");
-        List<String> lore = section.getStringList(id + ".lore");
-        boolean glow = section.getBoolean(id + ".glow");
-        Integer customModelData = section.contains(id + ".custom-model-data") ? section.getInt(id + ".custom-model-data") : null;
+        int amount = current.getInt("amount", 1);
+        String display = current.getString("display", "");
+        List<String> lore = current.getStringList("lore");
+        boolean glow = current.getBoolean("glow");
+        Integer customModelData = current.contains("custom-model-data") ? current.getInt("custom-model-data") : null;
         Map<String, String> nbtStrings = new HashMap<>();
-        ConfigurationSection section1 = section.getConfigurationSection(id + ".nbt-strings");
+        ConfigurationSection section1 = current.getConfigurationSection("nbt-strings");
         if (section1 != null) for (String key : section1.getKeys(false)) {
             nbtStrings.put(key, section1.getString(key, ""));
         }
         Map<String, String> nbtInts = new HashMap<>();
-        section1 = section.getConfigurationSection(id + ".nbt-ints");
+        section1 = current.getConfigurationSection("nbt-ints");
         if (section1 != null) for (String key : section1.getKeys(false)) {
             nbtInts.put(key, section1.getString(key, ""));
         }
@@ -162,7 +167,7 @@ public class LoadedIcon {
         List<IAction> dropCommands = loadActions(current, "drop-commands", "drop_commands");
         Object tag = null;
         for (ITagProvider provider : tagProviders) {
-            if ((tag = provider.provide(section, id)) != null) {
+            if ((tag = provider.provide(current)) != null) {
                 break;
             }
         }
