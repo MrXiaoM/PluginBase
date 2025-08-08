@@ -156,7 +156,10 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
         }
 
         public void handleOtherClick(ClickType type, int slot) {
-            Character id = getClickedId(slot);
+            handleOtherClick(type, getClickedId(slot));
+        }
+
+        public void handleOtherClick(ClickType type, Character id) {
             if (id != null) {
                 LoadedIcon icon = otherIcons.get(id);
                 if (icon != null) {

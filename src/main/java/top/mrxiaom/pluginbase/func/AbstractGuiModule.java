@@ -149,7 +149,10 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
         }
 
         public void handleOtherClick(ClickType type, int slot) {
-            Character id = getClickedId(slot);
+            handleOtherClick(type, getClickedId(slot));
+        }
+
+        public void handleOtherClick(ClickType type, Character id) {
             if (id != null) {
                 LoadedIcon icon = otherIcons.get(id);
                 if (icon != null) {
