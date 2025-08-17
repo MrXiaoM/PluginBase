@@ -22,4 +22,7 @@ public interface IModel {
     default ItemStack applyMainIcon(IGui instance, Player player, char id, int index, int appearTimes, AtomicBoolean ignore) {
         return applyMainIcon(instance, player, id, index, appearTimes);
     }
+    default ItemStack applyOtherIcon(IGui instance, Player player, char id, int index, int appearTimes, LoadedIcon icon) {
+        return icon.generateIcon(player);
+    }
 }

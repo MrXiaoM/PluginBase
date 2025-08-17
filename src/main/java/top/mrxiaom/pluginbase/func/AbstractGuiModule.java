@@ -68,11 +68,17 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
     protected void reloadMenuConfig(YamlConfiguration config) {
     }
     protected abstract void loadMainIcon(ConfigurationSection section, String id, LoadedIcon icon);
+    @Nullable
     protected ItemStack applyMainIcon(IGui instance, Player player, char id, int index, int appearTimes) {
         return null;
     }
+    @Nullable
     protected ItemStack applyMainIcon(IGui instance, Player player, char id, int index, int appearTimes, AtomicBoolean ignore) {
         return applyMainIcon(instance, player, id, index, appearTimes);
+    }
+    @Nullable
+    protected ItemStack applyOtherIcon(IGui instance, Player player, char id, int index, int appearTimes, LoadedIcon icon) {
+        return icon.generateIcon(player);
     }
 
     public static char[] getInventory(ConfigurationSection config, String key) {
@@ -113,7 +119,7 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
                 }
                 LoadedIcon icon = otherIcons.get(id);
                 if (icon != null) {
-                    setItem.accept(i, icon.generateIcon(player));
+                    setItem.accept(i, applyOtherIcon(this, player, id, i, appearTimes, icon));
                     continue;
                 }
                 setItem.accept(i, null);

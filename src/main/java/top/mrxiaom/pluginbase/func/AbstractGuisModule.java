@@ -120,7 +120,7 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
                 }
                 LoadedIcon icon = otherIcons.get(id);
                 if (icon != null) {
-                    setItem.accept(i, icon.generateIcon(player));
+                    setItem.accept(i, model.applyOtherIcon(this, player, id, i, appearTimes, icon));
                     continue;
                 }
                 setItem.accept(i, null);
