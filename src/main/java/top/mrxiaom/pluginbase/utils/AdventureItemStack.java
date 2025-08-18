@@ -1,8 +1,16 @@
 package top.mrxiaom.pluginbase.utils;
 
 import com.google.common.collect.Lists;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.changeme.nbtapi.NBTReflectionUtil;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
+import de.tr7zw.changeme.nbtapi.utils.nmsmappings.ReflectionMethod;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.event.HoverEventSource;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -138,6 +146,33 @@ public class AdventureItemStack {
             meta.setCustomModelData(customModelData);
             item.setItemMeta(meta);
         }
+    }
+
+    @SuppressWarnings({"deprecation"})
+    public static HoverEventSource<?> toHoverEvent(ItemStack item) {
+        // Paper 方案 - 直接转换
+        if (item instanceof HoverEventSource) {
+            return (HoverEventSource<?>) item;
+        }
+        // Spigot 方案 - 读取物品信息与 NBT
+        // https://github.com/MrXiaoM/DeathMessages/blob/main/src/main/java/dev/mrshawn/deathmessages/utils/HoverShowItemResolver.java
+        Object nmsItem = ReflectionMethod.ITEMSTACK_NMSCOPY.run(null, item);
+        NBTContainer nbt = NBTReflectionUtil.convertNMSItemtoNBTCompound(nmsItem);
+        NBTCompound components = nbt.hasTag("components") ? nbt.getCompound("components") : null;
+        NBTCompound tag = nbt.hasTag("tag") ? nbt.getCompound("tag") : null;
+
+        BinaryTagHolder itemTag;
+        if (components != null) { // 1.21.5+
+            itemTag = BinaryTagHolder.binaryTagHolder(components.toString());
+        } else if (tag != null) { // 1.7-1.21.4
+            itemTag = BinaryTagHolder.binaryTagHolder(tag.toString());
+        } else { // 未知格式
+            itemTag = BinaryTagHolder.binaryTagHolder("{}");
+        }
+        return HoverEvent.showItem(
+                Key.key(nbt.getString("id"), ':'),
+                nbt.getInteger("count"),
+                itemTag);
     }
 
     @Contract("null -> true")
