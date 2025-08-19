@@ -3,6 +3,8 @@ package top.mrxiaom.pluginbase.utils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,16 +20,23 @@ public class PAPI {
         return isEnabled;
     }
 
-    public static String setPlaceholders(OfflinePlayer player, String s) {
-        if (!isEnabled) return s.replace("%player_name%", String.valueOf(player.getName()));
-        return PlaceholderAPI.setPlaceholders(player, s);
-    }
-    public static String setPlaceholders(Player player, String s) {
-        if (!isEnabled) return s.replace("%player_name%", player.getName());
-        return PlaceholderAPI.setPlaceholders(player, s);
-    }
-    public static List<String> setPlaceholders(OfflinePlayer player, List<String> list) {
+    public static @NotNull String setPlaceholders(@Nullable OfflinePlayer player, @NotNull String s) {
         if (!isEnabled) {
+            if (player == null) return s;
+            return s.replace("%player_name%", String.valueOf(player.getName()));
+        }
+        return PlaceholderAPI.setPlaceholders(player, s);
+    }
+    public static @NotNull String setPlaceholders(@Nullable Player player, @NotNull String s) {
+        if (!isEnabled) {
+            if (player == null) return s;
+            return s.replace("%player_name%", player.getName());
+        }
+        return PlaceholderAPI.setPlaceholders(player, s);
+    }
+    public static @NotNull List<String> setPlaceholders(@Nullable OfflinePlayer player, @NotNull List<String> list) {
+        if (!isEnabled) {
+            if (player == null) return new ArrayList<>(list);
             List<String> result = new ArrayList<>();
             String playerName = String.valueOf(player.getName());
             for (String s : list) {
@@ -37,8 +46,9 @@ public class PAPI {
         }
         return PlaceholderAPI.setPlaceholders(player, list);
     }
-    public static List<String> setPlaceholders(Player player, List<String> list) {
+    public static @NotNull List<String> setPlaceholders(@Nullable Player player, @NotNull List<String> list) {
         if (!isEnabled) {
+            if (player == null) return new ArrayList<>(list);
             List<String> result = new ArrayList<>();
             String playerName = player.getName();
             for (String s : list) {
