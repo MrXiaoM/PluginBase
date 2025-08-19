@@ -8,8 +8,16 @@ import java.lang.annotation.Target;
 /**
  * 可选注解，用于设置语言键前缀
  */
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Language {
+    /**
+     * 语言键前缀，仅用于任意类、枚举类
+     */
     String prefix() default "";
+
+    /**
+     * 语言键名，仅用于字段
+     */
+    String value() default "";
 }

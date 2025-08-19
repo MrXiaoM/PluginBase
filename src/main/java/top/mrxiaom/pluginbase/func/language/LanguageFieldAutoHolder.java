@@ -19,9 +19,15 @@ public class LanguageFieldAutoHolder extends Message {
     }
     public void lateInitFromField(Class<?> parent, Field field) {
         if (key().isEmpty()) {
-            String name = field.getName().replace("__", ".").replace("_", "-");
-            Language lang = parent.getAnnotation(Language.class);
-            key(lang == null ? name : (lang.prefix() + name));
+            Language langParent = parent.getAnnotation(Language.class);
+            Language langField = field.getAnnotation(Language.class);
+            String name;
+            if (langField != null && !langField.value().isEmpty()) {
+                name = langField.value();
+            } else {
+                name = field.getName().replace("__", ".").replace("_", "-");
+            }
+            key(langParent == null ? name : (langParent.prefix() + name));
         }
     }
 
