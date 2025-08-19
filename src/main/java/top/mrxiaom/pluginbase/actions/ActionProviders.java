@@ -9,9 +9,7 @@ import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.api.IActionProvider;
 import top.mrxiaom.pluginbase.utils.Pair;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class ActionProviders {
     private static final List<IActionProvider> actionProviders = new ArrayList<>();
@@ -55,6 +53,15 @@ public class ActionProviders {
 
     public static void registerActionProvider(IActionProvider provider) {
         actionProviders.add(provider);
+        actionProviders.sort(Comparator.comparingInt(IActionProvider::priority));
+    }
+
+    public static void registerActionProviders(IActionProvider... providers) {
+        registerActionProviders(Arrays.asList(providers));
+    }
+
+    public static void registerActionProviders(Collection<IActionProvider> providers) {
+        actionProviders.addAll(providers);
         actionProviders.sort(Comparator.comparingInt(IActionProvider::priority));
     }
 
