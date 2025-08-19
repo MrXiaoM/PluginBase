@@ -1,6 +1,5 @@
 package top.mrxiaom.pluginbase.func;
 
-import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,38 +9,40 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
-import top.mrxiaom.pluginbase.gui.IGui;
+import top.mrxiaom.pluginbase.gui.IGuiHolder;
+import top.mrxiaom.pluginbase.utils.Util;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.function.BiConsumer;
 
 public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Listener {
-    final Map<UUID, IGui> playersGui = new HashMap<>();
-    BiConsumer<Player, IGui> disable = (player, gui) -> {
+    BiConsumer<Player, IGuiHolder> disable = (player, gui) -> {
         try {
             player.sendTitle("§e请等等", "§f管理员正在更新插件", 10, 30, 10);
         } catch (Throwable ignored) {}
     };
     boolean disabled = false;
+    boolean isNotFolia = !Util.isPresent("io.papermc.paper.threadedregions.RegionizedServer");
     public GuiManager(BukkitPlugin plugin) {
         super(plugin, true);
         registerEvents(this);
     }
 
-    public void openGui(IGui gui) {
+    public void openGui(IGuiHolder gui) {
         if (disabled) return;
         Player player = gui.getPlayer();
         if (player == null) return;
-        player.closeInventory();
-        playersGui.put(player.getUniqueId(), gui);
         Inventory inv = gui.newInventory();
         if (inv != null) {
-            player.openInventory(inv);
+            if (inv.getHolder() == gui) {
+                player.openInventory(inv);
+            } else {
+                player.closeInventory();
+                warn("试图为玩家 " + player.getName() + " 打开界面 " + gui.getClass().getName() + " 时，界面未设置 InventoryHolder 为自身实例");
+            }
         } else if (!gui.allowNullInventory()) {
             warn("试图为玩家 " + player.getName() + " 打开界面 " + gui.getClass().getName() + " 时，程序返回了 null");
         }
@@ -49,63 +50,89 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
 
     public void onDisable() {
         disabled = true;
-        List<Map.Entry<UUID, IGui>> entries = Lists.newArrayList(playersGui.entrySet());
-        for (Map.Entry<UUID, IGui> entry : entries) {
-            Player player = Bukkit.getPlayer(entry.getKey());
-            if (player == null) continue;
-            entry.getValue().onClose(player.getOpenInventory());
-            playersGui.remove(entry.getKey());
-            player.closeInventory();
-            if (disable != null) disable.accept(player, entry.getValue());
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            InventoryView view = player.getOpenInventory();
+            IGuiHolder gui = getInventoryHolder(view.getTopInventory());
+            if (gui != null) {
+                gui.onClose(view);
+                player.closeInventory();
+                if (disable != null) disable.accept(player, gui);
+            }
         }
     }
 
-    public void setDisableAction(@Nullable BiConsumer<Player, IGui> consumer) {
+    public void setDisableAction(@Nullable BiConsumer<Player, IGuiHolder> consumer) {
         this.disable = consumer;
     }
 
     @Nullable
-    public IGui getOpeningGui(Player player) {
+    public IGuiHolder getOpeningGui(Player player) {
         if (disabled) return null;
-        return playersGui.get(player.getUniqueId());
+        return getInventoryHolder(player.getOpenInventory().getTopInventory());
+    }
+
+    public IGuiHolder getInventoryHolder(Inventory inv) {
+        if (isNotFolia) return getHolderAsGui(inv);
+        try {
+            // 如果在 Folia 直接调用 getHolder()
+            // 此时玩家打开的界面是原版容器，会因为跨线程调用 Block.getState() 而报错
+            return getHolderAsGui(inv);
+        } catch (Throwable ignored) {
+        }
+        return null;
+    }
+
+    private IGuiHolder getHolderAsGui(Inventory inv) {
+        InventoryHolder holder = inv.getHolder();
+        if (holder instanceof IGuiHolder) {
+            return (IGuiHolder) holder;
+        }
+        return null;
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         if (disabled) return;
         Player player = e.getPlayer();
-        IGui remove = playersGui.remove(player.getUniqueId());
-        if (remove != null) {
-            remove.onClose(player.getOpenInventory());
+        InventoryView view = player.getOpenInventory();
+        IGuiHolder gui = getInventoryHolder(view.getTopInventory());
+        if (gui != null) {
+            gui.onClose(view);
         }
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (disabled || !(event.getWhoClicked() instanceof Player)) return;
-        Player player = (Player) event.getWhoClicked();
-        if (playersGui.containsKey(player.getUniqueId())) {
-            playersGui.get(player.getUniqueId()).onClick(event.getAction(), event.getClick(), event.getSlotType(),
-                    event.getRawSlot(), event.getCurrentItem(), event.getCursor(), event.getView(), event);
+        InventoryView view = event.getView();
+        IGuiHolder gui = getInventoryHolder(view.getTopInventory());
+        if (gui != null) {
+            gui.onClick(
+                    event.getAction(), event.getClick(),
+                    event.getSlotType(), event.getRawSlot(),
+                    event.getCurrentItem(), event.getCursor(),
+                    event.getView(), event
+            );
         }
     }
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         if (disabled || !(event.getWhoClicked() instanceof Player)) return;
-        Player player = (Player) event.getWhoClicked();
-        if (playersGui.containsKey(player.getUniqueId())) {
-            playersGui.get(player.getUniqueId()).onDrag(event.getView(), event);
+        InventoryView view = event.getView();
+        IGuiHolder gui = getInventoryHolder(view.getTopInventory());
+        if (gui != null) {
+            gui.onDrag(view, event);
         }
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         if (disabled || !(event.getPlayer() instanceof Player)) return;
-        Player player = (Player) event.getPlayer();
-        IGui remove = playersGui.remove(player.getUniqueId());
-        if (remove != null) {
-            remove.onClose(event.getView());
+        InventoryView view = event.getView();
+        IGuiHolder gui = getInventoryHolder(view.getTopInventory());
+        if (gui != null) {
+            gui.onClose(view);
         }
     }
 

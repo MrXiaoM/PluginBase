@@ -10,10 +10,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
-import top.mrxiaom.pluginbase.gui.IGui;
+import top.mrxiaom.pluginbase.gui.IGuiHolder;
+import top.mrxiaom.pluginbase.utils.Util;
 
 import java.io.File;
 import java.util.HashMap;
@@ -21,6 +23,9 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
+/**
+ * 单个菜单配置的抽象模块
+ */
 public abstract class AbstractGuiModule<T extends BukkitPlugin> extends AbstractModule<T> {
     protected final File file;
     protected String guiTitle;
@@ -69,15 +74,15 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
     }
     protected abstract void loadMainIcon(ConfigurationSection section, String id, LoadedIcon icon);
     @Nullable
-    protected ItemStack applyMainIcon(IGui instance, Player player, char id, int index, int appearTimes) {
+    protected ItemStack applyMainIcon(IGuiHolder instance, Player player, char id, int index, int appearTimes) {
         return null;
     }
     @Nullable
-    protected ItemStack applyMainIcon(IGui instance, Player player, char id, int index, int appearTimes, AtomicBoolean ignore) {
+    protected ItemStack applyMainIcon(IGuiHolder instance, Player player, char id, int index, int appearTimes, AtomicBoolean ignore) {
         return applyMainIcon(instance, player, id, index, appearTimes);
     }
     @Nullable
-    protected ItemStack applyOtherIcon(IGui instance, Player player, char id, int index, int appearTimes, LoadedIcon icon) {
+    protected ItemStack applyOtherIcon(IGuiHolder instance, Player player, char id, int index, int appearTimes, LoadedIcon icon) {
         return icon.generateIcon(player);
     }
 
@@ -85,10 +90,11 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
         return String.join("", config.getStringList(key)).toCharArray();
     }
 
-    public abstract class Gui implements IGui {
+    public abstract class Gui implements IGuiHolder {
         protected Player player;
         protected String title;
         protected char[] inventory;
+        protected Inventory created;
         protected Gui(Player player, String title, char[] inventory) {
             this.player = player;
             this.title = title;
@@ -132,18 +138,23 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
 
         public void updateInventory(InventoryView view) {
             updateInventory(view::setItem);
-            player.updateInventory();
+            Util.submitInvUpdate(player);
         }
 
         @Override
         public Inventory newInventory() {
-            Inventory inv = create(null, inventory.length, title);
-            updateInventory(inv);
-            return inv;
+            this.created = create(inventory.length, title);
+            updateInventory(created);
+            return created;
         }
 
-        protected Inventory create(InventoryHolder holder, int size, String title) {
-            return Bukkit.createInventory(holder, size, title);
+        @Override
+        public @NotNull Inventory getInventory() {
+            return created;
+        }
+
+        protected Inventory create(int size, String title) {
+            return Bukkit.createInventory(this, size, title);
         }
 
         public Character getClickedId(int slot) {

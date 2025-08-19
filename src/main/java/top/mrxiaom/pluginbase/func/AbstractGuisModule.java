@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.gui.IModel;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
-import top.mrxiaom.pluginbase.gui.IGui;
+import top.mrxiaom.pluginbase.gui.IGuiHolder;
 import top.mrxiaom.pluginbase.utils.Util;
 
 import java.io.File;
@@ -24,6 +24,10 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
+/**
+ * 允许用户创建多个相同模式的菜单配置的抽象模块
+ * @param <M> 菜单模型
+ */
 public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IModel> extends AbstractModule<T> {
     public interface IModelProvider<P extends AbstractGuisModule<?, M>, M extends IModel> {
         @Nullable M load(P parent, ConfigurationSection config, String id);
@@ -74,7 +78,7 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
         return menus.get(id);
     }
 
-    public static abstract class Gui<M extends IModel> implements IGui, InventoryHolder {
+    public static abstract class Gui<M extends IModel> implements IGuiHolder {
         protected Player player;
         protected M model;
         protected String title;
@@ -138,13 +142,13 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
 
         @Override
         public Inventory newInventory() {
-            Inventory inv = create(inventory.length, title);
-            updateInventory(inv);
-            return inv;
+            created = create(inventory.length, title);
+            updateInventory(created);
+            return created;
         }
 
         protected Inventory create(int size, String title) {
-            return (created = Bukkit.createInventory(this, size, title));
+            return Bukkit.createInventory(this, size, title);
         }
 
         public Character getClickedId(int slot) {

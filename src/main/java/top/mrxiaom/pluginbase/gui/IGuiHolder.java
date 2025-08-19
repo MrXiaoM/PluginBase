@@ -3,12 +3,16 @@ package top.mrxiaom.pluginbase.gui;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
 import top.mrxiaom.pluginbase.func.GuiManager;
 
-public interface IGui {
+/**
+ * 菜单创建与交互接口
+ */
+public interface IGuiHolder extends InventoryHolder {
     /**
      * 获取正在预览界面的玩家
      */
