@@ -30,7 +30,7 @@ public class ActionDelay implements IAction {
     }
 
     @Override
-    public void run(Player player, @Nullable List<Pair<String, Object>> replacements) {
+    public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
         // do nothing
     }
 }

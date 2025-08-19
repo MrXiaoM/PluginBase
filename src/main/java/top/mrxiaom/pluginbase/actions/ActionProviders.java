@@ -16,12 +16,12 @@ public class ActionProviders {
     private ActionProviders() {}
 
     @NotNull
-    public static List<IAction> loadActions(ConfigurationSection section, String key) {
-        return loadActions(section, new String[]{key});
+    public static List<IAction> loadActions(@NotNull ConfigurationSection section, @NotNull String key) {
+        return loadActions(section.getStringList(key));
     }
 
     @NotNull
-    public static List<IAction> loadActions(ConfigurationSection section, String... keys) {
+    public static List<IAction> loadActions(@NotNull ConfigurationSection section, @NotNull String... keys) {
         List<String> list = new ArrayList<>();
         for (String key : keys) {
             list.addAll(section.getStringList(key));
@@ -31,7 +31,7 @@ public class ActionProviders {
     }
 
     @NotNull
-    public static List<IAction> loadActions(List<String> list) {
+    public static List<IAction> loadActions(@NotNull List<String> list) {
         List<IAction> actions = new ArrayList<>();
         for (String s : list) {
             IAction action = loadAction(s);
@@ -43,7 +43,8 @@ public class ActionProviders {
     }
 
     @Nullable
-    public static IAction loadAction(String s) {
+    public static IAction loadAction(@Nullable String s) {
+        if (s == null) return null;
         for (IActionProvider provider : actionProviders) {
             IAction action = provider.provide(s);
             if (action != null) return action;
@@ -65,15 +66,15 @@ public class ActionProviders {
         actionProviders.sort(Comparator.comparingInt(IActionProvider::priority));
     }
 
-    public static void run(BukkitPlugin plugin, Player player, List<IAction> actions) {
+    public static void run(@NotNull BukkitPlugin plugin, @Nullable Player player, @NotNull List<IAction> actions) {
         run0(plugin, player, actions, null, 0);
     }
 
-    public static void run(BukkitPlugin plugin, Player player, List<IAction> actions, @Nullable List<Pair<String, Object>> replacements) {
+    public static void run(@NotNull BukkitPlugin plugin, @Nullable Player player, @NotNull List<IAction> actions, @Nullable List<Pair<String, Object>> replacements) {
         run0(plugin, player, actions, replacements, 0);
     }
 
-    private static void run0(BukkitPlugin plugin, Player player, List<IAction> actions, @Nullable List<Pair<String, Object>> replacements, int startIndex) {
+    private static void run0(@NotNull BukkitPlugin plugin, @Nullable Player player, @NotNull List<IAction> actions, @Nullable List<Pair<String, Object>> replacements, int startIndex) {
         for (int i = startIndex; i < actions.size(); i++) {
             IAction action = actions.get(i);
             action.run(player, replacements);

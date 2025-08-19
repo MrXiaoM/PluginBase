@@ -27,7 +27,7 @@ public class ActionConsole implements IAction {
     }
 
     @Override
-    public void run(Player player, @Nullable List<Pair<String, Object>> replacements) {
+    public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
         String s = Pair.replace(command, replacements);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PAPI.setPlaceholders(player, s));
     }
