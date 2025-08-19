@@ -5,10 +5,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
-import top.mrxiaom.pluginbase.func.language.AbstractLanguageHolder;
-import top.mrxiaom.pluginbase.func.language.ILanguageArgumentProcessor;
-import top.mrxiaom.pluginbase.func.language.LanguageEnumAutoHolder;
-import top.mrxiaom.pluginbase.func.language.LanguageFieldAutoHolder;
+import top.mrxiaom.pluginbase.func.language.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +14,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @SuppressWarnings("UnusedReturnValue")
@@ -37,7 +33,7 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
      */
     private String keyPrefix = "";
     public LanguageManager(BukkitPlugin plugin) {
-        super(plugin, true);
+        super(plugin);
     }
 
     /**
@@ -98,9 +94,31 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
     }
 
     /**
-     * 注册枚举到语言管理器
+     * 注册枚举到语言管理器，示例如下
+     * <pre><code>
+     * public enum Messages implements IHolderAccessor {
+     *     path__to__key("默认值")
+     *     ;
+     *     Messages(String defaultValue) {
+     *         holder = wrap(this, defaultValue);
+     *     }
+     *     Messages(String... defaultValue) {
+     *         holder = wrap(this, defaultValue);
+     *     }
+     *     Messages(List<String> defaultValue) {
+     *         holder = wrap(this, defaultValue);
+     *     }
+     *     private final LanguageEnumAutoHolder<Messages> holder;
+     *     public LanguageEnumAutoHolder<Messages> holder() {
+     *         return holder;
+     *     }
+     * }
+     * </code></pre>
+     * 在枚举名中，<code>__</code> 会被替换为 <code>.</code>，<code>_</code> 会被替换为 <code>-</code> 作为键名。<br>
      * @param enumType 枚举类型
-     * @param getter 获取 holder 实例的 getter
+     * @param getter 获取 holder 实例的 getter，如 <code>Messages::holder</code>
+     * @see top.mrxiaom.pluginbase.func.language.LanguageEnumAutoHolder#wrap(Enum, String)
+     * @see top.mrxiaom.pluginbase.func.language.IHolderAccessor
      */
     public <T extends Enum<T>> LanguageManager register(Class<T> enumType, Function<T, LanguageEnumAutoHolder<T>> getter) {
         holderGetters.put(enumType.getName(), getter);
@@ -111,13 +129,25 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
         return this;
     }
 
+    /**
+     * 通过读取 public static final 字段，注册到语言管理器。<br>
+     * 要求字段引用的实现必须为 <code>LanguageFieldAutoHolder</code> 或其子类，如
+     * <pre><code>
+     * public static final Message path__to__key = field("默认值");
+     * </code></pre>
+     * 在字段名中，<code>__</code> 会被替换为 <code>.</code>，<code>_</code> 会被替换为 <code>-</code> 作为键名。<br>
+     * 你也可以添加 <code>@Language("path.to.key")</code> 来自定义键名。
+     * @param anyType 任意类型
+     * @see top.mrxiaom.pluginbase.func.language.LanguageFieldAutoHolder#field(String)
+     * @see top.mrxiaom.pluginbase.func.language.Message
+     */
     public LanguageManager register(Class<?> anyType) {
         if (anyType.isAssignableFrom(Enum.class)) {
             throw new IllegalArgumentException("应该使用 register(Class, Function) 来注册 enum");
         }
         for (Field field : anyType.getDeclaredFields()) {
             int modifiers = field.getModifiers();
-            if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) {
+            if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers)) {
                 LanguageFieldAutoHolder holder = getOrNull(field, null);
                 if (holder != null) {
                     holder.lateInitFromField(anyType, field);
@@ -140,6 +170,9 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
         return Lists.newArrayList(holders.values());
     }
 
+    /**
+     * 用于 AbstractLanguageHolder，一般不直接调用
+     */
     @Nullable
     public String getAsString(String key) {
         Object obj = holderValues.get(key);
@@ -149,6 +182,9 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
         return null;
     }
 
+    /**
+     * 用于 AbstractLanguageHolder，一般不直接调用
+     */
     @Nullable
     @SuppressWarnings({"unchecked"})
     public List<String> getAsList(String key) {
@@ -165,6 +201,9 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
         reload();
     }
 
+    /**
+     * 重载语言文件
+     */
     public LanguageManager reload() {
         if (file == null || holders.isEmpty()) return this;
         holderValues.clear();
@@ -189,8 +228,11 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
         return this;
     }
 
+    /**
+     * 获取 PluginBase 的默认 LanguageManager 实例
+     */
     public static LanguageManager inst() {
-        return instanceOf(LanguageManager.class);
+        return instanceOf(LanguageManagerImpl.class);
     }
 
     @SuppressWarnings({"unchecked", "SameParameterValue"})

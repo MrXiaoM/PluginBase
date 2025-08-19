@@ -20,7 +20,7 @@ import top.mrxiaom.pluginbase.economy.VaultEconomy;
 import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
 import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.func.GuiManager;
-import top.mrxiaom.pluginbase.func.LanguageManager;
+import top.mrxiaom.pluginbase.func.language.LanguageManagerImpl;
 import top.mrxiaom.pluginbase.utils.ClassLoaderWrapper;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.pluginbase.utils.item.ItemEditor;
@@ -340,7 +340,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         // 并且由于部分内部模块应当是可选的，所以要额外加一层 try catch 以防相关类被精简导致报错。
         List<Class<? extends AbstractPluginHolder<?>>> earlyLoadModules = new ArrayList<>();
         try {
-            Class<LanguageManager> languageManagerClass = LanguageManager.class;
+            Class<LanguageManagerImpl> languageManagerClass = LanguageManagerImpl.class;
             earlyLoadModules.add(languageManagerClass);
         } catch (Throwable ignored) {
         }
