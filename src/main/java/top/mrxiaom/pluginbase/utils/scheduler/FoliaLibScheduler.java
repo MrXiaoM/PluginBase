@@ -6,6 +6,7 @@ import com.tcoded.folialib.wrapper.task.WrappedTask;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IRunTask;
@@ -35,75 +36,75 @@ public class FoliaLibScheduler implements IScheduler {
     }
 
     @Override
-    public IRunTask runTask(Runnable runnable) {
+    public @NotNull IRunTask runTask(@NotNull Runnable runnable) {
         scheduler.runNextTick((t) -> runnable.run());
         return DummyTask.INSTANCE;
     }
 
     @Override
-    public IRunTask runTaskLater(Runnable runnable, long delay) {
+    public @NotNull IRunTask runTaskLater(@NotNull Runnable runnable, long delay) {
         return wrap(scheduler.runLater(runnable, delay));
     }
 
     @Override
-    public IRunTask runTaskTimer(Runnable runnable, long delay, long period) {
+    public @NotNull IRunTask runTaskTimer(@NotNull Runnable runnable, long delay, long period) {
         return wrap(scheduler.runTimer(runnable, delay, period));
     }
 
     @Override
-    public IRunTask runTaskAsync(Runnable runnable) {
+    public @NotNull IRunTask runTaskAsync(@NotNull Runnable runnable) {
         scheduler.runNextTick((t) -> runnable.run());
         return DummyTask.INSTANCE;
     }
 
     @Override
-    public IRunTask runTaskLaterAsync(Runnable runnable, long delay) {
+    public @NotNull IRunTask runTaskLaterAsync(@NotNull Runnable runnable, long delay) {
         return wrap(scheduler.runLaterAsync(runnable, delay));
     }
 
     @Override
-    public IRunTask runTaskTimerAsync(Runnable runnable, long delay, long period) {
+    public @NotNull IRunTask runTaskTimerAsync(@NotNull Runnable runnable, long delay, long period) {
         return wrap(scheduler.runTimerAsync(runnable, delay, period));
     }
 
     @Override
-    public <T extends Entity> void runAtEntity(T entity, Consumer<T> runnable) {
+    public <T extends Entity> void runAtEntity(@NotNull T entity, @NotNull Consumer<T> runnable) {
         scheduler.runAtEntity(entity, wt -> runnable.accept(entity));
     }
 
     @Override
-    public <T extends Entity> IRunTask runAtEntityLater(T entity, Consumer<T> runnable, long delay) {
+    public <T extends Entity> @NotNull IRunTask runAtEntityLater(@NotNull T entity, @NotNull Consumer<T> runnable, long delay) {
         return wrap(scheduler.runAtEntityLater(entity, () -> runnable.accept(entity), delay));
     }
 
     @Override
-    public <T extends Entity> IRunTask runAtEntityTimer(T entity, Consumer<T> runnable, long delay, long period) {
+    public <T extends Entity> @NotNull IRunTask runAtEntityTimer(@NotNull T entity, @NotNull Consumer<T> runnable, long delay, long period) {
         return wrap(scheduler.runAtEntityTimer(entity, () -> runnable.accept(entity), delay, period));
     }
 
     @Override
-    public void runAtLocation(Location location, Consumer<Location> runnable) {
+    public void runAtLocation(@NotNull Location location, @NotNull Consumer<Location> runnable) {
         scheduler.runAtLocation(location, wt -> runnable.accept(location));
     }
 
     @Override
-    public IRunTask runAtLocationLater(Location location, Consumer<Location> runnable, long delay) {
+    public @NotNull IRunTask runAtLocationLater(@NotNull Location location, @NotNull Consumer<Location> runnable, long delay) {
         return wrap(scheduler.runAtLocationLater(location, () -> runnable.accept(location), delay));
     }
 
     @Override
-    public IRunTask runAtLocationTimer(Location location, Consumer<Location> runnable, long delay, long period) {
+    public @NotNull IRunTask runAtLocationTimer(@NotNull Location location, @NotNull Consumer<Location> runnable, long delay, long period) {
         return wrap(scheduler.runAtLocationTimer(location, () -> runnable.accept(location), delay, period));
     }
 
     @Override
-    public void teleport(Entity entity, Location location, PlayerTeleportEvent.TeleportCause cause, @Nullable Consumer<Entity> then) {
+    public void teleport(@NotNull Entity entity, @NotNull Location location, PlayerTeleportEvent.@NotNull TeleportCause cause, @Nullable Consumer<Entity> then) {
         CompletableFuture<Boolean> future = scheduler.teleportAsync(entity, location, cause);
         if (then != null) future.thenRun(() -> then.accept(entity));
     }
 
     @Override
-    public void teleport(Entity entity, Location location, @Nullable Consumer<Entity> then) {
+    public void teleport(@NotNull Entity entity, @NotNull Location location, @Nullable Consumer<Entity> then) {
         CompletableFuture<Boolean> future = scheduler.teleportAsync(entity, location);
         if (then != null) future.thenRun(() -> then.accept(entity));
     }

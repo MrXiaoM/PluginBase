@@ -2,6 +2,9 @@ package top.mrxiaom.pluginbase.func.language;
 
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * 本地化参数处理器
+ */
 public interface ILanguageArgumentProcessor {
     /**
      * 对输入参数进行转换

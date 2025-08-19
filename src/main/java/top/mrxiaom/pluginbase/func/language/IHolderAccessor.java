@@ -7,6 +7,9 @@ import top.mrxiaom.pluginbase.utils.Pair;
 
 import java.util.List;
 
+/**
+ * 用于快捷调用 AbstractLanguageHolder 中的方法，常用于 <code>enum</code>
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public interface IHolderAccessor {
 

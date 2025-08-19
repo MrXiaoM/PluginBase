@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IRunTask;
 import top.mrxiaom.pluginbase.api.IScheduler;
@@ -31,73 +32,73 @@ public class BukkitScheduler implements IScheduler {
     }
 
     @Override
-    public IRunTask runTask(Runnable runnable) {
+    public @NotNull IRunTask runTask(@NotNull Runnable runnable) {
         return wrap(Bukkit.getScheduler().runTask(plugin, runnable));
     }
 
     @Override
-    public IRunTask runTaskLater(Runnable runnable, long delay) {
+    public @NotNull IRunTask runTaskLater(@NotNull Runnable runnable, long delay) {
         return wrap(Bukkit.getScheduler().runTaskLater(plugin, runnable, delay));
     }
 
     @Override
-    public IRunTask runTaskTimer(Runnable runnable, long delay, long period) {
+    public @NotNull IRunTask runTaskTimer(@NotNull Runnable runnable, long delay, long period) {
         return wrap(Bukkit.getScheduler().runTaskTimer(plugin, runnable, delay, period));
     }
 
     @Override
-    public IRunTask runTaskAsync(Runnable runnable) {
+    public @NotNull IRunTask runTaskAsync(@NotNull Runnable runnable) {
         return wrap(Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable));
     }
 
     @Override
-    public IRunTask runTaskLaterAsync(Runnable runnable, long delay) {
+    public @NotNull IRunTask runTaskLaterAsync(@NotNull Runnable runnable, long delay) {
         return wrap(Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, runnable, delay));
     }
 
     @Override
-    public IRunTask runTaskTimerAsync(Runnable runnable, long delay, long period) {
+    public @NotNull IRunTask runTaskTimerAsync(@NotNull Runnable runnable, long delay, long period) {
         return wrap(Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, delay, period));
     }
 
     @Override
-    public <T extends Entity> void runAtEntity(T entity, Consumer<T> runnable) {
+    public <T extends Entity> void runAtEntity(@NotNull T entity, @NotNull Consumer<T> runnable) {
         runnable.accept(entity);
     }
 
     @Override
-    public <T extends Entity> IRunTask runAtEntityLater(T entity, Consumer<T> runnable, long delay) {
+    public <T extends Entity> @NotNull IRunTask runAtEntityLater(@NotNull T entity, @NotNull Consumer<T> runnable, long delay) {
         return runTaskLater(() -> runnable.accept(entity), delay);
     }
 
     @Override
-    public <T extends Entity> IRunTask runAtEntityTimer(T entity, Consumer<T> runnable, long delay, long period) {
+    public <T extends Entity> @NotNull IRunTask runAtEntityTimer(@NotNull T entity, @NotNull Consumer<T> runnable, long delay, long period) {
         return runTaskTimer(() -> runnable.accept(entity), delay, period);
     }
 
     @Override
-    public void runAtLocation(Location location, Consumer<Location> runnable) {
+    public void runAtLocation(@NotNull Location location, @NotNull Consumer<Location> runnable) {
         runnable.accept(location);
     }
 
     @Override
-    public IRunTask runAtLocationLater(Location location, Consumer<Location> runnable, long delay) {
+    public @NotNull IRunTask runAtLocationLater(@NotNull Location location, @NotNull Consumer<Location> runnable, long delay) {
         return runTaskLater(() -> runnable.accept(location), delay);
     }
 
     @Override
-    public IRunTask runAtLocationTimer(Location location, Consumer<Location> runnable, long delay, long period) {
+    public @NotNull IRunTask runAtLocationTimer(@NotNull Location location, @NotNull Consumer<Location> runnable, long delay, long period) {
         return runTaskTimer(() -> runnable.accept(location), delay, period);
     }
 
     @Override
-    public void teleport(Entity entity, Location location, PlayerTeleportEvent.TeleportCause cause, Consumer<Entity> then) {
+    public void teleport(@NotNull Entity entity, @NotNull Location location, PlayerTeleportEvent.@NotNull TeleportCause cause, Consumer<Entity> then) {
         entity.teleport(location, cause);
         if (then != null) then.accept(entity);
     }
 
     @Override
-    public void teleport(Entity entity, Location location, Consumer<Entity> then) {
+    public void teleport(@NotNull Entity entity, @NotNull Location location, Consumer<Entity> then) {
         entity.teleport(location);
         if (then != null) then.accept(entity);
     }

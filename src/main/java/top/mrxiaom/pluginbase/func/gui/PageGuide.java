@@ -16,6 +16,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+/**
+ * 菜单界面分页器
+ */
 public class PageGuide<T> {
     List<Pair<T, ItemStack>> contents = new ArrayList<>();
     List<Integer> slots = new ArrayList<>();

@@ -3,6 +3,9 @@ package top.mrxiaom.pluginbase.economy;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 
+/**
+ * Vault 经济插件
+ */
 public class VaultEconomy implements IEconomy {
     private final Economy economy;
     private final String name;

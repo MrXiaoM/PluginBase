@@ -14,9 +14,18 @@ import java.util.stream.Collectors;
 
 import static top.mrxiaom.pluginbase.utils.Pair.replace;
 
+/**
+ * 持有本地化键与默认值的抽象容器
+ */
 public abstract class AbstractLanguageHolder {
     private String key;
+    /**
+     * 默认值是否为列表
+     */
     public final boolean isList;
+    /**
+     * 默认值
+     */
     public final Object defaultValue;
 
     public AbstractLanguageHolder(@NotNull String key, List<String> defaultValue) {
@@ -34,10 +43,16 @@ public abstract class AbstractLanguageHolder {
         this.key = key;
     }
 
+    /**
+     * 配置键，按 <code>.</code> 分隔
+     */
     public String key() {
         return key;
     }
 
+    /**
+     * 获取本地化管理器
+     */
     public abstract LanguageManager getLanguageManager();
 
     @SuppressWarnings({"unchecked"})
@@ -45,6 +60,9 @@ public abstract class AbstractLanguageHolder {
         return value == null ? (T) defaultValue : value;
     }
 
+    /**
+     * 获取本地化字符串
+     */
     public String str() {
         LanguageManager lang = getLanguageManager();
         if (isList) {
@@ -54,6 +72,11 @@ public abstract class AbstractLanguageHolder {
             return getOrDefault(lang.getAsString(key));
         }
     }
+    /**
+     * 获取本地化字符串，并通过 <code>String.format</code> 进行格式化
+     * @param args 参数列表
+     * @see String#format(String, Object...)
+     */
     public String str(Object... args) {
         Object[] arguments = new Object[args.length];
         ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
@@ -62,6 +85,10 @@ public abstract class AbstractLanguageHolder {
         }
         return String.format(str(), arguments);
     }
+    /**
+     * 获取本地化字符串，并替换变量
+     * @param replacements 替换变量列表
+     */
     @SafeVarargs
     public final String str(Pair<String, Object>... replacements) {
         List<Pair<String, Object>> list = new ArrayList<>();
@@ -71,6 +98,10 @@ public abstract class AbstractLanguageHolder {
         }
         return replace(str(), list);
     }
+    /**
+     * 获取本地化字符串，并替换变量
+     * @param replacements 替换变量列表
+     */
     public String str(Iterable<Pair<String, Object>> replacements) {
         List<Pair<String, Object>> list = new ArrayList<>();
         ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
@@ -79,6 +110,9 @@ public abstract class AbstractLanguageHolder {
         }
         return replace(str(), list);
     }
+    /**
+     * 获取本地化字符串列表
+     */
     public List<String> list() {
         LanguageManager lang = getLanguageManager();
         if (isList) {
@@ -88,6 +122,11 @@ public abstract class AbstractLanguageHolder {
             return Lists.newArrayList(str.split("\n"));
         }
     }
+    /**
+     * 获取本地化字符串，并通过 <code>String.format</code> 进行格式化
+     * @param args 参数列表
+     * @see String#format(String, Object...)
+     */
     public List<String> list(Object... args) {
         Object[] arguments = new Object[args.length];
         ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
@@ -97,6 +136,10 @@ public abstract class AbstractLanguageHolder {
         String formatted = String.format(String.join("\n", list()), arguments);
         return Lists.newArrayList(formatted.split("\n"));
     }
+    /**
+     * 获取本地化字符串列表，并替换变量
+     * @param replacements 替换变量列表
+     */
     @SafeVarargs
     public final List<String> list(Pair<String, Object>... replacements) {
         List<Pair<String, Object>> list = new ArrayList<>();
@@ -108,6 +151,10 @@ public abstract class AbstractLanguageHolder {
                 .map(it -> replace(it, list))
                 .collect(Collectors.toList());
     }
+    /**
+     * 获取本地化字符串列表，并替换变量
+     * @param replacements 替换变量列表
+     */
     public List<String> list(Iterable<Pair<String, Object>> replacements) {
         List<Pair<String, Object>> list = new ArrayList<>();
         ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();

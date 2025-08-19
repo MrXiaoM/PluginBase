@@ -20,6 +20,9 @@ import java.util.*;
 
 import static top.mrxiaom.pluginbase.utils.Util.stackTraceToString;
 
+/**
+ * 持有插件主类实例的抽象功能类
+ */
 @SuppressWarnings({"unused", "unchecked"})
 public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
     private static final Map<Class<?>, AbstractPluginHolder<?>> registeredBungeeHolders = new HashMap<>();
@@ -203,26 +206,44 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         }
     }
 
+    /**
+     * 注册该模块
+     */
     protected void register() {
         registeredHolders.put(getClass(), this);
     }
 
+    /**
+     * 取消注册该模块
+     */
     protected void unregister() {
         registeredHolders.remove(getClass());
     }
 
+    /**
+     * 获取该模块是否已注册
+     */
     protected boolean isRegistered() {
         return registeredHolders.containsKey(getClass());
     }
 
+    /**
+     * 注册 BungeeCord 消息接受模块
+     */
     protected void registerBungee() {
         registeredBungeeHolders.put(getClass(), this);
     }
 
+    /**
+     * 取消注册 BungeeCord 消息接受模块
+     */
     protected void unregisterBungee() {
         registeredBungeeHolders.remove(getClass());
     }
 
+    /**
+     * 获取该模块是否可接受 BungeeCord 消息
+     */
     protected boolean isRegisteredBungee() {
         return registeredBungeeHolders.containsKey(getClass());
     }

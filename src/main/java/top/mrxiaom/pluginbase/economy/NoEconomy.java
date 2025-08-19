@@ -2,6 +2,9 @@ package top.mrxiaom.pluginbase.economy;
 
 import org.bukkit.OfflinePlayer;
 
+/**
+ * 无经济插件，所有玩家的余额皆为 0，任何操作均为允许
+ */
 public class NoEconomy implements IEconomy {
     public static NoEconomy INSTANCE = new NoEconomy();
     private NoEconomy() {}
