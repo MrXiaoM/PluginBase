@@ -1,10 +1,15 @@
 package top.mrxiaom.pluginbase.utils.scheduler;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitTask;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IRunTask;
 import top.mrxiaom.pluginbase.api.IScheduler;
+
+import java.util.function.Consumer;
 
 public class BukkitScheduler implements IScheduler {
     public static class Task implements IRunTask {
@@ -53,6 +58,48 @@ public class BukkitScheduler implements IScheduler {
     @Override
     public IRunTask runTaskTimerAsync(Runnable runnable, long delay, long period) {
         return wrap(Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, delay, period));
+    }
+
+    @Override
+    public <T extends Entity> void runAtEntity(T entity, Consumer<T> runnable) {
+        runnable.accept(entity);
+    }
+
+    @Override
+    public <T extends Entity> IRunTask runAtEntityLater(T entity, Consumer<T> runnable, long delay) {
+        return runTaskLater(() -> runnable.accept(entity), delay);
+    }
+
+    @Override
+    public <T extends Entity> IRunTask runAtEntityTimer(T entity, Consumer<T> runnable, long delay, long period) {
+        return runTaskTimer(() -> runnable.accept(entity), delay, period);
+    }
+
+    @Override
+    public void runAtLocation(Location location, Consumer<Location> runnable) {
+        runnable.accept(location);
+    }
+
+    @Override
+    public IRunTask runAtLocationLater(Location location, Consumer<Location> runnable, long delay) {
+        return runTaskLater(() -> runnable.accept(location), delay);
+    }
+
+    @Override
+    public IRunTask runAtLocationTimer(Location location, Consumer<Location> runnable, long delay, long period) {
+        return runTaskTimer(() -> runnable.accept(location), delay, period);
+    }
+
+    @Override
+    public void teleport(Entity entity, Location location, PlayerTeleportEvent.TeleportCause cause, Consumer<Entity> then) {
+        entity.teleport(location, cause);
+        if (then != null) then.accept(entity);
+    }
+
+    @Override
+    public void teleport(Entity entity, Location location, Consumer<Entity> then) {
+        entity.teleport(location);
+        if (then != null) then.accept(entity);
     }
 
     @Override
