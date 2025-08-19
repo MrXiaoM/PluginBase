@@ -5,6 +5,7 @@ plugins {
     id("com.gradleup.shadow")
 }
 
+group = "top.mrxiaom"
 val shadowLink = configurations.create("shadowLink")
 fun DependencyHandlerScope.shadowLink(dependencyNotation: String) {
     compileOnly(dependencyNotation)

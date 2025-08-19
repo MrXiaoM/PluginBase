@@ -17,8 +17,8 @@ buildConfig {
     buildConfigField("java.time.Instant", "BUILD_TIME", "java.time.Instant.ofEpochSecond(${System.currentTimeMillis() / 1000L}L)")
 }
 allprojects {
-    group = "top.mrxiaom"
-    version = "1.5.9"
+    group = "top.mrxiaom.pluginbase"
+    version = "1.6.0"
 
     repositories {
         mavenCentral()
@@ -84,7 +84,7 @@ tasks {
     }
 }
 mavenPublishing {
-    publishingType = PublishingType.AUTOMATIC
+    publishingType = PublishingType.USER_MANAGED
     url = "https://github.com/MrXiaoM/PluginBase"
 }
 publishing {
@@ -92,7 +92,7 @@ publishing {
         create<MavenPublication>("maven") {
             from(components.getByName("java"))
             groupId = project.group.toString()
-            artifactId = rootProject.name
+            artifactId = "library"
             version = project.version.toString()
 
             pom {
