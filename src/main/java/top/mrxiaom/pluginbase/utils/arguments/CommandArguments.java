@@ -189,6 +189,10 @@ public abstract class CommandArguments {
     }
 
     public Player nextPlayerOrSelf(CommandSender sender, Runnable selfNotPlayerAction, String perm, Runnable selfNoPermission) {
+        return nextPlayerOrSelf(sender, selfNotPlayerAction, perm, selfNoPermission, null);
+    }
+
+    public Player nextPlayerOrSelf(CommandSender sender, Runnable selfNotPlayerAction, String perm, Runnable selfNoPermission, Runnable noPlayerAction) {
         String value = arguments.getArgument(pointer++);
         if (value == null) {
             if (sender instanceof Player) {
@@ -201,10 +205,7 @@ public abstract class CommandArguments {
             return null;
         }
         return Util.getOnlinePlayer(value).orElseGet(() -> {
-            if (sender instanceof Player) {
-                return (Player) sender;
-            }
-            selfNotPlayerAction.run();
+            noPlayerAction.run();
             return null;
         });
     }
@@ -221,10 +222,14 @@ public abstract class CommandArguments {
     }
 
     public OfflinePlayer nextOfflineOrSelf(CommandSender sender, Runnable selfNotPlayerAction) {
-        return nextPlayerOrSelf(sender, selfNotPlayerAction, null, null);
+        return nextOfflineOrSelf(sender, selfNotPlayerAction, null, null);
     }
 
     public OfflinePlayer nextOfflineOrSelf(CommandSender sender, Runnable selfNotPlayerAction, String perm, Runnable selfNoPermission) {
+        return nextOfflineOrSelf(sender, selfNotPlayerAction, perm, selfNoPermission, null);
+    }
+
+    public OfflinePlayer nextOfflineOrSelf(CommandSender sender, Runnable selfNotPlayerAction, String perm, Runnable selfNoPermission, Runnable noPlayerAction) {
         String value = arguments.getArgument(pointer++);
         if (value == null) {
             if (sender instanceof OfflinePlayer) {
@@ -237,10 +242,7 @@ public abstract class CommandArguments {
             return null;
         }
         return Util.getOfflinePlayer(value).orElseGet(() -> {
-            if (sender instanceof OfflinePlayer) {
-                return (OfflinePlayer) sender;
-            }
-            selfNotPlayerAction.run();
+            noPlayerAction.run();
             return null;
         });
     }
