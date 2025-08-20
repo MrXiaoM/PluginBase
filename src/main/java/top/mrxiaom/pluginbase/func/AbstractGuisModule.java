@@ -1,6 +1,5 @@
 package top.mrxiaom.pluginbase.func;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -77,14 +76,13 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
         return menus.get(id);
     }
 
-    public static abstract class Gui<M extends IModel> implements IGuiHolder {
+    public abstract class Gui implements IGuiHolder {
         protected Player player;
         protected M model;
         protected String title;
         protected char[] inventory;
         protected Inventory created;
         protected Map<Character, LoadedIcon> otherIcons;
-        protected boolean legacy;
         protected Gui(@NotNull Player player, @NotNull M model) {
             this.player = player;
             this.model = model;
@@ -147,7 +145,7 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
         }
 
         protected Inventory create(int size, String title) {
-            return Bukkit.createInventory(this, size, title);
+            return plugin.createInventory(this, size, title);
         }
 
         public Character getClickedId(int slot) {

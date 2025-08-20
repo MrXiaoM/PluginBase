@@ -153,7 +153,7 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
         }
 
         protected Inventory create(int size, String title) {
-            return Bukkit.createInventory(this, size, title);
+            return plugin.createInventory(this, size, title);
         }
 
         public Character getClickedId(int slot) {
