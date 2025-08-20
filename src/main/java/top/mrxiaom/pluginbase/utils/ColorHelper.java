@@ -14,6 +14,10 @@ import java.util.regex.Pattern;
 
 import static top.mrxiaom.pluginbase.utils.Util.split;
 
+/**
+ * 祖传的颜色代码处理器，更推荐使用 <code>AdventureUtil</code> 代替
+ * @see AdventureUtil
+ */
 public class ColorHelper {
     private static final Pattern startWithColor = Pattern.compile("^(&[LMNKOlmnko])+");
     private static final Pattern gradientPattern = Pattern.compile("\\{(#[ABCDEFabcdef0123456789]{6}):(#[ABCDEFabcdef0123456789]{6}):(.*?)}");
@@ -21,6 +25,12 @@ public class ColorHelper {
     private static final Pattern translatePattern = Pattern.compile("<translate:(.*?)>");
     private static boolean old = false;
 
+    /**
+     * 替换消息中的颜色字符并发送给用户，如果插件启用了 adventure 选项，则会转而调用
+     * <pre><code>AdventureUtil.sendMessage(sender, s);</code></pre>
+     * @param sender 用户
+     * @param s 要发送的消息
+     */
     public static void parseAndSend(CommandSender sender, String s) {
         if (BukkitPlugin.getInstance().options.adventure()) {
             AdventureUtil.sendMessage(sender, s);
@@ -52,16 +62,29 @@ public class ColorHelper {
         }
     }
 
+    /**
+     * 替换十六进制颜色、渐变色为旧版样式代码 <code>§x</code>，以及替换 <code>&</code> 样式代码
+     * @see ColorHelper#parseHexText(String)
+     * @see ColorHelper#parseGradientText(String)
+     */
     public static List<String> parseColor(List<String> s) {
         return Lists.newArrayList(parseColor(String.join("\n", s)).split("\n"));
     }
 
+    /**
+     * 替换十六进制颜色、渐变色为旧版样式代码 <code>§x</code>，以及替换 <code>&</code> 样式代码
+     * @see ColorHelper#parseHexText(String)
+     * @see ColorHelper#parseGradientText(String)
+     */
     public static String parseColor(String s) {
         String fin = parseHexText(s);
         fin = parseGradientText(fin);
         return fin.replace("&", "§");
     }
 
+    /**
+     * 替换十六进制颜色为旧版样式代码 <code>§x</code>
+     */
     public static String parseHexText(String s) {
         return String.join("", split(hexPattern, s, regexResult -> {
             if (!regexResult.isMatched) return regexResult.text;
@@ -70,6 +93,10 @@ public class ColorHelper {
         }));
     }
 
+    /**
+     * 替换渐变色为旧版样式代码 <code>§x</code><br>
+     * 格式为 <code>{#颜色1:#颜色2:渐变文字内容}</code>
+     */
     public static String parseGradientText(String s) {
         return String.join("", split(gradientPattern, s, regexResult -> {
             if (!regexResult.isMatched) return regexResult.text;
@@ -119,6 +146,13 @@ public class ColorHelper {
         return result.toString();
     }
 
+    /**
+     * 创建渐变色数组
+     * @param startHex 起始颜色
+     * @param endHex 终止颜色
+     * @param step 行进步数，即色带分割份数
+     * @return 颜色数组，每个 <code>int</code> 都是一个颜色，数组大小为 <code>step</code>
+     */
     public static int[] createGradient(int startHex, int endHex, int step) {
         if (step == 1) return new int[]{startHex};
 
@@ -140,18 +174,37 @@ public class ColorHelper {
         return colors;
     }
 
+    /**
+     * 将整数转换为 Minecraft 1.16+ 的 16 进制颜色代码
+     * @see ColorHelper#hex(int)
+     * @see ColorHelper#parseHex(String)
+     */
     public static String hexToMc(int hex) {
         return parseHex(hex(hex));
     }
 
+    /**
+     * 将 <code>#FFFFFF</code> 格式的字符串转换为整数
+     */
     public static int hex(String hex) {
         return Integer.parseInt(hex.substring(1), 16);
     }
 
+    /**
+     * 将整数转换为 <code>#FFFFFF</code> 格式的字符串
+     */
     public static String hex(int hex) {
         return "#" + String.format("%06x", hex);
     }
 
+    /**
+     * 将整数转换为 RGB 数组
+     * <pre><code>
+     * int r = arr[0];
+     * int g = arr[1];
+     * int b = arr[2];
+     * </code></pre>
+     */
     public static int[] hexToRGB(int hex) {
         return new int[]{
                 (hex >> 16) & 0xff,
@@ -160,6 +213,10 @@ public class ColorHelper {
         };
     }
 
+    /**
+     * 将 RGB 转换为整数，以便转为 <code>#FFFFFF</code> 格式的字符串
+     * @see ColorHelper#hex(int)
+     */
     public static int rgbToHex(int r, int g, int b) {
         return (r << 16) + (g << 8) + b;
     }

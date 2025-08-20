@@ -9,7 +9,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
 
@@ -32,6 +34,9 @@ import java.util.regex.Pattern;
 
 import static top.mrxiaom.pluginbase.actions.ActionProviders.loadActions;
 
+/**
+ * 大杂烩工具库，所有杂项方法都放在这里
+ */
 @SuppressWarnings({"unused"})
 public class Util {
     public static Map<String, OfflinePlayer> players = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -71,6 +76,12 @@ public class Util {
         }
     }
 
+    /**
+     * 遍历文件夹内的每个文件，包括子文件夹中的文件
+     * @param folder 文件夹
+     * @param suffix 传入 <code>reloadConfig</code> 中的文件路径字符串是否需要包含文件后缀名
+     * @param reloadConfig 遍历逻辑
+     */
     public static void reloadFolder(File folder, boolean suffix, BiConsumer<String, File> reloadConfig) {
         reloadFolder(folder, null, suffix, reloadConfig);
     }
@@ -89,6 +100,12 @@ public class Util {
         }
     }
 
+    /**
+     * 获取相对路径
+     * @param parent 父目录
+     * @param file 文件
+     * @param suffix 返回值是否需要包含文件后缀名
+     */
     public static String getRelationPath(File parent, File file, boolean suffix) {
         String parentPath = parent.getAbsolutePath();
         String path = file.getAbsolutePath();
@@ -98,15 +115,33 @@ public class Util {
         return suffix ? relation : nameWithoutSuffix(relation);
     }
 
+    /**
+     * 获取不含文件后缀名的路径
+     * @param s 路径使用 <code>/</code> 作为分隔符，不支持 Windows 的 <code>\</code> 分隔符
+     */
     public static String nameWithoutSuffix(String s) {
-        int index = s.lastIndexOf('.');
+        int lastPath = Math.max(0, s.lastIndexOf('/'));
+        int index = s.lastIndexOf('.', lastPath);
         return index <= 0 ? s : s.substring(0, index);
     }
 
+    /**
+     * <code>getMapList</code> 的升级版，更方便地操作 Array 套 Object 的配置格式。<br>
+     * 你可以直接将 <code>List&lt;ConfigurationSection&gt;</code> 类型的值传入 <code>set(String, Object)</code>，如下所示
+     * <pre><code>
+     * List&lt;ConfigurationSection&gt; list = new ArrayList&lt;&gt;();
+     * list.add(new MemoryConfiguration());
+     * config.set("foo", list);
+     * </code></pre>
+     * @param config 配置
+     * @param key 键
+     * @return 一个新的列表，对其进行修改不会对原配置进行修改，需要执行 <code>config.set(String, Object)</code> 应用修改
+     * @see ConfigurationSection#getMapList(String)
+     */
     @NotNull
-    public static List<ConfigurationSection> getSectionList(ConfigurationSection parent, String key) {
+    public static List<ConfigurationSection> getSectionList(ConfigurationSection config, String key) {
         List<ConfigurationSection> list = new ArrayList<>();
-        List<Map<?, ?>> rawList = parent.getMapList(key);
+        List<Map<?, ?>> rawList = config.getMapList(key);
         for (Map<?, ?> map : rawList) {
             MemoryConfiguration section = new MemoryConfiguration();
             for (Map.Entry<?, ?> entry : map.entrySet()) {
@@ -144,15 +179,35 @@ public class Util {
         return value;
     }
 
-    public static Double getPercentAsDouble(ConfigurationSection section, String key, Double def) {
+    /**
+     * 读取普通小数 (<code>0.5</code>) 或百分数 (<code>50%</code>) 为 <code>1.0 = 100%</code> 的浮点数形式
+     * @param section 配置
+     * @param key 键
+     * @param def 默认值
+     */
+    @Contract("_,_,!null->!null")
+    public static Double getPercentAsDouble(@NotNull ConfigurationSection section, @NotNull String key, @Nullable Double def) {
         return getPercentAsDouble(section.getString(key, null), def);
     }
 
-    public static Float getPercentAsFloat(ConfigurationSection section, String key, Float def) {
+    /**
+     * 读取普通小数 (<code>0.5</code>) 或百分数 (<code>50%</code>) 为 <code>1.0 = 100%</code> 的浮点数形式
+     * @param section 配置
+     * @param key 键
+     * @param def 默认值
+     */
+    @Contract("_,_,!null->!null")
+    public static Float getPercentAsFloat(@NotNull ConfigurationSection section, @NotNull String key, @Nullable Float def) {
         return getPercentAsFloat(section.getString(key, null), def);
     }
 
-    public static Double getPercentAsDouble(String s, Double def) {
+    /**
+     * 读取普通小数 (<code>0.5</code>) 或百分数 (<code>50%</code>) 为 <code>1.0 = 100%</code> 的浮点数形式
+     * @param s 要转换的字符串
+     * @param def 默认值
+     */
+    @Contract("_,!null->!null")
+    public static Double getPercentAsDouble(@Nullable String s, @Nullable Double def) {
         if (s == null) return def;
         try {
             if (s.endsWith("%")) {
@@ -167,6 +222,12 @@ public class Util {
         }
     }
 
+    /**
+     * 读取普通小数 (<code>0.5</code>) 或百分数 (<code>50%</code>) 为 <code>1.0 = 100%</code> 的浮点数形式
+     * @param s 要转换的字符串
+     * @param def 默认值
+     */
+    @Contract("_,!null->!null")
     public static Float getPercentAsFloat(String s, Float def) {
         if (s == null) return def;
         try {
@@ -182,10 +243,22 @@ public class Util {
         }
     }
 
+    /**
+     * 获取可空的 Double 类型配置数据
+     * @param section 配置
+     * @param key 键
+     * @param def 默认值
+     */
     public static Double getDouble(ConfigurationSection section, String key, Double def) {
         return section.contains(key) && section.isDouble(key) ? Double.valueOf(section.getDouble(key)) : def;
     }
 
+    /**
+     * 获取可空的 Integer 类型配置数据
+     * @param section 配置
+     * @param key 键
+     * @param def 默认值
+     */
     public static Integer getInt(ConfigurationSection section, String key, Integer def) {
         return section.contains(key) && section.isInt(key) ? Integer.valueOf(section.getInt(key)) : def;
     }
@@ -249,14 +322,24 @@ public class Util {
         return list;
     }
 
+    /**
+     * @see File#createNewFile()
+     */
     public static boolean createNewFile(File file) throws IOException {
         return file.createNewFile();
     }
+
+    /**
+     * @see File#mkdirs()
+     */
     @SuppressWarnings("UnusedReturnValue")
     public static boolean mkdirs(File file) {
         return file.mkdirs();
     }
 
+    /**
+     * 将 Throwable 的堆栈信息打印到字符串
+     */
     public static String stackTraceToString(Throwable t) {
         StringWriter sw = new StringWriter();
         try (PrintWriter pw = new PrintWriter(sw)) {
@@ -265,11 +348,18 @@ public class Util {
         return sw.toString();
     }
 
+    /**
+     * @see Player#updateInventory()
+     */
     @SuppressWarnings({"UnstableApiUsage"})
     public static void submitInvUpdate(Player player) {
         player.updateInventory();
     }
 
+    /**
+     * 请使用 ActionProviders 代替
+     * @see top.mrxiaom.pluginbase.actions.ActionProviders#loadActions(List)
+     */
     @Deprecated
     @SafeVarargs
     public static void runCommands(Player player, List<String> list, Pair<String, Object>... replacements) {
@@ -320,14 +410,26 @@ public class Util {
         return loc1 != null && loc2 != null && (loc1.getX() != loc2.getX() || loc1.getZ() != loc2.getZ());
     }
 
+    /**
+     * 获取已缓存的离线玩家数据
+     * @param name 玩家名
+     */
     public static Optional<OfflinePlayer> getOfflinePlayer(String name) {
         return Optional.ofNullable(players.get(name));
     }
 
+    /**
+     * 获取已缓存的离线玩家数据
+     * @param uuid 玩家UUID
+     */
     public static Optional<OfflinePlayer> getOfflinePlayer(UUID uuid) {
         return Optional.ofNullable(playersByUUID.get(uuid));
     }
 
+    /**
+     * 获取在线玩家
+     * @param name 玩家名
+     */
     public static Optional<Player> getOnlinePlayer(String name) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getName().equalsIgnoreCase(name)) return Optional.of(player);
@@ -335,6 +437,10 @@ public class Util {
         return Optional.empty();
     }
 
+    /**
+     * 获取在线玩家
+     * @param uuid 玩家UUID
+     */
     public static Optional<Player> getOnlinePlayer(UUID uuid) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getUniqueId().equals(uuid)) return Optional.of(player);
@@ -342,6 +448,10 @@ public class Util {
         return Optional.empty();
     }
 
+    /**
+     * 获取在线玩家列表
+     * @param uuidList 玩家UUID列表
+     */
     public static List<Player> getOnlinePlayersByUUID(Collection<UUID> uuidList) {
         List<Player> players = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -350,6 +460,10 @@ public class Util {
         return players;
     }
 
+    /**
+     * 获取在线玩家列表
+     * @param nameList 玩家名列表
+     */
     public static List<Player> getOnlinePlayersByName(Collection<String> nameList) {
         Set<String> names = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         names.addAll(nameList);
@@ -360,6 +474,9 @@ public class Util {
         return players;
     }
 
+    /**
+     * 将字符串转换为单精度浮点数
+     */
     public static Optional<Float> parseFloat(String s) {
         if (s == null) return Optional.empty();
         try {
@@ -369,6 +486,9 @@ public class Util {
         }
     }
 
+    /**
+     * 将字符串转换为双精度浮点数
+     */
     public static Optional<Double> parseDouble(String s) {
         if (s == null) return Optional.empty();
         try {
@@ -378,6 +498,9 @@ public class Util {
         }
     }
 
+    /**
+     * 将字符串转换为整数
+     */
     public static Optional<Integer> parseInt(String s) {
         if (s == null) return Optional.empty();
         try {
@@ -387,6 +510,9 @@ public class Util {
         }
     }
 
+    /**
+     * 将字符串转换为长整数
+     */
     public static Optional<Long> parseLong(String s) {
         if (s == null) return Optional.empty();
         try {
@@ -396,6 +522,12 @@ public class Util {
         }
     }
 
+    /**
+     * 通过 enum values 或者 Bukkit Registry 读取值
+     * @param type 类型
+     * @param s 输入的字符串
+     * @param def 默认值
+     */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T> T valueOr(Class<T> type, String s, T def) {
         if (s == null || s.isEmpty()) return def;
@@ -419,6 +551,11 @@ public class Util {
         return def;
     }
 
+    /**
+     * 通过 enum values 或者 Bukkit Registry，输入多个结果，读取任意一个存在的值
+     * @param type 类型
+     * @param s 输入的多个字符串
+     */
     public static <T> T valueOrNull(Class<T> type, String... s) {
         for (String str : s) {
             T value = valueOr(type, str, null);
@@ -427,6 +564,9 @@ public class Util {
         return null;
     }
 
+    /**
+     * 从 Map 中读取，如果不存在，则创建、加入到 Map，并返回
+     */
     @NotNull
     public static <K, V> V getOrPut(Map<K, V> map, K key, Function<K, V> creator) {
         V value = map.get(key);
@@ -436,6 +576,9 @@ public class Util {
         return newValue;
     }
 
+    /**
+     * 从 Map 中读取，如果不存在，则创建、加入到 Map，并返回
+     */
     @NotNull
     public static <K, V> V getOrPut(Map<K, V> map, K key, Supplier<V> creator) {
         V value = map.get(key);
@@ -445,6 +588,12 @@ public class Util {
         return newValue;
     }
 
+    /**
+     * 将列表分割按每多少个一组，分割为多份，其中最后一份的数量可能数量不足<br>
+     * 与 kotlin 的 <code>List.chunk(Int)</code> 基本相同
+     * @param list 列表
+     * @param size 每份多少个元素
+     */
     public static <T> List<List<T>> chunk(List<T> list, int size) {
         List<List<T>> result = new ArrayList<>();
         List<T> temp = new ArrayList<>();
@@ -459,6 +608,9 @@ public class Util {
         return result;
     }
 
+    /**
+     * 检查类是否存在
+     */
     public static boolean isPresent(String className) {
         try {
             Class.forName(className);
@@ -468,6 +620,12 @@ public class Util {
         }
     }
 
+    /**
+     * 按正则表达式的 group 分割字符串
+     * @param regex 正则表达式
+     * @param s 字符串
+     * @param consumer 分割出来的每一份处理逻辑
+     */
     public static void split(Pattern regex, String s, Consumer<RegexResult> consumer) {
         int index = 0;
         Matcher m = regex.matcher(s);
@@ -485,6 +643,12 @@ public class Util {
         }
     }
 
+    /**
+     * 按正则表达式的 group 分割字符串，并添加到列表
+     * @param regex 正则表达式
+     * @param s 字符串
+     * @param transform 分割出来的每一份处理逻辑
+     */
     public static <T> List<T> split(Pattern regex, String s, Function<RegexResult, T> transform) {
         List<T> list = new ArrayList<>();
         int index = 0;
@@ -507,12 +671,36 @@ public class Util {
         return list;
     }
 
+    /**
+     * 将数值限制在指定范围内
+     * @param num 数值
+     * @param min 最小值
+     * @param max 最大值
+     */
+    public static int between(int num, int min, int max) {
+        if (num < min) num = min;
+        if (num > max) num = max;
+        return num;
+    }
+
+    /**
+     * 将数值限制在指定范围内
+     * @param num 数值
+     * @param min 最小值
+     * @param max 最大值
+     */
     public static double between(double num, double min, double max) {
         if (num < min) num = min;
         if (num > max) num = max;
         return num;
     }
 
+    /**
+     * 获取类列表，加载时出错的类忽略
+     * @param loader 类加载器
+     * @param packageName 起始包名
+     * @param ignorePackages 忽略的包名
+     */
     public static Set<Class<?>> getClasses(ClassLoader loader, String packageName, List<String> ignorePackages) {
         Set<Class<?>> classes = new TreeSet<>(Comparator.comparing(Class::getName));
         try {

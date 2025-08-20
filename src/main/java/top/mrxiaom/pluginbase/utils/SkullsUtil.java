@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -26,6 +25,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+/**
+ * 玩家透露相关工具
+ */
 public class SkullsUtil {
     public static class Skull {
         private final Consumer<SkullMeta> applier;
@@ -38,38 +40,62 @@ public class SkullsUtil {
     }
     private static final Map<String, Skull> cached = new HashMap<>();
     private static final Gson GSON = new Gson();
-    private static boolean HAS_PLAYER_PROFILES;
+    private static boolean HAS_PLAYER_PROFILES = false;
     private static ItemStack headItem;
     @SuppressWarnings({"deprecation"})
     protected static void init() {
-        HAS_PLAYER_PROFILES = MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_18_R1);
-        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_13_R1)) {
+        try {
+            Bukkit.class.getDeclaredMethod("createPlayerProfile", UUID.class);
+            HAS_PLAYER_PROFILES = true;
+        } catch (Throwable ignored) {
+        }
+        if (Util.valueOr(Material.class, "PLAYER_HEAD", null) != null) {
             headItem = new ItemStack(Material.PLAYER_HEAD, 1);
         } else {
             headItem = new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
         }
     }
 
+    /**
+     * 创建一个玩家头颅物品
+     */
     public static ItemStack createHeadItem() {
         return headItem.clone();
     }
 
+    /**
+     * 通过 base64 设置玩家头颅材质
+     * @param meta 物品 ItemMeta
+     * @param base64 头颅材质
+     */
     public static ItemMeta setSkullBase64(ItemMeta meta, String base64) {
         if (meta instanceof SkullMeta) {
-            Skull skull = cached.get(base64);
-            if (skull == null) {
-                skull = generateSkull(base64);
-                if (skull != null) {
-                    cached.put(base64, skull);
-                } else {
-                    return meta;
-                }
+            Skull skull = getOrCreateSkull(base64);
+            if (skull != null) {
+                skull.setSkull((SkullMeta) meta);
             }
-            skull.setSkull((SkullMeta) meta);
         }
         return meta;
     }
 
+    /**
+     * 获取或创建头颅缓存，有可能会创建失败
+     */
+    @Nullable
+    public static Skull getOrCreateSkull(@NotNull String base64) {
+        Skull skull = cached.get(base64);
+        if (skull == null) {
+            skull = generateSkull(base64);
+            if (skull != null) {
+                cached.put(base64, skull);
+            }
+        }
+        return skull;
+    }
+
+    /**
+     * 根据 Base64 生成头颅缓存
+     */
     @Nullable
     public static Skull generateSkull(@NotNull String base64) {
         if (base64.isEmpty()) return null;

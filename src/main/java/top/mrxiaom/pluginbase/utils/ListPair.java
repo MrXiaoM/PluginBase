@@ -4,6 +4,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+/**
+ * <code>List&lt;Pair&lt;K, V&gt;&gt;</code> 的包装类型，其中添加了一些实用的方法。<br>
+ * 默认实现为 <code>ArrayList</code>。
+ */
 public class ListPair<K, V> implements List<Pair<K, V>> {
     private final List<Pair<K, V>> proxy;
     public ListPair(List<Pair<K, V>> proxy) {

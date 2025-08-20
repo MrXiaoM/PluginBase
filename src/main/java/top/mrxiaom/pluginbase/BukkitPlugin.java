@@ -6,6 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -21,8 +23,11 @@ import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
 import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.func.GuiManager;
 import top.mrxiaom.pluginbase.func.language.LanguageManagerImpl;
+import top.mrxiaom.pluginbase.utils.AdventureItemStack;
 import top.mrxiaom.pluginbase.utils.ClassLoaderWrapper;
 import top.mrxiaom.pluginbase.utils.Util;
+import top.mrxiaom.pluginbase.utils.inventory.BukkitInventoryFactory;
+import top.mrxiaom.pluginbase.utils.inventory.InventoryFactory;
 import top.mrxiaom.pluginbase.utils.item.ItemEditor;
 import top.mrxiaom.pluginbase.utils.item.LegacyItemEditor;
 import top.mrxiaom.pluginbase.utils.scheduler.BukkitScheduler;
@@ -42,6 +47,9 @@ import java.util.logging.Level;
 
 import static top.mrxiaom.pluginbase.func.AbstractPluginHolder.*;
 
+/**
+ * PluginBase 抽象插件主类，所有功能的核心，包含一些自定义配置与常用工具
+ */
 @SuppressWarnings({"unused"})
 public abstract class BukkitPlugin extends JavaPlugin {
     public static class Options {
@@ -219,20 +227,37 @@ public abstract class BukkitPlugin extends JavaPlugin {
     }
     private static final String className = BukkitPlugin.class.getName();
     private static BukkitPlugin instance;
+
+    /**
+     * 获取插件主类实例
+     */
     public static BukkitPlugin getInstance() {
         return instance;
     }
     private final List<Class<? extends AbstractPluginHolder<?>>> modulesToRegister = new ArrayList<>();
     private boolean pluginEnabled = false;
+    /**
+     * 获取插件主类配置参数
+     */
     public final Options options;
+    /**
+     * 已包装的插件 ClassLoader，用于快捷添加 URL 到插件的 URLClassLoader 中
+     */
     protected final ClassLoaderWrapper classLoader;
+    /**
+     * 已包装的调度器，用于兼容 Folia 服务端
+     */
     protected IScheduler scheduler = new BukkitScheduler(this);
+    /**
+     * 物品栏创建工厂
+     */
+    protected InventoryFactory inventory;
     public BukkitPlugin(OptionsBuilder builder) {
         this(builder.build());
     }
     private BukkitPlugin(Options options) {
         if (className.equals("group.pluginbase.BukkitPlugin".replace("group", "top.mrxiaom"))) {
-            throw new IllegalStateException("PluginBase 依赖没有 relocate 到插件包，插件无法正常工作，请联系开发者解决该问题\n参考文档: https://github.com/MrXiaoM/PluginBase");
+            throw new IllegalStateException("PluginBase 依赖没有 relocate 到插件包，插件无法正常工作，请联系开发者解决该问题\n参考文档: https://plugins.mcio.dev/elopers/base/buildscript");
         }
         instance = this;
         this.options = options;
@@ -242,28 +267,49 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
     }
 
+    /**
+     * 初始化自定义经济实现，设置选项 <code>economy(EnumEconomy.CUSTOM)</code> 时使用
+     * @see BukkitPlugin#warnNoEconomy()
+     */
     @Nullable
     protected IEconomy initCustomEconomy() {
         return null;
     }
 
+    /**
+     * 初始化物品编辑器。开发者不应该直接使用本方法
+     * @see AdventureItemStack#getItemEditor()
+     */
     @NotNull
     public ItemEditor initItemEditor() {
         return new LegacyItemEditor();
+    }
+
+    /**
+     * 初始化物品栏创建工厂。开发者不应该直接使用本方法
+     * @see BukkitPlugin#createInventory(InventoryHolder, int, String)
+     */
+    @NotNull
+    public InventoryFactory initInventoryFactory() {
+        return new BukkitInventoryFactory();
     }
 
     protected void warnNoEconomy() {
         warn("未发现经济接口实现，插件将卸载");
     }
 
+    protected File getLibrariesFolder() {
+        return new File(getDataFolder(), "libraries");
+    }
+
     protected void loadLibraries() {
-        File librariesFolder = new File(getDataFolder(), "libraries");
+        File librariesFolder = getLibrariesFolder();
         if (!librariesFolder.exists()) {
             createLibrariesFolder(librariesFolder);
         }
         List<File> files = listLibraries(librariesFolder);
         for (File file : files) {
-            if (file.isDirectory()) continue;
+            if (file.isDirectory() || !file.getName().endsWith(".jar")) continue;
             try {
                 URL url = file.toURI().toURL();
                 this.classLoader.addURL(url);
@@ -295,12 +341,33 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     }
 
+    /**
+     * 获取已包装的调度器
+     */
+    @NotNull
     public IScheduler getScheduler() {
         return scheduler;
     }
 
+    /**
+     * 创建一个物品栏实例
+     * @param holder 物品栏持有数据
+     * @param size 大小 (9的倍数)
+     * @param title 标题，支持 MiniMessage
+     */
+    @NotNull
+    public Inventory createInventory(InventoryHolder holder, int size, String title) {
+        return inventory.create(holder, size, title);
+    }
+
+    /**
+     * 在开启 database 选项时，从数据库连接池获取一个连接
+     */
     public Connection getConnection() {
-        return options.databaseHolder == null ? null : options.databaseHolder.getConnection();
+        if (options.databaseHolder == null) {
+            throw new UnsupportedOperationException("请在插件主类配置添加 database(true)");
+        }
+        return options.databaseHolder.getConnection();
     }
 
     protected void beforeLoad() {
@@ -311,18 +378,45 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     }
 
+    /**
+     * 在插件启用的早期阶段执行的操作
+     * @return <code>true</code> 代表允许启用，<code>false</code> 代表遇到问题，例如未安装依赖插件，将会卸载插件
+     */
+    protected boolean beforeEnableEarly() {
+        return true;
+    }
+
+    /**
+     * 在插件启用时，早期阶段之后，模块加载之前执行的操作
+     */
     protected void beforeEnable() {
 
     }
 
+    /**
+     * 在插件启用时，模块加载之后，重载配置之前执行的操作
+     */
+    protected void afterEnableModules() {
+
+    }
+
+    /**
+     * 在插件启用时，重载配置之后的最后阶段执行的操作
+     */
     protected void afterEnable() {
 
     }
 
+    /**
+     * 在插件卸载时，最先执行的操作
+     */
     protected void beforeDisable() {
 
     }
 
+    /**
+     * 在插件卸载时，模块全部卸载完成后执行的操作
+     */
     protected void afterDisable() {
 
     }
@@ -367,6 +461,9 @@ public abstract class BukkitPlugin extends JavaPlugin {
         earlyLoadModules.clear();
     }
 
+    /**
+     * 获取插件功能模块的构造函数参数中，插件主类的类型
+     */
     public Class<?> getConstructorType() {
         return getClass();
     }
@@ -376,7 +473,12 @@ public abstract class BukkitPlugin extends JavaPlugin {
     @SuppressWarnings({"unchecked"})
     public void onEnable() {
         Util.init(this);
+        inventory = initInventoryFactory();
         if (options.enable(this)) {
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        if (!beforeEnableEarly()) {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -398,6 +500,8 @@ public abstract class BukkitPlugin extends JavaPlugin {
         beforeEnable();
         loadModules(this, modulesToRegister);
         modulesToRegister.clear();
+
+        afterEnableModules();
 
         reloadConfig();
 
@@ -455,6 +559,14 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     }
 
+    /**
+     * 在配置有设置 <code>goto</code> 时，转而去读取其指向的配置文件<br>
+     * 以免出现死循环，最多支持转跳 <code>64</code> 次。
+     */
+    public FileConfiguration resolveGotoFlag(FileConfiguration config) {
+        return resolveGotoFlag(config, 0);
+    }
+
     private FileConfiguration resolveGotoFlag(FileConfiguration last, int times) {
         if (times > 64) {
             warn("配置文件中的 goto 跳转次数过多，请自行检查 goto 标签是否有循环调用问题");
@@ -477,7 +589,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
             super.reloadConfig();
             config = getConfig();
             if (options.enableConfigGotoFlag) {
-                config = resolveGotoFlag(config, 0);
+                config = resolveGotoFlag(config);
             }
         } else {
             config = new YamlConfiguration();
@@ -515,10 +627,19 @@ public abstract class BukkitPlugin extends JavaPlugin {
         getLogger().log(Level.SEVERE, msg);
     }
 
+    /**
+     * 保存插件资源到插件数据目录下，若文件已存在，将覆盖该文件
+     * @param path 资源路径
+     */
     public void saveResource(String path) {
         saveResource(path, new File(getDataFolder(), path));
     }
-    
+
+    /**
+     * 保存插件资源到指定文件
+     * @param path 资源路径
+     * @param file 文件
+     */
     public void saveResource(String path, File file) {
         File parent = file.getParentFile();
         if (parent != null && !parent.exists()) {
@@ -538,6 +659,13 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
     }
 
+    /**
+     * 根据输入字符串获取文件实例
+     * <ul>
+     *     <li>以 <code>./</code> 开头时，路径相对于 <code>服务端/plugins/插件名/</code></li>
+     *     <li>其他情况下，路径相对于 <code>服务端/</code> 或者是绝对路径</li>
+     * </ul>
+     */
     public File resolve(String path) {
         return path.startsWith("./") ? new File(getDataFolder(), path.substring(2)) : new File(path);
     }

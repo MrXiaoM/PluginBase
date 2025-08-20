@@ -5,6 +5,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 键值对，并提供字符串快捷替换方案
+ */
 public class Pair<K, V> {
     K key;
     V value;

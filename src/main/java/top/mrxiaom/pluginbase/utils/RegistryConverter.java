@@ -25,6 +25,10 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 根据类名获取 Bukkit 的 Registry，用于 <code>Util.valueOr</code>
+ * @see Util#valueOr(Class, String, Object)
+ */
 public class RegistryConverter {
     private static final Map<String, Registry<?>> registries = new HashMap<>();
     @SuppressWarnings({"UnstableApiUsage"})

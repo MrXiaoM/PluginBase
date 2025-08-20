@@ -8,6 +8,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
 
+/**
+ * URLClassLoader 的包装器
+ */
 public class ClassLoaderWrapper {
     @FunctionalInterface
     public interface DelegateAddURL {
@@ -74,14 +77,23 @@ public class ClassLoaderWrapper {
         return null;
     }
 
+    /**
+     * 获取原始 ClassLoader
+     */
     public URLClassLoader getClassLoader() {
         return classLoader;
     }
 
+    /**
+     * 向 ClassLoader 中添加新的库
+     */
     public void addURL(URL url) throws Exception {
         addURL.run(url);
     }
 
+    /**
+     * 包装器的相关操作是否受支持
+     */
     public boolean isSupported() {
         return supported;
     }

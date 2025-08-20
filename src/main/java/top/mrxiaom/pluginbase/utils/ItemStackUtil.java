@@ -1,6 +1,7 @@
 package top.mrxiaom.pluginbase.utils;
 
 import com.google.common.collect.Lists;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -11,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
@@ -22,6 +24,10 @@ import java.util.*;
 
 import static top.mrxiaom.pluginbase.func.AbstractPluginHolder.t;
 
+/**
+ * 使用原始接口的物品操作工具，除了物品创建操作外，更推荐使用 <code>AdventureItemStack</code>
+ * @see AdventureItemStack
+ */
 public class ItemStackUtil {
     private static final boolean is1_13 = parseOrNull("BLUE_ICE") != null;
     private static final Integer[] frameSlots54 = new Integer[]{
@@ -51,6 +57,9 @@ public class ItemStackUtil {
             18, 19, 20, 21, 22, 23, 24, 25, 26
     };
 
+    /**
+     * 序列化物品为字符串
+     */
     public static String serializeItem(ItemStack item) {
         try (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
             try (BukkitObjectOutputStream out = new BukkitObjectOutputStream(bytes)) {
@@ -63,6 +72,9 @@ public class ItemStackUtil {
         }
     }
 
+    /**
+     * 序列化物品为字符串
+     */
     public static String serializeItems(ItemStack[] items) {
         try (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
             try (BukkitObjectOutputStream out = new BukkitObjectOutputStream(bytes)) {
@@ -78,6 +90,9 @@ public class ItemStackUtil {
         }
     }
 
+    /**
+     * 从字符串反序列化物品
+     */
     public static ItemStack deserializeItem(String s) {
         if (s.trim().isEmpty()) return null;
         try (ByteArrayInputStream bytes = new ByteArrayInputStream(Base64Coder.decodeLines(s))) {
@@ -90,6 +105,9 @@ public class ItemStackUtil {
         }
     }
 
+    /**
+     * 从字符串反序列化物品
+     */
     public static ItemStack[] deserializeItems(String s) {
         if (s.trim().isEmpty()) return new ItemStack[0];
         try (ByteArrayInputStream bytes = new ByteArrayInputStream(Base64Coder.decodeLines(s))) {
@@ -106,12 +124,22 @@ public class ItemStackUtil {
         }
     }
 
+    /**
+     * 获取物品名
+     * @param item 物品
+     * @see AdventureItemStack#getItemDisplayName(ItemStack)
+     */
     public static String getItemDisplayName(ItemStack item) {
         if ((item == null) || !item.hasItemMeta() || item.getItemMeta() == null)
             return item != null ? item.getType().name() : "";
         return item.getItemMeta().getDisplayName();
     }
 
+    /**
+     * 获取物品 Lore
+     * @param item 物品
+     * @see AdventureItemStack#getItemLore(ItemStack)
+     */
     public static List<String> getItemLore(ItemStack item) {
         if ((item == null) || !item.hasItemMeta() || item.getItemMeta() == null
                 || (item.getItemMeta().getLore() == null))
@@ -119,10 +147,19 @@ public class ItemStackUtil {
         return item.getItemMeta().getLore();
     }
 
+    /**
+     * 减少玩家主手物品数量，需要 <code>1.9+</code> 版本才能使用
+     * @param player 玩家
+     */
     public static void reduceItemInMainHand(Player player) {
         reduceItemInMainHand(player, 1);
     }
 
+    /**
+     * 减少玩家主手物品数量，需要 <code>1.9+</code> 版本才能使用
+     * @param player 玩家
+     * @param amount 要减少的数量
+     */
     public static void reduceItemInMainHand(Player player, int amount) {
         ItemStack im = player.getInventory().getItemInMainHand();
         if (im.getAmount() - amount > 0) {
@@ -133,10 +170,19 @@ public class ItemStackUtil {
         }
     }
 
+    /**
+     * 减少玩家副手物品数量，需要 <code>1.9+</code> 版本才能使用
+     * @param player 玩家
+     */
     public static void reduceItemInOffHand(Player player) {
         reduceItemInOffHand(player, 1);
     }
 
+    /**
+     * 减少玩家副手物品数量，需要 <code>1.9+</code> 版本才能使用
+     * @param player 玩家
+     * @param amount 要减少的数量
+     */
     public static void reduceItemInOffHand(Player player, int amount) {
         ItemStack im = player.getInventory().getItemInOffHand();
         if (im.getAmount() - amount > 0) {
@@ -147,6 +193,12 @@ public class ItemStackUtil {
         }
     }
 
+    /**
+     * 设置物品名
+     * @param item 物品
+     * @param name 名称
+     * @see AdventureItemStack#setItemDisplayName(ItemStack, Component)
+     */
     public static void setItemDisplayName(ItemStack item, String name) {
         if (item == null)
             return;
@@ -157,10 +209,22 @@ public class ItemStackUtil {
         item.setItemMeta(im);
     }
 
+    /**
+     * 设置物品 Lore
+     * @param item 物品
+     * @param lore Lore
+     * @see AdventureItemStack#setItemLore(ItemStack, List)
+     */
     public static void setItemLore(ItemStack item, String... lore) {
         setItemLore(item, Lists.newArrayList(lore));
     }
 
+    /**
+     * 设置物品 Lore
+     * @param item 物品
+     * @param lore Lore
+     * @see AdventureItemStack#setItemLore(ItemStack, List)
+     */
     public static void setItemLore(ItemStack item, List<String> lore) {
         if (item == null)
             return;
@@ -175,6 +239,11 @@ public class ItemStackUtil {
         item.setItemMeta(im);
     }
 
+    /**
+     * 设置物品自定义模型标记
+     * @param item 物品
+     * @param customModelData 自定义模型标记
+     */
     public static void setCustomModelData(ItemStack item, Integer customModelData) {
         try {
             ItemMeta meta = item.getItemMeta();
@@ -223,6 +292,10 @@ public class ItemStackUtil {
         return item;
     }
 
+    /**
+     * 设置发光效果，即添加一个附魔，并隐藏附魔，使得物品拥有附魔光泽
+     * @param item 物品
+     */
     public static void setGlow(ItemStack item) {
         Enchantment enchant = Util.valueOrNull(Enchantment.class, "DURABILITY", "UNBREAKING");
         if (enchant != null) {
@@ -233,13 +306,22 @@ public class ItemStackUtil {
         }
     }
 
+    /**
+     * 根据输入的字符串获得物品
+     * @exception IllegalStateException 在找不到物品时抛出异常
+     */
     @NotNull
-    @SuppressWarnings("DataFlowIssue")
     public static ItemStack getItem(String str) {
         return getItem(str, false);
     }
 
+    /**
+     * 根据输入的字符串获得物品
+     * @param defNull 如果找不到物品，返回 <code>null</code>
+     * @exception IllegalStateException 如果未开启 <code>defNull</code>，在找不到物品时抛出异常
+     */
     @Nullable
+    @Contract("_,false->!null")
     public static ItemStack getItem(String str, boolean defNull) {
         if (str.startsWith("itemsadder-")) {
             Optional<ItemStack> item = IA.get(str.substring(11));
@@ -290,8 +372,12 @@ public class ItemStackUtil {
             "SKELETON_SKULL", "WITHER_SKELETON_SKULL", "ZOMBIE_HEAD", "PLAYER_HEAD", "CREEPER_HEAD",
             "SKELETON_WALL_SKULL", "WITHER_SKELETON_WALL_SKULL", "ZOMBIE_WALL_HEAD", "PLAYER_WALL_HEAD", "CREEPER_WALL_HEAD",
     };
+
+    /**
+     * 根据输入字符串，获取 Material 以及旧版本 data 值 (俗称子ID)
+     */
     @Nullable
-    public static Pair<Material, Integer> parseMaterial(String input) {
+    public static Pair<@NotNull Material, @Nullable Integer> parseMaterial(String input) {
         String str;
         Integer dataValue;
         if (input.contains(":")) {
@@ -395,6 +481,9 @@ public class ItemStackUtil {
         return Util.valueOr(Material.class, str, null);
     }
 
+    /**
+     * 根据 <code>ItemStackUtil.parseMaterial</code> 获得的返回值生成新物品
+     */
     @SuppressWarnings({"deprecation"})
     public static ItemStack legacy(Pair<Material, Integer> pair) {
         Material material = pair.getKey();
@@ -406,16 +495,29 @@ public class ItemStackUtil {
         }
     }
 
+    /**
+     * 获取或创建物品的 ItemMeta
+     * @param item 物品
+     */
     @NotNull
     public static ItemMeta getItemMeta(@NotNull ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         return meta == null ? getItemMeta(item.getType()) : meta;
     }
 
+    /**
+     * 创建物品 ItemMeta
+     * @param material 物品材质
+     */
     public static ItemMeta getItemMeta(Material material) {
         return Bukkit.getItemFactory().getItemMeta(material);
     }
 
+    /**
+     * 为界面包裹一圈物品
+     * @param inv 界面，要求大小为 <code>27, 36, 45, 54</code> 其中一个，即 <code>3-6</code> 行
+     * @param item 要设置的物品
+     */
     public static void setFrameItems(Inventory inv, ItemStack item) {
         Integer[] frameSlots;
         switch (inv.getSize()) {
@@ -439,18 +541,33 @@ public class ItemStackUtil {
         }
     }
 
+    /**
+     * 设置菜单某一行的物品
+     * @param inv 菜单界面
+     * @param row 第几行 (<code>1-6</code>)
+     * @param item 要设置的物品
+     */
     public static void setRowItems(Inventory inv, int row, ItemStack item) {
         for (int i = 0; i < 9; i++) {
             inv.setItem(((row - 1) * 9) + i, item);
         }
     }
 
+    /**
+     * 获取一本新的附魔书
+     * @param enchantment 附魔
+     * @param level 等级
+     */
     public static ItemStack getEnchantedBook(Enchantment enchantment, int level) {
         Map<Enchantment, Integer> map = new HashMap<>();
         map.put(enchantment, level);
         return getEnchantedBook(map);
     }
 
+    /**
+     * 获取一本新的附魔书
+     * @param map 附魔列表
+     */
     public static ItemStack getEnchantedBook(Map<Enchantment, Integer> map) {
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta im = item.getItemMeta();
@@ -463,19 +580,43 @@ public class ItemStackUtil {
         return item;
     }
 
+    /**
+     * 给予玩家物品，如果玩家背包不足，则掉落到玩家附近
+     * @param player 玩家
+     * @param items 物品列表
+     */
     public static void giveItemToPlayer(final Player player, final List<ItemStack> items) {
         giveItemToPlayer(player, items.toArray(new ItemStack[0]));
     }
 
+    /**
+     * 给予玩家物品，如果玩家背包不足，则掉落到玩家附近
+     * @param player 玩家
+     * @param items 物品列表
+     */
     public static void giveItemToPlayer(final Player player, final ItemStack... items) {
         giveItemToPlayer(player, "", "", items);
     }
 
+    /**
+     * 给予玩家物品，如果玩家背包不足，则掉落到玩家附近
+     * @param player 玩家
+     * @param msg 成功给予物品时发送消息
+     * @param msgFull 玩家背包已满时，发送的额外消息
+     * @param items 物品列表
+     */
     public static void giveItemToPlayer(final Player player, final String msg, final String msgFull,
                                         final List<ItemStack> items) {
         giveItemToPlayer(player, msg, msgFull, items.toArray(new ItemStack[0]));
     }
 
+    /**
+     * 给予玩家物品，如果玩家背包不足，则掉落到玩家附近
+     * @param player 玩家
+     * @param msg 成功给予物品时发送消息
+     * @param msgFull 玩家背包已满时，发送的额外消息
+     * @param items 物品列表
+     */
     public static void giveItemToPlayer(final Player player, final String msg, final String msgFull,
                                         final ItemStack... items) {
         final Collection<ItemStack> last = player.getInventory().addItem(items).values();
