@@ -63,7 +63,7 @@ public class ColorHelper {
     }
 
     /**
-     * 替换十六进制颜色、渐变色为旧版样式代码 <code>§x</code>，以及替换 <code>&</code> 样式代码
+     * 替换十六进制颜色、渐变色为旧版样式代码 <code>§x</code>，以及替换 <code>&amp;</code> 样式代码
      * @see ColorHelper#parseHexText(String)
      * @see ColorHelper#parseGradientText(String)
      */
@@ -72,7 +72,7 @@ public class ColorHelper {
     }
 
     /**
-     * 替换十六进制颜色、渐变色为旧版样式代码 <code>§x</code>，以及替换 <code>&</code> 样式代码
+     * 替换十六进制颜色、渐变色为旧版样式代码 <code>§x</code>，以及替换 <code>&amp;</code> 样式代码
      * @see ColorHelper#parseHexText(String)
      * @see ColorHelper#parseGradientText(String)
      */

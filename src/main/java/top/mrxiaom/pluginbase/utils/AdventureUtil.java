@@ -241,7 +241,7 @@ public class AdventureUtil {
     }
 
     /**
-     * 将过时的 <code>&</code>、<code>§</code> 样式代码转换为 MiniMessage 格式
+     * 将过时的 <code>&amp;</code>、<code>§</code> 样式代码转换为 MiniMessage 格式
      */
     public static String legacyToMiniMessage(String legacy) {
         StringBuilder builder = new StringBuilder();
