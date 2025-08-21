@@ -270,22 +270,21 @@ public class AdventureItemStack {
                 itemTag);
     }
 
-    public static MiniMessage wrapHoverEvent(ItemStack item) {
+    public static MiniMessage.Builder wrapHoverEvent(ItemStack item) {
         return wrapHoverEvent("item", item);
     }
 
-    public static MiniMessage wrapHoverEvent(String tagName, ItemStack item) {
+    public static MiniMessage.Builder wrapHoverEvent(String tagName, ItemStack item) {
         return AdventureUtil.builder()
-                .editTags(it -> it.resolver(wrapHoverResolver(tagName, item)))
-                .build();
+                .editTags(it -> it.resolver(wrapHoverResolver(tagName, item)));
     }
 
-    public static MiniMessage wrapHoverEvent(List<Pair<String, ItemStack>> items) {
+    public static MiniMessage.Builder wrapHoverEvent(List<Pair<String, ItemStack>> items) {
         MiniMessage.Builder builder = AdventureUtil.builder();
         for (Pair<String, ItemStack> pair : items) {
             builder.editTags(it -> it.resolver(wrapHoverResolver(pair.key(), pair.value())));
         }
-        return builder.build();
+        return builder;
     }
 
     @SuppressWarnings("UnstableApiUsage")
