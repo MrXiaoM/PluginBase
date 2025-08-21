@@ -366,6 +366,9 @@ public class AdventureUtil {
                 }
                 default: {
                     builder.append(chars[i]);
+                    if (chars[i+1] == chars[i]) { // && 转义为 &
+                        i++;
+                    }
                     continue;
                 }
             }
