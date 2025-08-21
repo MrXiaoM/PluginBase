@@ -11,6 +11,7 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
@@ -210,6 +211,19 @@ public class AdventureUtil {
             list.add(miniMessage(miniMessage, component));
         }
         return list;
+    }
+
+    /**
+     * 移除文本组件中所有的 hover event 和 click event。
+     */
+    @Contract("null->null")
+    public static Component removeEvents(Component component) {
+        if (component == null) return null;
+        List<Component> children = new ArrayList<>();
+        for (Component child : component.children()) {
+            children.add(removeEvents(child));
+        }
+        return component.hoverEvent(null).clickEvent(null).children(children);
     }
 
     /**

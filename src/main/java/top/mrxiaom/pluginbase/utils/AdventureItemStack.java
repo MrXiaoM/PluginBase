@@ -133,7 +133,7 @@ public class AdventureItemStack {
      */
     public static void setItemDisplayName(ItemStack item, String name) {
         if (isEmpty(item)) return;
-        setItemDisplayName(item, miniMessage(miniMessageWithoutEvents, name));
+        setItemDisplayName(item, AdventureUtil.removeEvents(miniMessage(miniMessageWithoutEvents, name)));
     }
 
     /**
@@ -155,7 +155,7 @@ public class AdventureItemStack {
     public static String getItemDisplayNameAsMiniMessage(ItemStack item) {
         Component component = getItemDisplayName(item);
         if (component == null) return null;
-        return AdventureUtil.miniMessage(miniMessageWithoutEvents, component);
+        return AdventureUtil.miniMessage(miniMessageWithoutEvents, AdventureUtil.removeEvents(component));
     }
 
     /**
@@ -188,7 +188,7 @@ public class AdventureItemStack {
         if (isEmpty(item)) return;
         List<Component> lines = new ArrayList<>();
         for (String s : lore) {
-            lines.add(miniMessage(miniMessageWithoutEvents, s));
+            lines.add(AdventureUtil.removeEvents(miniMessage(miniMessageWithoutEvents, s)));
         }
         setItemLore(item, lines);
     }
@@ -213,7 +213,7 @@ public class AdventureItemStack {
         List<Component> components = getItemLore(item);
         List<String> lore = new ArrayList<>();
         for (Component component : components) {
-            String s = miniMessage(miniMessageWithoutEvents, component);
+            String s = miniMessage(miniMessageWithoutEvents, AdventureUtil.removeEvents(component));
             lore.add(s);
         }
         return lore;
