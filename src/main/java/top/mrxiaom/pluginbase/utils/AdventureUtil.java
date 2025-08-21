@@ -30,7 +30,7 @@ public class AdventureUtil {
     private static Field resolversField;
 
     @SuppressWarnings({"unchecked"})
-    private static void remove(TagResolver.Builder builder, String... tags) {
+    static void remove(TagResolver.Builder builder, String... tags) {
         try {
             if (resolversField == null) {
                 resolversField = builder.getClass().getDeclaredField("resolvers");

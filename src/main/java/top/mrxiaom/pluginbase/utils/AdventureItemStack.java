@@ -35,6 +35,7 @@ import static top.mrxiaom.pluginbase.utils.AdventureUtil.miniMessage;
  * 基于 adventure 的 Component 的物品操作工具
  */
 public class AdventureItemStack {
+    private static MiniMessage miniMessageWithoutEvents;
     private static ItemEditor itemEditor;
     private static boolean supportCustomModelData = false;
     protected static void init(BukkitPlugin plugin) {
@@ -43,6 +44,9 @@ public class AdventureItemStack {
             supportCustomModelData = true;
         } catch (Throwable ignored) {
         }
+        miniMessageWithoutEvents = AdventureUtil.builder()
+                .editTags(it -> AdventureUtil.remove(it, "hover", "click"))
+                .build();
         itemEditor = plugin.initItemEditor();
     }
 
@@ -129,7 +133,7 @@ public class AdventureItemStack {
      */
     public static void setItemDisplayName(ItemStack item, String name) {
         if (isEmpty(item)) return;
-        setItemDisplayName(item, miniMessage(name));
+        setItemDisplayName(item, miniMessage(miniMessageWithoutEvents, name));
     }
 
     /**
@@ -151,7 +155,7 @@ public class AdventureItemStack {
     public static String getItemDisplayNameAsMiniMessage(ItemStack item) {
         Component component = getItemDisplayName(item);
         if (component == null) return null;
-        return AdventureUtil.miniMessage(component);
+        return AdventureUtil.miniMessage(miniMessageWithoutEvents, component);
     }
 
     /**
@@ -184,7 +188,7 @@ public class AdventureItemStack {
         if (isEmpty(item)) return;
         List<Component> lines = new ArrayList<>();
         for (String s : lore) {
-            lines.add(miniMessage(s));
+            lines.add(miniMessage(miniMessageWithoutEvents, s));
         }
         setItemLore(item, lines);
     }
@@ -209,7 +213,7 @@ public class AdventureItemStack {
         List<Component> components = getItemLore(item);
         List<String> lore = new ArrayList<>();
         for (Component component : components) {
-            String s = miniMessage(component);
+            String s = miniMessage(miniMessageWithoutEvents, component);
             lore.add(s);
         }
         return lore;
