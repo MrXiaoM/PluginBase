@@ -20,28 +20,30 @@ import static top.mrxiaom.pluginbase.utils.AdventureUtil.legacyToMiniMessage;
 public class PaperInventoryFactory implements InventoryFactory {
     private final MiniMessage miniMessage;
     private final LegacyComponentSerializer legacy = LegacyComponentSerializer.legacySection();
+    private static Field resolversField;
     public PaperInventoryFactory() {
         miniMessage = MiniMessage.builder()
                 .editTags(it -> remove(it, "pride"))
+                .preProcessor(AdventureUtil::legacyToMiniMessage)
                 .postProcessor(it -> it.decoration(TextDecoration.ITALIC, false))
                 .build();
     }
 
-    @SuppressWarnings({"unchecked", "CallToPrintStackTrace"})
+    @SuppressWarnings({"unchecked"})
     private static void remove(TagResolver.Builder builder, String... tags) {
-        Class<?> type = builder.getClass();
         try {
-            Field field = type.getDeclaredField("resolvers");
-            field.setAccessible(true);
-            List<TagResolver> list = (List<TagResolver>) field.get(builder);
+            if (resolversField == null) {
+                resolversField = builder.getClass().getDeclaredField("resolvers");
+                resolversField.setAccessible(true);
+            }
+            List<TagResolver> list = (List<TagResolver>) resolversField.get(builder);
             list.removeIf(it -> {
                 for (String tag : tags) {
                     if (it.has(tag)) return true;
                 }
                 return false;
             });
-        } catch (Throwable t) {
-            t.printStackTrace();
+        } catch (Throwable ignored) {
         }
     }
 
@@ -49,7 +51,7 @@ public class PaperInventoryFactory implements InventoryFactory {
         if (text == null) {
             return Component.empty();
         }
-        return miniMessage.deserialize(legacyToMiniMessage(text));
+        return miniMessage.deserialize(text);
     }
 
     @Override

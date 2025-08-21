@@ -27,35 +27,39 @@ import java.util.UUID;
 public class AdventureUtil {
     private static BukkitAudiences adventure;
     private static MiniMessage miniMessage;
+    private static Field resolversField;
 
-    @SuppressWarnings({"unchecked", "CallToPrintStackTrace"})
+    @SuppressWarnings({"unchecked"})
     private static void remove(TagResolver.Builder builder, String... tags) {
-        Class<?> type = builder.getClass();
         try {
-            Field field = type.getDeclaredField("resolvers");
-            field.setAccessible(true);
-            List<TagResolver> list = (List<TagResolver>) field.get(builder);
+            if (resolversField == null) {
+                resolversField = builder.getClass().getDeclaredField("resolvers");
+                resolversField.setAccessible(true);
+            }
+            List<TagResolver> list = (List<TagResolver>) resolversField.get(builder);
             list.removeIf(it -> {
                 for (String tag : tags) {
                     if (it.has(tag)) return true;
                 }
                 return false;
             });
-        } catch (Throwable t) {
-            t.printStackTrace();
+        } catch (Throwable ignored) {
         }
     }
 
-    private static MiniMessage create() {
+    /**
+     * 创建 MiniMessage.Builder，添加了一些方便的设置，例如移除部分标签、自动转换旧版颜色代码等等
+     */
+    public static MiniMessage.Builder builder() {
         return MiniMessage.builder()
                 .editTags(it -> remove(it, "pride"))
-                .postProcessor(it -> it.decoration(TextDecoration.ITALIC, false))
-                .build();
+                .preProcessor(AdventureUtil::legacyToMiniMessage)
+                .postProcessor(it -> it.decoration(TextDecoration.ITALIC, false));
     }
 
     protected static void init(BukkitPlugin plugin) {
         adventure = BukkitAudiences.builder(plugin).build();
-        miniMessage = create();
+        miniMessage = builder().build();
         try {
             AdventureItemStack.init(plugin);
         } catch (Throwable ignored) {
@@ -112,9 +116,18 @@ public class AdventureUtil {
      */
     @NotNull
     public static Component miniMessage(@Nullable String s) {
-        return s == null
-                ? Component.empty()
-                : miniMessage.deserialize(legacyToMiniMessage(s));
+        return miniMessage(miniMessage, s);
+    }
+
+    /**
+     * 将字符串通过 MiniMessage 转换为 Component
+     */
+    @NotNull
+    public static Component miniMessage(@NotNull MiniMessage miniMessage, @Nullable String s) {
+        if (s == null) {
+            return Component.empty();
+        }
+        return miniMessage.deserialize(s);
     }
 
     /**
@@ -122,9 +135,18 @@ public class AdventureUtil {
      */
     @NotNull
     public static String miniMessage(@Nullable Component component) {
-        return component == null
-                ? ""
-                : miniMessage.serialize(component);
+        return miniMessage(miniMessage, component);
+    }
+
+    /**
+     * 将 Component 通过 MiniMessage 转换为字符串
+     */
+    @NotNull
+    public static String miniMessage(@NotNull MiniMessage miniMessage, @Nullable Component component) {
+        if (component == null) {
+            return "";
+        }
+        return miniMessage.serialize(component);
     }
 
     /**
@@ -132,12 +154,18 @@ public class AdventureUtil {
      */
     @NotNull
     public static List<Component> miniMessage(List<String> list) {
+        return miniMessage(miniMessage, list);
+    }
+
+    /**
+     * 将字符串列表通过 MiniMessage 转换为 Component 列表
+     */
+    @NotNull
+    public static List<Component> miniMessage(MiniMessage miniMessage, List<String> list) {
         if (list == null || list.isEmpty()) return new ArrayList<>();
         List<Component> components = new ArrayList<>();
         for (String s : list) {
-            components.add(s == null
-                    ? Component.empty()
-                    : miniMessage.deserialize(legacyToMiniMessage(s)));
+            components.add(miniMessage(miniMessage, s));
         }
         return components;
     }
@@ -146,12 +174,19 @@ public class AdventureUtil {
      * 将字符串列表通过 MiniMessage 转换为 Component，列表每一项均为一行
      */
     public static Component miniMessageLines(List<String> list) {
+        return miniMessageLines(miniMessage, list);
+    }
+
+    /**
+     * 将字符串列表通过 MiniMessage 转换为 Component，列表每一项均为一行
+     */
+    public static Component miniMessageLines(MiniMessage miniMessage, List<String> list) {
         if (list == null || list.isEmpty()) return Component.empty();
         TextComponent.Builder text = Component.text();
         text.append(miniMessage(list.get(0)));
         for (int i = 1; i < list.size(); i++) {
             text.appendNewline();
-            text.append(miniMessage(list.get(i)));
+            text.append(miniMessage(miniMessage, list.get(i)));
         }
         return text.build();
     }
@@ -161,10 +196,18 @@ public class AdventureUtil {
      */
     @NotNull
     public static List<String> miniMessage_(List<Component> components) {
+        return miniMessage_(miniMessage, components);
+    }
+
+    /**
+     * 将 Component 列表通过 MiniMessage 转换为字符串列表
+     */
+    @NotNull
+    public static List<String> miniMessage_(MiniMessage miniMessage, List<Component> components) {
         if (components == null) return new ArrayList<>();
         List<String> list = new ArrayList<>();
         for (Component component : components) {
-            list.add(miniMessage(component));
+            list.add(miniMessage(miniMessage, component));
         }
         return list;
     }
@@ -210,7 +253,17 @@ public class AdventureUtil {
      * @param message 消息
      */
     public static void sendMessage(CommandSender sender, String message) {
-        sendMessage(sender, miniMessage(message));
+        sendMessage(sender, miniMessage, message);
+    }
+
+    /**
+     * 向用户发送消息，支持 MiniMessage
+     * @param sender 消息接收者
+     * @param miniMessage 自定义 MiniMessage 实例
+     * @param message 消息
+     */
+    public static void sendMessage(CommandSender sender, MiniMessage miniMessage, String message) {
+        sendMessage(sender, miniMessage(miniMessage, message));
     }
 
     /**
@@ -228,6 +281,16 @@ public class AdventureUtil {
      * @param message 消息
      */
     public static void sendActionBar(Player player, String message) {
+        sendActionBar(player, miniMessage, message);
+    }
+
+    /**
+     * 向玩家发送 ActionBar 消息，即物品栏上方的消息
+     * @param player 玩家
+     * @param miniMessage 自定义 MiniMessage 实例
+     * @param message 消息
+     */
+    public static void sendActionBar(Player player, MiniMessage miniMessage, String message) {
         sendActionBar(player, miniMessage(message));
     }
 

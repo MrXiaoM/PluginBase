@@ -1,6 +1,7 @@
 package top.mrxiaom.pluginbase.func.language;
 
 import com.google.common.collect.Lists;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.func.LanguageManager;
@@ -217,12 +218,33 @@ public abstract class AbstractLanguageHolder {
     }
     /**
      * 以 MiniMessage 格式发送消息
+     * @param miniMessage 自定义 MiniMessage 实例
+     * @param receiver 消息接收者
+     * @return 用于命令快捷返回，恒返回 true
+     */
+    public boolean tm(MiniMessage miniMessage, CommandSender receiver) {
+        AdventureUtil.sendMessage(receiver, miniMessage, str());
+        return true;
+    }
+    /**
+     * 以 MiniMessage 格式发送消息
      * @param receiver 消息接收者
      * @param args <code>String.format</code> 参数
      * @return 用于命令快捷返回，恒返回 true
      */
     public boolean tm(CommandSender receiver, Object... args) {
         AdventureUtil.sendMessage(receiver, str(args));
+        return true;
+    }
+    /**
+     * 以 MiniMessage 格式发送消息
+     * @param miniMessage 自定义 MiniMessage 实例
+     * @param receiver 消息接收者
+     * @param args <code>String.format</code> 参数
+     * @return 用于命令快捷返回，恒返回 true
+     */
+    public boolean tm(MiniMessage miniMessage, CommandSender receiver, Object... args) {
+        AdventureUtil.sendMessage(receiver, miniMessage, str(args));
         return true;
     }
     /**
@@ -238,12 +260,35 @@ public abstract class AbstractLanguageHolder {
     }
     /**
      * 以 MiniMessage 格式发送消息
+     * @param miniMessage 自定义 MiniMessage 实例
+     * @param receiver 消息接收者
+     * @param replacements 变量替换键值对
+     * @return 用于命令快捷返回，恒返回 true
+     */
+    @SafeVarargs
+    public final boolean tm(MiniMessage miniMessage, CommandSender receiver, Pair<String, Object>... replacements) {
+        AdventureUtil.sendMessage(receiver, miniMessage, str(replacements));
+        return true;
+    }
+    /**
+     * 以 MiniMessage 格式发送消息
      * @param receiver 消息接收者
      * @param replacements 变量替换键值对
      * @return 用于命令快捷返回，恒返回 true
      */
     public boolean tm(CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
         AdventureUtil.sendMessage(receiver, str(replacements));
+        return true;
+    }
+    /**
+     * 以 MiniMessage 格式发送消息
+     * @param miniMessage 自定义 MiniMessage 实例
+     * @param receiver 消息接收者
+     * @param replacements 变量替换键值对
+     * @return 用于命令快捷返回，恒返回 true
+     */
+    public boolean tm(MiniMessage miniMessage, CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
+        AdventureUtil.sendMessage(receiver, miniMessage, str(replacements));
         return true;
     }
 }

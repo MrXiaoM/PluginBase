@@ -10,6 +10,12 @@ import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.event.HoverEventSource;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.internal.serializer.SerializableResolver;
+import net.kyori.adventure.text.minimessage.internal.serializer.StyleClaim;
+import net.kyori.adventure.text.minimessage.tag.Tag;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -262,6 +268,36 @@ public class AdventureItemStack {
                 Key.key(nbt.getString("id"), ':'),
                 nbt.getInteger("count"),
                 itemTag);
+    }
+
+    public static MiniMessage wrapHoverEvent(ItemStack item) {
+        return wrapHoverEvent("item", item);
+    }
+
+    public static MiniMessage wrapHoverEvent(String tagName, ItemStack item) {
+        return AdventureUtil.builder()
+                .editTags(it -> it.resolver(wrapHoverResolver(tagName, item)))
+                .build();
+    }
+
+    public static MiniMessage wrapHoverEvent(List<Pair<String, ItemStack>> items) {
+        MiniMessage.Builder builder = AdventureUtil.builder();
+        for (Pair<String, ItemStack> pair : items) {
+            builder.editTags(it -> it.resolver(wrapHoverResolver(pair.key(), pair.value())));
+        }
+        return builder.build();
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    private static TagResolver wrapHoverResolver(String tagName, ItemStack item) {
+        return SerializableResolver.claimingStyle(
+                tagName,
+                (args, ctx) -> Tag.styling(toHoverEvent(item).asHoverEvent()),
+                StyleClaim.claim(
+                        tagName,
+                        Style::hoverEvent,
+                        (event, emitter) -> emitter.tag(tagName)
+                ));
     }
 
     /**
