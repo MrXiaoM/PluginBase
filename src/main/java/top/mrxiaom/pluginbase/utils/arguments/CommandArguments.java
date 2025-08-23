@@ -276,7 +276,11 @@ public abstract class CommandArguments {
     }
 
     public <T> T to(Function<String[], T> transformer) {
-        return arguments.to(transformer);
+        T another = arguments.to(transformer);
+        if (another instanceof CommandArguments) {
+            ((CommandArguments) another).pointer(pointer);
+        }
+        return another;
     }
 
     public static <T> Supplier<T> NULL() {
