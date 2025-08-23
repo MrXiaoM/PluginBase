@@ -109,7 +109,7 @@ public class LoadedIcon {
         this.leftClickCommands = loadActions(current, "left-click-commands", "left_click_commands");
         this.rightClickCommands = loadActions(current, "right-click-commands", "right_click_commands");
         this.shiftLeftClickCommands = loadActions(current, "shift-left-click-commands", "shift_left_click_commands");
-        this.shiftRightClickCommands = loadActions(current, "shift-left-click-commands", "shift_left_click_commands");
+        this.shiftRightClickCommands = loadActions(current, "shift-right-click-commands", "shift_right_click_commands");
         this.dropCommands = loadActions(current, "drop-commands", "drop_commands");
         Object tag = null;
         for (ITagProvider provider : tagProviders) {
