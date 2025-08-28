@@ -45,7 +45,7 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
 
     @Override
     public void reloadConfig(MemoryConfiguration cfg) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration config = Util.load(file);
         guiTitle = config.getString("title", "");
         guiInventory = getInventory(config, "inventory");
         reloadMenuConfig(config);

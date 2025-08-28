@@ -47,7 +47,7 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
             warn(warningPrefix + "重复菜单 " + id);
             return;
         }
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration config = Util.load(file);
         M loaded = provider.load(parent, config, id);
         if (loaded != null) {
             menus.put(id, loaded);

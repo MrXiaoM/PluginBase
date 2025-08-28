@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.database.IDatabase;
+import top.mrxiaom.pluginbase.utils.Util;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -75,7 +76,7 @@ public class DatabaseHolder {
         reloadFromFile(file);
     }
     private void reloadFromFile(File file) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration config = Util.load(file);
         if (config.contains("goto")) {
             File gotoFile = new File(config.getString("goto", ""));
             if (gotoFile.exists() && gotoFile.isFile()) {

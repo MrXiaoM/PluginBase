@@ -573,7 +573,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         String gotoFlag = last.getString("goto", null);
         if (gotoFlag != null) {
             File file = resolve(gotoFlag);
-            YamlConfiguration newConfig = YamlConfiguration.loadConfiguration(file);
+            YamlConfiguration newConfig = Util.load(file);
             return resolveGotoFlag(newConfig, times + 1);
         }
         return last;
