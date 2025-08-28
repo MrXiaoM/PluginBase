@@ -1,8 +1,6 @@
 package top.mrxiaom.pluginbase.utils;
 
 import com.google.common.collect.Lists;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,7 +20,6 @@ public class ColorHelper {
     private static final Pattern startWithColor = Pattern.compile("^(&[LMNKOlmnko])+");
     private static final Pattern gradientPattern = Pattern.compile("\\{(#[ABCDEFabcdef0123456789]{6}):(#[ABCDEFabcdef0123456789]{6}):(.*?)}");
     private static final Pattern hexPattern = Pattern.compile("&(#[ABCDEFabcdef0123456789]{6})");
-    private static final Pattern translatePattern = Pattern.compile("<translate:(.*?)>");
     private static boolean old = false;
 
     /**
@@ -36,27 +33,13 @@ public class ColorHelper {
             AdventureUtil.sendMessage(sender, s);
             return;
         }
-        if (old && !(sender instanceof Player)) {
+        if (old) {
             sender.sendMessage(parseColor(s));
             return;
         }
-        TextComponent builder = new TextComponent("");
-        split(translatePattern, parseColor(s), regexResult -> {
-            if (!regexResult.isMatched) {
-                builder.addExtra(new TextComponent(regexResult.text));
-            } else {
-                TranslatableComponent translatable = new TranslatableComponent(regexResult.result.group(1));
-                builder.addExtra(translatable);
-            }
-        });
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            player.spigot().sendMessage(builder);
-            return;
-        }
         try {
-            sender.spigot().sendMessage(builder);
-        } catch (NoSuchMethodError ignored) {
+            BungeeComponents.parseAndSend(sender, parseColor(s));
+        } catch (LinkageError ignored) {
             old = true;
             sender.sendMessage(parseColor(s));
         }
