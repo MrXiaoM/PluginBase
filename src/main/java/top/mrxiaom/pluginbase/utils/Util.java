@@ -528,7 +528,7 @@ public class Util {
      * @param s 输入的字符串
      * @param def 默认值
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes"})
     public static <T> T valueOr(Class<T> type, String s, T def) {
         if (s == null || s.isEmpty()) return def;
         if (type.isEnum()) {
@@ -536,16 +536,12 @@ public class Util {
                 if (((Enum) t).name().equalsIgnoreCase(s)) return t;
             }
         } else {
-            Registry<?> registry = RegistryConverter.fromType(type);
-            if (registry != null) {
-                Keyed matched = registry.match(s);
-                if (/*matched != null && */type.isInstance(matched)) {
-                    return (T) matched;
+            try {
+                T t = RegistryUtils.fromType(type, s);
+                if (t != null) {
+                    return t;
                 }
-                Keyed newerMatched = registry.match(s.replace('_', '.'));
-                if (/*newerMatched != null && */type.isInstance(matched)) {
-                    return (T) newerMatched;
-                }
+            } catch (LinkageError ignored) {
             }
         }
         return def;

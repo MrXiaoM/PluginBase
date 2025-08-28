@@ -301,7 +301,10 @@ public class ItemStackUtil {
         if (enchant != null) {
             ItemMeta meta = getItemMeta(item);
             meta.addEnchant(enchant, 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            try {
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            } catch (Throwable ignored) {
+            }
             item.setItemMeta(meta);
         }
     }
