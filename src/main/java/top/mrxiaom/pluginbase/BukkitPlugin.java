@@ -32,10 +32,7 @@ import top.mrxiaom.pluginbase.utils.item.ItemEditor;
 import top.mrxiaom.pluginbase.utils.item.LegacyItemEditor;
 import top.mrxiaom.pluginbase.utils.scheduler.BukkitScheduler;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.Connection;
@@ -252,6 +249,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
      * 物品栏创建工厂
      */
     protected InventoryFactory inventory;
+    private FileConfiguration config;
     public BukkitPlugin(OptionsBuilder builder) {
         this(builder.build());
     }
@@ -582,12 +580,22 @@ public abstract class BukkitPlugin extends JavaPlugin {
     }
 
     @Override
+    public @NotNull FileConfiguration getConfig() {
+        if (config == null) {
+            this.reloadConfig();
+        }
+        return config;
+    }
+
+    @Override
     public void reloadConfig() {
         FileConfiguration config;
         if (!options.disableDefaultConfig) {
-            this.saveDefaultConfig();
-            super.reloadConfig();
-            config = getConfig();
+            File file = new File(getDataFolder(), "config.yml");
+            if (!file.exists()) {
+                saveResource("config.yml", file);
+            }
+            this.config = config = Util.load(file);
             if (options.enableConfigGotoFlag) {
                 config = resolveGotoFlag(config);
             }

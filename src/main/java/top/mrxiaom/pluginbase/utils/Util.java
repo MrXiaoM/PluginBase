@@ -1,9 +1,13 @@
 package top.mrxiaom.pluginbase.utils;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,12 +19,11 @@ import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -28,6 +31,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -582,6 +586,73 @@ public class Util {
         V newValue = creator.get();
         map.put(key, newValue);
         return newValue;
+    }
+
+    /**
+     * 加载配置文件
+     * @see Util#load(FileConfiguration, File, Charset)
+     */
+    public static YamlConfiguration load(File file) {
+        return load(new YamlConfiguration(), file);
+    }
+
+    /**
+     * 加载配置文件
+     * @see Util#load(FileConfiguration, File, Charset)
+     */
+    public static YamlConfiguration load(File file, Charset charset) {
+        return load(new YamlConfiguration(), file, charset);
+    }
+
+    /**
+     * 加载配置文件
+     * @see Util#load(FileConfiguration, File, Charset)
+     */
+    public static <T extends FileConfiguration> T load(T config, File file) {
+        return load(config, file, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 加载配置文件
+     * @param config 目标配置
+     * @param file 文件
+     * @param charset 编码
+     */
+    public static <T extends FileConfiguration> T load(T config, File file, Charset charset) {
+        try (FileInputStream stream = new FileInputStream(file)) {
+            config.load(new InputStreamReader(stream, charset));
+        } catch (FileNotFoundException ignored) {
+        } catch (IOException | InvalidConfigurationException ex) {
+            Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
+        }
+        return config;
+    }
+
+    /**
+     * 保存配置文件
+     * @see Util#save(FileConfiguration, File, Charset)
+     */
+    public static void save(FileConfiguration config, File file) throws IOException {
+        save(config, file, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 保存配置文件
+     * @param config 配置文件
+     * @param file 文件
+     * @param charset 编码
+     */
+    public static void save(FileConfiguration config, File file, Charset charset) throws IOException {
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            mkdirs(parent);
+        }
+        String data = config.saveToString();
+
+        try (FileOutputStream output = new FileOutputStream(file);
+             Writer writer = new OutputStreamWriter(output, charset)) {
+            writer.write(data);
+        }
     }
 
     /**
