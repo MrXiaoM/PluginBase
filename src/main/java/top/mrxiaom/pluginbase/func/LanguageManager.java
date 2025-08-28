@@ -222,7 +222,7 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
             }
         }
         try {
-            config.save(file);
+            Util.save(config, file);
         } catch (IOException e) {
             warn("更新语言文件时出现异常", e);
         }
