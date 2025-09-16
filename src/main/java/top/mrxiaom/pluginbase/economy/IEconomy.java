@@ -28,13 +28,15 @@ public interface IEconomy {
      * 给予玩家货币
      * @param player 玩家
      * @param money 货币数量
+     * @return 是否操作成功
      */
-    void giveMoney(OfflinePlayer player, double money);
+    boolean giveMoney(OfflinePlayer player, double money);
 
     /**
      * 从玩家那里拿走货币
      * @param player 玩家
      * @param money 货币数量
+     * @return 是否操作成功
      */
-    void takeMoney(OfflinePlayer player, double money);
+    boolean takeMoney(OfflinePlayer player, double money);
 }
