@@ -9,6 +9,46 @@ import java.net.URLClassLoader;
 import java.util.Collection;
 
 public class ClassLoaderWrapper {
+    public static final boolean isSupportLibraryLoader = supportLibraryLoader();
+    private static boolean supportLibraryLoader() {
+        try {
+            Class.forName("org.bukkit.plugin.java.LibraryLoader");
+            Class<?> desc = Class.forName("org.bukkit.plugin.PluginDescriptionFile");
+            desc.getDeclaredMethod("getLibraries");
+            return true;
+        } catch (Throwable t) {
+            return false;
+        }
+    }
+    public static URLClassLoader findLibraryLoader(URLClassLoader pluginClassLoader) {
+        URLClassLoader classLoader = findLibraryLoaderOrNull(pluginClassLoader);
+        return classLoader == null ? pluginClassLoader : classLoader;
+    }
+    public static URLClassLoader findLibraryLoaderOrNull(URLClassLoader pluginClassLoader) {
+        try {
+            Class<?> type = Class.forName("org.bukkit.plugin.java.PluginClassLoader");
+            if (type.isInstance(pluginClassLoader)) {
+                Object classLoader = getLibraryLoader(type, pluginClassLoader);
+                if (classLoader instanceof URLClassLoader) {
+                    return (URLClassLoader) classLoader;
+                }
+            }
+            Class<?> oldType = Class.forName("org.bukkit.plugin.java.JavaClassLoader");
+            if (oldType.isInstance(pluginClassLoader)) {
+                Object classLoader = getLibraryLoader(oldType, pluginClassLoader);
+                if (classLoader instanceof URLClassLoader) {
+                    return (URLClassLoader) classLoader;
+                }
+            }
+        } catch (ReflectiveOperationException ignored) {
+        }
+        return null;
+    }
+    private static Object getLibraryLoader(Class<?> type, Object instance) throws ReflectiveOperationException {
+        Field field = type.getDeclaredField("libraryLoader");
+        field.setAccessible(true);
+        return field.get(instance);
+    }
     @FunctionalInterface
     public interface DelegateAddURL {
         void run(URL url) throws Exception;
