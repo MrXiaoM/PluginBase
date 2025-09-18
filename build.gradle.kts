@@ -18,7 +18,7 @@ buildConfig {
 }
 allprojects {
     group = "top.mrxiaom.pluginbase"
-    version = "1.6.3"
+    version = "1.6.4"
 
     repositories {
         mavenCentral()
