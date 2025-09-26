@@ -27,6 +27,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.resolver.aether.artifact.Artifact;
 
 import static java.util.Objects.requireNonNull;
@@ -248,7 +249,7 @@ public final class Dependency {
         }
 
         @Override
-        public Iterator<Exclusion> iterator() {
+        public @NotNull Iterator<Exclusion> iterator() {
             return new Iterator<Exclusion>() {
 
                 private int cursor = 0;

@@ -18,10 +18,10 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.path;
 
-import org.codehaus.plexus.interpolation.AbstractValueSource;
-import org.codehaus.plexus.interpolation.InterpolationException;
-import org.codehaus.plexus.interpolation.MapBasedValueSource;
-import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.AbstractValueSource;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.InterpolationException;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.MapBasedValueSource;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.RegexBasedInterpolator;
 import top.mrxiaom.pluginbase.resolver.maven.model.ActivationFile;
 import top.mrxiaom.pluginbase.resolver.maven.model.profile.ProfileActivationContext;
 

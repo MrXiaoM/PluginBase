@@ -80,9 +80,6 @@ public class DependencyCollectionException extends RepositoryException {
         if (request.getRoot() != null) {
             return request.getRoot().toString();
         }
-        if (request.getRootArtifact() != null) {
-            return request.getRootArtifact().toString();
-        }
 
         return request.getDependencies().toString();
     }

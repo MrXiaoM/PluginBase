@@ -18,7 +18,7 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.interpolation;
 
-import org.codehaus.plexus.interpolation.AbstractValueSource;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.AbstractValueSource;
 
 import java.util.Date;
 import java.util.Properties;

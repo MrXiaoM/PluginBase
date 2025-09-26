@@ -18,10 +18,10 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.building;
 
-import org.codehaus.plexus.interpolation.InterpolationException;
-import org.codehaus.plexus.interpolation.MapBasedValueSource;
-import org.codehaus.plexus.interpolation.StringSearchInterpolator;
-import org.codehaus.plexus.util.StringUtils;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.InterpolationException;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.MapBasedValueSource;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.StringSearchInterpolator;
+import top.mrxiaom.pluginbase.resolver.plexus.util.StringUtils;
 import top.mrxiaom.pluginbase.resolver.maven.artifact.versioning.DefaultArtifactVersion;
 import top.mrxiaom.pluginbase.resolver.maven.artifact.versioning.InvalidVersionSpecificationException;
 import top.mrxiaom.pluginbase.resolver.maven.artifact.versioning.VersionRange;

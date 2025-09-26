@@ -18,7 +18,7 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.interpolation;
 
-import org.codehaus.plexus.interpolation.ValueSource;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.ValueSource;
 import top.mrxiaom.pluginbase.resolver.maven.model.building.ModelProblem;
 import top.mrxiaom.pluginbase.resolver.maven.model.building.ModelProblemCollector;
 import top.mrxiaom.pluginbase.resolver.maven.model.building.ModelProblemCollectorRequest;
@@ -64,8 +64,7 @@ class ProblemDetectingValueSource implements ValueSource {
     }
 
     @Override
-    @SuppressWarnings({"rawtypes"})
-    public List getFeedback() {
+    public List<Object> getFeedback() {
         return valueSource.getFeedback();
     }
 

@@ -18,9 +18,9 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.io;
 
-import org.codehaus.plexus.util.ReaderFactory;
-import org.codehaus.plexus.util.xml.XmlStreamReader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import top.mrxiaom.pluginbase.resolver.plexus.util.ReaderFactory;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.XmlStreamReader;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.pull.XmlPullParserException;
 import top.mrxiaom.pluginbase.resolver.maven.model.InputSource;
 import top.mrxiaom.pluginbase.resolver.maven.model.Model;
 import top.mrxiaom.pluginbase.resolver.maven.model.io.xpp3.MavenXpp3ReaderEx;

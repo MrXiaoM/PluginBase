@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 import top.mrxiaom.pluginbase.resolver.aether.RepositorySystem;
-import top.mrxiaom.pluginbase.resolver.aether.graph.DependencyCycle;
 import top.mrxiaom.pluginbase.resolver.aether.graph.DependencyNode;
 
 import static java.util.Objects.requireNonNull;
@@ -38,8 +37,6 @@ public final class DependencyResult {
 
     private DependencyNode root;
 
-    private List<DependencyCycle> cycles;
-
     private List<Exception> collectExceptions;
 
     private List<ArtifactResult> artifactResults;
@@ -52,7 +49,6 @@ public final class DependencyResult {
     public DependencyResult(DependencyRequest request) {
         this.request = requireNonNull(request, "dependency request cannot be null");
         root = request.getRoot();
-        cycles = Collections.emptyList();
         collectExceptions = Collections.emptyList();
         artifactResults = Collections.emptyList();
     }
@@ -84,33 +80,6 @@ public final class DependencyResult {
      */
     public DependencyResult setRoot(DependencyNode root) {
         this.root = root;
-        return this;
-    }
-
-    /**
-     * Gets the dependency cycles that were encountered while building the dependency graph. Note that dependency cycles
-     * will only be reported here if the underlying request was created from a
-     * {@link top.mrxiaom.pluginbase.resolver.aether.collection.CollectRequest CollectRequest}. If the underlying {@link DependencyRequest}
-     * was created from an existing dependency graph, information about cycles will not be available in this result.
-     *
-     * @return The dependency cycles in the (raw) graph, never {@code null}.
-     */
-    public List<DependencyCycle> getCycles() {
-        return cycles;
-    }
-
-    /**
-     * Records the specified dependency cycles while building the dependency graph.
-     *
-     * @param cycles The dependency cycles to record, may be {@code null}.
-     * @return This result for chaining, never {@code null}.
-     */
-    public DependencyResult setCycles(List<DependencyCycle> cycles) {
-        if (cycles == null) {
-            this.cycles = Collections.emptyList();
-        } else {
-            this.cycles = cycles;
-        }
         return this;
     }
 

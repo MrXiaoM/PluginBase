@@ -18,7 +18,7 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.validation;
 
-import org.codehaus.plexus.util.StringUtils;
+import top.mrxiaom.pluginbase.resolver.plexus.util.StringUtils;
 import top.mrxiaom.pluginbase.resolver.maven.model.*;
 import top.mrxiaom.pluginbase.resolver.maven.model.building.ModelBuildingRequest;
 import top.mrxiaom.pluginbase.resolver.maven.model.building.ModelProblem;

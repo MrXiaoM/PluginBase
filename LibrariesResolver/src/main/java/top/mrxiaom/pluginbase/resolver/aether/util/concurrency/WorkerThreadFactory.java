@@ -18,6 +18,8 @@
  */
 package top.mrxiaom.pluginbase.resolver.aether.util.concurrency;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -60,7 +62,7 @@ public final class WorkerThreadFactory implements ThreadFactory {
         return name;
     }
 
-    public Thread newThread(Runnable r) {
+    public Thread newThread(@NotNull Runnable r) {
         Thread thread = factory.newThread(r);
         thread.setName(namePrefix + threadIndex.getAndIncrement());
         thread.setDaemon(true);

@@ -9,11 +9,11 @@ package top.mrxiaom.pluginbase.resolver.maven.artifact.repository.metadata.io.xp
  //- Imported classes and packages -/
 //---------------------------------/
 
-import org.codehaus.plexus.util.ReaderFactory;
-import org.codehaus.plexus.util.xml.pull.EntityReplacementMap;
-import org.codehaus.plexus.util.xml.pull.MXParser;
-import org.codehaus.plexus.util.xml.pull.XmlPullParser;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import top.mrxiaom.pluginbase.resolver.plexus.util.ReaderFactory;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.pull.EntityReplacementMap;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.pull.MXParser;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.pull.XmlPullParser;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.pull.XmlPullParserException;
 import top.mrxiaom.pluginbase.resolver.maven.artifact.repository.metadata.*;
 
 import java.io.IOException;

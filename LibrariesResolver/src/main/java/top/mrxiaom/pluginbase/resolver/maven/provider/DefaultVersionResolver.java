@@ -18,7 +18,7 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.provider;
 
-import org.codehaus.plexus.util.StringUtils;
+import top.mrxiaom.pluginbase.resolver.plexus.util.StringUtils;
 import top.mrxiaom.pluginbase.resolver.aether.*;
 import top.mrxiaom.pluginbase.resolver.aether.RepositoryEvent.EventType;
 import top.mrxiaom.pluginbase.resolver.aether.artifact.Artifact;

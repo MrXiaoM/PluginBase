@@ -9,11 +9,12 @@ package top.mrxiaom.pluginbase.resolver.maven.model.io.xpp3;
  //- Imported classes and packages -/
 //---------------------------------/
 
-import org.codehaus.plexus.util.ReaderFactory;
-import org.codehaus.plexus.util.xml.pull.EntityReplacementMap;
-import org.codehaus.plexus.util.xml.pull.MXParser;
-import org.codehaus.plexus.util.xml.pull.XmlPullParser;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import top.mrxiaom.pluginbase.resolver.plexus.util.ReaderFactory;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.Xpp3DomBuilder;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.pull.EntityReplacementMap;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.pull.MXParser;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.pull.XmlPullParser;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.pull.XmlPullParserException;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.resolver.maven.model.*;
 
@@ -2277,9 +2278,9 @@ public class MavenXpp3ReaderEx
                 if (source != null) {
                     InputLocation _location = new InputLocation(parser.getLineNumber(), parser.getColumnNumber(), source);
                     model.setLocation("reports", _location);
-                    model.setReports( org.codehaus.plexus.util.xml.Xpp3DomBuilder.build( parser, true, new Xpp3DomBuilderInputLocationBuilder( _location ) ) );
+                    model.setReports( Xpp3DomBuilder.build( parser, true, new Xpp3DomBuilderInputLocationBuilder( _location ) ) );
                 } else {
-                    model.setReports( org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true) );
+                    model.setReports( Xpp3DomBuilder.build(parser, true) );
                 }
             }
             else if ( checkFieldWithDuplicate( parser, "reporting", null, parsed ) )
@@ -2663,9 +2664,9 @@ public class MavenXpp3ReaderEx
                 if (source != null) {
                     InputLocation _location = new InputLocation(parser.getLineNumber(), parser.getColumnNumber(), source);
                     plugin.setLocation("goals", _location);
-                    plugin.setGoals(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
+                    plugin.setGoals(Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
                 } else {
-                    plugin.setGoals(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true));
+                    plugin.setGoals(Xpp3DomBuilder.build(parser, true));
                 }
             }
             else if ( checkFieldWithDuplicate( parser, "inherited", null, parsed ) )
@@ -2681,9 +2682,9 @@ public class MavenXpp3ReaderEx
                 if (source != null) {
                     InputLocation _location = new InputLocation(parser.getLineNumber(), parser.getColumnNumber(), source);
                     plugin.setLocation("configuration", _location);
-                    plugin.setConfiguration(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
+                    plugin.setConfiguration(Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
                 } else {
-                    plugin.setConfiguration(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true));
+                    plugin.setConfiguration(Xpp3DomBuilder.build(parser, true));
                 }
             }
             else
@@ -2786,9 +2787,9 @@ public class MavenXpp3ReaderEx
                 if (source != null) {
                     InputLocation _location = new InputLocation(parser.getLineNumber(), parser.getColumnNumber(), source);
                     pluginExecution.setLocation("configuration", _location);
-                    pluginExecution.setConfiguration(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
+                    pluginExecution.setConfiguration(Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
                 } else {
-                    pluginExecution.setConfiguration(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true));
+                    pluginExecution.setConfiguration(Xpp3DomBuilder.build(parser, true));
                 }
             }
             else
@@ -3071,9 +3072,9 @@ public class MavenXpp3ReaderEx
                 if (source != null) {
                     InputLocation _location = new InputLocation(parser.getLineNumber(), parser.getColumnNumber(), source);
                     profile.setLocation("reports", _location);
-                    profile.setReports(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
+                    profile.setReports(Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
                 } else {
-                    profile.setReports(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true));
+                    profile.setReports(Xpp3DomBuilder.build(parser, true));
                 }
             }
             else if ( checkFieldWithDuplicate( parser, "reporting", null, parsed ) )
@@ -3253,9 +3254,9 @@ public class MavenXpp3ReaderEx
                 if (source != null) {
                     InputLocation _location = new InputLocation(parser.getLineNumber(), parser.getColumnNumber(), source);
                     reportPlugin.setLocation("configuration", _location);
-                    reportPlugin.setConfiguration(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
+                    reportPlugin.setConfiguration(Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
                 } else {
-                    reportPlugin.setConfiguration(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true));
+                    reportPlugin.setConfiguration(Xpp3DomBuilder.build(parser, true));
                 }
             }
             else
@@ -3350,9 +3351,9 @@ public class MavenXpp3ReaderEx
                 if (source != null) {
                     InputLocation _location = new InputLocation(parser.getLineNumber(), parser.getColumnNumber(), source);
                     reportSet.setLocation("configuration", _location);
-                    reportSet.setConfiguration(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
+                    reportSet.setConfiguration(Xpp3DomBuilder.build(parser, true, new Xpp3DomBuilderInputLocationBuilder(_location)));
                 } else {
-                    reportSet.setConfiguration(org.codehaus.plexus.util.xml.Xpp3DomBuilder.build(parser, true));
+                    reportSet.setConfiguration(Xpp3DomBuilder.build(parser, true));
                 }
             }
             else
@@ -3902,7 +3903,7 @@ public class MavenXpp3ReaderEx
      * @version $Revision$ $Date$
      */
     private static class Xpp3DomBuilderInputLocationBuilder
-        implements org.codehaus.plexus.util.xml.Xpp3DomBuilder.InputLocationBuilder
+        implements Xpp3DomBuilder.InputLocationBuilder
     {
 
           //--------------------------/

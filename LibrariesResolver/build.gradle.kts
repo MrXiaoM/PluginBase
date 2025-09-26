@@ -2,19 +2,11 @@ plugins {
     java
     signing
     `maven-publish`
-    id("com.gradleup.shadow")
 }
 
 group = "top.mrxiaom"
-val shadowLink = configurations.create("shadowLink")
-fun DependencyHandlerScope.shadowLink(dependencyNotation: String) {
-    compileOnly(dependencyNotation)
-    add("shadowLink", dependencyNotation)
-}
-dependencies {
-    shadowLink("org.codehaus.plexus:plexus-utils:3.5.1")
-    shadowLink("org.codehaus.plexus:plexus-interpolation:1.26")
 
+dependencies {
     compileOnly(files("../libs/stub-rt.jar"))
     compileOnly("org.jetbrains:annotations:24.0.0")
 }
@@ -29,19 +21,6 @@ java {
     withJavadocJar()
 }
 tasks {
-    shadowJar {
-        minimize()
-        exclude("licenses/*", "META-INF/LICENSE*", "META-INF/NOTICE*")
-        configurations.add(shadowLink)
-        mapOf(
-            "org.codehaus.plexus" to "plexus",
-        ).forEach { (original, target) ->
-            relocate(original, "top.mrxiaom.pluginbase.resolver.$target")
-        }
-    }
-    build {
-        dependsOn(shadowJar)
-    }
     withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
         if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {

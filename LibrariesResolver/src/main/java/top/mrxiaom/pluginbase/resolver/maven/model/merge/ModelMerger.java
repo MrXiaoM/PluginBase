@@ -18,7 +18,7 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.merge;
 
-import org.codehaus.plexus.util.xml.Xpp3Dom;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.Xpp3Dom;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.resolver.maven.model.*;
 

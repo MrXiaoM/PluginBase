@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import top.mrxiaom.pluginbase.resolver.aether.RepositoryEvent;
@@ -66,7 +65,6 @@ import top.mrxiaom.pluginbase.resolver.aether.spi.connector.filter.RemoteReposit
 import top.mrxiaom.pluginbase.resolver.aether.spi.io.FileProcessor;
 import top.mrxiaom.pluginbase.resolver.aether.spi.locator.Service;
 import top.mrxiaom.pluginbase.resolver.aether.spi.locator.ServiceLocator;
-import top.mrxiaom.pluginbase.resolver.aether.spi.resolution.ArtifactResolverPostProcessor;
 import top.mrxiaom.pluginbase.resolver.aether.spi.synccontext.SyncContextFactory;
 import top.mrxiaom.pluginbase.resolver.aether.transfer.ArtifactFilteredOutException;
 import top.mrxiaom.pluginbase.resolver.aether.transfer.ArtifactNotFoundException;
@@ -108,37 +106,11 @@ public class DefaultArtifactResolver implements ArtifactResolver, Service {
 
     private OfflineController offlineController;
 
-    private Map<String, ArtifactResolverPostProcessor> artifactResolverPostProcessors;
-
     private RemoteRepositoryFilterManager remoteRepositoryFilterManager;
 
     @Deprecated
     public DefaultArtifactResolver() {
         // enables default constructor
-    }
-
-    @SuppressWarnings("checkstyle:parameternumber")
-    public DefaultArtifactResolver(
-            FileProcessor fileProcessor,
-            RepositoryEventDispatcher repositoryEventDispatcher,
-            VersionResolver versionResolver,
-            UpdateCheckManager updateCheckManager,
-            RepositoryConnectorProvider repositoryConnectorProvider,
-            RemoteRepositoryManager remoteRepositoryManager,
-            SyncContextFactory syncContextFactory,
-            OfflineController offlineController,
-            Map<String, ArtifactResolverPostProcessor> artifactResolverPostProcessors,
-            RemoteRepositoryFilterManager remoteRepositoryFilterManager) {
-        setFileProcessor(fileProcessor);
-        setRepositoryEventDispatcher(repositoryEventDispatcher);
-        setVersionResolver(versionResolver);
-        setUpdateCheckManager(updateCheckManager);
-        setRepositoryConnectorProvider(repositoryConnectorProvider);
-        setRemoteRepositoryManager(remoteRepositoryManager);
-        setSyncContextFactory(syncContextFactory);
-        setOfflineController(offlineController);
-        setArtifactResolverPostProcessors(artifactResolverPostProcessors);
-        setRemoteRepositoryFilterManager(remoteRepositoryFilterManager);
     }
 
     public void initService(ServiceLocator locator) {
@@ -150,7 +122,6 @@ public class DefaultArtifactResolver implements ArtifactResolver, Service {
         setRemoteRepositoryManager(locator.getService(RemoteRepositoryManager.class));
         setSyncContextFactory(locator.getService(SyncContextFactory.class));
         setOfflineController(locator.getService(OfflineController.class));
-        setArtifactResolverPostProcessors(Collections.emptyMap());
         setRemoteRepositoryFilterManager(locator.getService(RemoteRepositoryFilterManager.class));
     }
 
@@ -195,13 +166,6 @@ public class DefaultArtifactResolver implements ArtifactResolver, Service {
 
     public DefaultArtifactResolver setOfflineController(OfflineController offlineController) {
         this.offlineController = requireNonNull(offlineController, "offline controller cannot be null");
-        return this;
-    }
-
-    public DefaultArtifactResolver setArtifactResolverPostProcessors(
-            Map<String, ArtifactResolverPostProcessor> artifactResolverPostProcessors) {
-        this.artifactResolverPostProcessors =
-                requireNonNull(artifactResolverPostProcessors, "artifact resolver post-processors cannot be null");
         return this;
     }
 
@@ -416,11 +380,6 @@ public class DefaultArtifactResolver implements ArtifactResolver, Service {
 
                 for (ResolutionGroup group : groups) {
                     performDownloads(session, group);
-                }
-
-                for (ArtifactResolverPostProcessor artifactResolverPostProcessor :
-                        artifactResolverPostProcessors.values()) {
-                    artifactResolverPostProcessor.postProcess(session, results);
                 }
 
                 for (ArtifactResult result : results) {

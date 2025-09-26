@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 
 import top.mrxiaom.pluginbase.resolver.aether.RepositorySystem;
-import top.mrxiaom.pluginbase.resolver.aether.graph.DependencyCycle;
 import top.mrxiaom.pluginbase.resolver.aether.graph.DependencyNode;
 
 import static java.util.Objects.requireNonNull;
@@ -39,8 +38,6 @@ public final class CollectResult {
 
     private List<Exception> exceptions;
 
-    private List<DependencyCycle> cycles;
-
     private DependencyNode root;
 
     /**
@@ -51,7 +48,6 @@ public final class CollectResult {
     public CollectResult(CollectRequest request) {
         this.request = requireNonNull(request, "dependency collection request cannot be null");
         exceptions = Collections.emptyList();
-        cycles = Collections.emptyList();
     }
 
     /**
@@ -84,31 +80,6 @@ public final class CollectResult {
                 exceptions = new ArrayList<>();
             }
             exceptions.add(exception);
-        }
-        return this;
-    }
-
-    /**
-     * Gets the dependency cycles that were encountered while building the dependency graph.
-     *
-     * @return The dependency cycles in the (raw) graph, never {@code null}.
-     */
-    public List<DependencyCycle> getCycles() {
-        return cycles;
-    }
-
-    /**
-     * Records the specified dependency cycle.
-     *
-     * @param cycle The dependency cycle to record, may be {@code null}.
-     * @return This result for chaining, never {@code null}.
-     */
-    public CollectResult addCycle(DependencyCycle cycle) {
-        if (cycle != null) {
-            if (cycles.isEmpty()) {
-                cycles = new ArrayList<>();
-            }
-            cycles.add(cycle);
         }
         return this;
     }

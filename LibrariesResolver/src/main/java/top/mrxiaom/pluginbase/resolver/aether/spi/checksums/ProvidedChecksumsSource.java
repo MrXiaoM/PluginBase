@@ -30,8 +30,7 @@ import java.util.Map;
 /**
  * Component able to provide (expected) checksums to connector beforehand the download happens. Checksum provided by
  * this component are of kind {@link ChecksumPolicy.ChecksumKind#PROVIDED}. Resolver by default provides one
- * implementation: an adapter, that makes {@link TrustedChecksumsSource} into {@link ProvidedChecksumsSource}. Users
- * are encouraged to rely on this adapter, and do not create their own implementations.
+ * implementation: Users are encouraged to rely on this adapter, and do not create their own implementations.
  *
  * @since 1.9.14
  */

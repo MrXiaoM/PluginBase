@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.resolver.aether.version.Version;
 
 import static java.util.Objects.requireNonNull;
@@ -103,7 +104,7 @@ final class GenericVersion implements Version {
     }
 
     @Override
-    public int compareTo(Version obj) {
+    public int compareTo(@NotNull Version obj) {
         final List<Item> these = items;
         final List<Item> those = ((GenericVersion) obj).items;
 

@@ -48,8 +48,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class ConflictIdSorter implements DependencyGraphTransformer {
 
-    public DependencyNode transformGraph(DependencyNode node, DependencyGraphTransformationContext context)
-            throws RepositoryException {
+    public DependencyNode transformGraph(DependencyNode node, DependencyGraphTransformationContext context) {
         requireNonNull(node, "node cannot be null");
         requireNonNull(context, "context cannot be null");
         Map<?, ?> conflictIds = (Map<?, ?>) context.get(TransformationContextKeys.CONFLICT_IDS);

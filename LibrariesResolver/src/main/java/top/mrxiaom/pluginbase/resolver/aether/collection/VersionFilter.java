@@ -21,6 +21,7 @@ package top.mrxiaom.pluginbase.resolver.aether.collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.resolver.aether.RepositoryException;
 import top.mrxiaom.pluginbase.resolver.aether.RepositorySystemSession;
 import top.mrxiaom.pluginbase.resolver.aether.graph.Dependency;
@@ -79,7 +80,7 @@ public interface VersionFilter {
          *
          * @return The iterator of available versions, never {@code null}.
          */
-        Iterator<Version> iterator();
+        @NotNull Iterator<Version> iterator();
 
         /**
          * Gets the version constraint that was parsed from the dependency's version string.
@@ -112,9 +113,8 @@ public interface VersionFilter {
      * handle this situation on their own.
      *
      * @param context The version filter context, must not be {@code null}.
-     * @throws RepositoryException If the filtering could not be performed.
      */
-    void filterVersions(VersionFilterContext context) throws RepositoryException;
+    void filterVersions(VersionFilterContext context);
 
     /**
      * Derives a version filter for the specified collection context. The derived filter will be used to handle version

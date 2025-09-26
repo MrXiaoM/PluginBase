@@ -18,7 +18,7 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.interpolation;
 
-import org.codehaus.plexus.interpolation.InterpolationPostProcessor;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.InterpolationPostProcessor;
 import top.mrxiaom.pluginbase.resolver.maven.model.path.UrlNormalizer;
 
 import java.util.HashSet;

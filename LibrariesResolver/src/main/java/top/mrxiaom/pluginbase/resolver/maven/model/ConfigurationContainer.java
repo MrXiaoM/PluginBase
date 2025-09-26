@@ -5,6 +5,8 @@
 
 package top.mrxiaom.pluginbase.resolver.maven.model;
 
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.Xpp3Dom;
+
 /**
  * Contains the configuration information of the container like
  * Plugin.
@@ -103,7 +105,7 @@ public class ConfigurationContainer
 
             if ( this.configuration != null )
             {
-                copy.configuration = new org.codehaus.plexus.util.xml.Xpp3Dom( (org.codehaus.plexus.util.xml.Xpp3Dom) this.configuration );
+                copy.configuration = new Xpp3Dom( (Xpp3Dom) this.configuration );
             }
 
             if ( copy.locations != null )

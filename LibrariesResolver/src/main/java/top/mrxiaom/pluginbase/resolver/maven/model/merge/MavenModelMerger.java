@@ -18,7 +18,7 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.merge;
 
-import org.codehaus.plexus.util.StringUtils;
+import top.mrxiaom.pluginbase.resolver.plexus.util.StringUtils;
 import top.mrxiaom.pluginbase.resolver.maven.model.*;
 
 import java.util.*;

@@ -230,14 +230,6 @@ public interface RepositorySystem {
             RepositorySystemSession session, List<RemoteRepository> repositories);
 
     /**
-     * Registers an "on repository system end" handler, executed after repository system is shut down.
-     *
-     * @param handler The handler, must not be {@code null}.
-     * @since 1.9.0
-     */
-    void addOnSystemEndedHandler(Runnable handler);
-
-    /**
      * Signals to repository system to shut down. Shut down instance is not usable anymore.
      * <p>
      * Repository system may perform some resource cleanup, if applicable. Not using this method may cause leaks or

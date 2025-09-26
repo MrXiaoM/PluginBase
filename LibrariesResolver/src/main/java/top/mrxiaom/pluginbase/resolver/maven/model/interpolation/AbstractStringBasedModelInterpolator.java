@@ -18,12 +18,12 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.interpolation;
 
-import org.codehaus.plexus.interpolation.*;
 import top.mrxiaom.pluginbase.resolver.maven.model.Model;
 import top.mrxiaom.pluginbase.resolver.maven.model.building.ModelBuildingRequest;
 import top.mrxiaom.pluginbase.resolver.maven.model.building.ModelProblemCollector;
 import top.mrxiaom.pluginbase.resolver.maven.model.path.PathTranslator;
 import top.mrxiaom.pluginbase.resolver.maven.model.path.UrlNormalizer;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.*;
 
 import java.io.File;
 import java.util.*;

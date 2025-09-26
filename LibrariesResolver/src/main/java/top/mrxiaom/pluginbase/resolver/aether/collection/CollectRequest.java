@@ -24,7 +24,6 @@ import java.util.List;
 
 import top.mrxiaom.pluginbase.resolver.aether.RepositorySystem;
 import top.mrxiaom.pluginbase.resolver.aether.RequestTrace;
-import top.mrxiaom.pluginbase.resolver.aether.artifact.Artifact;
 import top.mrxiaom.pluginbase.resolver.aether.graph.Dependency;
 import top.mrxiaom.pluginbase.resolver.aether.repository.RemoteRepository;
 
@@ -38,8 +37,6 @@ import top.mrxiaom.pluginbase.resolver.aether.repository.RemoteRepository;
  * @see RepositorySystem#collectDependencies(top.mrxiaom.pluginbase.resolver.aether.RepositorySystemSession, CollectRequest)
  */
 public final class CollectRequest {
-
-    private Artifact rootArtifact;
 
     private Dependency root;
 
@@ -98,15 +95,6 @@ public final class CollectRequest {
         setDependencies(dependencies);
         setManagedDependencies(managedDependencies);
         setRepositories(repositories);
-    }
-
-    /**
-     * Gets the root artifact for the dependency graph.
-     *
-     * @return The root artifact for the dependency graph or {@code null} if none.
-     */
-    public Artifact getRootArtifact() {
-        return rootArtifact;
     }
 
     /**

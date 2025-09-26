@@ -561,8 +561,7 @@ public final class ConflictResolver implements DependencyGraphTransformer {
                 DependencyNode root,
                 Map<?, ?> conflictIds,
                 int conflictIdCount,
-                DependencyGraphTransformationContext context)
-                throws RepositoryException {
+                DependencyGraphTransformationContext context) {
             this.conflictIds = conflictIds;
             this.verbosity = getVerbosity(context.getSession());
             potentialAncestorIds = new HashSet<>(conflictIdCount * 2);
@@ -720,7 +719,7 @@ public final class ConflictResolver implements DependencyGraphTransformer {
             return (size == 0) ? null : parentNodes.get(size - 1);
         }
 
-        private String deriveScope(DependencyNode node, Object conflictId) throws RepositoryException {
+        private String deriveScope(DependencyNode node, Object conflictId) {
             if ((node.getManagedBits() & DependencyNode.MANAGED_SCOPE) != 0
                     || (conflictId != null && resolvedIds.containsKey(conflictId))) {
                 return scope(node.getDependency());

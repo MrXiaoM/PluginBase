@@ -9,8 +9,8 @@ package top.mrxiaom.pluginbase.resolver.maven.artifact.repository.metadata.io.xp
  //- Imported classes and packages -/
 //---------------------------------/
 
-import org.codehaus.plexus.util.xml.pull.MXSerializer;
-import org.codehaus.plexus.util.xml.pull.XmlSerializer;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.pull.MXSerializer;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.pull.XmlSerializer;
 import top.mrxiaom.pluginbase.resolver.maven.artifact.repository.metadata.*;
 
 import java.io.OutputStream;

@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.resolver.aether.RepositorySystemSession;
 import top.mrxiaom.pluginbase.resolver.aether.RequestTrace;
 import top.mrxiaom.pluginbase.resolver.aether.artifact.Artifact;
@@ -217,7 +218,7 @@ public class BfDependencyCollector extends DependencyCollectorDelegate implement
 
                 int cycleEntry = find(context.parents, d.getArtifact());
                 if (cycleEntry >= 0) {
-                    results.addCycle(context.parents, cycleEntry, d);
+                    //results.addCycle(context.parents, cycleEntry, d);
                     DependencyNode cycleNode = context.parents.get(cycleEntry);
                     if (cycleNode.getDependency() != null) {
                         DefaultDependencyNode child = createDependencyNode(
@@ -517,7 +518,7 @@ public class BfDependencyCollector extends DependencyCollectorDelegate implement
         }
 
         @Override
-        public V get(long timeout, TimeUnit unit) {
+        public V get(long timeout, @NotNull TimeUnit unit) {
             return v;
         }
     }

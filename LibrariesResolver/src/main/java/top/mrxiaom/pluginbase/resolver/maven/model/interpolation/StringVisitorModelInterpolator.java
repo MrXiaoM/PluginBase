@@ -18,8 +18,8 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.interpolation;
 
-import org.codehaus.plexus.interpolation.*;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
+import top.mrxiaom.pluginbase.resolver.plexus.interpolation.*;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.Xpp3Dom;
 import top.mrxiaom.pluginbase.resolver.maven.model.*;
 import top.mrxiaom.pluginbase.resolver.maven.model.building.ModelBuildingRequest;
 import top.mrxiaom.pluginbase.resolver.maven.model.building.ModelProblem;

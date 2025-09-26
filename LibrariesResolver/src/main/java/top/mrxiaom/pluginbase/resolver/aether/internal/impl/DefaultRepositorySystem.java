@@ -100,31 +100,6 @@ public class DefaultRepositorySystem implements RepositorySystem, Service {
         this.shutdown = new AtomicBoolean(false);
     }
 
-    @SuppressWarnings("checkstyle:parameternumber")
-    public DefaultRepositorySystem(
-            VersionResolver versionResolver,
-            VersionRangeResolver versionRangeResolver,
-            ArtifactResolver artifactResolver,
-            MetadataResolver metadataResolver,
-            ArtifactDescriptorReader artifactDescriptorReader,
-            DependencyCollector dependencyCollector,
-            LocalRepositoryProvider localRepositoryProvider,
-            SyncContextFactory syncContextFactory,
-            RemoteRepositoryManager remoteRepositoryManager,
-            RepositorySystemLifecycle repositorySystemLifecycle) {
-        this.shutdown = new AtomicBoolean(false);
-        setVersionResolver(versionResolver);
-        setVersionRangeResolver(versionRangeResolver);
-        setArtifactResolver(artifactResolver);
-        setMetadataResolver(metadataResolver);
-        setArtifactDescriptorReader(artifactDescriptorReader);
-        setDependencyCollector(dependencyCollector);
-        setLocalRepositoryProvider(localRepositoryProvider);
-        setSyncContextFactory(syncContextFactory);
-        setRemoteRepositoryManager(remoteRepositoryManager);
-        setRepositorySystemLifecycle(repositorySystemLifecycle);
-    }
-
     @Override
     public void initService(ServiceLocator locator) {
         setVersionResolver(locator.getService(VersionResolver.class));
@@ -282,7 +257,6 @@ public class DefaultRepositorySystem implements RepositorySystem, Service {
                 collectResult = e.getResult();
             }
             result.setRoot(collectResult.getRoot());
-            result.setCycles(collectResult.getCycles());
             result.setCollectExceptions(collectResult.getExceptions());
         } else {
             throw new NullPointerException("dependency node and collect request cannot be null");
@@ -355,11 +329,6 @@ public class DefaultRepositorySystem implements RepositorySystem, Service {
 
         repositories = remoteRepositoryManager.aggregateRepositories(session, new ArrayList<>(), repositories, true);
         return repositories;
-    }
-
-    @Override
-    public void addOnSystemEndedHandler(Runnable handler) {
-        repositorySystemLifecycle.addOnSystemEndedHandler(handler);
     }
 
     @Override

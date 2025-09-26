@@ -193,7 +193,7 @@ public abstract class DependencyCollectorDelegate implements DependencyCollector
             node.setAliases(descriptorResult.getAliases());
             node.setRepositories(request.getRepositories());
         } else {
-            node = new DefaultDependencyNode(request.getRootArtifact());
+            node = new DefaultDependencyNode((Artifact) null);
             node.setRequestContext(request.getRequestContext());
             node.setRepositories(request.getRepositories());
         }
@@ -206,7 +206,7 @@ public abstract class DependencyCollectorDelegate implements DependencyCollector
             DataPool pool = new DataPool(session);
 
             DefaultDependencyCollectionContext context = new DefaultDependencyCollectionContext(
-                    session, request.getRootArtifact(), root, managedDependencies);
+                    session, null, root, managedDependencies);
 
             DefaultVersionFilterContext versionContext = new DefaultVersionFilterContext(session);
 
@@ -422,12 +422,7 @@ public abstract class DependencyCollectorDelegate implements DependencyCollector
         List<? extends Version> versions;
         if (verFilter != null && rangeResult.getVersionConstraint().getRange() != null) {
             verContext.set(dependency, rangeResult);
-            try {
-                verFilter.filterVersions(verContext);
-            } catch (RepositoryException e) {
-                throw new VersionRangeResolutionException(
-                        rangeResult, "Failed to filter versions for " + dependency.getArtifact(), e);
-            }
+            verFilter.filterVersions(verContext);
             versions = verContext.get();
             if (versions.isEmpty()) {
                 throw new VersionRangeResolutionException(
@@ -486,12 +481,6 @@ public abstract class DependencyCollectorDelegate implements DependencyCollector
                     buffer.append(dependency.getArtifact());
                     errorPath = buffer.toString();
                 }
-            }
-        }
-
-        public void addCycle(List<DependencyNode> nodes, int cycleEntry, Dependency dependency) {
-            if (maxCycles < 0 || result.getCycles().size() < maxCycles) {
-                result.addCycle(new DefaultDependencyCycle(nodes, cycleEntry, dependency));
             }
         }
     }

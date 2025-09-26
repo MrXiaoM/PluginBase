@@ -5,6 +5,8 @@
 
 package top.mrxiaom.pluginbase.resolver.maven.model;
 
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.Xpp3Dom;
+
 /**
  * 
  *         
@@ -236,7 +238,7 @@ public class ModelBase
 
             if ( this.reports != null )
             {
-                copy.reports = new org.codehaus.plexus.util.xml.Xpp3Dom( (org.codehaus.plexus.util.xml.Xpp3Dom) this.reports );
+                copy.reports = new Xpp3Dom( (Xpp3Dom) this.reports );
             }
 
             if ( this.reporting != null )

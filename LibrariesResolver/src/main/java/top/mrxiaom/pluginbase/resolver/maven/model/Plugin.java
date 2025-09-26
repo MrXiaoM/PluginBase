@@ -5,6 +5,8 @@
 
 package top.mrxiaom.pluginbase.resolver.maven.model;
 
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.Xpp3Dom;
+
 /**
  * 
  *         
@@ -111,7 +113,7 @@ public class Plugin
 
             if ( this.goals != null )
             {
-                copy.goals = new org.codehaus.plexus.util.xml.Xpp3Dom( (org.codehaus.plexus.util.xml.Xpp3Dom) this.goals );
+                copy.goals = new Xpp3Dom( (Xpp3Dom) this.goals );
             }
 
             return copy;

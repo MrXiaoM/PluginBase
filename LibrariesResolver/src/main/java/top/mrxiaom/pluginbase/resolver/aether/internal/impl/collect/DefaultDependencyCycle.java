@@ -18,51 +18,12 @@
  */
 package top.mrxiaom.pluginbase.resolver.aether.internal.impl.collect;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import top.mrxiaom.pluginbase.resolver.aether.artifact.Artifact;
-import top.mrxiaom.pluginbase.resolver.aether.graph.Dependency;
-import top.mrxiaom.pluginbase.resolver.aether.graph.DependencyCycle;
 import top.mrxiaom.pluginbase.resolver.aether.graph.DependencyNode;
-import top.mrxiaom.pluginbase.resolver.aether.util.artifact.ArtifactIdUtils;
 
-/**
- * Default implementation of {@link DependencyCycle}.
- * Internal helper class for collector implementations.
- */
-public final class DefaultDependencyCycle implements DependencyCycle {
-    private final List<Dependency> dependencies;
-
-    private final int cycleEntry;
-
-    public DefaultDependencyCycle(List<DependencyNode> nodes, int cycleEntry, Dependency dependency) {
-        // skip root node unless it actually has a dependency or is considered the cycle entry (due to its label)
-        int offset = (cycleEntry > 0 && nodes.get(0).getDependency() == null) ? 1 : 0;
-        Dependency[] dependencies = new Dependency[nodes.size() - offset + 1];
-        for (int i = 0, n = dependencies.length - 1; i < n; i++) {
-            DependencyNode node = nodes.get(i + offset);
-            dependencies[i] = node.getDependency();
-            // when cycle starts at root artifact as opposed to root dependency, synthesize a dependency
-            if (dependencies[i] == null) {
-                dependencies[i] = new Dependency(node.getArtifact(), null);
-            }
-        }
-        dependencies[dependencies.length - 1] = dependency;
-        this.dependencies = Collections.unmodifiableList(Arrays.asList(dependencies));
-        this.cycleEntry = cycleEntry;
-    }
-
-    @Override
-    public List<Dependency> getPrecedingDependencies() {
-        return dependencies.subList(0, cycleEntry);
-    }
-
-    @Override
-    public List<Dependency> getCyclicDependencies() {
-        return dependencies.subList(cycleEntry, dependencies.size());
-    }
+public final class DefaultDependencyCycle {
 
     /**
      * Searches for a node associated with the given artifact. A version of the artifact is not considered during the
@@ -109,16 +70,4 @@ public final class DefaultDependencyCycle implements DependencyCycle {
         return -1;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder buffer = new StringBuilder(256);
-        int i = 0;
-        for (Dependency dependency : dependencies) {
-            if (i++ > 0) {
-                buffer.append(" -> ");
-            }
-            buffer.append(ArtifactIdUtils.toVersionlessId(dependency.getArtifact()));
-        }
-        return buffer.toString();
-    }
 }

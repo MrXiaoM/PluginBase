@@ -18,7 +18,7 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.plugin;
 
-import org.codehaus.plexus.util.xml.Xpp3Dom;
+import top.mrxiaom.pluginbase.resolver.plexus.util.xml.Xpp3Dom;
 import top.mrxiaom.pluginbase.resolver.maven.model.Model;
 import top.mrxiaom.pluginbase.resolver.maven.model.ReportPlugin;
 import top.mrxiaom.pluginbase.resolver.maven.model.ReportSet;

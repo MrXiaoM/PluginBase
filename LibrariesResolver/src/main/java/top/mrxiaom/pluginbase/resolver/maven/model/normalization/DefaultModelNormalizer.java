@@ -18,7 +18,7 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.normalization;
 
-import org.codehaus.plexus.util.StringUtils;
+import top.mrxiaom.pluginbase.resolver.plexus.util.StringUtils;
 import top.mrxiaom.pluginbase.resolver.maven.model.Build;
 import top.mrxiaom.pluginbase.resolver.maven.model.Dependency;
 import top.mrxiaom.pluginbase.resolver.maven.model.Model;

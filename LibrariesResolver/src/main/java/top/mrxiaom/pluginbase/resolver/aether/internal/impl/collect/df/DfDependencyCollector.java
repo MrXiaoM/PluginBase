@@ -213,7 +213,7 @@ public class DfDependencyCollector extends DependencyCollectorDelegate implement
 
                 int cycleEntry = DefaultDependencyCycle.find(args.nodes.nodes, d.getArtifact());
                 if (cycleEntry >= 0) {
-                    results.addCycle(args.nodes.nodes, cycleEntry, d);
+                    //results.addCycle(args.nodes.nodes, cycleEntry, d);
                     DependencyNode cycleNode = args.nodes.get(cycleEntry);
                     if (cycleNode.getDependency() != null) {
                         DefaultDependencyNode child = createDependencyNode(

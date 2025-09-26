@@ -18,7 +18,7 @@
  */
 package top.mrxiaom.pluginbase.resolver.maven.model.profile.activation;
 
-import org.codehaus.plexus.util.Os;
+import top.mrxiaom.pluginbase.resolver.plexus.util.Os;
 import top.mrxiaom.pluginbase.resolver.maven.model.Activation;
 import top.mrxiaom.pluginbase.resolver.maven.model.ActivationOS;
 import top.mrxiaom.pluginbase.resolver.maven.model.Profile;
