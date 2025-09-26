@@ -70,15 +70,13 @@ public class DefaultHttpClientConnectionOperator implements HttpClientConnection
 
     public DefaultHttpClientConnectionOperator(
             final Lookup<ConnectionSocketFactory> socketFactoryRegistry,
-            final SchemePortResolver schemePortResolver,
-            final DnsResolver dnsResolver) {
+            final SchemePortResolver schemePortResolver) {
         super();
         Args.notNull(socketFactoryRegistry, "Socket factory registry");
         this.socketFactoryRegistry = socketFactoryRegistry;
         this.schemePortResolver = schemePortResolver != null ? schemePortResolver :
             DefaultSchemePortResolver.INSTANCE;
-        this.dnsResolver = dnsResolver != null ? dnsResolver :
-            SystemDefaultDnsResolver.INSTANCE;
+        this.dnsResolver = SystemDefaultDnsResolver.INSTANCE;
     }
 
     @SuppressWarnings("unchecked")

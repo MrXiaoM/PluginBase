@@ -73,8 +73,7 @@ import top.mrxiaom.pluginbase.resolver.http.util.TextUtils;
  *     keytool -import -alias "my server cert" -file server.crt -keystore my.truststore
  *    </pre>
  * <p>
- * In special cases the standard trust verification process can be bypassed by using a custom
- * {@link top.mrxiaom.pluginbase.resolver.http.conn.ssl.TrustStrategy}. This interface is primarily intended for allowing self-signed
+ * This interface is primarily intended for allowing self-signed
  * certificates to be accepted as trusted without having to add them to the trust-store file.
  * <p>
  * SSLSocketFactory will enable client authentication when supplied with

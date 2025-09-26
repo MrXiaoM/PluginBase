@@ -45,11 +45,9 @@ import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
 import top.mrxiaom.pluginbase.resolver.http.config.ConnectionConfig;
 import top.mrxiaom.pluginbase.resolver.http.config.Lookup;
 import top.mrxiaom.pluginbase.resolver.http.config.Registry;
-import top.mrxiaom.pluginbase.resolver.http.config.RegistryBuilder;
 import top.mrxiaom.pluginbase.resolver.http.config.SocketConfig;
 import top.mrxiaom.pluginbase.resolver.http.conn.ConnectionPoolTimeoutException;
 import top.mrxiaom.pluginbase.resolver.http.conn.ConnectionRequest;
-import top.mrxiaom.pluginbase.resolver.http.conn.DnsResolver;
 import top.mrxiaom.pluginbase.resolver.http.conn.HttpClientConnectionManager;
 import top.mrxiaom.pluginbase.resolver.http.conn.HttpClientConnectionOperator;
 import top.mrxiaom.pluginbase.resolver.http.conn.HttpConnectionFactory;
@@ -57,8 +55,6 @@ import top.mrxiaom.pluginbase.resolver.http.conn.ManagedHttpClientConnection;
 import top.mrxiaom.pluginbase.resolver.http.conn.SchemePortResolver;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.HttpRoute;
 import top.mrxiaom.pluginbase.resolver.http.conn.socket.ConnectionSocketFactory;
-import top.mrxiaom.pluginbase.resolver.http.conn.socket.PlainConnectionSocketFactory;
-import top.mrxiaom.pluginbase.resolver.http.conn.ssl.SSLConnectionSocketFactory;
 import top.mrxiaom.pluginbase.resolver.http.pool.ConnFactory;
 import top.mrxiaom.pluginbase.resolver.http.pool.ConnPoolControl;
 import top.mrxiaom.pluginbase.resolver.http.pool.PoolEntryCallback;
@@ -107,58 +103,13 @@ public class PoolingHttpClientConnectionManager
     private final HttpClientConnectionOperator connectionOperator;
     private final AtomicBoolean isShutDown;
 
-    private static Registry<ConnectionSocketFactory> getDefaultRegistry() {
-        return RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                .register("https", SSLConnectionSocketFactory.getSocketFactory())
-                .build();
-    }
-
-    public PoolingHttpClientConnectionManager() {
-        this(getDefaultRegistry());
-    }
-
-    public PoolingHttpClientConnectionManager(final long timeToLive, final TimeUnit timeUnit) {
-        this(getDefaultRegistry(), null, null ,null, timeToLive, timeUnit);
-    }
-
-    public PoolingHttpClientConnectionManager(
-            final Registry<ConnectionSocketFactory> socketFactoryRegistry) {
-        this(socketFactoryRegistry, null, null);
-    }
-
-    public PoolingHttpClientConnectionManager(
-            final Registry<ConnectionSocketFactory> socketFactoryRegistry,
-            final DnsResolver dnsResolver) {
-        this(socketFactoryRegistry, null, dnsResolver);
-    }
-
-    public PoolingHttpClientConnectionManager(
-            final Registry<ConnectionSocketFactory> socketFactoryRegistry,
-            final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory) {
-        this(socketFactoryRegistry, connFactory, null);
-    }
-
-    public PoolingHttpClientConnectionManager(
-            final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory) {
-        this(getDefaultRegistry(), connFactory, null);
-    }
-
-    public PoolingHttpClientConnectionManager(
-            final Registry<ConnectionSocketFactory> socketFactoryRegistry,
-            final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory,
-            final DnsResolver dnsResolver) {
-        this(socketFactoryRegistry, connFactory, null, dnsResolver, -1, TimeUnit.MILLISECONDS);
-    }
-
     public PoolingHttpClientConnectionManager(
             final Registry<ConnectionSocketFactory> socketFactoryRegistry,
             final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory,
             final SchemePortResolver schemePortResolver,
-            final DnsResolver dnsResolver,
             final long timeToLive, final TimeUnit timeUnit) {
         this(
-            new DefaultHttpClientConnectionOperator(socketFactoryRegistry, schemePortResolver, dnsResolver),
+            new DefaultHttpClientConnectionOperator(socketFactoryRegistry, schemePortResolver),
             connFactory,
             timeToLive, timeUnit
         );
@@ -186,13 +137,12 @@ public class PoolingHttpClientConnectionManager
     PoolingHttpClientConnectionManager(
             final CPool pool,
             final Lookup<ConnectionSocketFactory> socketFactoryRegistry,
-            final SchemePortResolver schemePortResolver,
-            final DnsResolver dnsResolver) {
+            final SchemePortResolver schemePortResolver) {
         super();
         this.configData = new ConfigData();
         this.pool = pool;
         this.connectionOperator = new DefaultHttpClientConnectionOperator(
-                socketFactoryRegistry, schemePortResolver, dnsResolver);
+                socketFactoryRegistry, schemePortResolver);
         this.isShutDown = new AtomicBoolean(false);
     }
 
@@ -273,12 +223,7 @@ public class PoolingHttpClientConnectionManager
                     final TimeUnit timeUnit) throws InterruptedException, ExecutionException, ConnectionPoolTimeoutException {
                 final HttpClientConnection conn = leaseConnection(future, timeout, timeUnit);
                 if (conn.isOpen()) {
-                    final HttpHost host;
-                    if (route.getProxyHost() != null) {
-                        host = route.getProxyHost();
-                    } else {
-                        host = route.getTargetHost();
-                    }
+                    final HttpHost host = route.getTargetHost();
                     final SocketConfig socketConfig = resolveSocketConfig(host);
                     conn.setSocketTimeout(socketConfig.getSoTimeout());
                 }
@@ -344,12 +289,7 @@ public class PoolingHttpClientConnectionManager
             final CPoolEntry entry = CPoolProxy.getPoolEntry(managedConn);
             conn = entry.getConnection();
         }
-        final HttpHost host;
-        if (route.getProxyHost() != null) {
-            host = route.getProxyHost();
-        } else {
-            host = route.getTargetHost();
-        }
+        final HttpHost host = route.getTargetHost();
         this.connectionOperator.connect(
                 conn, host, route.getLocalSocketAddress(), connectTimeout, resolveSocketConfig(host), context);
     }
@@ -582,13 +522,7 @@ public class PoolingHttpClientConnectionManager
 
         @Override
         public ManagedHttpClientConnection create(final HttpRoute route) {
-            ConnectionConfig config = null;
-            if (route.getProxyHost() != null) {
-                config = this.configData.getConnectionConfig(route.getProxyHost());
-            }
-            if (config == null) {
-                config = this.configData.getConnectionConfig(route.getTargetHost());
-            }
+            ConnectionConfig config = this.configData.getConnectionConfig(route.getTargetHost());
             if (config == null) {
                 config = this.configData.getDefaultConnectionConfig();
             }

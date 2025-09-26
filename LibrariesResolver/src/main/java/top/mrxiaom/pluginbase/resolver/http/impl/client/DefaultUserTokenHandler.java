@@ -33,9 +33,6 @@ import javax.net.ssl.SSLSession;
 import top.mrxiaom.pluginbase.resolver.http.HttpConnection;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthScheme;
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthState;
-import top.mrxiaom.pluginbase.resolver.http.auth.Credentials;
 import top.mrxiaom.pluginbase.resolver.http.client.UserTokenHandler;
 import top.mrxiaom.pluginbase.resolver.http.client.protocol.HttpClientContext;
 import top.mrxiaom.pluginbase.resolver.http.conn.ManagedHttpClientConnection;
@@ -66,38 +63,14 @@ public class DefaultUserTokenHandler implements UserTokenHandler {
         final HttpClientContext clientContext = HttpClientContext.adapt(context);
 
         Principal userPrincipal = null;
+        final HttpConnection conn = clientContext.getConnection();
+        if (conn.isOpen() && conn instanceof ManagedHttpClientConnection) {
+            final SSLSession sslsession = ((ManagedHttpClientConnection) conn).getSSLSession();
+            if (sslsession != null) {
+                userPrincipal = sslsession.getLocalPrincipal();
 
-        final AuthState targetAuthState = clientContext.getTargetAuthState();
-        if (targetAuthState != null) {
-            userPrincipal = getAuthPrincipal(targetAuthState);
-            if (userPrincipal == null) {
-                final AuthState proxyAuthState = clientContext.getProxyAuthState();
-                userPrincipal = getAuthPrincipal(proxyAuthState);
             }
         }
-
-        if (userPrincipal == null) {
-            final HttpConnection conn = clientContext.getConnection();
-            if (conn.isOpen() && conn instanceof ManagedHttpClientConnection) {
-                final SSLSession sslsession = ((ManagedHttpClientConnection) conn).getSSLSession();
-                if (sslsession != null) {
-                    userPrincipal = sslsession.getLocalPrincipal();
-                }
-            }
-        }
-
         return userPrincipal;
     }
-
-    private static Principal getAuthPrincipal(final AuthState authState) {
-        final AuthScheme scheme = authState.getAuthScheme();
-        if (scheme != null && scheme.isComplete() && scheme.isConnectionBased()) {
-            final Credentials creds = authState.getCredentials();
-            if (creds != null) {
-                return creds.getUserPrincipal();
-            }
-        }
-        return null;
-    }
-
 }

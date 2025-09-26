@@ -38,7 +38,6 @@ import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.ProtocolException;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthState;
 import top.mrxiaom.pluginbase.resolver.http.client.RedirectException;
 import top.mrxiaom.pluginbase.resolver.http.client.RedirectStrategy;
 import top.mrxiaom.pluginbase.resolver.http.client.config.RequestConfig;
@@ -133,18 +132,6 @@ public class RedirectExec implements ClientExecChain {
                     if (newTarget == null) {
                         throw new ProtocolException("Redirect URI does not specify a valid host name: " +
                                 uri);
-                    }
-
-                    // Reset virtual host and auth states if redirecting to another host
-                    if (!currentRoute.getTargetHost().equals(newTarget)) {
-                        final AuthState targetAuthState = context.getTargetAuthState();
-                        if (targetAuthState != null) {
-                            targetAuthState.reset();
-                        }
-                        final AuthState proxyAuthState = context.getProxyAuthState();
-                        if (proxyAuthState != null && proxyAuthState.isConnectionBased()) {
-                            proxyAuthState.reset();
-                        }
                     }
 
                     currentRoute = this.routePlanner.determineRoute(newTarget, currentRequest, context);

@@ -36,17 +36,13 @@ import top.mrxiaom.pluginbase.resolver.http.HttpHost;
 import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthSchemeProvider;
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthState;
 import top.mrxiaom.pluginbase.resolver.http.client.ClientProtocolException;
-import top.mrxiaom.pluginbase.resolver.http.client.CredentialsProvider;
 import top.mrxiaom.pluginbase.resolver.http.client.config.RequestConfig;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.CloseableHttpResponse;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.Configurable;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.HttpExecutionAware;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.HttpRequestWrapper;
 import top.mrxiaom.pluginbase.resolver.http.client.protocol.HttpClientContext;
-import top.mrxiaom.pluginbase.resolver.http.config.Lookup;
 import top.mrxiaom.pluginbase.resolver.http.conn.HttpClientConnectionManager;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.HttpRoute;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.HttpRoutePlanner;
@@ -66,8 +62,6 @@ class InternalHttpClient extends CloseableHttpClient implements Configurable {
     private final ClientExecChain execChain;
     private final HttpClientConnectionManager connManager;
     private final HttpRoutePlanner routePlanner;
-    private final Lookup<AuthSchemeProvider> authSchemeRegistry;
-    private final CredentialsProvider credentialsProvider;
     private final RequestConfig defaultConfig;
     private final List<Closeable> closeables;
 
@@ -75,8 +69,6 @@ class InternalHttpClient extends CloseableHttpClient implements Configurable {
             final ClientExecChain execChain,
             final HttpClientConnectionManager connManager,
             final HttpRoutePlanner routePlanner,
-            final Lookup<AuthSchemeProvider> authSchemeRegistry,
-            final CredentialsProvider credentialsProvider,
             final RequestConfig defaultConfig,
             final List<Closeable> closeables) {
         super();
@@ -86,8 +78,6 @@ class InternalHttpClient extends CloseableHttpClient implements Configurable {
         this.execChain = execChain;
         this.connManager = connManager;
         this.routePlanner = routePlanner;
-        this.authSchemeRegistry = authSchemeRegistry;
-        this.credentialsProvider = credentialsProvider;
         this.defaultConfig = defaultConfig;
         this.closeables = closeables;
     }
@@ -100,18 +90,6 @@ class InternalHttpClient extends CloseableHttpClient implements Configurable {
     }
 
     private void setupContext(final HttpClientContext context) {
-        if (context.getAttribute(HttpClientContext.TARGET_AUTH_STATE) == null) {
-            context.setAttribute(HttpClientContext.TARGET_AUTH_STATE, new AuthState());
-        }
-        if (context.getAttribute(HttpClientContext.PROXY_AUTH_STATE) == null) {
-            context.setAttribute(HttpClientContext.PROXY_AUTH_STATE, new AuthState());
-        }
-        if (context.getAttribute(HttpClientContext.AUTHSCHEME_REGISTRY) == null) {
-            context.setAttribute(HttpClientContext.AUTHSCHEME_REGISTRY, this.authSchemeRegistry);
-        }
-        if (context.getAttribute(HttpClientContext.CREDS_PROVIDER) == null) {
-            context.setAttribute(HttpClientContext.CREDS_PROVIDER, this.credentialsProvider);
-        }
         if (context.getAttribute(HttpClientContext.REQUEST_CONFIG) == null) {
             context.setAttribute(HttpClientContext.REQUEST_CONFIG, this.defaultConfig);
         }

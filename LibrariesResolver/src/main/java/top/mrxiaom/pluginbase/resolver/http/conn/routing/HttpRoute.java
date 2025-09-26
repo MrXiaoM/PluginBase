@@ -239,11 +239,6 @@ public final class HttpRoute implements RouteInfo, Cloneable {
     }
 
     @Override
-    public HttpHost getProxyHost() {
-        return proxyChain != null && !this.proxyChain.isEmpty() ? this.proxyChain.get(0) : null;
-    }
-
-    @Override
     public TunnelType getTunnelType() {
         return this.tunnelled;
     }

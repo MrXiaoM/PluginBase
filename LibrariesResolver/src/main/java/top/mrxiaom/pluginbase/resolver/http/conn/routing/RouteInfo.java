@@ -107,14 +107,6 @@ public interface RouteInfo {
     HttpHost getHopTarget(int hop);
 
     /**
-     * Obtains the first proxy host.
-     *
-     * @return the first proxy in the proxy chain, or
-     *         {@code null} if this route is direct
-     */
-    HttpHost getProxyHost();
-
-    /**
      * Obtains the tunnel type of this route.
      * If there is a proxy chain, only end-to-end tunnels are considered.
      *

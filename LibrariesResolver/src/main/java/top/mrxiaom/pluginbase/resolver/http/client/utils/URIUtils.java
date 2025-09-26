@@ -186,12 +186,6 @@ public class URIUtils {
         if (uri == null) {
             return null;
         }
-        if (route.getProxyHost() != null && !route.isTunnelled()) {
-            // Make sure the request URI is absolute
-            return uri.isAbsolute()
-                    ? rewriteURI(uri)
-                    : rewriteURI(uri, route.getTargetHost(), normalizeUri ? DROP_FRAGMENT_AND_NORMALIZE : DROP_FRAGMENT);
-        }
         // Make sure the request URI is relative
         return uri.isAbsolute() ? rewriteURI(uri, null, normalizeUri ? DROP_FRAGMENT_AND_NORMALIZE : DROP_FRAGMENT) : rewriteURI(uri);
     }

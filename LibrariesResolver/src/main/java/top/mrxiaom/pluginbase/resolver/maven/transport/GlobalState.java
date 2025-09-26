@@ -175,7 +175,7 @@ final class GlobalState implements Closeable {
 
         PoolingHttpClientConnectionManager connMgr = new PoolingHttpClientConnectionManager(
                 new DefaultHttpClientConnectionOperator(
-                        registryBuilder.build(), DefaultSchemePortResolver.INSTANCE, SystemDefaultDnsResolver.INSTANCE),
+                        registryBuilder.build(), DefaultSchemePortResolver.INSTANCE),
                 ManagedHttpClientConnectionFactory.INSTANCE,
                 connectionMaxTtlSeconds,
                 TimeUnit.SECONDS);

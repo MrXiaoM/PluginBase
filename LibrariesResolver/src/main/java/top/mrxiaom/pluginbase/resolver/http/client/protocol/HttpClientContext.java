@@ -30,12 +30,7 @@ package top.mrxiaom.pluginbase.resolver.http.client.protocol;
 import java.net.URI;
 import java.util.List;
 
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthSchemeProvider;
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthState;
-import top.mrxiaom.pluginbase.resolver.http.client.AuthCache;
-import top.mrxiaom.pluginbase.resolver.http.client.CredentialsProvider;
 import top.mrxiaom.pluginbase.resolver.http.client.config.RequestConfig;
-import top.mrxiaom.pluginbase.resolver.http.config.Lookup;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.HttpRoute;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.RouteInfo;
 import top.mrxiaom.pluginbase.resolver.http.protocol.BasicHttpContext;
@@ -64,40 +59,10 @@ public class HttpClientContext extends HttpCoreContext {
     public static final String REDIRECT_LOCATIONS = "http.protocol.redirect-locations";
 
     /**
-     * Attribute name of a {@link top.mrxiaom.pluginbase.resolver.http.client.CredentialsProvider}
-     * object that represents the actual credentials provider.
-     */
-    public static final String CREDS_PROVIDER        = "http.auth.credentials-provider";
-
-    /**
-     * Attribute name of a {@link top.mrxiaom.pluginbase.resolver.http.client.AuthCache} object
-     * that represents the auth scheme cache.
-     */
-    public static final String AUTH_CACHE            = "http.auth.auth-cache";
-
-    /**
-     * Attribute name of a {@link top.mrxiaom.pluginbase.resolver.http.auth.AuthState}
-     * object that represents the actual target authentication state.
-     */
-    public static final String TARGET_AUTH_STATE     = "http.auth.target-scope";
-
-    /**
-     * Attribute name of a {@link top.mrxiaom.pluginbase.resolver.http.auth.AuthState}
-     * object that represents the actual proxy authentication state.
-     */
-    public static final String PROXY_AUTH_STATE      = "http.auth.proxy-scope";
-
-    /**
      * Attribute name of a {@link java.lang.Object} object that represents
      * the actual user identity such as user {@link java.security.Principal}.
      */
     public static final String USER_TOKEN            = "http.user-token";
-
-    /**
-     * Attribute name of a {@link top.mrxiaom.pluginbase.resolver.http.config.Lookup} object that represents
-     * the actual {@link AuthSchemeProvider} registry.
-     */
-    public static final String AUTHSCHEME_REGISTRY   = "http.authscheme-registry";
 
     /**
      * Attribute name of a {@link top.mrxiaom.pluginbase.resolver.http.client.config.RequestConfig} object that
@@ -130,43 +95,6 @@ public class HttpClientContext extends HttpCoreContext {
     @SuppressWarnings("unchecked")
     public List<URI> getRedirectLocations() {
         return getAttribute(REDIRECT_LOCATIONS, List.class);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> Lookup<T> getLookup(final String name, final Class<T> clazz) {
-        return getAttribute(name, Lookup.class);
-    }
-
-    public Lookup<AuthSchemeProvider> getAuthSchemeRegistry() {
-        return getLookup(AUTHSCHEME_REGISTRY, AuthSchemeProvider.class);
-    }
-
-    public void setAuthSchemeRegistry(final Lookup<AuthSchemeProvider> lookup) {
-        setAttribute(AUTHSCHEME_REGISTRY, lookup);
-    }
-
-    public CredentialsProvider getCredentialsProvider() {
-        return getAttribute(CREDS_PROVIDER, CredentialsProvider.class);
-    }
-
-    public void setCredentialsProvider(final CredentialsProvider credentialsProvider) {
-        setAttribute(CREDS_PROVIDER, credentialsProvider);
-    }
-
-    public AuthCache getAuthCache() {
-        return getAttribute(AUTH_CACHE, AuthCache.class);
-    }
-
-    public void setAuthCache(final AuthCache authCache) {
-        setAttribute(AUTH_CACHE, authCache);
-    }
-
-    public AuthState getTargetAuthState() {
-        return getAttribute(TARGET_AUTH_STATE, AuthState.class);
-    }
-
-    public AuthState getProxyAuthState() {
-        return getAttribute(PROXY_AUTH_STATE, AuthState.class);
     }
 
     public <T> T getUserToken(final Class<T> clazz) {

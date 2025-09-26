@@ -37,9 +37,6 @@ import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.ProtocolException;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthScope;
-import top.mrxiaom.pluginbase.resolver.http.auth.UsernamePasswordCredentials;
-import top.mrxiaom.pluginbase.resolver.http.client.CredentialsProvider;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.CloseableHttpResponse;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.HttpExecutionAware;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.HttpRequestWrapper;
@@ -47,7 +44,6 @@ import top.mrxiaom.pluginbase.resolver.http.client.methods.HttpUriRequest;
 import top.mrxiaom.pluginbase.resolver.http.client.protocol.HttpClientContext;
 import top.mrxiaom.pluginbase.resolver.http.client.utils.URIUtils;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.HttpRoute;
-import top.mrxiaom.pluginbase.resolver.http.impl.client.BasicCredentialsProvider;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpCoreContext;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpProcessor;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
@@ -130,21 +126,6 @@ public class ProtocolExec implements ClientExecChain {
         }
         if (target == null) {
             target = route.getTargetHost();
-        }
-
-        // Get user info from the URI
-        if (uri != null) {
-            final String userinfo = uri.getUserInfo();
-            if (userinfo != null) {
-                CredentialsProvider credsProvider = context.getCredentialsProvider();
-                if (credsProvider == null) {
-                    credsProvider = new BasicCredentialsProvider();
-                    context.setCredentialsProvider(credsProvider);
-                }
-                credsProvider.setCredentials(
-                        new AuthScope(target),
-                        new UsernamePasswordCredentials(userinfo));
-            }
         }
 
         // Run request protocol interceptors

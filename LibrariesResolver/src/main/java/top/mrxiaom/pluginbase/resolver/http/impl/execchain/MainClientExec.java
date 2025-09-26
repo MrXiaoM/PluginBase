@@ -42,11 +42,6 @@ import top.mrxiaom.pluginbase.resolver.http.HttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.HttpResponse;
 import top.mrxiaom.pluginbase.resolver.http.annotation.Contract;
 import top.mrxiaom.pluginbase.resolver.http.annotation.ThreadingBehavior;
-import top.mrxiaom.pluginbase.resolver.http.auth.AUTH;
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthProtocolState;
-import top.mrxiaom.pluginbase.resolver.http.auth.AuthState;
-import top.mrxiaom.pluginbase.resolver.http.client.AuthenticationStrategy;
-import top.mrxiaom.pluginbase.resolver.http.client.NonRepeatableRequestException;
 import top.mrxiaom.pluginbase.resolver.http.client.UserTokenHandler;
 import top.mrxiaom.pluginbase.resolver.http.client.config.RequestConfig;
 import top.mrxiaom.pluginbase.resolver.http.client.methods.CloseableHttpResponse;
@@ -61,7 +56,6 @@ import top.mrxiaom.pluginbase.resolver.http.conn.routing.HttpRoute;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.HttpRouteDirector;
 import top.mrxiaom.pluginbase.resolver.http.conn.routing.RouteTracker;
 import top.mrxiaom.pluginbase.resolver.http.entity.BufferedHttpEntity;
-import top.mrxiaom.pluginbase.resolver.http.impl.auth.HttpAuthenticator;
 import top.mrxiaom.pluginbase.resolver.http.impl.conn.ConnectionShutdownException;
 import top.mrxiaom.pluginbase.resolver.http.message.BasicHttpRequest;
 import top.mrxiaom.pluginbase.resolver.http.protocol.HttpCoreContext;
@@ -70,7 +64,6 @@ import top.mrxiaom.pluginbase.resolver.http.protocol.HttpRequestExecutor;
 import top.mrxiaom.pluginbase.resolver.http.protocol.ImmutableHttpProcessor;
 import top.mrxiaom.pluginbase.resolver.http.protocol.RequestTargetHost;
 import top.mrxiaom.pluginbase.resolver.http.util.Args;
-import top.mrxiaom.pluginbase.resolver.http.util.EntityUtils;
 
 /**
  * The last request executor in the HTTP request execution chain
@@ -90,9 +83,6 @@ public class MainClientExec implements ClientExecChain {
     private final ConnectionReuseStrategy reuseStrategy;
     private final ConnectionKeepAliveStrategy keepAliveStrategy;
     private final HttpProcessor proxyHttpProcessor;
-    private final AuthenticationStrategy targetAuthStrategy;
-    private final AuthenticationStrategy proxyAuthStrategy;
-    private final HttpAuthenticator authenticator;
     private final UserTokenHandler userTokenHandler;
     private final HttpRouteDirector routeDirector;
 
@@ -105,26 +95,19 @@ public class MainClientExec implements ClientExecChain {
             final ConnectionReuseStrategy reuseStrategy,
             final ConnectionKeepAliveStrategy keepAliveStrategy,
             final HttpProcessor proxyHttpProcessor,
-            final AuthenticationStrategy targetAuthStrategy,
-            final AuthenticationStrategy proxyAuthStrategy,
             final UserTokenHandler userTokenHandler) {
         Args.notNull(requestExecutor, "HTTP request executor");
         Args.notNull(connManager, "Client connection manager");
         Args.notNull(reuseStrategy, "Connection reuse strategy");
         Args.notNull(keepAliveStrategy, "Connection keep alive strategy");
         Args.notNull(proxyHttpProcessor, "Proxy HTTP processor");
-        Args.notNull(targetAuthStrategy, "Target authentication strategy");
-        Args.notNull(proxyAuthStrategy, "Proxy authentication strategy");
         Args.notNull(userTokenHandler, "User token handler");
-        this.authenticator      = new HttpAuthenticator();
         this.routeDirector      = new BasicRouteDirector();
         this.requestExecutor    = requestExecutor;
         this.connManager        = connManager;
         this.reuseStrategy      = reuseStrategy;
         this.keepAliveStrategy  = keepAliveStrategy;
         this.proxyHttpProcessor = proxyHttpProcessor;
-        this.targetAuthStrategy = targetAuthStrategy;
-        this.proxyAuthStrategy  = proxyAuthStrategy;
         this.userTokenHandler   = userTokenHandler;
     }
 
@@ -133,12 +116,10 @@ public class MainClientExec implements ClientExecChain {
             final HttpClientConnectionManager connManager,
             final ConnectionReuseStrategy reuseStrategy,
             final ConnectionKeepAliveStrategy keepAliveStrategy,
-            final AuthenticationStrategy targetAuthStrategy,
-            final AuthenticationStrategy proxyAuthStrategy,
             final UserTokenHandler userTokenHandler) {
         this(requestExecutor, connManager, reuseStrategy, keepAliveStrategy,
                 new ImmutableHttpProcessor(new RequestTargetHost()),
-                targetAuthStrategy, proxyAuthStrategy, userTokenHandler);
+                userTokenHandler);
     }
 
     @Override
@@ -150,17 +131,6 @@ public class MainClientExec implements ClientExecChain {
         Args.notNull(route, "HTTP route");
         Args.notNull(request, "HTTP request");
         Args.notNull(context, "HTTP context");
-
-        AuthState targetAuthState = context.getTargetAuthState();
-        if (targetAuthState == null) {
-            targetAuthState = new AuthState();
-            context.setAttribute(HttpClientContext.TARGET_AUTH_STATE, targetAuthState);
-        }
-        AuthState proxyAuthState = context.getProxyAuthState();
-        if (proxyAuthState == null) {
-            proxyAuthState = new AuthState();
-            context.setAttribute(HttpClientContext.PROXY_AUTH_STATE, proxyAuthState);
-        }
 
         if (request instanceof HttpEntityEnclosingRequest) {
             RequestEntityProxy.enhance((HttpEntityEnclosingRequest) request);
@@ -203,20 +173,14 @@ public class MainClientExec implements ClientExecChain {
             }
 
             HttpResponse response;
-            for (int execCount = 1;; execCount++) {
-
-                if (execCount > 1 && !RequestEntityProxy.isRepeatable(request)) {
-                    throw new NonRepeatableRequestException("Cannot retry request " +
-                            "with a non-repeatable request entity.");
-                }
-
+            for (;;) {
                 if (execAware != null && execAware.isAborted()) {
                     throw new RequestAbortedException("Request aborted");
                 }
 
                 if (!managedConn.isOpen()) {
                     try {
-                        establishRoute(proxyAuthState, managedConn, route, request, context);
+                        establishRoute(managedConn, route, request, context);
                     } catch (final TunnelRefusedException ex) {
                         response = ex.getResponse();
                         break;
@@ -229,13 +193,6 @@ public class MainClientExec implements ClientExecChain {
 
                 if (execAware != null && execAware.isAborted()) {
                     throw new RequestAbortedException("Request aborted");
-                }
-
-                if (!request.containsHeader(AUTH.WWW_AUTH_RESP)) {
-                    this.authenticator.generateAuthResponse(request, targetAuthState, context);
-                }
-                if (!request.containsHeader(AUTH.PROXY_AUTH_RESP) && !route.isTunnelled()) {
-                    this.authenticator.generateAuthResponse(request, proxyAuthState, context);
                 }
 
                 context.setAttribute(HttpCoreContext.HTTP_REQUEST, request);
@@ -251,35 +208,7 @@ public class MainClientExec implements ClientExecChain {
                 } else {
                     connHolder.markNonReusable();
                 }
-
-                if (needAuthentication(
-                        targetAuthState, proxyAuthState, route, response, context)) {
-                    // Make sure the response body is fully consumed, if present
-                    final HttpEntity entity = response.getEntity();
-                    if (connHolder.isReusable()) {
-                        EntityUtils.consume(entity);
-                    } else {
-                        managedConn.close();
-                        if (proxyAuthState.getState() == AuthProtocolState.SUCCESS
-                                && proxyAuthState.isConnectionBased()) {
-                            proxyAuthState.reset();
-                        }
-                        if (targetAuthState.getState() == AuthProtocolState.SUCCESS
-                                && targetAuthState.isConnectionBased()) {
-                            targetAuthState.reset();
-                        }
-                    }
-                    // discard previous auth headers
-                    final HttpRequest original = request.getOriginal();
-                    if (!original.containsHeader(AUTH.WWW_AUTH_RESP)) {
-                        request.removeHeaders(AUTH.WWW_AUTH_RESP);
-                    }
-                    if (!original.containsHeader(AUTH.PROXY_AUTH_RESP)) {
-                        request.removeHeaders(AUTH.PROXY_AUTH_RESP);
-                    }
-                } else {
-                    break;
-                }
+                break;
             }
 
             if (userToken == null) {
@@ -303,17 +232,8 @@ public class MainClientExec implements ClientExecChain {
                     "Connection has been shut down");
             ioex.initCause(ex);
             throw ioex;
-        } catch (final HttpException ex) {
+        } catch (final HttpException | IOException | RuntimeException ex) {
             connHolder.abortConnection();
-            throw ex;
-        } catch (final IOException | RuntimeException ex) {
-            connHolder.abortConnection();
-            if (proxyAuthState.isConnectionBased()) {
-                proxyAuthState.reset();
-            }
-            if (targetAuthState.isConnectionBased()) {
-                targetAuthState.reset();
-            }
             throw ex;
         } catch (final Error error) {
             connManager.shutdown();
@@ -325,7 +245,6 @@ public class MainClientExec implements ClientExecChain {
      * Establishes the target route.
      */
     void establishRoute(
-            final AuthState proxyAuthState,
             final HttpClientConnection managedConn,
             final HttpRoute route,
             final HttpRequest request,
@@ -354,12 +273,9 @@ public class MainClientExec implements ClientExecChain {
                         route,
                         Math.max(timeout, 0),
                         context);
-                final HttpHost proxy  = route.getProxyHost();
-                tracker.connectProxy(proxy, route.isSecure() && !route.isTunnelled());
                 break;
             case HttpRouteDirector.TUNNEL_TARGET: {
-                final boolean secure = createTunnelToTarget(
-                        proxyAuthState, managedConn, route, request, context);
+                final boolean secure = createTunnelToTarget(managedConn, route, request, context);
                 tracker.tunnelTarget(secure);
             }   break;
 
@@ -401,7 +317,6 @@ public class MainClientExec implements ClientExecChain {
      * information about the tunnel, that is left to the caller.
      */
     private boolean createTunnelToTarget(
-            final AuthState proxyAuthState,
             final HttpClientConnection managedConn,
             final HttpRoute route,
             final HttpRequest request,
@@ -411,7 +326,6 @@ public class MainClientExec implements ClientExecChain {
         final int timeout = config.getConnectTimeout();
 
         final HttpHost target = route.getTargetHost();
-        final HttpHost proxy = route.getProxyHost();
         HttpResponse response = null;
 
         final String authority = target.toHostString();
@@ -428,8 +342,7 @@ public class MainClientExec implements ClientExecChain {
                         context);
             }
 
-            connect.removeHeaders(AUTH.PROXY_AUTH_RESP);
-            this.authenticator.generateAuthResponse(connect, proxyAuthState, context);
+            connect.removeHeaders("Proxy-Authorization");
 
             response = this.requestExecutor.execute(connect, managedConn, context);
             this.requestExecutor.postProcess(response, this.proxyHttpProcessor, context);
@@ -438,24 +351,6 @@ public class MainClientExec implements ClientExecChain {
             if (status < 200) {
                 throw new HttpException("Unexpected response to CONNECT request: " +
                         response.getStatusLine());
-            }
-
-            if (config.isAuthenticationEnabled()) {
-                if (this.authenticator.isAuthenticationRequested(proxy, response,
-                        this.proxyAuthStrategy, proxyAuthState, context)) {
-                    if (this.authenticator.handleAuthChallenge(proxy, response,
-                            this.proxyAuthStrategy, proxyAuthState, context)) {
-                        // Retry request
-                        if (this.reuseStrategy.keepAlive(response, context)) {
-                            // Consume response content
-                            final HttpEntity entity = response.getEntity();
-                            EntityUtils.consume(entity);
-                        } else {
-                            managedConn.close();
-                        }
-                        response = null;
-                    }
-                }
             }
         }
 
@@ -502,46 +397,4 @@ public class MainClientExec implements ClientExecChain {
 
         throw new HttpException("Proxy chains are not supported.");
     }
-
-    private boolean needAuthentication(
-            final AuthState targetAuthState,
-            final AuthState proxyAuthState,
-            final HttpRoute route,
-            final HttpResponse response,
-            final HttpClientContext context) {
-        final RequestConfig config = context.getRequestConfig();
-        if (config.isAuthenticationEnabled()) {
-            HttpHost target = context.getTargetHost();
-            if (target == null) {
-                target = route.getTargetHost();
-            }
-            if (target.getPort() < 0) {
-                target = new HttpHost(
-                        target.getHostName(),
-                        route.getTargetHost().getPort(),
-                        target.getSchemeName());
-            }
-            final boolean targetAuthRequested = this.authenticator.isAuthenticationRequested(
-                    target, response, this.targetAuthStrategy, targetAuthState, context);
-
-            HttpHost proxy = route.getProxyHost();
-            // if proxy is not set use target host instead
-            if (proxy == null) {
-                proxy = route.getTargetHost();
-            }
-            final boolean proxyAuthRequested = this.authenticator.isAuthenticationRequested(
-                    proxy, response, this.proxyAuthStrategy, proxyAuthState, context);
-
-            if (targetAuthRequested) {
-                return this.authenticator.handleAuthChallenge(target, response,
-                        this.targetAuthStrategy, targetAuthState, context);
-            }
-            if (proxyAuthRequested) {
-                return this.authenticator.handleAuthChallenge(proxy, response,
-                        this.proxyAuthStrategy, proxyAuthState, context);
-            }
-        }
-        return false;
-    }
-
 }

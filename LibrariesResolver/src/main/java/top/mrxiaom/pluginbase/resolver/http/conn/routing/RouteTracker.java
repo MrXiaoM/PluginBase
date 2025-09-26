@@ -221,11 +221,6 @@ public final class RouteTracker implements RouteInfo, Cloneable {
         return result;
     }
 
-    @Override
-    public HttpHost getProxyHost() {
-        return (this.proxyChain == null) ? null : this.proxyChain[0];
-    }
-
     public boolean isConnected() {
         return this.connected;
     }
