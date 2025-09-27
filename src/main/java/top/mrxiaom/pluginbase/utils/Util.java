@@ -24,6 +24,8 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -124,9 +126,23 @@ public class Util {
      * @param s 路径使用 <code>/</code> 作为分隔符，不支持 Windows 的 <code>\</code> 分隔符
      */
     public static String nameWithoutSuffix(String s) {
-        int lastPath = Math.max(0, s.lastIndexOf('/'));
-        int index = s.lastIndexOf('.', lastPath);
-        return index <= 0 ? s : s.substring(0, index);
+        Path path = Paths.get(s);
+        Path fileName = path.getFileName();
+        if (fileName == null) {
+            return s;
+        }
+        String fileNameStr = fileName.toString();
+        int lastDotIndex = fileNameStr.lastIndexOf('.');
+        if (lastDotIndex <= 0) {
+            return s;
+        }
+        String fileNameWithoutExt = fileNameStr.substring(0, lastDotIndex);
+        Path parentDir = path.getParent();
+        if (parentDir == null) {
+            return fileNameWithoutExt;
+        } else {
+            return parentDir.resolve(fileNameWithoutExt).toString();
+        }
     }
 
     /**
