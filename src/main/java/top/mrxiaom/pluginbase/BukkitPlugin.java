@@ -259,10 +259,19 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
         instance = this;
         this.options = options;
-        this.classLoader = new ClassLoaderWrapper((URLClassLoader) getClassLoader());
+        this.classLoader = initClassLoader((URLClassLoader) getClassLoader());
         if (this.options.libraries() || this.options.database) {
             loadLibraries();
         }
+    }
+
+    /**
+     * 初始化类加载器包装实现
+     * @param classLoader 旧的类加载器
+     */
+    @NotNull
+    protected ClassLoaderWrapper initClassLoader(URLClassLoader classLoader) {
+        return new ClassLoaderWrapper(classLoader);
     }
 
     /**
