@@ -1,6 +1,5 @@
 package top.mrxiaom.pluginbase.func;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,7 +25,7 @@ import java.util.function.BiConsumer;
  * 单个菜单配置的抽象模块
  */
 public abstract class AbstractGuiModule<T extends BukkitPlugin> extends AbstractModule<T> {
-    protected final File file;
+    protected File file;
     protected String guiTitle;
     protected char[] guiInventory;
     private final String mainIconsKey, otherIconsKey;
