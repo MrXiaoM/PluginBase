@@ -271,7 +271,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
      */
     @NotNull
     protected ClassLoaderWrapper initClassLoader(URLClassLoader classLoader) {
-        return new ClassLoaderWrapper(classLoader);
+        return ClassLoaderWrapper.resolve(classLoader);
     }
 
     /**

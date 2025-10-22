@@ -23,6 +23,11 @@ public class ClassLoaderWrapper {
             return false;
         }
     }
+    public static ClassLoaderWrapper resolve(URLClassLoader pluginClassLoader) {
+        return isSupportLibraryLoader
+                ? new ClassLoaderWrapper(findLibraryLoader(pluginClassLoader))
+                : new ClassLoaderWrapper(pluginClassLoader);
+    }
     public static URLClassLoader findLibraryLoader(URLClassLoader pluginClassLoader) {
         URLClassLoader classLoader = findLibraryLoaderOrNull(pluginClassLoader);
         return classLoader == null ? pluginClassLoader : classLoader;
