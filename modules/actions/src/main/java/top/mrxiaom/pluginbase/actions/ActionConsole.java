@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.api.IActionProvider;
-import top.mrxiaom.pluginbase.utils.ColorHelper;
 import top.mrxiaom.pluginbase.utils.depend.PAPI;
 import top.mrxiaom.pluginbase.utils.Pair;
 
@@ -23,7 +22,7 @@ public class ActionConsole implements IAction {
     };
     public final String command;
     public ActionConsole(String command) {
-        this.command = ColorHelper.parseColor(command);
+        this.command = command;
     }
 
     @Override
