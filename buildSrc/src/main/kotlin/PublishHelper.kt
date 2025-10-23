@@ -28,6 +28,7 @@ fun Project.setupJava(targetJavaVersion: Int, withDocuments: Boolean = true) {
     }
     tasks.withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
+        options.compilerArgumentProviders.add { listOf("-Xlint:-options") }
         if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
             options.release.set(targetJavaVersion)
         }
