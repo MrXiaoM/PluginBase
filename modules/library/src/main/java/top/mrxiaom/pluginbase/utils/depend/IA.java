@@ -1,4 +1,4 @@
-package top.mrxiaom.pluginbase.utils;
+package top.mrxiaom.pluginbase.utils.depend;
 
 import dev.lone.itemsadder.api.CustomStack;
 import org.bukkit.inventory.ItemStack;

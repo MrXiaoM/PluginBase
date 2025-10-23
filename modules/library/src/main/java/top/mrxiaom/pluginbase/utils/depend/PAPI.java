@@ -1,10 +1,11 @@
-package top.mrxiaom.pluginbase.utils;
+package top.mrxiaom.pluginbase.utils.depend;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 @SuppressWarnings({"unused"})
 public class PAPI {
     private static boolean isEnabled = false;
-    protected static void init() {
+    public static void init() {
         isEnabled = Util.isPresent("me.clip.placeholderapi.PlaceholderAPI");
     }
 

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.utils.*;
+import top.mrxiaom.pluginbase.utils.depend.PAPI;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package top.mrxiaom.pluginbase.utils;
+package top.mrxiaom.pluginbase.utils.depend;
 
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;

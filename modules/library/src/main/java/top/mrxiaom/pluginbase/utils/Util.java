@@ -11,6 +11,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
+import top.mrxiaom.pluginbase.utils.depend.PAPI;
 
 import java.io.*;
 import java.net.JarURLConnection;
