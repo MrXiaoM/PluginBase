@@ -10,6 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.api.IScheduler;
@@ -500,8 +501,18 @@ public abstract class BukkitPlugin extends JavaPlugin {
         reloadConfig();
 
         if (options.bungee) {
-            getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-            getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeIncomingChannel());
+            PluginMessageListener channel = null;
+            try {
+                Class<?> type = Class.forName("top.mrxiaom.pluginbase.BungeeIncomingChannel");
+                channel = (PluginMessageListener) type.getConstructor().newInstance();
+            } catch (Throwable ignored) {
+            }
+            if (channel != null) {
+                getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+                getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", channel);
+            } else {
+                warn("开发者开启了 BungeeCord 消息通道支持，但未添加依赖 top.mrxiaom.pluginbase:misc，消息接收将无法正常工作！");
+            }
         }
         afterEnable();
     }
