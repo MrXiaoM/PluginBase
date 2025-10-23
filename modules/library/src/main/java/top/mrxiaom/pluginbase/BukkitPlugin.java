@@ -12,7 +12,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import top.mrxiaom.pluginbase.actions.*;
 import top.mrxiaom.pluginbase.api.IScheduler;
 import top.mrxiaom.pluginbase.database.IDatabase;
 import top.mrxiaom.pluginbase.economy.EnumEconomy;
@@ -21,8 +20,6 @@ import top.mrxiaom.pluginbase.economy.NoEconomy;
 import top.mrxiaom.pluginbase.economy.VaultEconomy;
 import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
 import top.mrxiaom.pluginbase.func.AutoRegister;
-import top.mrxiaom.pluginbase.func.GuiManager;
-import top.mrxiaom.pluginbase.func.language.LanguageManagerImpl;
 import top.mrxiaom.pluginbase.utils.AdventureItemStack;
 import top.mrxiaom.pluginbase.utils.ClassLoaderWrapper;
 import top.mrxiaom.pluginbase.utils.Util;
@@ -231,7 +228,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
     public static BukkitPlugin getInstance() {
         return instance;
     }
-    private final List<Class<? extends AbstractPluginHolder<?>>> modulesToRegister = new ArrayList<>();
+    private final List<Class<?>> modulesToRegister = new ArrayList<>();
     private boolean pluginEnabled = false;
     /**
      * 获取插件主类配置参数
@@ -439,28 +436,18 @@ public abstract class BukkitPlugin extends JavaPlugin {
         // 内部模块属于“依赖”的一部分，因为 scanIgnore 的存在，不能添加 @AutoRegister 注解来自动注册。
         // 应该在这里将内部模块手动添加到 earlyLoadModules 里面，进行独立的早期加载。
         // 并且由于部分内部模块应当是可选的，所以要额外加一层 try catch 以防相关类被精简导致报错。
-        List<Class<? extends AbstractPluginHolder<?>>> earlyLoadModules = new ArrayList<>();
+        List<Class<?>> earlyLoadModules = new ArrayList<>();
         try {
-            Class<LanguageManagerImpl> languageManagerClass = LanguageManagerImpl.class;
-            earlyLoadModules.add(languageManagerClass);
+            earlyLoadModules.add(Class.forName("top.mrxiaom.pluginbase.func.language.LanguageManagerImpl"));
         } catch (Throwable ignored) {
         }
         try {
-            Class<GuiManager> guiManagerClass = GuiManager.class;
-            earlyLoadModules.add(guiManagerClass);
+            earlyLoadModules.add(Class.forName("top.mrxiaom.pluginbase.func.GuiManager"));
         } catch (Throwable ignored) {
         }
         try {
-            ActionProviders.registerActionProvider(ActionConsole.PROVIDER);
-            ActionProviders.registerActionProvider(ActionPlayer.PROVIDER);
-            if (options.adventure) {
-                ActionProviders.registerActionProvider(ActionActionBar.PROVIDER);
-                ActionProviders.registerActionProvider(ActionMessageAdventure.PROVIDER);
-            } else {
-                ActionProviders.registerActionProvider(ActionMessage.PROVIDER);
-            }
-            ActionProviders.registerActionProvider(ActionClose.PROVIDER);
-            ActionProviders.registerActionProvider(ActionDelay.PROVIDER);
+            Class<?> clazz = Class.forName("top.mrxiaom.pluginbase.actions.ActionProviders");
+            clazz.getDeclaredMethod("registerBuiltInActions", BukkitPlugin.class).invoke(null, this);
         } catch (Throwable ignored) {
         }
 

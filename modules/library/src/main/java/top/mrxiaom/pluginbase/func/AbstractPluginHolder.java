@@ -55,7 +55,7 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         }
     }
 
-    public static void loadModules(BukkitPlugin plugin, List<Class<? extends AbstractPluginHolder<?>>> classList) {
+    public static void loadModules(BukkitPlugin plugin, List<Class<?>> classList) {
         List<HolderConstructor> list = new ArrayList<>();
         for (Class<?> type : classList) {
             try {

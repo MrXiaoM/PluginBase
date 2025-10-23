@@ -9,6 +9,7 @@ import org.gradle.external.javadoc.StandardJavadocDocletOptions
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.getByName
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
@@ -97,5 +98,23 @@ fun Project.setupPublishing(
             useInMemoryPgpKeys(signingKey, signingPassword)
             sign(extensions.getByType<PublishingExtension>().publications.getByName("maven"))
         }
+    }
+}
+
+fun Project.setupLibraries(key: String, vararg libraries: String) {
+    val list = listOf(*libraries)
+    extra.set("libraries.$key", list)
+}
+fun Project.applyLibraries(key: String, vararg configurationNames: String) {
+    val list = extra.get("libraries.$key") as? List<*>
+    if (list != null) {
+        for (dependency in list) {
+            if (dependency == null) continue
+            for (configurationName in configurationNames) {
+                dependencies.add(configurationName, dependency)
+            }
+        }
+    } else {
+        println("${project.buildTreePath} > 无法找到依赖组 $key")
     }
 }

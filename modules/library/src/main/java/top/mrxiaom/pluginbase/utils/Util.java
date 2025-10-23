@@ -1,6 +1,5 @@
 package top.mrxiaom.pluginbase.utils;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -19,7 +18,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
-import top.mrxiaom.pluginbase.api.IAction;
 
 import java.io.*;
 import java.net.JarURLConnection;
@@ -39,8 +37,6 @@ import java.util.logging.Level;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static top.mrxiaom.pluginbase.actions.ActionProviders.loadActions;
 
 /**
  * 大杂烩工具库，所有杂项方法都放在这里
@@ -389,20 +385,6 @@ public class Util {
     @SuppressWarnings({"UnstableApiUsage"})
     public static void submitInvUpdate(Player player) {
         player.updateInventory();
-    }
-
-    /**
-     * 请使用 ActionProviders 代替
-     * @see top.mrxiaom.pluginbase.actions.ActionProviders#loadActions(List)
-     */
-    @Deprecated
-    @SafeVarargs
-    public static void runCommands(Player player, List<String> list, Pair<String, Object>... replacements) {
-        List<IAction> actions = loadActions(list);
-        List<Pair<String, Object>> args = Lists.newArrayList(replacements);
-        for (IAction action : actions) {
-            action.run(player, args);
-        }
     }
 
     public static List<String> startsWith(String s, String... texts) {

@@ -118,8 +118,8 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
      * 在枚举名中，<code>__</code> 会被替换为 <code>.</code>，<code>_</code> 会被替换为 <code>-</code> 作为键名。<br>
      * @param enumType 枚举类型
      * @param getter 获取 holder 实例的 getter，如 <code>Messages::holder</code>
-     * @see top.mrxiaom.pluginbase.func.language.LanguageEnumAutoHolder#wrap(Enum, String)
-     * @see top.mrxiaom.pluginbase.func.language.IHolderAccessor
+     * @see LanguageEnumAutoHolder#wrap(Enum, String)
+     * @see IHolderAccessor
      */
     public <T extends Enum<T>> LanguageManager register(Class<T> enumType, Function<T, LanguageEnumAutoHolder<T>> getter) {
         holderGetters.put(enumType.getName(), getter);
@@ -139,8 +139,8 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
      * 在字段名中，<code>__</code> 会被替换为 <code>.</code>，<code>_</code> 会被替换为 <code>-</code> 作为键名。<br>
      * 你也可以添加 <code>@Language("path.to.key")</code> 来自定义键名。
      * @param anyType 任意类型
-     * @see top.mrxiaom.pluginbase.func.language.LanguageFieldAutoHolder#field(String)
-     * @see top.mrxiaom.pluginbase.func.language.Message
+     * @see LanguageFieldAutoHolder#field(String)
+     * @see Message
      */
     public LanguageManager register(Class<?> anyType) {
         if (anyType.isAssignableFrom(Enum.class)) {

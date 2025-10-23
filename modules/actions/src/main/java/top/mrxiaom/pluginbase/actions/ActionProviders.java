@@ -15,6 +15,23 @@ public class ActionProviders {
     private static final List<IActionProvider> actionProviders = new ArrayList<>();
     private ActionProviders() {}
 
+    public static void registerBuiltInActions(BukkitPlugin plugin) {
+        if (!actionProviders.isEmpty()) return;
+        try {
+            ActionProviders.registerActionProvider(ActionConsole.PROVIDER);
+            ActionProviders.registerActionProvider(ActionPlayer.PROVIDER);
+            if (plugin.options.adventure()) {
+                ActionProviders.registerActionProvider(ActionActionBar.PROVIDER);
+                ActionProviders.registerActionProvider(ActionMessageAdventure.PROVIDER);
+            } else {
+                ActionProviders.registerActionProvider(ActionMessage.PROVIDER);
+            }
+            ActionProviders.registerActionProvider(ActionClose.PROVIDER);
+            ActionProviders.registerActionProvider(ActionDelay.PROVIDER);
+        } catch (Throwable ignored) {
+        }
+    }
+
     @NotNull
     public static List<IAction> loadActions(@NotNull ConfigurationSection section, @NotNull String key) {
         return loadActions(section.getStringList(key));
