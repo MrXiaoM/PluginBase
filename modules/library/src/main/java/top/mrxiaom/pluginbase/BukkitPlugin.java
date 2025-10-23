@@ -480,7 +480,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         }
 
         String packageName = options.scanPackage != null ? options.scanPackage : getClass().getPackage().getName();
-        Set<Class<?>> classes = Util.getClasses(getClassLoader(), packageName, options.scanIgnore);
+        Set<Class<?>> classes = Util.getClasses(getFile(), packageName, options.scanIgnore);
         for (Class<?> clazz : classes) {
             if (clazz.isInterface() || clazz.isAnnotation() || clazz.isEnum()) continue;
             if (!AbstractPluginHolder.class.isAssignableFrom(clazz)) continue;

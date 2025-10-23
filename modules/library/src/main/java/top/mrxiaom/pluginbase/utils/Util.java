@@ -416,6 +416,15 @@ public class Util {
         return classes;
     }
 
+    public static Set<Class<?>> getClasses(File jarFile, String packageName, List<String> ignorePackages) {
+        Set<Class<?>> classes = new TreeSet<>(Comparator.comparing(Class::getName));
+        try (JarFile jar = new JarFile(jarFile)) {
+            findAnnotatedClassesInJar(jar, packageName, ignorePackages, classes);
+        } catch (Exception ignored) {
+        }
+        return classes;
+    }
+
     private static void findAnnotatedClassesInDirectory(File directory, String packageName, List<String> ignorePackages, Set<Class<?>> classes) {
         File[] files = directory.listFiles(file -> ((file.isFile() && file.getName().endsWith(".class")) || file.isDirectory()));
         if (files != null) for (File file : files) {
@@ -435,8 +444,13 @@ public class Util {
     }
 
     private static void findAnnotatedClassesInJar(URL url, String packageName, List<String> ignorePackages, Set<Class<?>> classes) throws Exception {
+        try (JarFile jar = ((JarURLConnection) url.openConnection()).getJarFile()) {
+            findAnnotatedClassesInJar(jar, packageName, ignorePackages, classes);
+        }
+    }
+
+    private static void findAnnotatedClassesInJar(JarFile jar, String packageName, List<String> ignorePackages, Set<Class<?>> classes) {
         String packagePath = packageName.replace(".", "/");
-        JarFile jar = ((JarURLConnection) url.openConnection()).getJarFile();
         Enumeration<JarEntry> entries = jar.entries();
         while (entries.hasMoreElements()) {
             JarEntry entry = entries.nextElement();
