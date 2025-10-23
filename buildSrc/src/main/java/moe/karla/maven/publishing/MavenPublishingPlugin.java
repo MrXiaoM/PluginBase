@@ -69,7 +69,7 @@ public class MavenPublishingPlugin implements Plugin<Project> {
         rootProject.getTasks().getByName("clean").dependsOn(cleanTask);
 
         TaskProvider<Zip> packBundleTask = rootProject.getTasks().register("packMavenPublishingStage", Zip.class, task -> {
-            task.getDestinationDirectory().set(new File(task.getProject().getBuildFile(), "tmp"));
+            task.getDestinationDirectory().set(rootProject.getLayout().getBuildDirectory().dir("tmp"));
             task.getArchiveFileName().set("bundle.zip");
 
             task.from(cacheRepoLocation);
