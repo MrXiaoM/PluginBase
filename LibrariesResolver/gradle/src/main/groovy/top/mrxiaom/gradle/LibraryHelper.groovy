@@ -16,6 +16,8 @@ class LibraryHelper {
     private Project project
     private Configuration configuration
     private String targetConfiguration
+    public final LibrariesResolver resolver = new LibrariesResolver()
+    public final PluginBase modules = new PluginBase()
     LibraryHelper(@NotNull Project project) {
         this(project, project.getConfigurations().create("libraryGroup", it -> {
             it.setCanBeResolved(true)
