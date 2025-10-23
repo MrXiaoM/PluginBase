@@ -15,6 +15,7 @@ dependencies {
 setupJava(8)
 setupJavadoc(false)
 setupPublishing(
+    publishName = "LibrariesResolver-Gradle",
     publishDesc = "MrXiaoM's Bukkit plugin libraries resolver gradle pre-process logic",
-    sourceCodeUrl = "https://github.com/MrXiaoM/PluginBase/tree/main/LibrariesResolver-Gradle",
+    sourceCodeUrl = "https://github.com/MrXiaoM/PluginBase/tree/main/LibrariesResolver/gradle",
 )

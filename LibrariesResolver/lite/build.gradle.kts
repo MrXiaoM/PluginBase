@@ -19,6 +19,7 @@ buildConfig {
 setupJava(8)
 setupJavadoc(false)
 setupPublishing(
+    publishName = "LibrariesResolver-Lite",
     publishDesc = "MrXiaoM's Bukkit plugin libraries resolver, but a more simple variant",
-    sourceCodeUrl = "https://github.com/MrXiaoM/PluginBase/tree/main/LibrariesResolver-Lite",
+    sourceCodeUrl = "https://github.com/MrXiaoM/PluginBase/tree/main/LibrariesResolver/lite",
 )

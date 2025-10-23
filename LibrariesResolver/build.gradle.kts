@@ -1,17 +1,15 @@
-plugins {
-    java
-    signing
-    `maven-publish`
-}
+subprojects {
+    apply(plugin="java")
+    apply(plugin="maven-publish")
+    apply(plugin="signing")
 
-dependencies {
-    compileOnly(files("../libs/stub-rt.jar"))
-    compileOnly("org.jetbrains:annotations:24.0.0")
-}
+    group = "top.mrxiaom"
 
-setupJava(8)
-setupJavadoc(false)
-setupPublishing(
-    publishDesc = "MrXiaoM's Bukkit plugin libraries resolver",
-    sourceCodeUrl = "https://github.com/MrXiaoM/PluginBase/tree/main/LibrariesResolver",
-)
+    dependencies {
+        add("compileOnly", rootProject.files("libs/stub-rt.jar"))
+        add("compileOnly", "org.jetbrains:annotations:24.0.0")
+    }
+
+    setupJava(8)
+    setupJavadoc(false)
+}
