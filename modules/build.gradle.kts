@@ -7,7 +7,7 @@ subprojects {
     group = "top.mrxiaom.pluginbase"
 
     dependencies {
-        add("compileOnly", rootProject.files("libs/stub-rt.jar"))
+        add("compileOnly", rootProject.files("buildSrc/libs/stub-rt.jar"))
         add("compileOnly", "org.jetbrains:annotations:24.0.0")
     }
 
