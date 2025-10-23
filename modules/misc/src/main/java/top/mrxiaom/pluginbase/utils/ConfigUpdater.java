@@ -130,7 +130,7 @@ public class ConfigUpdater extends AbstractPluginHolder<BukkitPlugin> {
 
         if (modified && saveFile != null) {
             try {
-                Util.save(config, saveFile);
+                ConfigUtils.save(config, saveFile);
             } catch (IOException e) {
                 warn(e);
             }

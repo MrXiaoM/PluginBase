@@ -23,6 +23,7 @@ import top.mrxiaom.pluginbase.func.AbstractPluginHolder;
 import top.mrxiaom.pluginbase.func.AutoRegister;
 import top.mrxiaom.pluginbase.utils.AdventureItemStack;
 import top.mrxiaom.pluginbase.utils.ClassLoaderWrapper;
+import top.mrxiaom.pluginbase.utils.ConfigUtils;
 import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.pluginbase.utils.inventory.BukkitInventoryFactory;
 import top.mrxiaom.pluginbase.utils.inventory.InventoryFactory;
@@ -580,7 +581,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         String gotoFlag = last.getString("goto", null);
         if (gotoFlag != null) {
             File file = resolve(gotoFlag);
-            YamlConfiguration newConfig = Util.load(file);
+            YamlConfiguration newConfig = ConfigUtils.load(file);
             return resolveGotoFlag(newConfig, times + 1);
         }
         return last;
@@ -602,7 +603,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
             if (!file.exists()) {
                 saveResource("config.yml", file);
             }
-            this.config = config = Util.load(file);
+            this.config = config = ConfigUtils.load(file);
             if (options.enableConfigGotoFlag) {
                 config = resolveGotoFlag(config);
             }

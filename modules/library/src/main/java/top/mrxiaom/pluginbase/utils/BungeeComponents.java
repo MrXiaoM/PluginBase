@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import java.util.regex.Pattern;
 
-import static top.mrxiaom.pluginbase.utils.Util.split;
+import static top.mrxiaom.pluginbase.utils.CollectionUtils.split;
 
 public class BungeeComponents {
     private static final Pattern translatePattern = Pattern.compile("<translate:(.*?)>");

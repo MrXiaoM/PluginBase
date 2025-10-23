@@ -1,7 +1,7 @@
 package top.mrxiaom.pluginbase.temporary;
 
 import top.mrxiaom.pluginbase.temporary.period.Period;
-import top.mrxiaom.pluginbase.utils.Util;
+import top.mrxiaom.pluginbase.utils.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -119,8 +119,8 @@ public abstract class TemporaryData<T> {
     }
 
     public void deserialize(String string) {
-        List<String> split = Util.split(string, ';', 2);
-        List<String> arguments = Util.split(split.get(0), ',');
+        List<String> split = CollectionUtils.split(string, ';', 2);
+        List<String> arguments = CollectionUtils.split(split.get(0), ',');
         this.nextOutdateTime = dateTime(arguments.get(0));
         if (this.isOutdated()) {
             this.applyDefaultValue();

@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.language.*;
-import top.mrxiaom.pluginbase.utils.Util;
+import top.mrxiaom.pluginbase.utils.ConfigUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -208,7 +208,7 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
     public LanguageManager reload() {
         if (file == null || holders.isEmpty()) return this;
         holderValues.clear();
-        YamlConfiguration config = Util.load(file);
+        YamlConfiguration config = ConfigUtils.load(file);
         config.setDefaults(new YamlConfiguration());
         for (AbstractLanguageHolder holder : holders.values()) {
             if (!config.contains(holder.key())) {
@@ -222,7 +222,7 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
             }
         }
         try {
-            Util.save(config, file);
+            ConfigUtils.save(config, file);
         } catch (IOException e) {
             warn("更新语言文件时出现异常", e);
         }

@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.gui.IGuiHolder;
+import top.mrxiaom.pluginbase.utils.ConfigUtils;
 import top.mrxiaom.pluginbase.utils.Util;
 
 import java.io.File;
@@ -44,7 +45,7 @@ public abstract class AbstractGuiModule<T extends BukkitPlugin> extends Abstract
 
     @Override
     public void reloadConfig(MemoryConfiguration cfg) {
-        YamlConfiguration config = Util.load(file);
+        YamlConfiguration config = ConfigUtils.load(file);
         guiTitle = config.getString("title", "");
         guiInventory = getInventory(config, "inventory");
         reloadMenuConfig(config);

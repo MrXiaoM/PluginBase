@@ -15,6 +15,7 @@ import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.gui.IModel;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.gui.IGuiHolder;
+import top.mrxiaom.pluginbase.utils.ConfigUtils;
 import top.mrxiaom.pluginbase.utils.Util;
 
 import java.io.File;
@@ -47,7 +48,7 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
             warn(warningPrefix + "重复菜单 " + id);
             return;
         }
-        YamlConfiguration config = Util.load(file);
+        YamlConfiguration config = ConfigUtils.load(file);
         M loaded = provider.load(parent, config, id);
         if (loaded != null) {
             menus.put(id, loaded);

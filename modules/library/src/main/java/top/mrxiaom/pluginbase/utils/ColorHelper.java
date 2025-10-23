@@ -3,14 +3,13 @@ package top.mrxiaom.pluginbase.utils;
 import com.google.common.collect.Lists;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static top.mrxiaom.pluginbase.utils.Util.split;
+import static top.mrxiaom.pluginbase.utils.CollectionUtils.split;
 
 /**
  * 祖传的颜色代码处理器，更推荐使用 <code>AdventureUtil</code> 代替
