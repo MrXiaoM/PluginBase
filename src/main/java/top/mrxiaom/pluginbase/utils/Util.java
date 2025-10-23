@@ -13,6 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -79,6 +81,19 @@ public class Util {
         }
         if (plugin.options.adventure()) {
             AdventureUtil.init(plugin);
+        }
+    }
+
+    /**
+     * 获取 Inventory 的 InventoryHolder 实例
+     * @return 在 Folia 服务端，如果是 BlockInventoryHolder，会因为异步调用方块而报错。该报错会被捕捉，返回 <code>null</code>。
+     */
+    @Nullable
+    public static InventoryHolder getHolder(@NotNull Inventory inv) {
+        try {
+            return inv.getHolder();
+        } catch (Throwable ignored) { // fuck folia
+            return null;
         }
     }
 

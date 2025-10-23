@@ -25,7 +25,6 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
         } catch (Throwable ignored) {}
     };
     boolean disabled = false;
-    boolean isNotFolia = !Util.isPresent("io.papermc.paper.threadedregions.RegionizedServer");
     public GuiManager(BukkitPlugin plugin) {
         super(plugin, true);
         registerEvents(this);
@@ -37,7 +36,7 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
         if (player == null) return;
         Inventory inv = gui.newInventory();
         if (inv != null) {
-            if (inv.getHolder() == gui) {
+            if (Util.getHolder(inv) == gui) {
                 player.openInventory(inv);
             } else {
                 player.closeInventory();
@@ -72,18 +71,11 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
     }
 
     public IGuiHolder getInventoryHolder(Inventory inv) {
-        if (isNotFolia) return getHolderAsGui(inv);
-        try {
-            // 如果在 Folia 直接调用 getHolder()
-            // 此时玩家打开的界面是原版容器，会因为跨线程调用 Block.getState() 而报错
-            return getHolderAsGui(inv);
-        } catch (Throwable ignored) {
-        }
-        return null;
+        return getHolderAsGui(inv);
     }
 
     private IGuiHolder getHolderAsGui(Inventory inv) {
-        InventoryHolder holder = inv.getHolder();
+        InventoryHolder holder = Util.getHolder(inv);
         if (holder instanceof IGuiHolder) {
             return (IGuiHolder) holder;
         }
