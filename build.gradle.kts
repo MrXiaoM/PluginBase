@@ -85,8 +85,8 @@ tasks {
 }
 mavenPublishing {
     publishingType = PublishingType.AUTOMATIC
-    url = "https://github.com/MrXiaoM/PluginBase"
 }
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
