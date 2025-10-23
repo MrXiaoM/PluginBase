@@ -7,8 +7,8 @@ plugins {
 }
 
 allprojects {
-    group = "top.mrxiaom"
-    version = "1.6.7"
+    group = rootProject.group
+    version = rootProject.version
 
     repositories {
         mavenCentral()
