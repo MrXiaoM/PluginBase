@@ -87,6 +87,9 @@ class LibraryHelper {
     }
 
     String join() {
+        if (resolvedLibraries.isEmpty()) {
+            doResolveLibraries()
+        }
         def joiner = new StringJoiner(",\n")
         for (final def s in resolvedLibraries) {
             joiner.add("    \"$s\"")
