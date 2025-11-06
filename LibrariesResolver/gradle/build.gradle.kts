@@ -48,7 +48,7 @@ buildConfig {
     fun name(proj: Project): String {
         return buildString {
             var upper = false
-            for ((index, ch) in proj.name.withIndex()) {
+            for ((_, ch) in proj.name.withIndex()) {
                 if (ch == '-' || ch == '.') {
                     upper = true
                     continue
