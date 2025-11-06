@@ -72,6 +72,12 @@ public class Util {
      */
     @Nullable
     public static InventoryHolder getHolder(@NotNull Inventory inv) {
+        // 因为 Folia 非要找存在感，把日志打出来，所以需要增加额外判定
+        try {
+            // 这个 getLocation() 在 1.9 加入，所以只要这里报错，也可以放心调用 .getHolder()
+            if (inv.getLocation() != null) return null;
+        } catch (Throwable ignored) {
+        }
         try {
             return inv.getHolder();
         } catch (Throwable ignored) { // fuck folia
