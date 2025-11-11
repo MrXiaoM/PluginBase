@@ -378,6 +378,18 @@ public class AdventureUtil {
                     i += 12;
                     break;
                 }
+                case '#': {
+                    if (i + 6 >= chars.length) {
+                        builder.append(chars[i]);
+                        continue;
+                    }
+                    builder
+                            .append("<#")
+                            .append(chars,i+1, 6)
+                            .append(">");
+                    i += 5;
+                    break;
+                }
                 default: {
                     builder.append(chars[i]);
                     if (chars[i+1] == chars[i]) { // && 转义为 &
