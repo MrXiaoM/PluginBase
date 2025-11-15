@@ -80,5 +80,6 @@ buildConfig {
             val dep = dependency(proj) ?: continue
             buildConfigField("String", name(proj), "\"$dep\"")
         }
+        buildConfigField("String", "VERSION", "\"${project.version}\"")
     }
 }
