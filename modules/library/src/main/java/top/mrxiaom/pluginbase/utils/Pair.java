@@ -101,12 +101,15 @@ public class Pair<K, V> {
     public static String replace(String s, @Nullable Iterable<Pair<String, Object>> replacements) {
         if (replacements == null) return s;
         for (Pair<String, Object> replacement : replacements) {
-            if (replacement.key.startsWith("__internal__")) continue;
-            Object value = replacement.value;
-            String str = value instanceof Supplier<?>
-                    ? String.valueOf(((Supplier<?>) value).get())
-                    : String.valueOf(value);
-            s = s.replace(replacement.key, str);
+            String key = replacement.key;
+            if (key.startsWith("__internal__")) continue;
+            if (s.contains(key)) {
+                Object value = replacement.value;
+                String str = value instanceof Supplier<?>
+                        ? String.valueOf(((Supplier<?>) value).get())
+                        : String.valueOf(value);
+                s = s.replace(key, str);
+            }
         }
         return s;
     }
@@ -114,12 +117,15 @@ public class Pair<K, V> {
     public static String replace(String s, Pair<String, Object> @Nullable [] replacements) {
         if (replacements == null) return s;
         for (Pair<String, Object> replacement : replacements) {
-            if (replacement.key.startsWith("__internal__")) continue;
-            Object value = replacement.value;
-            String str = value instanceof Supplier<?>
-                ? String.valueOf(((Supplier<?>) value).get())
-                : String.valueOf(value);
-            s = s.replace(replacement.key, str);
+            String key = replacement.key;
+            if (key.startsWith("__internal__")) continue;
+            if (s.contains(key)) {
+                Object value = replacement.value;
+                String str = value instanceof Supplier<?>
+                        ? String.valueOf(((Supplier<?>) value).get())
+                        : String.valueOf(value);
+                s = s.replace(key, str);
+            }
         }
         return s;
     }
