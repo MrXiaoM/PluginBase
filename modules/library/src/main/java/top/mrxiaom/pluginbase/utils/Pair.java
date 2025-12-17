@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * 键值对，并提供字符串快捷替换方案
@@ -101,7 +102,11 @@ public class Pair<K, V> {
         if (replacements == null) return s;
         for (Pair<String, Object> replacement : replacements) {
             if (replacement.key.startsWith("__internal__")) continue;
-            s = s.replace(replacement.key, String.valueOf(replacement.value));
+            Object value = replacement.value;
+            String str = value instanceof Supplier<?>
+                    ? String.valueOf(((Supplier<?>) value).get())
+                    : String.valueOf(value);
+            s = s.replace(replacement.key, str);
         }
         return s;
     }
@@ -110,7 +115,11 @@ public class Pair<K, V> {
         if (replacements == null) return s;
         for (Pair<String, Object> replacement : replacements) {
             if (replacement.key.startsWith("__internal__")) continue;
-            s = s.replace(replacement.key, String.valueOf(replacement.value));
+            Object value = replacement.value;
+            String str = value instanceof Supplier<?>
+                ? String.valueOf(((Supplier<?>) value).get())
+                : String.valueOf(value);
+            s = s.replace(replacement.key, str);
         }
         return s;
     }

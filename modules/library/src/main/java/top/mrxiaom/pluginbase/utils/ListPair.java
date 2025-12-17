@@ -3,6 +3,7 @@ package top.mrxiaom.pluginbase.utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * <code>List&lt;Pair&lt;K, V&gt;&gt;</code> 的包装类型，其中添加了一些实用的方法。<br>
@@ -62,6 +63,14 @@ public class ListPair<K, V> implements List<Pair<K, V>> {
 
     public boolean add(K key, V value) {
         return add(Pair.of(key, value));
+    }
+
+    /**
+     * 该方法仅限在泛型 V 的类型为 Object 时使用
+     */
+    @SuppressWarnings({"unchecked"})
+    public boolean add(K key, Supplier<V> supplier) {
+        return add(Pair.of(key, (V) supplier));
     }
 
     @Override
