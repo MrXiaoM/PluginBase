@@ -487,7 +487,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
             AutoRegister annotation = clazz.getAnnotation(AutoRegister.class);
             if (annotation != null) {
-                modulesToRegister.add((Class<? extends AbstractPluginHolder<?>>) clazz);
+                modulesToRegister.add(clazz);
             }
         }
 
