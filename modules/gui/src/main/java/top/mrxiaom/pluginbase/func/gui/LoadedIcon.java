@@ -217,9 +217,31 @@ public class LoadedIcon {
     }
 
     /**
+     * 获取图标点击操作
+     * @param type 具体点击操作类型
+     * @return 可能会返回空列表，例如不支持该点击类型，或者用户未配置
+     */
+    @NotNull
+    public List<IAction> getClickActions(@NotNull ClickType type) {
+        switch (type) {
+            case LEFT:
+                return leftClickCommands;
+            case RIGHT:
+                return rightClickCommands;
+            case SHIFT_LEFT:
+                return shiftLeftClickCommands;
+            case SHIFT_RIGHT:
+                return shiftRightClickCommands;
+            case DROP:
+                return dropCommands;
+        }
+        return new ArrayList<>();
+    }
+
+    /**
      * 处理图标点击操作
      * @param player 点击该图标的玩家
-     * @param type 具体点击操作
+     * @param type 具体点击操作类型
      */
     public void click(@NotNull Player player, @NotNull ClickType type) {
         click(player, type, null);
@@ -228,30 +250,12 @@ public class LoadedIcon {
     /**
      * 处理图标点击操作
      * @param player 点击该图标的玩家
-     * @param type 具体点击操作
+     * @param type 具体点击操作类型
      * @param replacements 替换变量列表
      */
     public void click(@NotNull Player player, @NotNull ClickType type, @Nullable List<Pair<String, Object>> replacements) {
-        List<IAction> actions;
-        switch (type) {
-            case LEFT:
-                actions = leftClickCommands;
-                break;
-            case RIGHT:
-                actions = rightClickCommands;
-                break;
-            case SHIFT_LEFT:
-                actions = shiftLeftClickCommands;
-                break;
-            case SHIFT_RIGHT:
-                actions = shiftRightClickCommands;
-                break;
-            case DROP:
-                actions = dropCommands;
-                break;
-            default:
-                return;
-        }
+        List<IAction> actions = getClickActions(type);
+        if (actions.isEmpty()) return;
         ListPair<String, Object> args = new ListPair<>();
         args.add("__internal__loaded_icon", this);
         if (replacements != null) args.addAll(replacements);
