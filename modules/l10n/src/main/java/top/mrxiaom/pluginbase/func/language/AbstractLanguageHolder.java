@@ -78,7 +78,7 @@ public abstract class AbstractLanguageHolder {
      * @param args 参数列表
      * @see String#format(String, Object...)
      */
-    public String str(Object... args) {
+    public String strFormat(Object... args) {
         Object[] arguments = new Object[args.length];
         ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
         for (int i = 0; i < args.length; i++) {
@@ -128,7 +128,7 @@ public abstract class AbstractLanguageHolder {
      * @param args 参数列表
      * @see String#format(String, Object...)
      */
-    public List<String> list(Object... args) {
+    public List<String> listFormat(Object... args) {
         Object[] arguments = new Object[args.length];
         ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
         for (int i = 0; i < args.length; i++) {
@@ -182,8 +182,8 @@ public abstract class AbstractLanguageHolder {
      * @param args <code>String.format</code> 参数
      * @return 用于命令快捷返回，恒返回 true
      */
-    public boolean t(CommandSender receiver, Object... args) {
-        ColorHelper.parseAndSend(receiver, str(args));
+    public boolean tf(CommandSender receiver, Object... args) {
+        ColorHelper.parseAndSend(receiver, strFormat(args));
         return true;
     }
     /**
@@ -232,8 +232,8 @@ public abstract class AbstractLanguageHolder {
      * @param args <code>String.format</code> 参数
      * @return 用于命令快捷返回，恒返回 true
      */
-    public boolean tm(CommandSender receiver, Object... args) {
-        AdventureUtil.sendMessage(receiver, str(args));
+    public boolean tmf(CommandSender receiver, Object... args) {
+        AdventureUtil.sendMessage(receiver, strFormat(args));
         return true;
     }
     /**
@@ -243,8 +243,8 @@ public abstract class AbstractLanguageHolder {
      * @param args <code>String.format</code> 参数
      * @return 用于命令快捷返回，恒返回 true
      */
-    public boolean tm(MiniMessage miniMessage, CommandSender receiver, Object... args) {
-        AdventureUtil.sendMessage(receiver, miniMessage, str(args));
+    public boolean tmf(MiniMessage miniMessage, CommandSender receiver, Object... args) {
+        AdventureUtil.sendMessage(receiver, miniMessage, strFormat(args));
         return true;
     }
     /**

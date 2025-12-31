@@ -24,10 +24,10 @@ public interface IHolderAccessor {
     }
 
     /**
-     * @see AbstractLanguageHolder#str(Object...)
+     * @see AbstractLanguageHolder#strFormat(Object...)
      */
-    default String str(Object... args) {
-        return holder().str(args);
+    default String strFormat(Object... args) {
+        return holder().strFormat(args);
     }
 
     /**
@@ -52,10 +52,10 @@ public interface IHolderAccessor {
     }
 
     /**
-     * @see AbstractLanguageHolder#list(Object...)
+     * @see AbstractLanguageHolder#listFormat(Object...)
      */
-    default List<String> list(Object... args) {
-        return holder().list(args);
+    default List<String> listFormat(Object... args) {
+        return holder().listFormat(args);
     }
 
     /**
@@ -85,10 +85,10 @@ public interface IHolderAccessor {
     }
 
     /**
-     * @see AbstractLanguageHolder#t(CommandSender, Object...)
+     * @see AbstractLanguageHolder#tf(CommandSender, Object...)
      */
-    default boolean t(CommandSender receiver, Object... args) {
-        ColorHelper.parseAndSend(receiver, str(args));
+    default boolean tf(CommandSender receiver, Object... args) {
+        ColorHelper.parseAndSend(receiver, strFormat(args));
         return true;
     }
 
@@ -125,18 +125,18 @@ public interface IHolderAccessor {
     }
 
     /**
-     * @see AbstractLanguageHolder#tm(CommandSender, Object...)
+     * @see AbstractLanguageHolder#tmf(CommandSender, Object...)
      */
-    default boolean tm(CommandSender receiver, Object... args) {
-        AdventureUtil.sendMessage(receiver, str(args));
+    default boolean tmf(CommandSender receiver, Object... args) {
+        AdventureUtil.sendMessage(receiver, strFormat(args));
         return true;
     }
 
     /**
-     * @see AbstractLanguageHolder#tm(MiniMessage, CommandSender, Object...)
+     * @see AbstractLanguageHolder#tmf(MiniMessage, CommandSender, Object...)
      */
-    default boolean tm(MiniMessage miniMessage, CommandSender receiver, Object... args) {
-        AdventureUtil.sendMessage(receiver, miniMessage, str(args));
+    default boolean tmf(MiniMessage miniMessage, CommandSender receiver, Object... args) {
+        AdventureUtil.sendMessage(receiver, miniMessage, strFormat(args));
         return true;
     }
 
