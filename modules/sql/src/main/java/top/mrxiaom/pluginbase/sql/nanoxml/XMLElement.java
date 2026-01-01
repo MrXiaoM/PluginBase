@@ -2058,7 +2058,7 @@ public class XMLElement implements Serializable {
      * <P>
      * You should override this method when subclassing XMLElement.
      */
-    protected XMLElement createAnotherElement()
+    public XMLElement createAnotherElement()
     {
         return new XMLElement(this.entities,
                               this.ignoreWhitespace,
@@ -2875,5 +2875,5 @@ public class XMLElement implements Serializable {
         String msg = "Unknown or invalid entity: &" + name + ";";
         return new XMLParseException(this.getName(), this.parserLineNr, msg);
     }
-    
+
 }
