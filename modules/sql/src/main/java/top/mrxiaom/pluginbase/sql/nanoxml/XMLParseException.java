@@ -57,7 +57,7 @@ public class XMLParseException
      * <code>NO_LINE</code> if the line number is unknown.
      *
      * <dl><dt><b>Invariants:</b></dt><dd>
-     * <ul><li><code>lineNr &gt 0 || lineNr == NO_LINE</code>
+     * <ul><li><code>lineNr > 0 || lineNr == NO_LINE</code>
      * </ul></dd></dl>
      */
     private int lineNr;
@@ -68,7 +68,7 @@ public class XMLParseException
      *
      * @param name    The name of the element where the error is located.
      * @param message A message describing what went wrong.
-     *
+     * <p>
      * </dl><dl><dt><b>Preconditions:</b></dt><dd>
      * <ul><li><code>message != null</code>
      * </ul></dd></dl>
@@ -94,7 +94,7 @@ public class XMLParseException
      * @param name    The name of the element where the error is located.
      * @param lineNr  The number of the line in the input.
      * @param message A message describing what went wrong.
-     *
+     * <p>
      * </dl><dl><dt><b>Preconditions:</b></dt><dd>
      * <ul><li><code>message != null</code>
      *     <li><code>lineNr &gt; 0</code>

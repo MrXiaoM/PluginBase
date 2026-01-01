@@ -196,7 +196,7 @@ public class XMLElement implements Serializable {
      * The line number where the element starts.
      *
      * <dl><dt><b>Invariants:</b></dt><dd>
-     * <ul><li><code>lineNr &gt= 0</code>
+     * <ul><li><code>lineNr >= 0</code>
      * </ul></dd></dl>
      */
     private final int lineNr;
