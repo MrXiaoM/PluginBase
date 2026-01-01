@@ -2628,7 +2628,7 @@ public class XMLElement implements Serializable {
             this.unreadChar(ch);
             this.scanPCData(buf);
         } else {
-            for (;;) {
+            while (true) {
                 ch = this.readChar();
                 if (ch == '!') {
                     if (this.checkCDATA(buf)) {
@@ -2648,8 +2648,25 @@ public class XMLElement implements Serializable {
                 }
             }
         }
-        if (buf.length() == 0) {
-            while (ch != '/') {
+        while (ch != '/') {
+            if (buf.length() != 0) {
+                if (this.ignoreWhitespace) {
+                    elt.setContent(buf.toString().trim());
+                } else {
+                    elt.setContent(buf.toString());
+                }
+                buf.setLength(0);
+                ch = this.readChar();
+            } else {
+                if (!elt.getContent().trim().isEmpty()) {
+                    String content = elt.getContent();
+                    elt.setContent("");
+
+                    XMLElement child = this.createAnotherElement();
+                    child.setName("content");
+                    child.setContent(content);
+                    elt.addChild(child);
+                }
                 if (ch == '!') {
                     ch = this.readChar();
                     if (ch != '-') {
@@ -2666,20 +2683,23 @@ public class XMLElement implements Serializable {
                     this.scanElement(child);
                     elt.addChild(child);
                 }
-                ch = this.scanWhitespace();
+                ch = this.scanWhitespace(buf);
                 if (ch != '<') {
-                    throw this.expectedInput("<");
+                    this.unreadChar(ch);
+                    this.scanPCData(buf);
                 }
-                ch = this.readChar();
-            }
-            this.unreadChar(ch);
-        } else {
-            if (this.ignoreWhitespace) {
-                elt.setContent(buf.toString().trim());
-            } else {
-                elt.setContent(buf.toString());
             }
         }
+        if (!elt.children.isEmpty() && !elt.getContent().trim().isEmpty()) {
+            String content = elt.getContent();
+            elt.setContent("");
+
+            XMLElement child = this.createAnotherElement();
+            child.setName("content");
+            child.setContent(content);
+            elt.addChild(child);
+        }
+        this.unreadChar(ch);
         ch = this.readChar();
         if (ch != '/') {
             throw this.expectedInput("/");
