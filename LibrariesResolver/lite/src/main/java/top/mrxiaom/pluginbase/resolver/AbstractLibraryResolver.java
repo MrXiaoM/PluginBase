@@ -18,6 +18,7 @@ public abstract class AbstractLibraryResolver {
     protected final File librariesDir;
     protected List<RemoteRepository> repositories;
     protected final List<String> libraries = new ArrayList<>();
+    protected Map<String, String> startsReplacer = new HashMap<>();
     protected List<URL> lastResolve = null;
     protected String userAgent;
 
@@ -77,6 +78,14 @@ public abstract class AbstractLibraryResolver {
         for (String library : libraries) {
             this.libraries.add(library);
         }
+    }
+
+    public Map<String, String> getStartsReplacer() {
+        return startsReplacer;
+    }
+
+    public void setStartsReplacer(Map<String, String> startsReplacer) {
+        this.startsReplacer = startsReplacer;
     }
 
     protected void onDownloadFailed(String uri, Exception ex) {
@@ -139,6 +148,15 @@ public abstract class AbstractLibraryResolver {
         return false;
     }
 
+    private String map(String oldLink) {
+        for (Map.Entry<String, String> entry : startsReplacer.entrySet()) {
+            if (oldLink.startsWith(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+        return oldLink;
+    }
+
     /**
      * 检查并下载依赖
      * @return 依赖文件列表
@@ -148,7 +166,8 @@ public abstract class AbstractLibraryResolver {
         if (libraries.isEmpty()) return Collections.emptyList();
 
         List<URL> jarFiles = new ArrayList<>();
-        for (String library : libraries) {
+        for (String oldLink : libraries) {
+            String library = map(oldLink);
             File file = new File(librariesDir, library);
             // 如果校验失败，下载文件
             if (!Sha1Checksum.checksum(file)) {
