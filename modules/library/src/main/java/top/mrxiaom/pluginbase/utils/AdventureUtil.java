@@ -59,8 +59,14 @@ public class AdventureUtil {
     }
 
     protected static void init(BukkitPlugin plugin) {
-        adventure = BukkitAudiences.builder(plugin).build();
-        miniMessage = builder().build();
+        try {
+            adventure = BukkitAudiences.builder(plugin).build();
+            miniMessage = builder().build();
+        } catch (LinkageError e) {
+            plugin.warn(plugin.getName() + " 的 adventure 相关库似乎出现了依赖冲突问题，请参考以下链接进行解决");
+            plugin.warn("https://plugins.mcio.dev/elopers/base/resolver-override");
+            throw e;
+        }
         try {
             AdventureItemStack.init(plugin);
         } catch (Throwable ignored) {
