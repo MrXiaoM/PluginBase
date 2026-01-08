@@ -81,7 +81,10 @@ public class LoadedIcon {
      */
     public final Object tag;
 
+    private final ConfigurationSection section;
+
     LoadedIcon(ConfigurationSection current) {
+        this.section = current;
         ConfigurationSection section;
 
         String material, materialStr = current.getString("material");
@@ -119,6 +122,10 @@ public class LoadedIcon {
             }
         }
         this.tag = tag;
+    }
+
+    public ConfigurationSection getSection() {
+        return section;
     }
 
     /**
