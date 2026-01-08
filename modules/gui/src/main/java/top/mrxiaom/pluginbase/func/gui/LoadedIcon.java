@@ -27,59 +27,59 @@ public class LoadedIcon {
     /**
      * 物品材质
      */
-    public final String material;
+    public String material;
     /**
      * 物品数量
      */
-    public final int amount;
+    public int amount;
     /**
      * 物品显示名称
      */
-    public final String display;
+    public String display;
     /**
      * 物品 Lore
      */
-    public final List<String> lore;
+    public List<String> lore;
     /**
      * 物品是否发光，即物品是否添加一个附魔并隐藏，以产生附魔光泽
      */
-    public final boolean glow;
+    public boolean glow;
     /**
      * 物品的自定义模型标记
      */
-    public final Integer customModelData;
+    public Integer customModelData;
     /**
      * 物品的额外 NBT
      */
-    public final Map<String, String> nbtStrings;
+    public Map<String, String> nbtStrings;
     /**
      * 物品的额外 NBT
      */
-    public final Map<String, String> nbtInts;
+    public Map<String, String> nbtInts;
     /**
      * 左键点击物品执行的操作
      */
-    public final List<IAction> leftClickCommands;
+    public List<IAction> leftClickCommands;
     /**
      * 右键点击物品执行的操作
      */
-    public final List<IAction> rightClickCommands;
+    public List<IAction> rightClickCommands;
     /**
      * Shift+左键点击物品执行的操作
      */
-    public final List<IAction> shiftLeftClickCommands;
+    public List<IAction> shiftLeftClickCommands;
     /**
      * Shift+右键点击物品执行的操作
      */
-    public final List<IAction> shiftRightClickCommands;
+    public List<IAction> shiftRightClickCommands;
     /**
      * 鼠标悬停，Q键点击物品执行的操作
      */
-    public final List<IAction> dropCommands;
+    public List<IAction> dropCommands;
     /**
      * 物品的自定义标签，通过 ITagProvider 提供
      */
-    public final Object tag;
+    public Object tag;
 
     private final ConfigurationSection section;
 
