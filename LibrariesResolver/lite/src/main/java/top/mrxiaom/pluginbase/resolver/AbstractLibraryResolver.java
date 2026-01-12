@@ -165,7 +165,7 @@ public abstract class AbstractLibraryResolver {
     public List<URL> doResolve() {
         if (libraries.isEmpty()) return Collections.emptyList();
 
-        List<URL> jarFiles = new ArrayList<>();
+        Set<String> libraryURLs = new HashSet<>();
         for (String oldLink : libraries) {
             String library = map(oldLink);
             File file = new File(librariesDir, library);
@@ -177,6 +177,11 @@ public abstract class AbstractLibraryResolver {
                 }
             }
             // 如果校验成功，或者下载成功，添加结果
+            libraryURLs.add(library);
+        }
+        List<URL> jarFiles = new ArrayList<>();
+        for (String library : libraryURLs) {
+            File file = new File(librariesDir, library);
             try {
                 jarFiles.add(file.toURI().toURL());
             } catch (MalformedURLException ex) {

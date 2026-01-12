@@ -141,23 +141,24 @@ class LibraryHelper {
         return "new String[] {\n$joiner\n}"
     }
 
-    private <T> void collect(List<T> resolvedList, ResolvedDependency dep, Function<ResolvedDependency, T> collector) {
-        T s = collector.apply(dep)
-        if (s == null) return
-        if (!resolvedList.contains(s)) {
-            resolvedList.add(s)
+    private <T> void collect(List<ResolvedDependency> resolvedList, ResolvedDependency dep) {
+        if (dep == null) return
+        if (!resolvedList.contains(dep)) {
+            resolvedList.add(dep)
             for (final def child in dep.getChildren()) {
-                collect(resolvedList, child, collector)
+                collect(resolvedList, child)
             }
         }
     }
 
     <T> List<T> collectLibraries(Function<ResolvedDependency, T> collector) {
-        List<T> list = new ArrayList<>()
+        List<ResolvedDependency> list = new ArrayList<>()
         for (final def dependency in configuration.getResolvedConfiguration().getFirstLevelModuleDependencies()) {
-            collect(list, dependency, collector)
+            collect(list, dependency)
         }
-        return list
+        return list.collect {
+            collector.apply(it)
+        }
     }
 
     List<String> doResolveLibraries() {
@@ -165,9 +166,8 @@ class LibraryHelper {
     }
 
     List<String> doResolveLibraries(Function<ResolvedDependency, String> collector) {
-        for (final def dependency in configuration.getResolvedConfiguration().getFirstLevelModuleDependencies()) {
-            collect(resolvedLibraries, dependency, collector)
-        }
+        resolvedLibraries.clear()
+        resolvedLibraries.addAll(collectLibraries(collector))
         return resolvedLibraries
     }
 }
