@@ -152,13 +152,26 @@ class LibraryHelper {
     }
 
     <T> List<T> collectLibraries(Function<ResolvedDependency, T> collector) {
-        List<ResolvedDependency> list = new ArrayList<>()
+        List<ResolvedDependency> depList = new ArrayList<>()
         for (final def dependency in configuration.getResolvedConfiguration().getFirstLevelModuleDependencies()) {
-            collect(list, dependency)
+            collect(depList, dependency)
         }
-        return list.collect {
-            collector.apply(it)
+        Map<String, ResolvedDependency> depMap = new HashMap<>()
+        for (final def dep in depList) {
+            String key = dep.moduleGroup + ":" + dep.moduleName
+            def old = depMap.get(key)
+            if (old == null || dep.moduleVersion > old.moduleVersion) {
+                depMap.put(key, dep)
+            }
         }
+        List<T> list = new ArrayList()
+        for (final def dep in depMap.values()) {
+            T entry = collector.apply(dep)
+            if (entry != null) {
+                list.add(entry)
+            }
+        }
+        return list
     }
 
     List<String> doResolveLibraries() {
