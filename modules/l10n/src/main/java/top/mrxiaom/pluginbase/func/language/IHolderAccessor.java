@@ -80,7 +80,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#t(CommandSender)
      */
     default boolean t(CommandSender receiver) {
-        ColorHelper.parseAndSend(receiver, str());
+        String message = str();
+        if (!message.isEmpty()) {
+            ColorHelper.parseAndSend(receiver, message);
+        }
         return true;
     }
 
@@ -88,7 +91,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#tf(CommandSender, Object...)
      */
     default boolean tf(CommandSender receiver, Object... args) {
-        ColorHelper.parseAndSend(receiver, strFormat(args));
+        String message = strFormat(args);
+        if (!message.isEmpty()) {
+            ColorHelper.parseAndSend(receiver, message);
+        }
         return true;
     }
 
@@ -96,7 +102,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#t(CommandSender, Pair[])
      */
     default boolean t(CommandSender receiver, Pair... replacements) {
-        ColorHelper.parseAndSend(receiver, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            ColorHelper.parseAndSend(receiver, message);
+        }
         return true;
     }
 
@@ -104,7 +113,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#t(CommandSender, Iterable)
      */
     default boolean t(CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
-        ColorHelper.parseAndSend(receiver, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            ColorHelper.parseAndSend(receiver, message);
+        }
         return true;
     }
 
@@ -112,7 +124,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#tm(CommandSender)
      */
     default boolean tm(CommandSender receiver) {
-        AdventureUtil.sendMessage(receiver, str());
+        String message = str();
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, message);
+        }
         return true;
     }
 
@@ -120,7 +135,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#tm(MiniMessage, CommandSender)
      */
     default boolean tm(MiniMessage miniMessage, CommandSender receiver) {
-        AdventureUtil.sendMessage(receiver, miniMessage, str());
+        String message = str();
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, miniMessage, message);
+        }
         return true;
     }
 
@@ -128,7 +146,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#tmf(CommandSender, Object...)
      */
     default boolean tmf(CommandSender receiver, Object... args) {
-        AdventureUtil.sendMessage(receiver, strFormat(args));
+        String message = strFormat(args);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, message);
+        }
         return true;
     }
 
@@ -136,7 +157,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#tmf(MiniMessage, CommandSender, Object...)
      */
     default boolean tmf(MiniMessage miniMessage, CommandSender receiver, Object... args) {
-        AdventureUtil.sendMessage(receiver, miniMessage, strFormat(args));
+        String message = strFormat(args);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, miniMessage, message);
+        }
         return true;
     }
 
@@ -144,7 +168,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#tm(CommandSender, Pair[])
      */
     default boolean tm(CommandSender receiver, Pair... replacements) {
-        AdventureUtil.sendMessage(receiver, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, message);
+        }
         return true;
     }
 
@@ -152,7 +179,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#tm(MiniMessage, CommandSender, Pair[])
      */
     default boolean tm(MiniMessage miniMessage, CommandSender receiver, Pair... replacements) {
-        AdventureUtil.sendMessage(receiver, miniMessage, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, miniMessage, message);
+        }
         return true;
     }
 
@@ -160,7 +190,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#tm(CommandSender, Iterable)
      */
     default boolean tm(CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
-        AdventureUtil.sendMessage(receiver, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, message);
+        }
         return true;
     }
 
@@ -168,7 +201,10 @@ public interface IHolderAccessor {
      * @see AbstractLanguageHolder#tm(MiniMessage, CommandSender, Iterable)
      */
     default boolean tm(MiniMessage miniMessage, CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
-        AdventureUtil.sendMessage(receiver, miniMessage, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, miniMessage, message);
+        }
         return true;
     }
 }

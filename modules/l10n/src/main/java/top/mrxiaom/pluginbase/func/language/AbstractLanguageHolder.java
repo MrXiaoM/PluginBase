@@ -173,7 +173,10 @@ public abstract class AbstractLanguageHolder {
      * @return 用于命令快捷返回，恒返回 true
      */
     public boolean t(CommandSender receiver) {
-        ColorHelper.parseAndSend(receiver, str());
+        String message = str();
+        if (!message.isEmpty()) {
+            ColorHelper.parseAndSend(receiver, message);
+        }
         return true;
     }
     /**
@@ -183,7 +186,10 @@ public abstract class AbstractLanguageHolder {
      * @return 用于命令快捷返回，恒返回 true
      */
     public boolean tf(CommandSender receiver, Object... args) {
-        ColorHelper.parseAndSend(receiver, strFormat(args));
+        String message = strFormat(args);
+        if (!message.isEmpty()) {
+            ColorHelper.parseAndSend(receiver, message);
+        }
         return true;
     }
     /**
@@ -194,7 +200,10 @@ public abstract class AbstractLanguageHolder {
      */
     @SafeVarargs
     public final boolean t(CommandSender receiver, Pair<String, Object>... replacements) {
-        ColorHelper.parseAndSend(receiver, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            ColorHelper.parseAndSend(receiver, message);
+        }
         return true;
     }
     /**
@@ -204,7 +213,10 @@ public abstract class AbstractLanguageHolder {
      * @return 用于命令快捷返回，恒返回 true
      */
     public boolean t(CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
-        ColorHelper.parseAndSend(receiver, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            ColorHelper.parseAndSend(receiver, message);
+        }
         return true;
     }
     /**
@@ -213,7 +225,10 @@ public abstract class AbstractLanguageHolder {
      * @return 用于命令快捷返回，恒返回 true
      */
     public boolean tm(CommandSender receiver) {
-        AdventureUtil.sendMessage(receiver, str());
+        String message = str();
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, message);
+        }
         return true;
     }
     /**
@@ -223,7 +238,10 @@ public abstract class AbstractLanguageHolder {
      * @return 用于命令快捷返回，恒返回 true
      */
     public boolean tm(MiniMessage miniMessage, CommandSender receiver) {
-        AdventureUtil.sendMessage(receiver, miniMessage, str());
+        String message = str();
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, miniMessage, message);
+        }
         return true;
     }
     /**
@@ -233,7 +251,10 @@ public abstract class AbstractLanguageHolder {
      * @return 用于命令快捷返回，恒返回 true
      */
     public boolean tmf(CommandSender receiver, Object... args) {
-        AdventureUtil.sendMessage(receiver, strFormat(args));
+        String message = strFormat(args);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, message);
+        }
         return true;
     }
     /**
@@ -244,7 +265,10 @@ public abstract class AbstractLanguageHolder {
      * @return 用于命令快捷返回，恒返回 true
      */
     public boolean tmf(MiniMessage miniMessage, CommandSender receiver, Object... args) {
-        AdventureUtil.sendMessage(receiver, miniMessage, strFormat(args));
+        String message = strFormat(args);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, miniMessage, message);
+        }
         return true;
     }
     /**
@@ -255,7 +279,10 @@ public abstract class AbstractLanguageHolder {
      */
     @SafeVarargs
     public final boolean tm(CommandSender receiver, Pair<String, Object>... replacements) {
-        AdventureUtil.sendMessage(receiver, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, message);
+        }
         return true;
     }
     /**
@@ -267,7 +294,10 @@ public abstract class AbstractLanguageHolder {
      */
     @SafeVarargs
     public final boolean tm(MiniMessage miniMessage, CommandSender receiver, Pair<String, Object>... replacements) {
-        AdventureUtil.sendMessage(receiver, miniMessage, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, miniMessage, message);
+        }
         return true;
     }
     /**
@@ -277,7 +307,10 @@ public abstract class AbstractLanguageHolder {
      * @return 用于命令快捷返回，恒返回 true
      */
     public boolean tm(CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
-        AdventureUtil.sendMessage(receiver, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, message);
+        }
         return true;
     }
     /**
@@ -288,7 +321,10 @@ public abstract class AbstractLanguageHolder {
      * @return 用于命令快捷返回，恒返回 true
      */
     public boolean tm(MiniMessage miniMessage, CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
-        AdventureUtil.sendMessage(receiver, miniMessage, str(replacements));
+        String message = str(replacements);
+        if (!message.isEmpty()) {
+            AdventureUtil.sendMessage(receiver, miniMessage, message);
+        }
         return true;
     }
 }
