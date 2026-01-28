@@ -17,6 +17,7 @@ import top.mrxiaom.pluginbase.configuration.ConfigurationSection;
 import top.mrxiaom.pluginbase.configuration.InvalidConfigurationException;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -281,19 +282,7 @@ public class YamlConfiguration extends FileConfiguration {
     @NotNull
     public static YamlConfiguration loadConfiguration(@NotNull File file) {
         Preconditions.checkArgument(file != null, "File cannot be null");
-
-        YamlConfiguration config = new YamlConfiguration();
-
-        try {
-            config.load(file);
-        } catch (FileNotFoundException ex) {
-        } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
-        } catch (InvalidConfigurationException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
-        }
-
-        return config;
+        return loadConfiguration(new YamlConfiguration(), file);
     }
 
     /**
@@ -321,6 +310,38 @@ public class YamlConfiguration extends FileConfiguration {
             Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
         }
 
+        return config;
+    }
+
+    /**
+     * 加载配置文件
+     * @see YamlConfiguration#loadConfiguration(FileConfiguration, File, Charset)
+     */
+    public static YamlConfiguration loadConfiguration(File file, Charset charset) {
+        return loadConfiguration(new YamlConfiguration(), file, charset);
+    }
+
+    /**
+     * 加载配置文件
+     * @see YamlConfiguration#loadConfiguration(FileConfiguration, File, Charset)
+     */
+    public static <T extends FileConfiguration> T loadConfiguration(T config, File file) {
+        return loadConfiguration(config, file, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 加载配置文件
+     * @param config 目标配置
+     * @param file 文件
+     * @param charset 编码
+     */
+    public static <T extends FileConfiguration> T loadConfiguration(T config, File file, Charset charset) {
+        try (FileInputStream stream = new FileInputStream(file)) {
+            config.load(new InputStreamReader(stream, charset));
+        } catch (FileNotFoundException ignored) {
+        } catch (IOException | InvalidConfigurationException ex) {
+            Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
+        }
         return config;
     }
 }

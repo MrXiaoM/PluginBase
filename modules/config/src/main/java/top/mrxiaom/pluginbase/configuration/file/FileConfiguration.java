@@ -10,6 +10,7 @@ import top.mrxiaom.pluginbase.configuration.InvalidConfigurationException;
 import top.mrxiaom.pluginbase.configuration.MemoryConfiguration;
 
 import java.io.*;
+import java.nio.charset.Charset;
 
 /**
  * This is a base class for all File based implementations of {@link
@@ -50,13 +51,34 @@ public abstract class FileConfiguration extends MemoryConfiguration {
      * @throws IllegalArgumentException Thrown when file is null.
      */
     public void save(@NotNull File file) throws IOException {
+        save(file, Charsets.UTF_8);
+    }
+
+    /**
+     * Saves this {@link FileConfiguration} to the specified location.
+     * <p>
+     * If the file does not exist, it will be created. If already exists, it
+     * will be overwritten. If it cannot be overwritten or created, an
+     * exception will be thrown.
+     * <p>
+     * This method will save using the system default encoding, or possibly
+     * using UTF8.
+     *
+     * @param file File to save to.
+     * @param charset Charset to save file.
+     * @throws IOException Thrown when the given file cannot be written to for
+     *     any reason.
+     * @throws IllegalArgumentException Thrown when file is null.
+     */
+    public void save(@NotNull File file, @NotNull Charset charset) throws IOException {
         Preconditions.checkArgument(file != null, "File cannot be null");
+        Preconditions.checkArgument(charset != null, "Charset cannot be null");
 
         Files.createParentDirs(file);
 
         String data = saveToString();
 
-        Writer writer = new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8);
+        Writer writer = new OutputStreamWriter(new FileOutputStream(file), charset);
 
         try {
             writer.write(data);
@@ -113,11 +135,35 @@ public abstract class FileConfiguration extends MemoryConfiguration {
      * @throws IllegalArgumentException Thrown when file is null.
      */
     public void load(@NotNull File file) throws FileNotFoundException, IOException, InvalidConfigurationException {
+        load(file, Charsets.UTF_8);
+    }
+
+    /**
+     * Loads this {@link FileConfiguration} from the specified location.
+     * <p>
+     * All the values contained within this configuration will be removed,
+     * leaving only settings and defaults, and the new values will be loaded
+     * from the given file.
+     * <p>
+     * If the file cannot be loaded for any reason, an exception will be
+     * thrown.
+     *
+     * @param file File to load from.
+     * @param charset Charset to load file.
+     * @throws FileNotFoundException Thrown when the given file cannot be
+     *     opened.
+     * @throws IOException Thrown when the given file cannot be read.
+     * @throws InvalidConfigurationException Thrown when the given file is not
+     *     a valid Configuration.
+     * @throws IllegalArgumentException Thrown when file is null.
+     */
+    public void load(@NotNull File file, @NotNull Charset charset) throws FileNotFoundException, IOException, InvalidConfigurationException {
         Preconditions.checkArgument(file != null, "File cannot be null");
+        Preconditions.checkArgument(charset != null, "Charset cannot be null");
 
         final FileInputStream stream = new FileInputStream(file);
 
-        load(new InputStreamReader(stream, Charsets.UTF_8));
+        load(new InputStreamReader(stream, charset));
     }
 
     /**
