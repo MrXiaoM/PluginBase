@@ -537,6 +537,50 @@ public interface ConfigurationSection {
     public boolean isFloat(@NotNull String path);
 
     /**
+     * 读取普通小数 (<code>0.5</code>) 或百分数 (<code>50%</code>) 为 <code>1.0 = 100%</code> 的浮点数形式
+     * @param key 键
+     * @param def 默认值
+     */
+    @Contract("_,!null->!null")
+    public default Double getPercentAsDouble(@NotNull String key, Double def) {
+        String s = getString(key, null);
+        if (s == null) return def;
+        try {
+            if (s.endsWith("%")) {
+                String str = s.substring(0, s.length() - 1);
+                double value = Double.parseDouble(str);
+                return value / 100.0d;
+            } else {
+                return Double.parseDouble(s);
+            }
+        } catch (NumberFormatException e) {
+            return def;
+        }
+    }
+
+    /**
+     * 读取普通小数 (<code>0.5</code>) 或百分数 (<code>50%</code>) 为 <code>1.0 = 100%</code> 的浮点数形式
+     * @param key 键
+     * @param def 默认值
+     */
+    @Contract("_,!null->!null")
+    public default Float getPercentAsFloat(@NotNull String key, Float def) {
+        String s = getString(key, null);
+        if (s == null) return def;
+        try {
+            if (s.endsWith("%")) {
+                String str = s.substring(0, s.length() - 1);
+                float value = Float.parseFloat(str);
+                return value / 100.0f;
+            } else {
+                return Float.parseFloat(s);
+            }
+        } catch (NumberFormatException e) {
+            return def;
+        }
+    }
+
+    /**
      * Gets the requested long by path.
      * <p>
      * If the long does not exist but a default value has been specified, this
