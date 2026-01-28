@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * Represents a section of a {@link top.mrxiaom.pluginbase.configuration.Configuration}
@@ -260,6 +261,24 @@ public interface ConfigurationSection {
     @Contract("_, !null -> !null")
     @Nullable
     public String getString(@NotNull String path, @Nullable String def);
+
+    /**
+     * Gets the requested String by path, returning a default value if not
+     * found.
+     * <p>
+     * If the String does not exist then the specified default value will
+     * returned regardless of if a default has been identified in the root
+     * {@link top.mrxiaom.pluginbase.configuration.Configuration}.
+     *
+     * @param path Path of the String to get.
+     * @param converter Function that parse String to your custom object.
+     * @param def The default value to return if the path is not found or is
+     *     not a String.
+     * @return Requested converted value.
+     */
+    @Contract("_, _, !null -> !null")
+    @Nullable
+    public <T> T getString(@NotNull String path, @NotNull Function<String, T> converter, @Nullable T def);
 
     /**
      * Checks if the specified path is a String.

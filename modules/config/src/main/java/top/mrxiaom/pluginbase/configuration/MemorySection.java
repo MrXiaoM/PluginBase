@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 
 import static org.bukkit.util.NumberConversions.*;
 
@@ -335,6 +336,18 @@ public class MemorySection implements ConfigurationSection {
     public String getString(@NotNull String path, @Nullable String def) {
         Object val = get(path, def);
         return (val != null) ? val.toString() : def;
+    }
+
+    @Override
+    @Contract("_, _, !null -> !null")
+    @Nullable
+    public <T> T getString(@NotNull String path, @NotNull Function<String, T> converter, @Nullable T def) {
+        String str = getString(path, null);
+        if (str != null) {
+            return converter.apply(str);
+        } else {
+            return def;
+        }
     }
 
     @Override
