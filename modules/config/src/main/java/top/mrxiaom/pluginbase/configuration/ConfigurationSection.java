@@ -275,6 +275,45 @@ public interface ConfigurationSection {
     public boolean isString(@NotNull String path);
 
     /**
+     * Gets the requested Number by path.
+     * <p>
+     * If the int does not exist but a default value has been specified, this
+     * will return the default value. If the Number does not exist and no default
+     * value was specified, this will return null.
+     *
+     * @param path Path of the Number to get.
+     * @return Requested Number.
+     */
+    public Number getNumber(@NotNull String path);
+
+    /**
+     * Gets the requested Number by path, returning a default value if not found.
+     * <p>
+     * If the Number does not exist then the specified default value will
+     * returned regardless of if a default has been identified in the root
+     * {@link top.mrxiaom.pluginbase.configuration.Configuration}.
+     *
+     * @param path Path of the Number to get.
+     * @param def The default value to return if the path is not found or is
+     *     not an Number.
+     * @return Requested Number.
+     */
+    public Number getNumber(@NotNull String path, Number def);
+
+    /**
+     * Checks if the specified path is an Number.
+     * <p>
+     * If the path exists but is not a Number, this will return false. If the
+     * path does not exist, this will return false. If the path does not exist
+     * but a default value has been specified, this will check if that default
+     * value is a Number and return appropriately.
+     *
+     * @param path Path of the Number to check.
+     * @return Whether or not the specified path is an Number.
+     */
+    public boolean isNumber(@NotNull String path);
+
+    /**
      * Gets the requested int by path.
      * <p>
      * If the int does not exist but a default value has been specified, this
@@ -299,6 +338,22 @@ public interface ConfigurationSection {
      * @return Requested int.
      */
     public int getInt(@NotNull String path, int def);
+
+    /**
+     * The same as {@link ConfigurationSection#getInt(String)}, but null value is allowed.
+     * @param path Path of the int to get.
+     * @return Requested int.
+     */
+    public Integer getIntRef(@NotNull String path);
+
+    /**
+     * The same as {@link ConfigurationSection#getInt(String, int)}, but null value is allowed.
+     * @param path Path of the int to get.
+     * @param def The default value to return if the path is not found or is
+     *     not an int.
+     * @return Requested int.
+     */
+    public Integer getIntRef(@NotNull String path, Integer def);
 
     /**
      * Checks if the specified path is an int.
@@ -341,6 +396,22 @@ public interface ConfigurationSection {
     public boolean getBoolean(@NotNull String path, boolean def);
 
     /**
+     * The same as {@link ConfigurationSection#getBoolean(String)}, but null value is allowed.
+     * @param path Path of the boolean to get.
+     * @return Requested boolean.
+     */
+    public Boolean getBooleanRef(@NotNull String path);
+
+    /**
+     * The same as {@link ConfigurationSection#getBoolean(String, boolean)}, but null value is allowed.
+     * @param path Path of the boolean to get.
+     * @param def The default value to return if the path is not found or is
+     *     not a boolean.
+     * @return Requested boolean.
+     */
+    public Boolean getBooleanRef(@NotNull String path, Boolean def);
+
+    /**
      * Checks if the specified path is a boolean.
      * <p>
      * If the path exists but is not a boolean, this will return false. If the
@@ -381,6 +452,22 @@ public interface ConfigurationSection {
     public double getDouble(@NotNull String path, double def);
 
     /**
+     * The same as {@link ConfigurationSection#getDouble(String)}, but null value is allowed.
+     * @param path Path of the double to get.
+     * @return Requested double.
+     */
+    public Double getDoubleRef(@NotNull String path);
+
+    /**
+     * The same as {@link ConfigurationSection#getDouble(String, double)}, but null value is allowed.
+     * @param path Path of the double to get.
+     * @param def The default value to return if the path is not found or is
+     *     not a double.
+     * @return Requested double.
+     */
+    public Double getDoubleRef(@NotNull String path, Double def);
+
+    /**
      * Checks if the specified path is a double.
      * <p>
      * If the path exists but is not a double, this will return false. If the
@@ -392,6 +479,62 @@ public interface ConfigurationSection {
      * @return Whether or not the specified path is a double.
      */
     public boolean isDouble(@NotNull String path);
+
+    /**
+     * Gets the requested float by path.
+     * <p>
+     * If the float does not exist but a default value has been specified,
+     * this will return the default value. If the float does not exist and no
+     * default value was specified, this will return 0.
+     *
+     * @param path Path of the float to get.
+     * @return Requested float.
+     */
+    public float getFloat(@NotNull String path);
+
+    /**
+     * Gets the requested float by path, returning a default value if not
+     * found.
+     * <p>
+     * If the float does not exist then the specified default value will
+     * returned regardless of if a default has been identified in the root
+     * {@link top.mrxiaom.pluginbase.configuration.Configuration}.
+     *
+     * @param path Path of the float to get.
+     * @param def The default value to return if the path is not found or is
+     *     not a float.
+     * @return Requested float.
+     */
+    public float getFloat(@NotNull String path, float def);
+
+    /**
+     * The same as {@link ConfigurationSection#getFloat(String)}, but null value is allowed.
+     * @param path Path of the float to get.
+     * @return Requested float.
+     */
+    public Float getFloatRef(@NotNull String path);
+
+    /**
+     * The same as {@link ConfigurationSection#getFloat(String, float)}, but null value is allowed.
+     * @param path Path of the float to get.
+     * @param def The default value to return if the path is not found or is
+     *     not a float.
+     * @return Requested float.
+     */
+    public Float getFloatRef(@NotNull String path, Float def);
+
+    /**
+     * Checks if the specified path is a float.
+     * <p>
+     * If the path exists but is not a float, this will return false. If the
+     * path does not exist, this will return false. If the path does not exist
+     * but a default value has been specified, this will check if that default
+     * value is a float and return appropriately.
+     *
+     * @param path Path of the float to check.
+     * @return Whether or not the specified path is a float.
+     */
+    public boolean isFloat(@NotNull String path);
 
     /**
      * Gets the requested long by path.
@@ -419,6 +562,22 @@ public interface ConfigurationSection {
      * @return Requested long.
      */
     public long getLong(@NotNull String path, long def);
+
+    /**
+     * The same as {@link ConfigurationSection#getLong(String)}, but null value is allowed.
+     * @param path Path of the long to get.
+     * @return Requested long.
+     */
+    public Long getLongRef(@NotNull String path);
+
+    /**
+     * The same as {@link ConfigurationSection#getLong(String, long)}, but null value is allowed.
+     * @param path Path of the long to get.
+     * @param def The default value to return if the path is not found or is
+     *     not a long.
+     * @return Requested long.
+     */
+    public Long getLongRef(@NotNull String path, Long def);
 
     /**
      * Checks if the specified path is a long.

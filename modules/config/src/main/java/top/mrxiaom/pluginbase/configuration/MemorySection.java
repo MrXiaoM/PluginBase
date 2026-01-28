@@ -344,6 +344,28 @@ public class MemorySection implements ConfigurationSection {
     }
 
     @Override
+    public Number getNumber(@NotNull String path) {
+        Object def = getDefault(path);
+        if (def instanceof Number) {
+            return getNumber(path, (Number) def);
+        } else {
+            return getNumber(path, null);
+        }
+    }
+
+    @Override
+    public Number getNumber(@NotNull String path, Number def) {
+        Object val = get(path, def);
+        return (val instanceof Number) ? (Number)val : def;
+    }
+
+    @Override
+    public boolean isNumber(@NotNull String path) {
+        Object val = get(path);
+        return val instanceof Number;
+    }
+
+    @Override
     public int getInt(@NotNull String path) {
         Object def = getDefault(path);
         return getInt(path, (def instanceof Number) ? toInt(def) : 0);
@@ -362,6 +384,22 @@ public class MemorySection implements ConfigurationSection {
     }
 
     @Override
+    public Integer getIntRef(@NotNull String path) {
+        Object def = getDefault(path);
+        if (def instanceof Number) {
+            return getIntRef(path, toInt(def));
+        } else {
+            return getIntRef(path, null);
+        }
+    }
+
+    @Override
+    public Integer getIntRef(@NotNull String path, Integer def) {
+        Object val = get(path, def);
+        return (val instanceof Number) ? Integer.valueOf(toInt(val)) : def;
+    }
+
+    @Override
     public boolean getBoolean(@NotNull String path) {
         Object def = getDefault(path);
         return getBoolean(path, (def instanceof Boolean) ? (Boolean) def : false);
@@ -369,6 +407,22 @@ public class MemorySection implements ConfigurationSection {
 
     @Override
     public boolean getBoolean(@NotNull String path, boolean def) {
+        Object val = get(path, def);
+        return (val instanceof Boolean) ? (Boolean) val : def;
+    }
+
+    @Override
+    public Boolean getBooleanRef(@NotNull String path) {
+        Object def = getDefault(path);
+        if (def instanceof Boolean) {
+            return getBooleanRef(path, (Boolean) def);
+        } else {
+            return getBooleanRef(path, null);
+        }
+    }
+
+    @Override
+    public Boolean getBooleanRef(@NotNull String path, Boolean def) {
         Object val = get(path, def);
         return (val instanceof Boolean) ? (Boolean) val : def;
     }
@@ -392,9 +446,59 @@ public class MemorySection implements ConfigurationSection {
     }
 
     @Override
+    public Double getDoubleRef(@NotNull String path) {
+        Object def = getDefault(path);
+        if (def instanceof Number) {
+            return getDoubleRef(path, toDouble(def));
+        } else {
+            return getDoubleRef(path, null);
+        }
+    }
+
+    @Override
+    public Double getDoubleRef(@NotNull String path, Double def) {
+        Object val = get(path, def);
+        return (val instanceof Number) ? Double.valueOf(toDouble(val)) : def;
+    }
+
+    @Override
     public boolean isDouble(@NotNull String path) {
         Object val = get(path);
         return val instanceof Double;
+    }
+
+    @Override
+    public float getFloat(@NotNull String path) {
+        Object def = getDefault(path);
+        return getFloat(path, (def instanceof Number) ? toFloat(def) : 0);
+    }
+
+    @Override
+    public float getFloat(@NotNull String path, float def) {
+        Object val = get(path, def);
+        return (val instanceof Number) ? toFloat(val) : def;
+    }
+
+    @Override
+    public Float getFloatRef(@NotNull String path) {
+        Object def = getDefault(path);
+        if (def instanceof Number) {
+            return getFloatRef(path, toFloat(def));
+        } else {
+            return getFloatRef(path, null);
+        }
+    }
+
+    @Override
+    public Float getFloatRef(@NotNull String path, Float def) {
+        Object val = get(path, def);
+        return (val instanceof Number) ? Float.valueOf(toFloat(val)) : def;
+    }
+
+    @Override
+    public boolean isFloat(@NotNull String path) {
+        Object val = get(path);
+        return val instanceof Double || val instanceof Float;
     }
 
     @Override
@@ -407,6 +511,22 @@ public class MemorySection implements ConfigurationSection {
     public long getLong(@NotNull String path, long def) {
         Object val = get(path, def);
         return (val instanceof Number) ? toLong(val) : def;
+    }
+
+    @Override
+    public Long getLongRef(@NotNull String path) {
+        Object def = getDefault(path);
+        if (def instanceof Number) {
+            return getLongRef(path, toLong(def));
+        } else {
+            return getLongRef(path, null);
+        }
+    }
+
+    @Override
+    public Long getLongRef(@NotNull String path, Long def) {
+        Object val = get(path, def);
+        return (val instanceof Number) ? Long.valueOf(toLong(val)) : def;
     }
 
     @Override
