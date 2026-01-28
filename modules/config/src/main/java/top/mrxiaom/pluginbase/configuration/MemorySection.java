@@ -704,6 +704,48 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
+    @Override
+    @NotNull
+    public List<ConfigurationSection> getSectionList(@NotNull String path) {
+        List<ConfigurationSection> list = new ArrayList<>();
+        List<Map<?, ?>> rawList = getMapList(path);
+        for (Map<?, ?> map : rawList) {
+            MemoryConfiguration section = new MemoryConfiguration();
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                String sectionKey = entry.getKey().toString();
+                section.set(sectionKey, processListValue(section, sectionKey, entry.getValue()));
+            }
+            list.add(section);
+        }
+        return list;
+    }
+
+    private static Object processListValue(ConfigurationSection parent, String key, Object value) {
+        if (value instanceof Map<?, ?>) {
+            Map<?, ?> map = (Map<?, ?>) value;
+            ConfigurationSection section;
+            if (parent == null || key == null) { // 兼容 List
+                section = new MemoryConfiguration();
+            } else { // 兼容 Map
+                section = parent.createSection(key);
+            }
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                String mapKey = entry.getKey().toString();
+                section.set(mapKey, processListValue(section, mapKey, entry.getValue()));
+            }
+            return section;
+        }
+        if (value instanceof List<?>) {
+            List<?> list = (List<?>) value;
+            List<Object> result = new ArrayList<>();
+            for (Object object : list) {
+                result.add(processListValue(null, null, object));
+            }
+            return result;
+        }
+        return value;
+    }
+
     // Bukkit
     @Nullable
     @Override

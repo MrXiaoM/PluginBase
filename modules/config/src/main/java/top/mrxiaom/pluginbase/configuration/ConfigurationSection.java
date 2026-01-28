@@ -637,6 +637,22 @@ public interface ConfigurationSection {
     @NotNull
     public List<Map<?, ?>> getMapList(@NotNull String path);
 
+    /**
+     * Gets the requested List of Sections by path.
+     * <p>
+     * If the List does not exist but a default value has been specified, this
+     * will return the default value. If the List does not exist and no
+     * default value was specified, this will return an empty List.
+     * <p>
+     * This method is the same as {@link ConfigurationSection#getMapList(String)},
+     * but parse all the key-value as {@link MemoryConfiguration}.
+     *
+     * @param path Path of the List to get.
+     * @return Requested List of Sections.
+     */
+    @NotNull
+    public List<ConfigurationSection> getSectionList(@NotNull String path);
+
     // Bukkit
     /**
      * Gets the requested object at the given path.
