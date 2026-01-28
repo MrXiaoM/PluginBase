@@ -1,6 +1,7 @@
 package top.mrxiaom.pluginbase.utils;
 
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,6 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
@@ -357,6 +359,50 @@ public class Util {
             if (value != null) return value;
         }
         return null;
+    }
+
+    /**
+     * 解析字符串为物品类型
+     * @see Util#valueOr(Class, String, Object)
+     * @param s 输入的字符串
+     * @return 物品类型，如果找不到将返回 <code>null</code>
+     */
+    @Nullable
+    public static Material parseMaterial(String s) {
+        return valueOr(Material.class, s, null);
+    }
+
+    /**
+     * 解析字符串为音效
+     * @see Util#valueOr(Class, String, Object)
+     * @param s 输入的字符串
+     * @return 音效，如果找不到将返回 <code>null</code>
+     */
+    @Nullable
+    public static Sound parseSound(String s) {
+        return valueOr(Sound.class, s, null);
+    }
+
+    /**
+     * 解析字符串为附魔类型
+     * @see Util#valueOr(Class, String, Object)
+     * @param s 输入的字符串
+     * @return 附魔类型，如果找不到将返回 <code>null</code>
+     */
+    @Nullable
+    public static Enchantment parseEnchant(String s) {
+        return valueOr(Enchantment.class, s, null);
+    }
+
+    /**
+     * 解析字符串为药水效果类型
+     * @see Util#valueOr(Class, String, Object)
+     * @param s 输入的字符串
+     * @return 药水效果类型，如果找不到将返回 <code>null</code>
+     */
+    @Nullable
+    public static PotionEffectType parsePotion(String s) {
+        return valueOr(PotionEffectType.class, s, null);
     }
 
     /**

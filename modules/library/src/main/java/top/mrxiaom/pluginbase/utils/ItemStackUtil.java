@@ -482,7 +482,7 @@ public class ItemStackUtil {
     }
     @Nullable
     public static Material parseOrNull(String str) {
-        return Util.valueOr(Material.class, str, null);
+        return Util.parseMaterial(str);
     }
 
     /**
