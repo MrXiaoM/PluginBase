@@ -271,7 +271,7 @@ public interface ConfigurationSection {
      * {@link top.mrxiaom.pluginbase.configuration.Configuration}.
      *
      * @param path Path of the String to get.
-     * @param converter Function that parse String to your custom object.
+     * @param converter Function that parse String to your custom object. Return null means convert failed and use default value.
      * @param def The default value to return if the path is not found or is
      *     not a String.
      * @return Requested converted value.

@@ -344,7 +344,8 @@ public class MemorySection implements ConfigurationSection {
     public <T> T getString(@NotNull String path, @NotNull Function<String, T> converter, @Nullable T def) {
         String str = getString(path, null);
         if (str != null) {
-            return converter.apply(str);
+            T val = converter.apply(str);
+            return val != null ? val : def;
         } else {
             return def;
         }
