@@ -1,10 +1,10 @@
 package top.mrxiaom.pluginbase.actions;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.api.IActionProvider;
+import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.pluginbase.utils.depend.PAPI;
 import top.mrxiaom.pluginbase.utils.Pair;
 
@@ -29,7 +29,7 @@ public class ActionPlayer implements IAction {
     public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
         if (player != null) {
             String s = Pair.replace(command, replacements);
-            Bukkit.dispatchCommand(player, PAPI.setPlaceholders(player, s));
+            Util.dispatchCommand(player, PAPI.setPlaceholders(player, s));
         }
     }
 }

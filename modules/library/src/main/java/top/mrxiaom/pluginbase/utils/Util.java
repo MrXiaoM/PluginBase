@@ -1,6 +1,7 @@
 package top.mrxiaom.pluginbase.utils;
 
 import org.bukkit.*;
+import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +14,10 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
+import top.mrxiaom.pluginbase.api.ICommandDispatcher;
 import top.mrxiaom.pluginbase.utils.depend.PAPI;
+import top.mrxiaom.pluginbase.utils.diapatcher.BukkitDispatcher;
+import top.mrxiaom.pluginbase.utils.diapatcher.FoliaDispatcher;
 
 import java.io.*;
 import java.net.JarURLConnection;
@@ -33,8 +37,16 @@ import java.util.regex.MatchResult;
 public class Util {
     public static Map<String, OfflinePlayer> players = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static Map<UUID, OfflinePlayer> playersByUUID = new TreeMap<>();
+    private static ICommandDispatcher dispatcher;
 
     public static void init(BukkitPlugin plugin) {
+        try {
+            Bukkit.getServer().getClass().getDeclaredMethod("dispatchCmdAsync", CommandSender.class, String.class);
+            dispatcher = new FoliaDispatcher(plugin.getScheduler());
+        } catch (ReflectiveOperationException e) {
+            dispatcher = BukkitDispatcher.INSTANCE;
+        }
+        plugin.info(dispatcher.getClass().getName());
         plugin.getScheduler().runTaskAsync(() -> {
             for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
                 if (player.getName() != null) {
@@ -66,6 +78,10 @@ public class Util {
         if (plugin.options.adventure()) {
             AdventureUtil.init(plugin);
         }
+    }
+
+    public static void dispatchCommand(@NotNull CommandSender sender, @NotNull String commandLine) {
+        dispatcher.dispatchCommand(sender, commandLine);
     }
 
     /**

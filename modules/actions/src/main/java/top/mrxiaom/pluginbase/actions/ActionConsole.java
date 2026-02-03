@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.api.IActionProvider;
+import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.pluginbase.utils.depend.PAPI;
 import top.mrxiaom.pluginbase.utils.Pair;
 
@@ -28,6 +29,6 @@ public class ActionConsole implements IAction {
     @Override
     public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
         String s = Pair.replace(command, replacements);
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), PAPI.setPlaceholders(player, s));
+        Util.dispatchCommand(Bukkit.getConsoleSender(), PAPI.setPlaceholders(player, s));
     }
 }
