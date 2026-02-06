@@ -46,7 +46,6 @@ public class Util {
         } catch (ReflectiveOperationException e) {
             dispatcher = BukkitDispatcher.INSTANCE;
         }
-        plugin.info(dispatcher.getClass().getName());
         plugin.getScheduler().runTaskAsync(() -> {
             for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
                 if (player.getName() != null) {
