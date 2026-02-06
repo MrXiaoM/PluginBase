@@ -2,6 +2,7 @@ package top.mrxiaom.pluginbase.actions;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.api.IActionProvider;
 import top.mrxiaom.pluginbase.utils.Util;
@@ -28,8 +29,12 @@ public class ActionPlayer implements IAction {
     @Override
     public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
         if (player != null) {
-            String s = Pair.replace(command, replacements);
-            Util.dispatchCommand(player, PAPI.setPlaceholders(player, s));
+            String commandLine = PAPI.setPlaceholders(player, Pair.replace(command, replacements));
+            if (commandLine.trim().isEmpty()) {
+                BukkitPlugin.getInstance().warn("无法运行操作 '[player]" + command + "'，其解析后的命令为空");
+                return;
+            }
+            Util.dispatchCommand(player, commandLine);
         }
     }
 }
