@@ -8,6 +8,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.utils.ColorHelper;
@@ -23,7 +24,6 @@ import static top.mrxiaom.pluginbase.utils.Util.stackTraceToString;
 /**
  * 持有插件主类实例的抽象功能类
  */
-@SuppressWarnings({"unused", "unchecked"})
 public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
     private static final Map<Class<?>, AbstractPluginHolder<?>> registeredBungeeHolders = new HashMap<>();
     private static final Map<Class<?>, AbstractPluginHolder<?>> registeredHolders = new HashMap<>();
@@ -34,6 +34,7 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
     }
 
     public AbstractPluginHolder(BukkitPlugin plugin, boolean register) {
+        // noinspection unchecked
         this.plugin = (T) plugin;
         if (register) register();
     }
@@ -269,21 +270,26 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         plugin.getLogger().warning(stackTraceToString(t));
     }
 
+    @NotNull
+    public static Collection<AbstractPluginHolder<?>> getAllRegisteredHolders() {
+        return Collections.unmodifiableCollection(registeredHolders.values());
+    }
+
     /**
      * 从已注册的模块列表中寻找模块，找不到模块时，将返回 null
      */
     @Nullable
-    @SuppressWarnings({"unchecked"})
-    public static <T extends AbstractPluginHolder<?>> T getOrNull(Class<T> clazz) {
-        return (T) registeredHolders.get(clazz);
+    public static <T extends AbstractPluginHolder<?>> T getOrNull(Class<T> type) {
+        // noinspection unchecked
+        return (T) registeredHolders.get(type);
     }
 
     /**
      * 从已注册的模块列表中寻找模块
      */
-    @SuppressWarnings({"unchecked"})
-    public static <T extends AbstractPluginHolder<?>> Optional<T> get(Class<T> clazz) {
-        T inst = (T) registeredHolders.get(clazz);
+    public static <T extends AbstractPluginHolder<?>> Optional<T> get(Class<T> type) {
+        // noinspection unchecked
+        T inst = (T) registeredHolders.get(type);
         if (inst == null) return Optional.empty();
         return Optional.of(inst);
     }
@@ -291,10 +297,10 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
     /**
      * 从已注册的模块列表中寻找模块，找不到模块时，将抛出一个异常
      */
-    @SuppressWarnings({"unchecked", "SameParameterValue"})
-    protected static <T extends AbstractPluginHolder<?>> T instanceOf(Class<T> clazz) {
-        T inst = (T) registeredHolders.get(clazz);
-        if (inst == null) throw new IllegalStateException("无法找到已注册的 " + clazz.getName());
+    protected static <T extends AbstractPluginHolder<?>> T instanceOf(Class<T> type) {
+        // noinspection unchecked
+        T inst = (T) registeredHolders.get(type);
+        if (inst == null) throw new IllegalStateException("无法找到已注册的 " + type.getName());
         return inst;
     }
 
