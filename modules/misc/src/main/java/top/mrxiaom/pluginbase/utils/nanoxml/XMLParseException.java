@@ -27,7 +27,7 @@
  *****************************************************************************/
 
 
-package top.mrxiaom.pluginbase.sql.nanoxml;
+package top.mrxiaom.pluginbase.utils.nanoxml;
 
 
 /**
@@ -37,7 +37,7 @@ package top.mrxiaom.pluginbase.sql.nanoxml;
  * $Revision: 1.4 $<BR>
  * $Date: 2002/03/24 10:27:59 $<P>
  *
- * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement
+ * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement
  *
  * @author Marc De Scheemaecker
  * @version $Name: RELEASE_2_2_1 $, $Revision: 1.4 $
@@ -120,7 +120,7 @@ public class XMLParseException
      * Where the error occurred, or <code>NO_LINE</code> if the line number is
      * unknown.
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLParseException#NO_LINE
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLParseException#NO_LINE
      */
     public int getLineNr()
     {

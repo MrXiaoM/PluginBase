@@ -27,7 +27,7 @@
  *****************************************************************************/
 
 
-package top.mrxiaom.pluginbase.sql.nanoxml;
+package top.mrxiaom.pluginbase.utils.nanoxml;
 
 
 import java.io.*;
@@ -53,7 +53,7 @@ import java.util.Vector;
  * You can enumerate the attributes of an element using the method
  * {@link #enumerateAttributeNames() enumerateAttributeNames}.
  * The attribute values can be retrieved using the method
- * {@link #getStringAttribute(java.lang.String) getStringAttribute}.
+ * {@link #getStringAttribute(String) getStringAttribute}.
  * The following example shows how to list the attributes of an element:
  * <pre><code>
  * XMLElement element = ...;
@@ -88,7 +88,7 @@ import java.util.Vector;
  * </DD></DL>
  * <P>
  *
- * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLParseException
+ * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLParseException
  *
  * @author Marc De Scheemaecker
  *         &lt;<A href="mailto:cyberelf@mac.com">cyberelf@mac.com</A>&gt;
@@ -108,7 +108,7 @@ public class XMLElement implements Serializable {
      * are source compatible. If the major version is different, you may
      * need to modify the client source code.
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#NANOXML_MINOR_VERSION
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#NANOXML_MINOR_VERSION
      */
     public static final int NANOXML_MAJOR_VERSION = 2;
 
@@ -119,7 +119,7 @@ public class XMLElement implements Serializable {
      * are source compatible. If the major version is different, you may
      * need to modify the client source code.
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#NANOXML_MAJOR_VERSION
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#NANOXML_MAJOR_VERSION
      */
     public static final int NANOXML_MINOR_VERSION = 2;
 
@@ -262,10 +262,10 @@ public class XMLElement implements Serializable {
      *     <li>getName() => null
      * </ul></dd></dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(java.util.Hashtable)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(Hashtable)
      *         XMLElement(Hashtable)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(Hashtable,boolean)
      *         XMLElement(Hashtable, boolean)
      */
     public XMLElement()
@@ -297,9 +297,9 @@ public class XMLElement implements Serializable {
      *     <li>getName() => null
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(Hashtable,boolean)
      *         XMLElement(Hashtable, boolean)
      */
     public XMLElement(Hashtable<String, Object> entities)
@@ -328,10 +328,10 @@ public class XMLElement implements Serializable {
      *     <li>getName() => null
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(java.util.Hashtable)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(Hashtable)
      *         XMLElement(Hashtable)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(Hashtable,boolean)
      *         XMLElement(Hashtable, boolean)
      */
     public XMLElement(boolean skipLeadingWhitespace)
@@ -366,9 +366,9 @@ public class XMLElement implements Serializable {
      *     <li>getName() => null
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(java.util.Hashtable)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(Hashtable)
      *         XMLElement(Hashtable)
      */
     public XMLElement(Hashtable<String, Object> entities,
@@ -404,11 +404,11 @@ public class XMLElement implements Serializable {
      *     <li>getName() => null
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(java.util.Hashtable)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(Hashtable)
      *         XMLElement(Hashtable)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#XMLElement(Hashtable,boolean)
      *         XMLElement(Hashtable, boolean)
      */
     public XMLElement(Hashtable<String, Object> entities,
@@ -456,7 +456,7 @@ public class XMLElement implements Serializable {
      *     <li>getName() => null
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#createAnotherElement()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#createAnotherElement()
      */
     protected XMLElement(Hashtable<String, Object> entities,
                          boolean   skipLeadingWhitespace,
@@ -508,10 +508,10 @@ public class XMLElement implements Serializable {
      *     <li>getChildren() => old.enumerateChildren() + child
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#countChildren()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateChildren()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getChildren()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeChild(top.mrxiaom.pluginbase.sql.nanoxml.XMLElement)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#countChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeChild(top.mrxiaom.pluginbase.utils.nanoxml.XMLElement)
      *         removeChild(XMLElement)
      */
     public void addChild(XMLElement child)
@@ -540,27 +540,27 @@ public class XMLElement implements Serializable {
      *     <li>getAttribute(name) => value
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setDoubleAttribute(String, double)
      *         setDoubleAttribute(String, double)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setIntAttribute(String, int)
      *         setIntAttribute(String, int)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String)
      *         getAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String, Object)
      *         getAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String,
-     *                                      java.util.Hashtable,
-     *                                      java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String,
+     *                                      Hashtable,
+     *                                      String, boolean)
      *         getAttribute(String, Hashtable, String, boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String)
      *         getStringAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String,
-     *                                            java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String,
+     *                                            String)
      *         getStringAttribute(String, String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String,
-     *                                            java.util.Hashtable,
-     *                                            java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String,
+     *                                            Hashtable,
+     *                                            String, boolean)
      *         getStringAttribute(String, Hashtable, String, boolean)
      */
     public void setAttribute(String name,
@@ -581,7 +581,7 @@ public class XMLElement implements Serializable {
      * @param value
      *     The value of the attribute.
      *
-     * @deprecated Use {@link #setAttribute(java.lang.String, java.lang.Object)
+     * @deprecated Use {@link #setAttribute(String, Object)
      *             setAttribute} instead.
      */
     public void addProperty(String name,
@@ -610,20 +610,20 @@ public class XMLElement implements Serializable {
      *     <li>getIntAttribute(name) => value
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setDoubleAttribute(String, double)
      *         setDoubleAttribute(String, double)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setAttribute(String, Object)
      *         setAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeAttribute(String)
      *         removeAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String)
      *         getIntAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String, int)
      *         getIntAttribute(String, int)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String,
-     *                                         java.util.Hashtable,
-     *                                         java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String,
+     *                                         Hashtable,
+     *                                         String, boolean)
      *         getIntAttribute(String, Hashtable, String, boolean)
      */
     public void setIntAttribute(String name,
@@ -644,7 +644,7 @@ public class XMLElement implements Serializable {
      * @param value
      *     The value of the attribute.
      *
-     * @deprecated Use {@link #setIntAttribute(java.lang.String, int)
+     * @deprecated Use {@link #setIntAttribute(String, int)
      *             setIntAttribute} instead.
      */
     public void addProperty(String key,
@@ -673,20 +673,20 @@ public class XMLElement implements Serializable {
      *     <li>getDoubleAttribute(name) => value
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setIntAttribute(String, int)
      *         setIntAttribute(String, int)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setAttribute(String, Object)
      *         setAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeAttribute(String)
      *         removeAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String)
      *         getDoubleAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String, double)
      *         getDoubleAttribute(String, double)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
-     *                                            java.util.Hashtable,
-     *                                            java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String,
+     *                                            Hashtable,
+     *                                            String, boolean)
      *         getDoubleAttribute(String, Hashtable, String, boolean)
      */
     public void setDoubleAttribute(String name,
@@ -707,7 +707,7 @@ public class XMLElement implements Serializable {
      * @param value
      *     The value of the attribute.
      *
-     * @deprecated Use {@link #setDoubleAttribute(java.lang.String, double)
+     * @deprecated Use {@link #setDoubleAttribute(String, double)
      *             setDoubleAttribute} instead.
      */
     public void addProperty(String name,
@@ -724,11 +724,11 @@ public class XMLElement implements Serializable {
      * <ul><li><code>result >= 0</code>
      * </ul></dd></dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#addChild(top.mrxiaom.pluginbase.sql.nanoxml.XMLElement)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#addChild(top.mrxiaom.pluginbase.utils.nanoxml.XMLElement)
      *         addChild(XMLElement)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateChildren()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getChildren()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeChild(top.mrxiaom.pluginbase.sql.nanoxml.XMLElement)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeChild(top.mrxiaom.pluginbase.utils.nanoxml.XMLElement)
      *         removeChild(XMLElement)
      */
     public int countChildren()
@@ -744,50 +744,50 @@ public class XMLElement implements Serializable {
      * <ul><li><code>result != null</code>
      * </ul></dd></dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setDoubleAttribute(String, double)
      *         setDoubleAttribute(String, double)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setIntAttribute(String, int)
      *         setIntAttribute(String, int)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setAttribute(String, Object)
      *         setAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeAttribute(String)
      *         removeAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String)
      *         getAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String, Object)
      *         getAttribute(String, String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String,
-     *                                      java.util.Hashtable,
-     *                                      java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String,
+     *                                      Hashtable,
+     *                                      String, boolean)
      *         getAttribute(String, Hashtable, String, boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String)
      *         getStringAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String,
-     *                                            java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String,
+     *                                            String)
      *         getStringAttribute(String, String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String,
-     *                                            java.util.Hashtable,
-     *                                            java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String,
+     *                                            Hashtable,
+     *                                            String, boolean)
      *         getStringAttribute(String, Hashtable, String, boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String)
      *         getIntAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String, int)
      *         getIntAttribute(String, int)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String,
-     *                                         java.util.Hashtable,
-     *                                         java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String,
+     *                                         Hashtable,
+     *                                         String, boolean)
      *         getIntAttribute(String, Hashtable, String, boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String)
      *         getDoubleAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String, double)
      *         getDoubleAttribute(String, double)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
-     *                                            java.util.Hashtable,
-     *                                            java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String,
+     *                                            Hashtable,
+     *                                            String, boolean)
      *         getDoubleAttribute(String, Hashtable, String, boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getBooleanAttribute(java.lang.String,
-     *                                             java.lang.String,
-     *                                             java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getBooleanAttribute(String,
+     *                                             String,
+     *                                             String, boolean)
      *         getBooleanAttribute(String, String, String, boolean)
      */
     public Enumeration<String> enumerateAttributeNames()
@@ -815,11 +815,11 @@ public class XMLElement implements Serializable {
      * <ul><li><code>result != null</code>
      * </ul></dd></dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#addChild(top.mrxiaom.pluginbase.sql.nanoxml.XMLElement)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#addChild(top.mrxiaom.pluginbase.utils.nanoxml.XMLElement)
      *         addChild(XMLElement)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#countChildren()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getChildren()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeChild(top.mrxiaom.pluginbase.sql.nanoxml.XMLElement)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#countChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeChild(top.mrxiaom.pluginbase.utils.nanoxml.XMLElement)
      *         removeChild(XMLElement)
      */
     public Enumeration<XMLElement> enumerateChildren()
@@ -836,11 +836,11 @@ public class XMLElement implements Serializable {
      * <ul><li><code>result != null</code>
      * </ul></dd></dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#addChild(top.mrxiaom.pluginbase.sql.nanoxml.XMLElement)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#addChild(top.mrxiaom.pluginbase.utils.nanoxml.XMLElement)
      *         addChild(XMLElement)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#countChildren()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateChildren()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeChild(top.mrxiaom.pluginbase.sql.nanoxml.XMLElement)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#countChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeChild(top.mrxiaom.pluginbase.utils.nanoxml.XMLElement)
      *         removeChild(XMLElement)
      */
     @SuppressWarnings("unchecked")
@@ -872,7 +872,7 @@ public class XMLElement implements Serializable {
      * Returns the PCDATA content of the object. If there is no such content,
      * <CODE>null</CODE> is returned.
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setContent(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setContent(String)
      *         setContent(String)
      */
     public String getContent()
@@ -906,16 +906,16 @@ public class XMLElement implements Serializable {
      *     <li><code>name</code> is a valid XML identifier
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setAttribute(String, Object)
      *         setAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeAttribute(String)
      *         removeAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String, Object)
      *         getAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String,
-     *                                      java.util.Hashtable,
-     *                                      java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String,
+     *                                      Hashtable,
+     *                                      String, boolean)
      *         getAttribute(String, Hashtable, String, boolean)
      */
     public Object getAttribute(String name)
@@ -936,16 +936,16 @@ public class XMLElement implements Serializable {
      *     <li><code>name</code> is a valid XML identifier
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setAttribute(String, Object)
      *         setAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeAttribute(String)
      *         removeAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String)
      *         getAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String,
-     *                                      java.util.Hashtable,
-     *                                      java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String,
+     *                                      Hashtable,
+     *                                      String, boolean)
      *         getAttribute(String, Hashtable, String, boolean)
      */
     public Object getAttribute(String name,
@@ -989,14 +989,14 @@ public class XMLElement implements Serializable {
      *     <li>the keys of <code>valueSet</code> are strings
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setAttribute(String, Object)
      *         setAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeAttribute(String)
      *         removeAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String)
      *         getAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String, Object)
      *         getAttribute(String, Object)
      */
     public Object getAttribute(String          name,
@@ -1035,17 +1035,17 @@ public class XMLElement implements Serializable {
      *     <li><code>name</code> is a valid XML identifier
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setAttribute(String, Object)
      *         setAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeAttribute(String)
      *         removeAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String,
-     *                                            java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String,
+     *                                            String)
      *         getStringAttribute(String, String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String,
-     *                                            java.util.Hashtable,
-     *                                            java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String,
+     *                                            Hashtable,
+     *                                            String, boolean)
      *         getStringAttribute(String, Hashtable, String, boolean)
      */
     public String getStringAttribute(String name)
@@ -1066,16 +1066,16 @@ public class XMLElement implements Serializable {
      *     <li><code>name</code> is a valid XML identifier
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setAttribute(String, Object)
      *         setAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeAttribute(String)
      *         removeAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String)
      *         getStringAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String,
-     *                                            java.util.Hashtable,
-     *                                            java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String,
+     *                                            Hashtable,
+     *                                            String, boolean)
      *         getStringAttribute(String, Hashtable, String, boolean)
      */
     public String getStringAttribute(String name,
@@ -1113,15 +1113,15 @@ public class XMLElement implements Serializable {
      *     <li>the values of <code>valueSet</code> are strings
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setAttribute(String, Object)
      *         setAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeAttribute(String)
      *         removeAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String)
      *         getStringAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String,
-     *                                            java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String,
+     *                                            String)
      *         getStringAttribute(String, String)
      */
     public String getStringAttribute(String          name,
@@ -1145,14 +1145,14 @@ public class XMLElement implements Serializable {
      *     <li><code>name</code> is a valid XML identifier
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setIntAttribute(String, int)
      *         setIntAttribute(String, int)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String, int)
      *         getIntAttribute(String, int)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String,
-     *                                         java.util.Hashtable,
-     *                                         java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String,
+     *                                         Hashtable,
+     *                                         String, boolean)
      *         getIntAttribute(String, Hashtable, String, boolean)
      */
     public int getIntAttribute(String name)
@@ -1173,14 +1173,14 @@ public class XMLElement implements Serializable {
      *     <li><code>name</code> is a valid XML identifier
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setIntAttribute(String, int)
      *         setIntAttribute(String, int)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String)
      *         getIntAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String,
-     *                                         java.util.Hashtable,
-     *                                         java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String,
+     *                                         Hashtable,
+     *                                         String, boolean)
      *         getIntAttribute(String, Hashtable, String, boolean)
      */
     public int getIntAttribute(String name,
@@ -1231,12 +1231,12 @@ public class XMLElement implements Serializable {
      *         key in <code>valueSet</code> or an integer.
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setIntAttribute(String, int)
      *         setIntAttribute(String, int)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String)
      *         getIntAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String, int)
      *         getIntAttribute(String, int)
      */
     public int getIntAttribute(String          name,
@@ -1282,14 +1282,14 @@ public class XMLElement implements Serializable {
      *     <li><code>name</code> is a valid XML identifier
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setDoubleAttribute(String, double)
      *         setDoubleAttribute(String, double)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String, double)
      *         getDoubleAttribute(String, double)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
-     *                                            java.util.Hashtable,
-     *                                            java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String,
+     *                                            Hashtable,
+     *                                            String, boolean)
      *         getDoubleAttribute(String, Hashtable, String, boolean)
      */
     public double getDoubleAttribute(String name)
@@ -1310,14 +1310,14 @@ public class XMLElement implements Serializable {
      *     <li><code>name</code> is a valid XML identifier
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setDoubleAttribute(String, double)
      *         setDoubleAttribute(String, double)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String)
      *         getDoubleAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
-     *                                            java.util.Hashtable,
-     *                                            java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String,
+     *                                            Hashtable,
+     *                                            String, boolean)
      *         getDoubleAttribute(String, Hashtable, String, boolean)
      */
     public double getDoubleAttribute(String name,
@@ -1369,12 +1369,12 @@ public class XMLElement implements Serializable {
      *         key in <code>valueSet</code> or a double.
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setDoubleAttribute(String, double)
      *         setDoubleAttribute(String, double)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String)
      *         getDoubleAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String, double)
      *         getDoubleAttribute(String, double)
      */
     public double getDoubleAttribute(String          name,
@@ -1431,11 +1431,11 @@ public class XMLElement implements Serializable {
      *         are different strings.
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setAttribute(String, Object)
      *         setAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#removeAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#removeAttribute(String)
      *         removeAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
      */
     public boolean getBooleanAttribute(String  name,
                                        String  trueValue,
@@ -1461,8 +1461,8 @@ public class XMLElement implements Serializable {
     /**
      * Returns an attribute by looking up a key in a hashtable.
      *
-     * @deprecated Use {@link #getIntAttribute(java.lang.String,
-     *             java.util.Hashtable, java.lang.String, boolean)
+     * @deprecated Use {@link #getIntAttribute(String,
+     *             Hashtable, String, boolean)
      *             getIntAttribute} instead.
      */
     public int getIntProperty(String          name,
@@ -1476,7 +1476,7 @@ public class XMLElement implements Serializable {
     /**
      * Returns an attribute.
      *
-     * @deprecated Use {@link #getStringAttribute(java.lang.String)
+     * @deprecated Use {@link #getStringAttribute(String)
      *             getStringAttribute} instead.
      */
     public String getProperty(String name)
@@ -1488,8 +1488,8 @@ public class XMLElement implements Serializable {
     /**
      * Returns an attribute.
      *
-     * @deprecated Use {@link #getStringAttribute(java.lang.String,
-     *             java.lang.String) getStringAttribute} instead.
+     * @deprecated Use {@link #getStringAttribute(String,
+     *             String) getStringAttribute} instead.
      */
     public String getProperty(String name,
                               String defaultValue)
@@ -1501,7 +1501,7 @@ public class XMLElement implements Serializable {
     /**
      * Returns an attribute.
      *
-     * @deprecated Use {@link #getIntAttribute(java.lang.String, int)
+     * @deprecated Use {@link #getIntAttribute(String, int)
      *             getIntAttribute} instead.
      */
     public int getProperty(String name,
@@ -1514,7 +1514,7 @@ public class XMLElement implements Serializable {
     /**
      * Returns an attribute.
      *
-     * @deprecated Use {@link #getDoubleAttribute(java.lang.String, double)
+     * @deprecated Use {@link #getDoubleAttribute(String, double)
      *             getDoubleAttribute} instead.
      */
     public double getProperty(String name,
@@ -1527,8 +1527,8 @@ public class XMLElement implements Serializable {
     /**
      * Returns an attribute.
      *
-     * @deprecated Use {@link #getBooleanAttribute(java.lang.String,
-     *             java.lang.String, java.lang.String, boolean)
+     * @deprecated Use {@link #getBooleanAttribute(String,
+     *             String, String, boolean)
      *             getBooleanAttribute} instead.
      */
     public boolean getProperty(String  key,
@@ -1544,8 +1544,8 @@ public class XMLElement implements Serializable {
     /**
      * Returns an attribute by looking up a key in a hashtable.
      *
-     * @deprecated Use {@link #getAttribute(java.lang.String,
-     *             java.util.Hashtable, java.lang.String, boolean)
+     * @deprecated Use {@link #getAttribute(String,
+     *             Hashtable, String, boolean)
      *             getAttribute} instead.
      */
     public Object getProperty(String          name,
@@ -1559,8 +1559,8 @@ public class XMLElement implements Serializable {
     /**
      * Returns an attribute by looking up a key in a hashtable.
      *
-     * @deprecated Use {@link #getStringAttribute(java.lang.String,
-     *             java.util.Hashtable, java.lang.String, boolean)
+     * @deprecated Use {@link #getStringAttribute(String,
+     *             Hashtable, String, boolean)
      *             getStringAttribute} instead.
      */
     public String getStringProperty(String          name,
@@ -1574,8 +1574,8 @@ public class XMLElement implements Serializable {
     /**
      * Returns an attribute by looking up a key in a hashtable.
      *
-     * @deprecated Use {@link #getIntAttribute(java.lang.String,
-     *             java.util.Hashtable, java.lang.String, boolean)
+     * @deprecated Use {@link #getIntAttribute(String,
+     *             Hashtable, String, boolean)
      *             getIntAttribute} instead.
      */
     public int getSpecialIntProperty(String          name,
@@ -1589,8 +1589,8 @@ public class XMLElement implements Serializable {
     /**
      * Returns an attribute by looking up a key in a hashtable.
      *
-     * @deprecated Use {@link #getDoubleAttribute(java.lang.String,
-     *             java.util.Hashtable, java.lang.String, boolean)
+     * @deprecated Use {@link #getDoubleAttribute(String,
+     *             Hashtable, String, boolean)
      *             getDoubleAttribute} instead.
      */
     public double getSpecialDoubleProperty(String          name,
@@ -1604,7 +1604,7 @@ public class XMLElement implements Serializable {
     /**
      * Returns the name of the element.
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setName(java.lang.String) setName(String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setName(String) setName(String)
      */
     public String getName()
     {
@@ -1641,9 +1641,9 @@ public class XMLElement implements Serializable {
      *         '&gt;' character of the XML element
      * </ul></dd></dl><dl>
      *
-     * @throws java.io.IOException
+     * @throws IOException
      *     If an error occured while reading the input.
-     * @throws top.mrxiaom.pluginbase.sql.nanoxml.XMLParseException
+     * @throws top.mrxiaom.pluginbase.utils.nanoxml.XMLParseException
      *     If an error occured while parsing the read data.
      */
     public void parseFromReader(Reader reader)
@@ -1673,9 +1673,9 @@ public class XMLElement implements Serializable {
      *         '&gt;' character of the XML element
      * </ul></dd></dl><dl>
      *
-     * @throws java.io.IOException
+     * @throws IOException
      *     If an error occured while reading the input.
-     * @throws top.mrxiaom.pluginbase.sql.nanoxml.XMLParseException
+     * @throws top.mrxiaom.pluginbase.utils.nanoxml.XMLParseException
      *     If an error occured while parsing the read data.
      */
     public void parseFromReader(Reader reader,
@@ -1722,7 +1722,7 @@ public class XMLElement implements Serializable {
      *         parsed from the reader
      * </ul></dd></dl><dl>
      *
-     * @throws top.mrxiaom.pluginbase.sql.nanoxml.XMLParseException
+     * @throws top.mrxiaom.pluginbase.utils.nanoxml.XMLParseException
      *     If an error occured while parsing the string.
      */
     public void parseString(String string)
@@ -1756,7 +1756,7 @@ public class XMLElement implements Serializable {
      *         parsed from the reader
      * </ul></dd></dl><dl>
      *
-     * @throws top.mrxiaom.pluginbase.sql.nanoxml.XMLParseException
+     * @throws top.mrxiaom.pluginbase.utils.nanoxml.XMLParseException
      *     If an error occured while parsing the string.
      */
     public void parseString(String string,
@@ -1790,7 +1790,7 @@ public class XMLElement implements Serializable {
      *         parsed from the reader
      * </ul></dd></dl><dl>
      *
-     * @throws top.mrxiaom.pluginbase.sql.nanoxml.XMLParseException
+     * @throws top.mrxiaom.pluginbase.utils.nanoxml.XMLParseException
      *     If an error occured while parsing the string.
      */
     public void parseString(String string,
@@ -1827,7 +1827,7 @@ public class XMLElement implements Serializable {
      *         parsed from the reader
      * </ul></dd></dl><dl>
      *
-     * @throws top.mrxiaom.pluginbase.sql.nanoxml.XMLParseException
+     * @throws top.mrxiaom.pluginbase.utils.nanoxml.XMLParseException
      *     If an error occured while parsing the string.
      */
     public void parseString(String string,
@@ -1868,7 +1868,7 @@ public class XMLElement implements Serializable {
      *         parsed from the reader
      * </ul></dd></dl><dl>
      *
-     * @throws top.mrxiaom.pluginbase.sql.nanoxml.XMLParseException
+     * @throws top.mrxiaom.pluginbase.utils.nanoxml.XMLParseException
      *     If an error occured while parsing the string.
      */
     public void parseCharArray(char[] input,
@@ -1905,7 +1905,7 @@ public class XMLElement implements Serializable {
      *         parsed from the reader
      * </ul></dd></dl><dl>
      *
-     * @throws top.mrxiaom.pluginbase.sql.nanoxml.XMLParseException
+     * @throws top.mrxiaom.pluginbase.utils.nanoxml.XMLParseException
      *     If an error occured while parsing the string.
      */
     public void parseCharArray(char[] input,
@@ -1940,11 +1940,11 @@ public class XMLElement implements Serializable {
      *     <li>getChildren() => old.enumerateChildren() - child
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#addChild(top.mrxiaom.pluginbase.sql.nanoxml.XMLElement)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#addChild(top.mrxiaom.pluginbase.utils.nanoxml.XMLElement)
      *         addChild(XMLElement)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#countChildren()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateChildren()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#countChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateChildren()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getChildren()
      */
     public void removeChild(XMLElement child)
     {
@@ -1969,49 +1969,49 @@ public class XMLElement implements Serializable {
      *     <li>getAttribute(name) => <code>null</code>
      * </ul></dd></dl><dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#enumerateAttributeNames()
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#enumerateAttributeNames()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setDoubleAttribute(String, double)
      *         setDoubleAttribute(String, double)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setIntAttribute(String, int)
      *         setIntAttribute(String, int)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#setAttribute(String, Object)
      *         setAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String)
      *         getAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String, Object)
      *         getAttribute(String, Object)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getAttribute(java.lang.String,
-     *                                      java.util.Hashtable,
-     *                                      java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getAttribute(String,
+     *                                      Hashtable,
+     *                                      String, boolean)
      *         getAttribute(String, Hashtable, String, boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String)
      *         getStringAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String,
-     *                                            java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String,
+     *                                            String)
      *         getStringAttribute(String, String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getStringAttribute(java.lang.String,
-     *                                            java.util.Hashtable,
-     *                                            java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getStringAttribute(String,
+     *                                            Hashtable,
+     *                                            String, boolean)
      *         getStringAttribute(String, Hashtable, String, boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String)
      *         getIntAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String, int)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String, int)
      *         getIntAttribute(String, int)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getIntAttribute(java.lang.String,
-     *                                         java.util.Hashtable,
-     *                                         java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getIntAttribute(String,
+     *                                         Hashtable,
+     *                                         String, boolean)
      *         getIntAttribute(String, Hashtable, String, boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String)
      *         getDoubleAttribute(String)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String, double)
      *         getDoubleAttribute(String, double)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getDoubleAttribute(java.lang.String,
-     *                                            java.util.Hashtable,
-     *                                            java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getDoubleAttribute(String,
+     *                                            Hashtable,
+     *                                            String, boolean)
      *         getDoubleAttribute(String, Hashtable, String, boolean)
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getBooleanAttribute(java.lang.String,
-     *                                             java.lang.String,
-     *                                             java.lang.String, boolean)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getBooleanAttribute(String,
+     *                                             String,
+     *                                             String, boolean)
      *         getBooleanAttribute(String, String, String, boolean)
      */
     public void removeAttribute(String name)
@@ -2029,7 +2029,7 @@ public class XMLElement implements Serializable {
      * @param name
      *     The name of the attribute.
      *
-     * @deprecated Use {@link #removeAttribute(java.lang.String)
+     * @deprecated Use {@link #removeAttribute(String)
      *             removeAttribute} instead.
      */
     public void removeProperty(String name)
@@ -2044,7 +2044,7 @@ public class XMLElement implements Serializable {
      * @param name
      *     The name of the attribute.
      *
-     * @deprecated Use {@link #removeAttribute(java.lang.String)
+     * @deprecated Use {@link #removeAttribute(String)
      *             removeAttribute} instead.
      */
     public void removeChild(String name)
@@ -2085,7 +2085,7 @@ public class XMLElement implements Serializable {
      * @param name
      *     The new name.
      *
-     * @deprecated Use {@link #setName(java.lang.String) setName} instead.
+     * @deprecated Use {@link #setName(String) setName} instead.
      */
     public void setTagName(String name)
     {
@@ -2104,7 +2104,7 @@ public class XMLElement implements Serializable {
      *     <li><code>name</code> is a valid XML identifier
      * </ul></dd></dl>
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#getName()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#getName()
      */
     public void setName(String name)
     {
@@ -2115,7 +2115,7 @@ public class XMLElement implements Serializable {
     /**
      * Writes the XML element to a string.
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#write(java.io.Writer) write(Writer)
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#write(Writer) write(Writer)
      */
     public String toString()
     {
@@ -2143,10 +2143,10 @@ public class XMLElement implements Serializable {
      *     <li><code>writer</code> is not closed
      * </ul></dd></dl>
      *
-     * @throws java.io.IOException
+     * @throws IOException
      *      If the data could not be written to the writer.
      *
-     * @see top.mrxiaom.pluginbase.sql.nanoxml.XMLElement#toString()
+     * @see top.mrxiaom.pluginbase.utils.nanoxml.XMLElement#toString()
      */
     public void write(Writer writer)
         throws IOException
