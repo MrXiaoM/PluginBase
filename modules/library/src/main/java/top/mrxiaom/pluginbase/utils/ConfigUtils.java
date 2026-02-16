@@ -103,14 +103,22 @@ public class ConfigUtils {
     @NotNull
     public static List<ConfigurationSection> getSectionList(ConfigurationSection config, String key) {
         List<ConfigurationSection> list = new ArrayList<>();
-        List<Map<?, ?>> rawList = config.getMapList(key);
-        for (Map<?, ?> map : rawList) {
-            MemoryConfiguration section = new MemoryConfiguration();
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-                String sectionKey = entry.getKey().toString();
-                section.set(sectionKey, processValue(section, sectionKey, entry.getValue()));
+        List<?> rawList = config.getList(key, null);
+        if (rawList == null) return list;
+        for (Object obj : rawList) {
+            if (obj instanceof Map) {
+                Map<?, ?> map = (Map<?, ?>) obj;
+                MemoryConfiguration section = new MemoryConfiguration();
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+                    String sectionKey = entry.getKey().toString();
+                    section.set(sectionKey, processValue(section, sectionKey, entry.getValue()));
+                }
+                list.add(section);
+                continue;
             }
-            list.add(section);
+            if (obj instanceof ConfigurationSection) {
+                list.add((ConfigurationSection) obj);
+            }
         }
         return list;
     }
