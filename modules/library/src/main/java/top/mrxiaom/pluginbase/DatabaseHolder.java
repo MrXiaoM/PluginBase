@@ -155,6 +155,9 @@ public class DatabaseHolder {
             hikariConfig.setMinimumIdle(config.getInt("hikari.minimum_idle", 8));
             hikariConfig.setMaximumPoolSize(config.getInt("hikari.maximum_pool_size", 36));
         }
+        for (IDatabase db : databases) {
+            db.beforeReload(hikariConfig, config);
+        }
         if (isMySQL()) {
             String host = config.getString("mysql.host", "localhost");
             int port = config.getInt("mysql.port", 3306);
