@@ -369,6 +369,8 @@ public class Util {
      * @param s 输入的多个字符串
      */
     public static <T> T valueOrNull(Class<T> type, String... s) {
+        if (s.length == 0) return null;
+        if (s.length == 1) return valueOr(type, s[0], null);
         for (String str : s) {
             T value = valueOr(type, str, null);
             if (value != null) return value;
