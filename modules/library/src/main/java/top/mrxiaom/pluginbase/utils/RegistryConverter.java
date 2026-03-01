@@ -67,8 +67,14 @@ public class RegistryConverter {
             add(DamageType.class, Registry.DAMAGE_TYPE);
         } catch (Throwable ignored) {}
         try {
-            add(PotionEffectType.class, Registry.EFFECT);
-        } catch (Throwable ignored) {}
+            // Paper
+            add("org.bukkit.potion.PotionEffectType", "POTION_EFFECT_TYPE");
+        } catch (Throwable t) {
+            try {
+                add(PotionEffectType.class, Registry.EFFECT);
+            } catch (Throwable ignored) {
+            }
+        }
         try {
             add(Enchantment.class, Registry.ENCHANTMENT);
         } catch (Throwable ignored) {}
