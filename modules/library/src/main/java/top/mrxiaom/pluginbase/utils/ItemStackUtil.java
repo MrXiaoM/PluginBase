@@ -3,7 +3,9 @@ package top.mrxiaom.pluginbase.utils;
 import com.google.common.collect.Lists;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -589,7 +591,7 @@ public class ItemStackUtil {
      * @param player 玩家
      * @param items 物品列表
      */
-    public static void giveItemToPlayer(final Player player, final List<ItemStack> items) {
+    public static void giveItemToPlayer(Player player, List<ItemStack> items) {
         giveItemToPlayer(player, items.toArray(new ItemStack[0]));
     }
 
@@ -598,7 +600,7 @@ public class ItemStackUtil {
      * @param player 玩家
      * @param items 物品列表
      */
-    public static void giveItemToPlayer(final Player player, final ItemStack... items) {
+    public static void giveItemToPlayer(Player player, ItemStack... items) {
         giveItemToPlayer(player, "", "", items);
     }
 
@@ -609,8 +611,7 @@ public class ItemStackUtil {
      * @param msgFull 玩家背包已满时，发送的额外消息
      * @param items 物品列表
      */
-    public static void giveItemToPlayer(final Player player, final String msg, final String msgFull,
-                                        final List<ItemStack> items) {
+    public static void giveItemToPlayer(Player player, String msg, String msgFull, List<ItemStack> items) {
         giveItemToPlayer(player, msg, msgFull, items.toArray(new ItemStack[0]));
     }
 
@@ -621,15 +622,23 @@ public class ItemStackUtil {
      * @param msgFull 玩家背包已满时，发送的额外消息
      * @param items 物品列表
      */
-    public static void giveItemToPlayer(final Player player, final String msg, final String msgFull,
-                                        final ItemStack... items) {
-        final Collection<ItemStack> last = player.getInventory().addItem(items).values();
+    public static void giveItemToPlayer(Player player, String msg, String msgFull, ItemStack... items) {
+        Collection<ItemStack> last = player.getInventory().addItem(items).values();
         if (!msg.isEmpty() || (!last.isEmpty() && !msgFull.isEmpty())) {
             t(player, msg + (last.isEmpty() ? "" : ("\n&r" + msgFull)));
         }
-        for (final ItemStack item : last) {
-            player.getWorld().dropItem(player.getLocation(), item);
-        }
+        if (last.isEmpty()) return;
+        World world = player.getWorld();
+        Location location = player.getLocation();
+        Location loc = new Location(world, location.getBlockX() + 0.5, location.getY() + 1.0, location.getBlockZ() + 0.5);
+        BukkitPlugin.getInstance().getScheduler().runAtLocation(loc, () -> {
+            for (ItemStack item : last) {
+                if (item == null || item.getType().equals(Material.AIR) || item.getAmount() <= 0) {
+                    continue;
+                }
+                world.dropItem(loc, item);
+            }
+        });
     }
 
 }
