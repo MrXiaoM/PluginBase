@@ -152,14 +152,14 @@ public class RegistryConverter {
         } catch (Throwable ignored) {}
     }
 
-    private static void add(String classType, String registry) throws Throwable {
+    public static void add(String classType, String registry) throws Throwable {
         Class<?> type = Class.forName(classType);
         Field field = Registry.class.getDeclaredField(registry);
         Registry<?> object = (Registry<?>) field.get(null);
         registries.put(type.getName(), object);
     }
 
-    private static <T extends Keyed> void add(Class<T> type, Registry<T> registry) {
+    public static <T extends Keyed> void add(Class<T> type, Registry<T> registry) {
         registries.put(type.getName(), registry);
     }
 
