@@ -1,5 +1,6 @@
 package top.mrxiaom.pluginbase.actions;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
@@ -12,12 +13,28 @@ import top.mrxiaom.pluginbase.utils.Pair;
 import java.util.List;
 
 public class ActionPlayer implements IAction {
-    public static final IActionProvider PROVIDER = s -> {
-        if (s.startsWith("[player]")) {
-            return new ActionPlayer(s.substring(8));
-        }
-        if (s.startsWith("player:")) {
-            return new ActionPlayer(s.substring(7));
+    public static final IActionProvider PROVIDER = input -> {
+        if (input instanceof ConfigurationSection) {
+            ConfigurationSection section = (ConfigurationSection) input;
+            if (!section.contains("type") && section.contains("player")) {
+                String command = section.getString("player");
+                if (command != null) {
+                    return new ActionPlayer(command);
+                }
+            } else if ("player".equals(section.getString("type"))) {
+                String command = section.getString("command");
+                if (command != null) {
+                    return new ActionPlayer(command);
+                }
+            }
+        } else {
+            String s = String.valueOf(input);
+            if (s.startsWith("[player]")) {
+                return new ActionPlayer(s.substring(8));
+            }
+            if (s.startsWith("player:")) {
+                return new ActionPlayer(s.substring(7));
+            }
         }
         return null;
     };

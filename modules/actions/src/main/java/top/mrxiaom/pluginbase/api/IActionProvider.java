@@ -9,9 +9,10 @@ import java.util.function.Function;
 public interface IActionProvider {
     /**
      * IAction 提供器，返回 null 代表字符串不匹配当前 Action
+     * @param input 输入值，可能是字符串，也可能是 {@link org.bukkit.configuration.ConfigurationSection}
      */
     @Nullable
-    IAction provide(@NotNull String s);
+    IAction provide(@NotNull Object input);
 
     /**
      * 处理优先级，数字越小越先处理
@@ -21,11 +22,11 @@ public interface IActionProvider {
     }
 
     @NotNull
-    static IActionProvider newProvider(int priority, @NotNull Function<String, IAction> function) {
+    static IActionProvider newProvider(int priority, @NotNull Function<Object, IAction> function) {
         return new IActionProvider() {
             @Override
-            public @Nullable IAction provide(@NotNull String s) {
-                return function.apply(s);
+            public @Nullable IAction provide(@NotNull Object input) {
+                return function.apply(input);
             }
 
             @Override

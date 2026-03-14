@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.api.IActionProvider;
+import top.mrxiaom.pluginbase.utils.ConfigUtils;
 import top.mrxiaom.pluginbase.utils.Pair;
 
 import java.util.*;
@@ -34,23 +35,23 @@ public class ActionProviders {
 
     @NotNull
     public static List<IAction> loadActions(@NotNull ConfigurationSection section, @NotNull String key) {
-        return loadActions(section.getStringList(key));
+        return loadActions(ConfigUtils.getList(section, key));
     }
 
     @NotNull
     public static List<IAction> loadActions(@NotNull ConfigurationSection section, @NotNull String... keys) {
-        List<String> list = new ArrayList<>();
+        List<Object> list = new ArrayList<>();
         for (String key : keys) {
-            list.addAll(section.getStringList(key));
+            list.addAll(ConfigUtils.getList(section, key));
         }
         if (list.isEmpty()) return new ArrayList<>();
         return loadActions(list);
     }
 
     @NotNull
-    public static List<IAction> loadActions(@NotNull List<String> list) {
+    public static List<IAction> loadActions(@NotNull List<Object> list) {
         List<IAction> actions = new ArrayList<>();
-        for (String s : list) {
+        for (Object s : list) {
             IAction action = loadAction(s);
             if (action != null) {
                 actions.add(action);
@@ -60,7 +61,7 @@ public class ActionProviders {
     }
 
     @Nullable
-    public static IAction loadAction(@Nullable String s) {
+    public static IAction loadAction(@Nullable Object s) {
         if (s == null) return null;
         for (IActionProvider provider : actionProviders) {
             IAction action = provider.provide(s);

@@ -1,6 +1,7 @@
 package top.mrxiaom.pluginbase.actions;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.api.IAction;
@@ -12,12 +13,28 @@ import top.mrxiaom.pluginbase.utils.Pair;
 import java.util.List;
 
 public class ActionMessageAdventure implements IAction {
-    public static final IActionProvider PROVIDER = s -> {
-        if (s.startsWith("[message]")) {
-            return new ActionMessageAdventure(s.substring(9));
-        }
-        if (s.startsWith("message:")) {
-            return new ActionMessageAdventure(s.substring(8));
+    public static final IActionProvider PROVIDER = input -> {
+        if (input instanceof ConfigurationSection) {
+            ConfigurationSection section = (ConfigurationSection) input;
+            if (!section.contains("type") && section.contains("message")) {
+                String content = section.getString("message");
+                if (content != null) {
+                    return new ActionMessageAdventure(content);
+                }
+            } else if ("message".equals(section.getString("type"))) {
+                String content = section.getString("content");
+                if (content != null) {
+                    return new ActionMessageAdventure(content);
+                }
+            }
+        } else {
+            String s = String.valueOf(input);
+            if (s.startsWith("[message]")) {
+                return new ActionMessageAdventure(s.substring(9));
+            }
+            if (s.startsWith("message:")) {
+                return new ActionMessageAdventure(s.substring(8));
+            }
         }
         return null;
     };
