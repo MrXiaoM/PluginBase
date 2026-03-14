@@ -860,6 +860,19 @@ public interface ConfigurationSection {
     public List<Map<?, ?>> getMapList(@NotNull String path);
 
     /**
+     * Gets the requested List by path.
+     * <p>
+     * If the List does not exist but a default value has been specified, this
+     * will return the default value. If the List does not exist and no
+     * default value was specified, this will return empty list.
+     *
+     * @param path Path of the List to get.
+     * @return Requested List.
+     */
+    @NotNull
+    public List<Object> getProcessList(@NotNull String path, boolean process);
+
+    /**
      * Gets the requested List of Sections by path.
      * <p>
      * If the List does not exist but a default value has been specified, this

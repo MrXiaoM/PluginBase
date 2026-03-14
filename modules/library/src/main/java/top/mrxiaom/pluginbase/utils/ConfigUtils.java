@@ -88,6 +88,35 @@ public class ConfigUtils {
     }
 
     /**
+     * <code>getList</code> 的升级版，更方便操作 Array 套 Object 的配置格式。
+     * @see ConfigUtils#getSectionList(ConfigurationSection, String)
+     * @see ConfigurationSection#getList(String)
+     * @param config 配置
+     * @param key 键
+     * @return 一个新的列表，对其进行修改不会对原配置进行修改，需要执行 <code>config.set(String, Object)</code> 应用修改
+     */
+    @NotNull
+    public static List<Object> getList(ConfigurationSection config, String key) {
+        List<Object> list = new ArrayList<>();
+        List<?> rawList = config.getList(key, null);
+        if (rawList == null) return list;
+        for (Object obj : rawList) {
+            if (obj instanceof Map) {
+                Map<?, ?> map = (Map<?, ?>) obj;
+                MemoryConfiguration section = new MemoryConfiguration();
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+                    String sectionKey = entry.getKey().toString();
+                    section.set(sectionKey, processValue(section, sectionKey, entry.getValue()));
+                }
+                list.add(section);
+                continue;
+            }
+            list.add(processValue(null, null, obj));
+        }
+        return list;
+    }
+
+    /**
      * <code>getMapList</code> 的升级版，更方便地操作 Array 套 Object 的配置格式。<br>
      * 你可以直接将 <code>List&lt;ConfigurationSection&gt;</code> 类型的值传入 <code>set(String, Object)</code>，如下所示
      * <pre><code>

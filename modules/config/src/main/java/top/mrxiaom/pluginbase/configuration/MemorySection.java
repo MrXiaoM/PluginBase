@@ -839,17 +839,46 @@ public class MemorySection implements ConfigurationSection {
     }
 
     @Override
+    public @NotNull List<Object> getProcessList(@NotNull String path, boolean process) {
+        List<Object> list = new ArrayList<>();
+        List<?> rawList = getList(path, null);
+        if (rawList == null || !process) return list;
+        for (Object obj : rawList) {
+            if (obj instanceof Map) {
+                Map<?, ?> map = (Map<?, ?>) obj;
+                MemoryConfiguration section = new MemoryConfiguration();
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+                    String sectionKey = entry.getKey().toString();
+                    section.set(sectionKey, processListValue(section, sectionKey, entry.getValue()));
+                }
+                list.add(section);
+                continue;
+            }
+            list.add(processListValue(null, null, obj));
+        }
+        return list;
+    }
+
+    @Override
     @NotNull
     public List<ConfigurationSection> getSectionList(@NotNull String path) {
         List<ConfigurationSection> list = new ArrayList<>();
-        List<Map<?, ?>> rawList = getMapList(path);
-        for (Map<?, ?> map : rawList) {
-            MemoryConfiguration section = new MemoryConfiguration();
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-                String sectionKey = entry.getKey().toString();
-                section.set(sectionKey, processListValue(section, sectionKey, entry.getValue()));
+        List<?> rawList = getList(path, null);
+        if (rawList == null) return list;
+        for (Object obj : rawList) {
+            if (obj instanceof Map) {
+                Map<?, ?> map = (Map<?, ?>) obj;
+                MemoryConfiguration section = new MemoryConfiguration();
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+                    String sectionKey = entry.getKey().toString();
+                    section.set(sectionKey, processListValue(section, sectionKey, entry.getValue()));
+                }
+                list.add(section);
+                continue;
             }
-            list.add(section);
+            if (obj instanceof ConfigurationSection) {
+                list.add((ConfigurationSection) obj);
+            }
         }
         return list;
     }
