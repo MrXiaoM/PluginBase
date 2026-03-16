@@ -24,6 +24,11 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.chrono.IsoChronology;
+import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.jar.JarEntry;
@@ -336,6 +341,123 @@ public class Util {
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
+    }
+
+    /**
+     * 解析字符串为时间
+     */
+    public static Optional<LocalTime> parseTime(String s) {
+        return parseTime(s, ':');
+    }
+
+    /**
+     * 解析字符串为时间
+     * @param splitter 各单位的分隔符，建议使用 <code>:</code>
+     */
+    public static Optional<LocalTime> parseTime(String s, char splitter) {
+        List<String> split = CollectionUtils.split(s, splitter, 3);
+        if (split.size() == 2) {
+            int hour = Util.parseInt(split.get(0)).orElse(-1);
+            int minute = Util.parseInt(split.get(1)).orElse(-1);
+            if (ChronoField.HOUR_OF_DAY.range().isValidValue(hour)
+                    && ChronoField.MINUTE_OF_HOUR.range().isValidValue(minute)
+            ) {
+                return Optional.of(LocalTime.of(hour, minute));
+            }
+        }
+        if (split.size() == 3) {
+            int hour = Util.parseInt(split.get(0)).orElse(-1);
+            int minute = Util.parseInt(split.get(1)).orElse(-1);
+            int second = Util.parseInt(split.get(2)).orElse(-1);
+            if (ChronoField.HOUR_OF_DAY.range().isValidValue(hour)
+                    && ChronoField.MINUTE_OF_HOUR.range().isValidValue(minute)
+                    && ChronoField.SECOND_OF_MINUTE.range().isValidValue(second)
+            ) {
+                return Optional.of(LocalTime.of(hour, minute));
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * 解析字符串为日期
+     */
+    public static Optional<LocalDate> parseDate(String s) {
+        return parseDate(s, '-');
+    }
+
+    /**
+     * 解析字符串为日期
+     * @param splitter 各单位的分隔符，建议使用 <code>-</code>
+     */
+    public static Optional<LocalDate> parseDate(String s, char splitter) {
+        List<String> split = CollectionUtils.split(s, splitter, 3);
+        if (split.size() == 3) {
+            int year = Util.parseInt(split.get(0)).orElse(-1);
+            int month = Util.parseInt(split.get(1)).orElse(-1);
+            int dayOfMonth = Util.parseInt(split.get(2)).orElse(-1);
+            if (ChronoField.YEAR_OF_ERA.range().isValidValue(year)
+                    && ChronoField.MONTH_OF_YEAR.range().isValidValue(month)
+                    && ChronoField.DAY_OF_MONTH.range().isValidValue(dayOfMonth)
+            ) {
+                int dom;
+                switch (month) {
+                    case 2:
+                        dom = (IsoChronology.INSTANCE.isLeapYear(year) ? 29 : 28);
+                        break;
+                    case 4:
+                    case 6:
+                    case 9:
+                    case 11:
+                        dom = 30;
+                        break;
+                    default:
+                        dom = 31;
+                        break;
+                }
+                if (dom <= dayOfMonth) {
+                    return Optional.of(LocalDate.of(year, month, dayOfMonth));
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * 解析字符串为日期与时间
+     */
+    public static Optional<LocalDateTime> parseDateTime(String s) {
+        return parseDateTime(s, ' ');
+    }
+
+    /**
+     * 解析字符串为日期与时间
+     * @param splitter 日期与时间之间的分隔符，建议使用 <code> </code> (空格)
+     */
+    public static Optional<LocalDateTime> parseDateTime(String s, char splitter) {
+        return parseDateTime(s, splitter, '-', ':');
+    }
+
+    /**
+     * 解析字符串为日期与时间
+     * @param splitter 日期与时间之间的分隔符，建议使用 <code> </code> (空格)
+     * @param dateSplitter 日期各单位的分隔符
+     * @param timeSplitter 时间各单位的分隔符
+     * @see Util#parseDate(String, char)
+     * @see Util#parseTime(String, char)
+     */
+    public static Optional<LocalDateTime> parseDateTime(String s, char splitter, char dateSplitter, char timeSplitter) {
+        int index = s.indexOf(splitter);
+        if (index > 5) {
+            String dateStr = s.substring(0, index);
+            String timeStr = s.substring(index + 1);
+            LocalDate date = parseDate(dateStr, dateSplitter).orElse(null);
+            LocalTime time = parseTime(timeStr, timeSplitter).orElse(null);
+            if (date != null && time != null) {
+                return Optional.of(date.atTime(time));
+            }
+        }
+        return Optional.empty();
     }
 
     /**

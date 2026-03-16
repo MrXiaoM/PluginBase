@@ -13,19 +13,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CollectionUtils {
-    public static List<String> split(String string, String spliter) {
-        return split(string, spliter, 0);
+    public static List<String> split(String string, String splitter) {
+        return split(string, splitter, 0);
     }
 
-    public static List<String> split(String string, String spliter, int limit) {
+    public static List<String> split(String string, String splitter, int limit) {
         int oldIndex = 0;
-        int length = spliter.length();
+        int length = splitter.length();
         if (length == 0) throw new IllegalArgumentException("spliter can't be empty!");
         int count = limit - 1;
         boolean unlimited = limit <= 0;
         List<String> list = new ArrayList<>();
         while (unlimited || list.size() < count) {
-            int i = string.indexOf(spliter, oldIndex);
+            int i = string.indexOf(splitter, oldIndex);
             if (i >= 0) {
                 if (oldIndex == i) {
                     list.add("");
@@ -41,17 +41,17 @@ public class CollectionUtils {
         return list;
     }
 
-    public static List<String> split(String string, char spliter) {
-        return split(string, spliter, 0);
+    public static List<String> split(String string, char splitter) {
+        return split(string, splitter, 0);
     }
 
-    public static List<String> split(String string, char spliter, int limit) {
+    public static List<String> split(String string, char splitter, int limit) {
         int oldIndex = 0;
         int count = limit - 1;
         boolean unlimited = limit <= 0;
         List<String> list = new ArrayList<>();
         while (unlimited || list.size() < count) {
-            int i = string.indexOf(spliter, oldIndex);
+            int i = string.indexOf(splitter, oldIndex);
             if (i >= 0) {
                 if (oldIndex == i) {
                     list.add("");
