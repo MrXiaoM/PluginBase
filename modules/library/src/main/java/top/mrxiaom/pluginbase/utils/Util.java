@@ -182,7 +182,7 @@ public class Util {
      */
     @SuppressWarnings("UnusedReturnValue")
     public static boolean mkdirs(File file) {
-        return file.mkdirs();
+        return file != null && file.mkdirs();
     }
 
     /**
