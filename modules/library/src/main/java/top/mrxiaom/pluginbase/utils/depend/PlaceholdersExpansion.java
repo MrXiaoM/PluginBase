@@ -34,6 +34,11 @@ public abstract class PlaceholdersExpansion<T extends JavaPlugin> extends Placeh
         return plugin.getDescription().getVersion();
     }
 
+    @Override
+    public boolean persist() {
+        return true;
+    }
+
     public static String bool(boolean value) {
         return value ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
     }
