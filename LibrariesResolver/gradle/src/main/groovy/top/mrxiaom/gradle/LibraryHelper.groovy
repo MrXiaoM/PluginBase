@@ -15,6 +15,7 @@ import java.util.function.Function
 class LibraryHelper {
     private final List<String> resolvedLibraries = new ArrayList<>()
     private Project project
+    private List<String> addedLibraries = new ArrayList<>();
     /**
      * 收集依赖用的配置
      */
@@ -47,6 +48,7 @@ class LibraryHelper {
     }
 
     void library(String dependencyNotation) {
+        addedLibraries.add(dependencyNotation)
         def dependencies = project.getDependencies()
         dependencies.add(configuration.getName(), dependencyNotation)
         if (targetConfiguration != null) {
@@ -55,6 +57,7 @@ class LibraryHelper {
     }
 
     void library(String dependencyNotation, Consumer<ExternalModuleDependency> consumer) {
+        addedLibraries.add(dependencyNotation)
         def dependencies = project.getDependencies()
         dependencies.add(configuration.getName(), dependencyNotation, toClosure(consumer))
         if (targetConfiguration != null) {
@@ -182,5 +185,18 @@ class LibraryHelper {
         resolvedLibraries.clear()
         resolvedLibraries.addAll(collectLibraries(collector))
         return resolvedLibraries
+    }
+
+    List<String> getAddedLibraries() {
+        return Collections.unmodifiableList(addedLibraries)
+    }
+
+    List<String> getAddedLibrariesYAML() {
+        List<String> list = new ArrayList<>();
+        list.add("libraries:")
+        for (final def lib in addedLibraries) {
+            list.add("  - \"" + lib + "\"")
+        }
+        return list
     }
 }
