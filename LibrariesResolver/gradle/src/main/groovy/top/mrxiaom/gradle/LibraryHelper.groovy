@@ -1,11 +1,24 @@
 package top.mrxiaom.gradle
 
 import com.google.common.collect.Iterables
+import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ExternalModuleDependency
 import org.gradle.api.artifacts.ResolvedArtifact
 import org.gradle.api.artifacts.ResolvedDependency
+import org.gradle.api.file.CopySpec
+import org.gradle.api.file.DuplicatesStrategy
+import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.api.tasks.javadoc.Javadoc
+import org.gradle.external.javadoc.StandardJavadocDocletOptions
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.language.jvm.tasks.ProcessResources
 import org.jetbrains.annotations.NotNull
 import org.jetbrains.annotations.Nullable
 
@@ -192,11 +205,96 @@ class LibraryHelper {
     }
 
     List<String> getAddedLibrariesYAML() {
-        List<String> list = new ArrayList<>();
-        list.add("libraries:")
-        for (final def lib in addedLibraries) {
-            list.add("  - \"" + lib + "\"")
+        List<String> list = new ArrayList<>()
+        list.add("")
+        if (addedLibraries.isEmpty()) {
+            list.add("libraries: []")
+        } else {
+            list.add("libraries:")
+            for (final def lib in addedLibraries) {
+                list.add("  - \"" + lib + "\"")
+            }
         }
         return list
+    }
+
+    static void initJava(Project project, LibraryHelper base, int targetJavaVersion, boolean extraJar) {
+        project.extensions.configure(JavaPluginExtension.class) {
+            it.disableAutoTargetJvm()
+            def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+            if (JavaVersion.current() < javaVersion) {
+                it.toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
+            }
+            if (extraJar) {
+                it.withJavadocJar()
+                it.withSourcesJar()
+            }
+        }
+        def tasks = project.tasks
+        def shadowJar = tasks.named("shadowJar")
+
+        def copyTask = tasks.register("copyBuildArtifact", Copy.class) {
+            it.dependsOn(shadowJar)
+            it.from(shadowJar.get().outputs)
+            it.rename((_) -> "${project.name}-${project.version}.jar")
+            it.into(project.rootProject.file("out"))
+        }
+        tasks.named("build") {
+            it.dependsOn(copyTask)
+        }
+        if (extraJar) {
+            tasks.named("javadoc", Javadoc.class) {
+                def options = it.options as StandardJavadocDocletOptions
+
+                options.links("https://hub.spigotmc.org/javadocs/spigot/")
+
+                options.locale("zh_CN")
+                options.encoding("UTF-8")
+                options.docEncoding("UTF-8")
+                options.addBooleanOption("keywords", true)
+                options.addBooleanOption("Xdoclint:none", true)
+            }
+        }
+        tasks.withType(JavaCompile.class).configureEach {
+            it.options.encoding = "UTF-8"
+            it.options.compilerArgs.add("-Xlint:-options")
+            if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+                it.options.release.set(targetJavaVersion)
+            }
+        }
+        def sourceSets = (SourceSetContainer) project.extensions.getByName("sourceSets")
+        tasks.named("processResources", ProcessResources.class) {
+            it.duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            it.from(sourceSets.named("main").get().resources.srcDirs) { CopySpec copy ->
+                Map<String, Object> map = new HashMap<>()
+                map.put("version", project.version)
+                if (base != null) {
+                    def joiner = new StringJoiner("\"\n  - \"")
+                    for (final def lib in base.getAddedLibraries()) {
+                        joiner.add(lib)
+                    }
+                    map.put("libraries", joiner.toString())
+                    map.put("libraries_config", base.getAddedLibrariesYAML().join("\n"))
+                }
+                copy.expand(map)
+                copy.include("plugin.yml")
+            }
+        }
+    }
+
+    static void initPublishing(Project project) {
+        project.extensions.configure(PublishingExtension.class) {
+            it.publications {
+                it.create("maven", MavenPublication.class) {
+                    it.groupId = project.group.toString()
+                    it.artifactId = project.name
+                    it.version = project.version.toString()
+
+                    it.artifact(project.tasks.named("shadowJar")).classifier = null
+                    it.artifact(project.tasks.named("sourcesJar"))
+                    it.artifact(project.tasks.named("javadocJar"))
+                }
+            }
+        }
     }
 }
