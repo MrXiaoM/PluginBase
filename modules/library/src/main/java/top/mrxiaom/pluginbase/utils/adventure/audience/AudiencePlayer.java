@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.utils.adventure.serializer.BungeeComponentSerializer;
 import top.mrxiaom.pluginbase.utils.adventure.serializer.legacy.LegacyComponentSerializer;
 
@@ -32,6 +33,7 @@ public class AudiencePlayer implements Audience {
                 player.spigot().sendMessage(components);
                 return;
             } catch (LinkageError e) {
+                BukkitPlugin.getInstance().warn("尝试通过 BungeeCord Chat Component 发送消息时出现兼容性问题", e);
                 SUPPORT_BUNGEE = false;
             }
         }
@@ -45,6 +47,7 @@ public class AudiencePlayer implements Audience {
                 BaseComponent components = BungeeComponentSerializer.serialize(message);
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, components);
             } catch (LinkageError e) {
+                BukkitPlugin.getInstance().warn("尝试通过 BungeeCord Chat Component 发送消息时出现兼容性问题", e);
                 SUPPORT_BUNGEE = false;
             }
         }

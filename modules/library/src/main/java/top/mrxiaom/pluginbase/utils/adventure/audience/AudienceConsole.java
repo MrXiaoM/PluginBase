@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
+import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.utils.adventure.serializer.BungeeComponentSerializer;
 import top.mrxiaom.pluginbase.utils.adventure.serializer.legacy.LegacyComponentSerializer;
 
@@ -24,6 +25,7 @@ public class AudienceConsole implements Audience {
                 console.spigot().sendMessage(components);
                 return;
             } catch (LinkageError e) {
+                BukkitPlugin.getInstance().warn("尝试通过 BungeeCord Chat Component 发送消息时出现兼容性问题", e);
                 SUPPORT_BUNGEE = false;
             }
         }
