@@ -1,36 +1,30 @@
 package top.mrxiaom.pluginbase.api;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import top.mrxiaom.pluginbase.utils.AdventureUtil;
-import top.mrxiaom.pluginbase.utils.Util;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface IAdventureHandler {
     @NotNull
     MiniMessage.Builder builder();
     @NotNull
-    BukkitAudiences adventure();
-    @NotNull
+    @ApiStatus.Experimental
     Audience of(@NotNull CommandSender sender);
     @NotNull
+    @ApiStatus.Experimental
     default Audience of(@NotNull Player player) {
         return of((CommandSender) player);
     }
     @NotNull
-    default Audience of(@NotNull UUID player) {
-        return Util.getOnlinePlayer(player).map(AdventureUtil::of).orElseGet(() -> adventure().player(player));
-    }
-    @NotNull
+    @ApiStatus.Experimental
     default Audience console() {
         return of(Bukkit.getConsoleSender());
     }

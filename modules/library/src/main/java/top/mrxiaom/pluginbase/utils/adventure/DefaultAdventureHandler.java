@@ -1,33 +1,39 @@
 package top.mrxiaom.pluginbase.utils.adventure;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAdventureHandler;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
+import top.mrxiaom.pluginbase.utils.CollectionUtils;
+import top.mrxiaom.pluginbase.utils.adventure.audience.AudienceConsole;
+import top.mrxiaom.pluginbase.utils.adventure.audience.AudiencePlayer;
 
 import java.lang.reflect.Field;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class DefaultAdventureHandler implements IAdventureHandler {
+public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     private static Field resolversField;
-    protected BukkitAudiences adventure;
+    private final Map<UUID, AudiencePlayer> players = new HashMap<>();
     protected MiniMessage miniMessage;
     public DefaultAdventureHandler(BukkitPlugin plugin) {
-        adventure = BukkitAudiences.builder(plugin).build();
         miniMessage = builder().build();
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @SuppressWarnings({"unchecked", "SameParameterValue"})
@@ -56,9 +62,9 @@ public class DefaultAdventureHandler implements IAdventureHandler {
                 .postProcessor(it -> it.decoration(TextDecoration.ITALIC, false));
     }
 
-    @Override
-    public @NotNull BukkitAudiences adventure() {
-        return adventure;
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        players.remove(e.getPlayer().getUniqueId());
     }
 
     @Override
@@ -66,7 +72,15 @@ public class DefaultAdventureHandler implements IAdventureHandler {
         if (sender instanceof Audience) {
             return (Audience) sender;
         }
-        return adventure.sender(sender);
+        if (sender instanceof ConsoleCommandSender) {
+            return AudienceConsole.INSTANCE;
+        }
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            UUID uuid = player.getUniqueId();
+            return CollectionUtils.getOrPut(players, uuid, () -> new AudiencePlayer(player));
+        }
+        return new Audience() {};
     }
 
     @Override

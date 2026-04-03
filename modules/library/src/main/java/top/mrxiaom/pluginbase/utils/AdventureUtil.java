@@ -1,23 +1,19 @@
 package top.mrxiaom.pluginbase.utils;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAdventureHandler;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * adventure 与 mini message 相关操作工具
@@ -61,15 +57,9 @@ public class AdventureUtil {
     }
 
     /**
-     * 获取 adventure-platform-bukkit 的实例
-     */
-    public static BukkitAudiences adventure() {
-        return handler.adventure();
-    }
-
-    /**
      * 获取 Bukkit CommandSender 在 adventure 的 Audience，如果有本地平台实现，优先使用本地平台实现
      */
+    @ApiStatus.Experimental
     public static Audience of(CommandSender sender) {
         return handler.of(sender);
     }
@@ -77,6 +67,7 @@ public class AdventureUtil {
     /**
      * @see AdventureUtil#of(CommandSender)
      */
+    @ApiStatus.Experimental
     public static Audience of(Player player) {
         return handler.of(player);
     }
@@ -84,13 +75,7 @@ public class AdventureUtil {
     /**
      * @see AdventureUtil#of(CommandSender)
      */
-    public static Audience of(UUID player) {
-        return handler.of(player);
-    }
-
-    /**
-     * @see AdventureUtil#of(CommandSender)
-     */
+    @ApiStatus.Experimental
     public static Audience console() {
         return handler.console();
     }
