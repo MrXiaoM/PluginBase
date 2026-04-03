@@ -269,9 +269,13 @@ public class AdventureItemStack {
         } else { // 未知格式
             itemTag = BinaryTagHolder.binaryTagHolder("{}");
         }
+
+        int count = nbt.hasTag("Count")
+                ? nbt.getInteger("Count")
+                : nbt.getInteger("count");
         return HoverEvent.showItem(
                 Key.key(nbt.getString("id"), ':'),
-                nbt.getInteger("count"),
+                count,
                 itemTag);
     }
 
