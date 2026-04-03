@@ -23,9 +23,8 @@ subprojects {
     )
     setupLibraries(
         key="adventure",
-        "net.kyori:adventure-api:4.21.0",
-        "net.kyori:adventure-text-serializer-bungeecord:4.4.1",
+        "net.kyori:adventure-api:4.25.0",
         "net.kyori:adventure-text-serializer-legacy:4.4.1",
-        "net.kyori:adventure-text-minimessage:4.21.0",
+        "net.kyori:adventure-text-minimessage:4.25.0",
     )
 }

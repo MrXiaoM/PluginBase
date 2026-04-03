@@ -5,19 +5,20 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.sound.SoundStop;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.BungeeComponentSerializer;
 
 public class AudiencePlayer implements Audience {
+    private static boolean SUPPORT_BUNGEE = true;
     private static final LegacyComponentSerializer legacy = LegacyComponentSerializer.legacySection();
-    private static final BungeeComponentSerializer bungee = BungeeComponentSerializer.get();
     private final Player player;
     public AudiencePlayer(Player player) {
         this.player = player;
@@ -25,14 +26,33 @@ public class AudiencePlayer implements Audience {
 
     @Override
     public void sendMessage(@NotNull Component message) {
-        BaseComponent[] components = bungee.serialize(message);
-        player.spigot().sendMessage(components);
+        if (SUPPORT_BUNGEE) {
+            try {
+                BaseComponent components = BungeeComponentSerializer.serialize(message);
+                player.spigot().sendMessage(components);
+                return;
+            } catch (LinkageError e) {
+                SUPPORT_BUNGEE = false;
+            }
+        }
+        player.sendMessage(legacy.serialize(message));
     }
 
     @Override
     public void sendActionBar(@NotNull Component message) {
-        BaseComponent[] components = bungee.serialize(message);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, components);
+        if (SUPPORT_BUNGEE) {
+            try {
+                BaseComponent components = BungeeComponentSerializer.serialize(message);
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, components);
+            } catch (LinkageError e) {
+                SUPPORT_BUNGEE = false;
+            }
+        }
+        try {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(legacy.serialize(message)));
+        } catch (LinkageError ignored) {
+            player.sendMessage(legacy.serialize(message));
+        }
     }
 
     @Override

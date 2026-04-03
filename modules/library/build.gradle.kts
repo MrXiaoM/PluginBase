@@ -24,6 +24,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.zaxxer:HikariCP:4.0.3")
     compileOnly("com.mojang:authlib:2.1.28")
+    compileOnly("net.md-5:bungeecord-chat:1.21-R0.5-SNAPSHOT")
 
     applyLibraries("adventure", "compileOnly")
     applyLibraries("nbt-api", "compileOnly")
