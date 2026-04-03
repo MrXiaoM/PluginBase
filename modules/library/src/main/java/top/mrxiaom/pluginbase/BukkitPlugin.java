@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.api.IAdventureHandler;
 import top.mrxiaom.pluginbase.api.IScheduler;
 import top.mrxiaom.pluginbase.database.IDatabase;
 import top.mrxiaom.pluginbase.economy.EnumEconomy;
@@ -25,6 +26,7 @@ import top.mrxiaom.pluginbase.utils.AdventureItemStack;
 import top.mrxiaom.pluginbase.utils.ClassLoaderWrapper;
 import top.mrxiaom.pluginbase.utils.ConfigUtils;
 import top.mrxiaom.pluginbase.utils.Util;
+import top.mrxiaom.pluginbase.utils.adventure.DefaultAdventureHandler;
 import top.mrxiaom.pluginbase.utils.inventory.BukkitInventoryFactory;
 import top.mrxiaom.pluginbase.utils.inventory.InventoryFactory;
 import top.mrxiaom.pluginbase.utils.item.ItemEditor;
@@ -298,6 +300,14 @@ public abstract class BukkitPlugin extends JavaPlugin {
     @NotNull
     public InventoryFactory initInventoryFactory() {
         return new BukkitInventoryFactory();
+    }
+
+    /**
+     * 初始化 Adventure 处理器
+     */
+    @NotNull
+    public IAdventureHandler initAdventureHandler() {
+        return new DefaultAdventureHandler(this);
     }
 
     protected void warnNoEconomy() {

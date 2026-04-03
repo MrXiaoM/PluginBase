@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
+import top.mrxiaom.pluginbase.utils.adventure.DefaultAdventureHandler;
 import top.mrxiaom.pluginbase.utils.item.ItemEditor;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class AdventureItemStack {
         } catch (Throwable ignored) {
         }
         miniMessageWithoutEvents = AdventureUtil.builder()
-                .editTags(it -> AdventureUtil.remove(it, "hover", "click"))
+                .editTags(it -> DefaultAdventureHandler.remove(it, "hover", "click"))
                 .build();
         itemEditor = plugin.initItemEditor();
     }
