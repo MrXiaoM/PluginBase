@@ -93,15 +93,20 @@ public class ActionProviders {
     }
 
     private static void run0(@NotNull BukkitPlugin plugin, @Nullable Player player, @NotNull List<IAction> actions, @Nullable List<Pair<String, Object>> replacements, int startIndex) {
-        for (int i = startIndex; i < actions.size(); i++) {
-            IAction action = actions.get(i);
-            action.run(player, replacements);
-            long delay = action.delayAfterRun();
-            if (delay > 0) {
-                int index = i + 1;
-                plugin.getScheduler().runTaskLater(() -> run0(plugin, player, actions, replacements, index), delay);
-                return;
+        try {
+            for (int i = startIndex; i < actions.size(); i++) {
+                IAction action = actions.get(i);
+                action.run(player, replacements);
+                long delay = action.delayAfterRun();
+                if (delay > 0) {
+                    int index = i + 1;
+                    plugin.getScheduler().runTaskLater(() -> run0(plugin, player, actions, replacements, index), delay);
+                    return;
+                }
             }
+        } catch (Throwable t) {
+            plugin.warn("执行操作时出现异常", t);
+            throw new RuntimeException(t);
         }
     }
 }
