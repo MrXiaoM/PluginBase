@@ -46,7 +46,7 @@ public class AdventureItemStack {
         } catch (Throwable ignored) {
         }
         miniMessageWithoutEvents = AdventureUtil.builder()
-                .editTags(it -> DefaultAdventureHandler.remove(it, "hover", "click"))
+                .editTags(it -> DefaultAdventureHandler.remove(it, Lists.newArrayList("hover", "click")))
                 .build();
         itemEditor = plugin.initItemEditor();
     }

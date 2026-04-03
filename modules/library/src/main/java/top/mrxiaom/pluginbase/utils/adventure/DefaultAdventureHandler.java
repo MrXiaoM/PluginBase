@@ -1,8 +1,11 @@
 package top.mrxiaom.pluginbase.utils.adventure;
 
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.ShadowColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -18,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAdventureHandler;
-import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.CollectionUtils;
 import top.mrxiaom.pluginbase.utils.adventure.audience.AudienceConsole;
 import top.mrxiaom.pluginbase.utils.adventure.audience.AudiencePlayer;
@@ -26,18 +28,33 @@ import top.mrxiaom.pluginbase.utils.adventure.audience.AudiencePlayer;
 import java.lang.reflect.Field;
 import java.time.Duration;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     private static Field resolversField;
+    private static final Map<String, Consumer<Component>> tagImplMap = new HashMap<String, Consumer<Component>>() {{
+        put("shadow", c -> c.style().shadowColor(ShadowColor.none()));
+        put("font", c -> c.style().font(Key.key("default")));
+        put("gradient", c -> c.style().color(TextColor.color(255, 255, 255)));
+    }};
+    private final List<String> disabledTags = new ArrayList<>();
     private final Map<UUID, AudiencePlayer> players = new HashMap<>();
     protected MiniMessage miniMessage;
     public DefaultAdventureHandler(BukkitPlugin plugin) {
+        disabledTags.add("pride");
+        tagImplMap.forEach((tag, type) -> {
+            try {
+                type.accept(Component.empty());
+            } catch (LinkageError e) {
+                disabledTags.add(tag);
+            }
+        });
         miniMessage = builder().build();
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @SuppressWarnings({"unchecked", "SameParameterValue"})
-    public static void remove(TagResolver.Builder builder, String... tags) {
+    public static void remove(TagResolver.Builder builder, Iterable<String> tags) {
         try {
             if (resolversField == null) {
                 resolversField = builder.getClass().getDeclaredField("resolvers");
@@ -57,8 +74,8 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     @Override
     public @NotNull MiniMessage.Builder builder() {
         return MiniMessage.builder()
-                .editTags(it -> remove(it, "pride"))
-                .preProcessor(AdventureUtil::legacyToMiniMessage)
+                .editTags(it -> remove(it, disabledTags))
+                .preProcessor(this::legacyToMiniMessage)
                 .postProcessor(it -> it.decoration(TextDecoration.ITALIC, false));
     }
 
