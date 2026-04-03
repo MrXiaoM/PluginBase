@@ -2,9 +2,12 @@ package top.mrxiaom.pluginbase.utils.adventure.serializer;
 
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.chat.*;
+import top.mrxiaom.pluginbase.utils.Util;
 import top.mrxiaom.pluginbase.utils.adventure.serializer.converter.*;
 
 public class BungeeComponentSerializer {
+    protected static final boolean isModernHover = Util.isPresent("net.md_5.bungee.api.chat.hover.content.Text");
+
     public static BaseComponent serialize(Component input) {
         BaseComponent component = convert(input);
         for (Styles style : Styles.values()) {

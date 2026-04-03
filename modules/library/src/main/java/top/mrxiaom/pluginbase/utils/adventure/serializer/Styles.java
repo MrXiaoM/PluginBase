@@ -10,13 +10,16 @@ import net.kyori.adventure.text.format.TextColor;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ItemTag;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+
+import static top.mrxiaom.pluginbase.utils.adventure.serializer.BungeeComponentSerializer.isModernHover;
 
 @SuppressWarnings({"deprecation"})
 public enum Styles {
@@ -112,7 +115,8 @@ public enum Styles {
         HoverEvent<?> event = c.hoverEvent();
         if (event != null) {
             HoverEvent.Action<?> action = event.action();
-            try {
+            if (isModernHover) {
+                // 1.13+ 支持自定义 Content
                 if (action.equals(HoverEvent.Action.SHOW_TEXT)) {
                     Component value = (Component) event.value();
                     Text text = new Text(BungeeComponentSerializer.serialize(value));
@@ -132,10 +136,20 @@ public enum Styles {
                     Item item = new Item(type, count, ItemTag.ofNbt(nbt));
                     bc.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_ITEM, item));
                 }
-            } catch (Throwable ignored) {
+            } else {
+                // 1.12 及以下只能使用 BaseComponent[] 作为值
                 if (action.equals(HoverEvent.Action.SHOW_TEXT) && event.value() instanceof Component) {
                     BaseComponent[] components = new BaseComponent[] { BungeeComponentSerializer.serialize((Component) event.value()) };
                     bc.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, components));
+                }
+                if (action.equals(HoverEvent.Action.SHOW_ITEM) && event.value() instanceof HoverEvent.ShowItem) {
+                    HoverEvent.ShowItem showItem = (HoverEvent.ShowItem) event.value();
+                    String tag = showItem.nbt() == null ? "{}" : showItem.nbt().string();
+                    String id = showItem.item().asString();
+                    int count = showItem.count();
+                    String nbt = "{id:\"" + id + "\",Count:" + count + "b,tag:" + tag + "}";
+                    BaseComponent[] components = new TextComponent[] { new TextComponent(nbt) };
+                    bc.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_ITEM, components));
                 }
             }
         }
