@@ -2,12 +2,12 @@ package top.mrxiaom.pluginbase.utils.adventure.audience;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.utils.adventure.serializer.BungeeComponentSerializer;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.legacy.LegacyComponentSerializer;
 
 public class AudienceConsole implements Audience {
     private static boolean SUPPORT_BUNGEE = true;

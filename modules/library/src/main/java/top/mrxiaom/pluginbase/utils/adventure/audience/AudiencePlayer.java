@@ -5,7 +5,6 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.sound.SoundStop;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -15,6 +14,7 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.utils.adventure.serializer.BungeeComponentSerializer;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.legacy.LegacyComponentSerializer;
 
 public class AudiencePlayer implements Audience {
     private static boolean SUPPORT_BUNGEE = true;

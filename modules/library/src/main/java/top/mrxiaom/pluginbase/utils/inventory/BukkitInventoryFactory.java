@@ -1,11 +1,11 @@
 package top.mrxiaom.pluginbase.utils.inventory;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.legacy.LegacyComponentSerializer;
 
 public class BukkitInventoryFactory implements InventoryFactory {
     private final LegacyComponentSerializer legacy = LegacyComponentSerializer.legacySection();
