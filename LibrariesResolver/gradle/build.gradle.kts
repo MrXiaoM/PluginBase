@@ -15,6 +15,11 @@ rootProject.subprojects.forEach { subproject ->
     }
 }
 
+val targetJavaVersion = 11
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+}
+
 @Suppress("VulnerableLibrariesLocal")
 dependencies {
     compileOnly(gradleApi())
@@ -22,7 +27,7 @@ dependencies {
     implementation("com.google.guava:guava:21.0")
 }
 
-setupJava(8)
+setupJava(targetJavaVersion)
 setupJavadoc(false)
 setupPublishing(
     publishName = "LibrariesResolver-Gradle",
