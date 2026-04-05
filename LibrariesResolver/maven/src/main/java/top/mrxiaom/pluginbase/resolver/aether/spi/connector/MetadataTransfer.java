@@ -25,8 +25,6 @@ import java.io.File;
 
 /**
  * A download/upload of metadata.
- *
- * @noextend This class is not intended to be extended by clients.
  */
 public abstract class MetadataTransfer extends Transfer {
 

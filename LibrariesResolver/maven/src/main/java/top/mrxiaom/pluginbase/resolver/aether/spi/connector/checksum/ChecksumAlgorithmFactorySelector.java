@@ -26,8 +26,6 @@ import java.util.List;
  * Note: this component is NOT meant to be implemented or extended by client, is exposed ONLY to make clients
  * able to get {@link ChecksumAlgorithmFactory} instances.
  *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  * @since 1.8.0
  */
 public interface ChecksumAlgorithmFactorySelector {

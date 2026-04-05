@@ -28,9 +28,6 @@ import java.util.Map;
  * returns a new metadata instance and leaves the original instance unchanged. Implementors are strongly advised to obey
  * this contract. <em>Note:</em> Implementors are strongly advised to inherit from {@link AbstractMetadata} instead of
  * directly implementing this interface.
- *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
 public interface Metadata {
 

@@ -24,10 +24,6 @@ import top.mrxiaom.pluginbase.resolver.aether.transfer.RepositoryOfflineExceptio
 
 /**
  * Determines whether a remote repository is accessible in offline mode.
- *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
- * @provisional This type is provisional and can be changed, moved or removed without prior notice.
  */
 public interface OfflineController {
 

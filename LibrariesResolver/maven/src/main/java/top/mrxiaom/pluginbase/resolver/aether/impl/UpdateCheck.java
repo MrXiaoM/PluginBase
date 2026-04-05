@@ -29,7 +29,6 @@ import java.io.File;
  * @param <T>
  * @param <E>
  * @see UpdateCheckManager
- * @provisional This type is provisional and can be changed, moved or removed without prior notice.
  */
 public final class UpdateCheck<T, E extends RepositoryException> {
 

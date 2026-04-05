@@ -26,10 +26,6 @@ import top.mrxiaom.pluginbase.resolver.aether.repository.NoLocalRepositoryManage
 
 /**
  * Retrieves a local repository manager from the installed local repository manager factories.
- *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
- * @provisional This type is provisional and can be changed, moved or removed without prior notice.
  */
 public interface LocalRepositoryProvider {
 

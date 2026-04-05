@@ -25,8 +25,6 @@ import java.util.Map;
  * are a means to simplify the description of an artifact by referring to an artifact type instead of specifying the
  * various properties individually.
  *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  * @see ArtifactTypeRegistry
  * @see DefaultArtifact#DefaultArtifact(String, String, String, String, String, ArtifactType)
  */

@@ -54,9 +54,6 @@ import top.mrxiaom.pluginbase.resolver.aether.resolution.VersionResult;
  * <p>
  * When the repository system or the application integrating it is about to exit, invoke the {@link #shutdown()} to let
  * resolver system perform possible resource cleanups.
- *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
 public interface RepositorySystem {
 

@@ -24,9 +24,6 @@ import top.mrxiaom.pluginbase.resolver.aether.transfer.TransferResource;
 
 /**
  * Assists repository connectors in applying checksum policies to downloaded resources.
- *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
 public interface ChecksumPolicyProvider {
 

@@ -26,8 +26,6 @@ import top.mrxiaom.pluginbase.resolver.aether.resolution.VersionResult;
 
 /**
  * Evaluates artifact meta/pseudo versions.
- *
- * @provisional This type is provisional and can be changed, moved or removed without prior notice.
  */
 public interface VersionResolver {
 

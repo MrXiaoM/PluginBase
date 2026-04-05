@@ -27,10 +27,6 @@ import top.mrxiaom.pluginbase.resolver.aether.collection.DependencyCollectionExc
 /**
  * Given a collection of direct dependencies, recursively gathers their transitive dependencies and calculates the
  * dependency graph.
- *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
- * @provisional This type is provisional and can be changed, moved or removed without prior notice.
  */
 public interface DependencyCollector {
 

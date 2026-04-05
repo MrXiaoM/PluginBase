@@ -760,8 +760,6 @@ public final class ConflictResolver implements DependencyGraphTransformer {
      * A context used to hold information that is relevant for deriving the scope of a child dependency.
      *
      * @see ScopeDeriver
-     * @noinstantiate This class is not intended to be instantiated by clients in production code, the constructor may
-     *                change without notice and only exists to enable unit testing.
      */
     public static final class ScopeContext {
 
@@ -776,8 +774,6 @@ public final class ConflictResolver implements DependencyGraphTransformer {
          *
          * @param parentScope The scope of the parent dependency, may be {@code null}.
          * @param childScope The scope of the child dependency, may be {@code null}.
-         * @noreference This class is not intended to be instantiated by clients in production code, the constructor may
-         *              change without notice and only exists to enable unit testing.
          */
         public ScopeContext(String parentScope, String childScope) {
             this.parentScope = (parentScope != null) ? parentScope : "";
@@ -827,9 +823,6 @@ public final class ConflictResolver implements DependencyGraphTransformer {
 
     /**
      * A conflicting dependency.
-     *
-     * @noinstantiate This class is not intended to be instantiated by clients in production code, the constructor may
-     *                change without notice and only exists to enable unit testing.
      */
     public static final class ConflictItem {
 
@@ -883,8 +876,6 @@ public final class ConflictResolver implements DependencyGraphTransformer {
          *            of {@link ConflictResolver.ConflictItem#OPTIONAL_TRUE} and
          *            {@link ConflictResolver.ConflictItem#OPTIONAL_FALSE}.
          * @param scopes The derived scopes of the conflicting dependency, must not be {@code null}.
-         * @noreference This class is not intended to be instantiated by clients in production code, the constructor may
-         *              change without notice and only exists to enable unit testing.
          */
         public ConflictItem(
                 DependencyNode parent, DependencyNode node, int depth, int optionalities, String... scopes) {
@@ -989,8 +980,6 @@ public final class ConflictResolver implements DependencyGraphTransformer {
      *
      * @see VersionSelector
      * @see ScopeSelector
-     * @noinstantiate This class is not intended to be instantiated by clients in production code, the constructor may
-     *                change without notice and only exists to enable unit testing.
      */
     public static final class ConflictContext {
 
@@ -1022,8 +1011,6 @@ public final class ConflictResolver implements DependencyGraphTransformer {
          *            {@code null}.
          * @param conflictIds The mapping from dependency node to conflict id, must not be {@code null}.
          * @param items The conflict items in this context, must not be {@code null}.
-         * @noreference This class is not intended to be instantiated by clients in production code, the constructor may
-         *              change without notice and only exists to enable unit testing.
          */
         public ConflictContext(
                 DependencyNode root,

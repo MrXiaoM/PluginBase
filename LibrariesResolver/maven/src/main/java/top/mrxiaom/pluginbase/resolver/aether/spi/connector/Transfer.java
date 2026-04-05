@@ -23,8 +23,6 @@ import top.mrxiaom.pluginbase.resolver.aether.transfer.TransferListener;
 
 /**
  * An artifact/metadata transfer.
- *
- * @noextend This class is not intended to be extended by clients.
  */
 public abstract class Transfer {
 

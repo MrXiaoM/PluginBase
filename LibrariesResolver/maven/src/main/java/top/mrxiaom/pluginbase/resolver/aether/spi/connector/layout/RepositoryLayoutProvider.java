@@ -24,9 +24,6 @@ import top.mrxiaom.pluginbase.resolver.aether.transfer.NoRepositoryLayoutExcepti
 
 /**
  * Retrieves a repository layout from the installed layout factories.
- *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
 public interface RepositoryLayoutProvider {
 

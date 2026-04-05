@@ -25,10 +25,6 @@ import top.mrxiaom.pluginbase.resolver.aether.transfer.NoRepositoryConnectorExce
 
 /**
  * Retrieves a repository connector from the installed repository connector factories.
- *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
- * @provisional This type is provisional and can be changed, moved or removed without prior notice.
  */
 public interface RepositoryConnectorProvider {
 

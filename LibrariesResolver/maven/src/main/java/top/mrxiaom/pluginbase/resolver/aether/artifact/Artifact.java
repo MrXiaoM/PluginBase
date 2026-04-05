@@ -26,9 +26,6 @@ import java.util.Map;
  * data. <em>Note:</em> Artifact instances are supposed to be immutable, e.g. any exposed mutator method returns a new
  * artifact instance and leaves the original instance unchanged. <em>Note:</em> Implementors are strongly advised to
  * inherit from {@link AbstractArtifact} instead of directly implementing this interface.
- *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
 public interface Artifact {
 

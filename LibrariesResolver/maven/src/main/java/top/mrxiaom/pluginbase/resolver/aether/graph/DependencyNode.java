@@ -33,9 +33,6 @@ import top.mrxiaom.pluginbase.resolver.aether.version.VersionConstraint;
  * discover multiple paths leading to the same node instance unless the input graph is known to be a duplicate-free
  * tree. <em>Note:</em> Unless otherwise noted, implementation classes are not thread-safe and dependency nodes should
  * not be mutated by concurrent threads.
- *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
 public interface DependencyNode {
 

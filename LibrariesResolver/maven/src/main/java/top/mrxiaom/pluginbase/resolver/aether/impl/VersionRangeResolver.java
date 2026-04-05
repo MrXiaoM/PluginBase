@@ -26,8 +26,6 @@ import top.mrxiaom.pluginbase.resolver.aether.resolution.VersionRangeResult;
 
 /**
  * Parses and evaluates version ranges encountered in dependency declarations.
- *
- * @provisional This type is provisional and can be changed, moved or removed without prior notice.
  */
 public interface VersionRangeResolver {
 

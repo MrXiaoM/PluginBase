@@ -28,8 +28,6 @@ import top.mrxiaom.pluginbase.resolver.aether.graph.DependencyNode;
  *
  * @see top.mrxiaom.pluginbase.resolver.aether.RequestTrace
  * @since 1.8.1
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
 public interface CollectStepData {
     /**

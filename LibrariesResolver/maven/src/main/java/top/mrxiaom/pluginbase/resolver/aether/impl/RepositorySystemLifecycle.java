@@ -21,9 +21,6 @@ package top.mrxiaom.pluginbase.resolver.aether.impl;
 /**
  * Lifecycle managing component for repository system.
  *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
- * @provisional This type is provisional and can be changed, moved or removed without prior notice.
  * @since 1.9.0
  */
 public interface RepositorySystemLifecycle {

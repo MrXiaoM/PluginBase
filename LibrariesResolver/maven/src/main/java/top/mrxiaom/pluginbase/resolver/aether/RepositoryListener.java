@@ -27,8 +27,6 @@ package top.mrxiaom.pluginbase.resolver.aether;
  *
  * @see top.mrxiaom.pluginbase.resolver.aether.RepositorySystemSession#getRepositoryListener()
  * @see top.mrxiaom.pluginbase.resolver.aether.transfer.TransferListener
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
 public interface RepositoryListener {
 

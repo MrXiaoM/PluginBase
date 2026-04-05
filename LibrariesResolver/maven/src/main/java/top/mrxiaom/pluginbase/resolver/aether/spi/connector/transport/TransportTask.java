@@ -24,8 +24,6 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * A transport task.
- *
- * @noextend This class is not intended to be extended by clients.
  */
 public abstract class TransportTask {
 

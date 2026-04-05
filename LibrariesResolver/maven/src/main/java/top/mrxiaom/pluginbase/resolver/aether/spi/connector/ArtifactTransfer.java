@@ -25,8 +25,6 @@ import java.io.File;
 
 /**
  * A download/upload of an artifact.
- *
- * @noextend This class is not intended to be extended by clients.
  */
 public abstract class ArtifactTransfer extends Transfer {
 

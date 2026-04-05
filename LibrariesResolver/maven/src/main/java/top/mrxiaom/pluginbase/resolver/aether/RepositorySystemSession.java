@@ -41,9 +41,6 @@ import top.mrxiaom.pluginbase.resolver.aether.transfer.TransferListener;
  * supposed to be immutable and hence can safely be shared across an entire application and any concurrent threads
  * reading it. Components that wish to tweak some aspects of an existing session should use the copy constructor of
  * {@link DefaultRepositorySystemSession} and its mutators to derive a custom session.
- *
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
 public interface RepositorySystemSession {
 

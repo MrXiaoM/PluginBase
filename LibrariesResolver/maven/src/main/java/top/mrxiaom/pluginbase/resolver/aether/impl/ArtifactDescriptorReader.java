@@ -28,8 +28,6 @@ import top.mrxiaom.pluginbase.resolver.aether.resolution.ArtifactDescriptorResul
  * Provides information about an artifact that is relevant to transitive dependency resolution.
  * Each artifact is expected to have an accompanying <em>artifact descriptor</em> that among others lists
  * the direct dependencies of the artifact.
- *
- * @provisional This type is provisional and can be changed, moved or removed without prior notice.
  */
 public interface ArtifactDescriptorReader {
     /**
