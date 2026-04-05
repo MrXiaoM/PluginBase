@@ -253,6 +253,23 @@ public class ConfigUtils {
     }
 
     /**
+     * 获取可空的 Float 类型配置数据
+     * @param section 配置
+     * @param key 键
+     * @param def 默认值
+     */
+    public static Float getFloat(ConfigurationSection section, String key, Float def) {
+        String str = section.getString(key, null);
+        if (str != null) {
+            try {
+                return Float.parseFloat(str);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return def;
+    }
+
+    /**
      * 获取可空的 Integer 类型配置数据
      * @param section 配置
      * @param key 键

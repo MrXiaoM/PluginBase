@@ -24,9 +24,12 @@ public class ActionProviders {
             if (plugin.options.adventure()) {
                 ActionProviders.registerActionProvider(ActionActionBar.PROVIDER);
                 ActionProviders.registerActionProvider(ActionMessageAdventure.PROVIDER);
+                ActionProviders.registerActionProvider(ActionTitleAdventure.PROVIDER);
             } else {
                 ActionProviders.registerActionProvider(ActionMessage.PROVIDER);
+                ActionProviders.registerActionProvider(ActionTitle.PROVIDER);
             }
+            ActionProviders.registerActionProvider(ActionSound.PROVIDER);
             ActionProviders.registerActionProvider(ActionClose.PROVIDER);
             ActionProviders.registerActionProvider(ActionDelay.PROVIDER);
         } catch (Throwable ignored) {
