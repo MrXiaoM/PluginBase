@@ -13,6 +13,7 @@ dependencies {
 tasks {
     shadowJar {
         configurations.add(shadowLink)
+        configurations.add(project.configurations.runtimeClasspath.get())
         relocate("org.yaml.snakeyaml", "top.mrxiaom.pluginbase.configuration.snakeyaml")
     }
 }

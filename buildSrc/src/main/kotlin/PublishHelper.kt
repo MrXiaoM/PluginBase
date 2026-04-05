@@ -17,6 +17,7 @@ import org.gradle.plugins.signing.SigningExtension
 
 fun Project.setupJava(targetJavaVersion: Int, withDocuments: Boolean = true) {
     extensions.configure<JavaPluginExtension> {
+        disableAutoTargetJvm()
         val javaVersion = JavaVersion.toVersion(targetJavaVersion)
         if (JavaVersion.current() < javaVersion) {
             toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))

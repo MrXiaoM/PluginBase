@@ -1,6 +1,5 @@
 plugins {
     id("com.github.gmazzo.buildconfig")
-    id("com.gradleup.shadow")
 }
 
 buildConfig {

@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     api(gradleApi())
-    api("com.google.code.gson:gson:2.10.1")
+    api("com.google.code.gson:gson:2.13.2")
 
     api("org.apache.httpcomponents:httpclient:4.5.13")
     api("org.apache.httpcomponents:httpmime:4.5.13")
