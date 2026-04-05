@@ -1,8 +1,13 @@
+repositories {
+    maven("https://repo.papermc.io/repository/maven-public/")
+}
 
 dependencies {
-    applyLibraries("spigot-api", "compileOnly")
     applyLibraries("adventure", "compileOnly")
     implementation(project(":modules:library"))
+
+    compileOnly("com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot:26.1")
 }
 
 setupPublishing(
