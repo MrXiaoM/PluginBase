@@ -72,19 +72,28 @@ buildConfig {
         val publication = publishing.publications.filterIsInstance<MavenPublication>().firstOrNull() ?: return null
         return "${publication.groupId}:${publication.artifactId}:${publication.version}"
     }
+    fun com.github.gmazzo.buildconfig.BuildConfigClassSpec.field(name: String, value: String) {
+        buildConfigField("String", name, "\"$value\"")
+    }
 
     forClass("top.mrxiaom.gradle", "LibrariesResolver") {
         for (proj in project(":LibrariesResolver").subprojects) {
             if (proj == project) continue
             val dep = dependency(proj) ?: continue
-            buildConfigField("String", name(proj), "\"$dep\"")
+            field(name(proj), dep)
         }
     }
     forClass("top.mrxiaom.gradle", "PluginBase") {
         for (proj in project(":modules").subprojects) {
             val dep = dependency(proj) ?: continue
-            buildConfigField("String", name(proj), "\"$dep\"")
+            field(name(proj), "\"$dep\"")
         }
-        buildConfigField("String", "VERSION", "\"${project.version}\"")
+        field("VERSION", project.version.toString())
+    }
+    forClass("top.mrxiaom.gradle", "Depend") {
+        field("annotations", "org.jetbrains:annotations:24.0.0")
+        field("HikariCP", "com.zaxxer:HikariCP:4.0.3")
+        field("EvalEx", "top.mrxiaom:EvalEx-j8:3.4.0")
+        field("nbtapi", "de.tr7zw:item-nbt-api:2.15.7")
     }
 }

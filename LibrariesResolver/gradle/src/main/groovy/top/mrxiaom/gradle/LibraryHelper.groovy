@@ -45,6 +45,10 @@ class LibraryHelper {
      * 当前版本的 PluginBase 各模块依赖简要声明字符串
      */
     public final PluginBase modules = new PluginBase()
+    /**
+     * 当前 PluginBase 推荐使用的依赖的简要声明字符串
+     */
+    public final Depend depend = new Depend()
     LibraryHelper(@NotNull Project project) {
         this(project, project.getConfigurations().create("libraryGroup", it -> {
             it.setCanBeResolved(true)
