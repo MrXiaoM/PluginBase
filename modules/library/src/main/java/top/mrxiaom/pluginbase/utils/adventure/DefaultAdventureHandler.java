@@ -86,9 +86,11 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
 
     @Override
     public @NotNull Audience of(@NotNull CommandSender sender) {
+        // Paper: 使用本地 adventure 实现
         if (sender instanceof Audience) {
             return (Audience) sender;
         }
+        // Spigot: 使用转换为 BungeeCord Chat Components 发送的实现
         if (sender instanceof ConsoleCommandSender) {
             return AudienceConsole.INSTANCE;
         }
@@ -97,7 +99,7 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
             UUID uuid = player.getUniqueId();
             return CollectionUtils.getOrPut(players, uuid, () -> new AudiencePlayer(player));
         }
-        return new Audience() {};
+        return Audience.empty();
     }
 
     @Override
