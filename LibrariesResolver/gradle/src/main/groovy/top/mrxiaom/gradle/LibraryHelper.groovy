@@ -1,6 +1,7 @@
 package top.mrxiaom.gradle
 
 import com.google.common.collect.Iterables
+import com.google.common.collect.Lists
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -62,6 +63,32 @@ class LibraryHelper {
         this.project = project
         this.configuration = configuration
         this.targetConfiguration = targetConfiguration
+    }
+
+    static List<String> adventure(
+            String adventureVersion = "4.22.0",
+            List<String> modules = Lists.newArrayList(
+                    "api",
+                    "text-minimessage",
+                    "text-serializer-gson",
+                    "text-serializer-plain",
+            )
+    ) {
+        List<String> list = new ArrayList<>()
+        for (final def artifactPart in modules) {
+            list.add("net.kyori:adventure-$artifactPart:$adventureVersion")
+        }
+        return list
+    }
+
+    void library(List<String> dependencyNotations) {
+        dependencyNotations.forEach(this::library)
+    }
+
+    void library(List<String> dependencyNotations, Consumer<ExternalModuleDependency> consumer) {
+        for (final def dependencyNotation in dependencyNotations) {
+            library(dependencyNotation, consumer)
+        }
     }
 
     void library(String dependencyNotation) {
