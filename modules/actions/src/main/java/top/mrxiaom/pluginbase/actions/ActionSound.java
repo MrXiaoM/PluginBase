@@ -22,17 +22,17 @@ public class ActionSound implements IAction {
                 if (sound != null) {
                     float volume = ConfigUtils.getFloat(section, "volume", 1.0f);
                     float pitch = ConfigUtils.getFloat(section, "pitch", 1.0f);
-                    return new ActionSound(sound, volume, pitch);
+                    return new ActionSound(sound.toLowerCase(), volume, pitch);
                 }
             }
         } else {
             String s = String.valueOf(input);
             if (s.startsWith("[sound]")) {
-                String[] split = s.split(",");
-                String sound = split[0];
-                float volume = split.length > 1 ? Util.parseFloat(split[1]).orElse(1.0f) : 1.0f;
-                float pitch = split.length > 2 ? Util.parseFloat(split[2]).orElse(1.0f) : 1.0f;
-                return new ActionSound(sound, volume, pitch);
+                String[] split = s.substring(7).split(",");
+                String sound = split[0].trim();
+                float volume = split.length > 1 ? Util.parseFloat(split[1].trim()).orElse(1.0f) : 1.0f;
+                float pitch = split.length > 2 ? Util.parseFloat(split[2].trim()).orElse(1.0f) : 1.0f;
+                return new ActionSound(sound.toLowerCase(), volume, pitch);
             }
         }
         return null;
