@@ -38,14 +38,22 @@ public class ActionProviders {
 
     @NotNull
     public static List<IAction> loadActions(@NotNull ConfigurationSection section, @NotNull String key) {
-        return loadActions(ConfigUtils.getList(section, key));
+        if (section.contains(key)) {
+            List<Object> list = ConfigUtils.getList(section, key);
+            if (list.isEmpty()) return new ArrayList<>();
+            return loadActions(list);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @NotNull
     public static List<IAction> loadActions(@NotNull ConfigurationSection section, @NotNull String... keys) {
         List<Object> list = new ArrayList<>();
         for (String key : keys) {
-            list.addAll(ConfigUtils.getList(section, key));
+            if (section.contains(key)) {
+                list.addAll(ConfigUtils.getList(section, key));
+            }
         }
         if (list.isEmpty()) return new ArrayList<>();
         return loadActions(list);
