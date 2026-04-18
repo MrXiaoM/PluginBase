@@ -136,13 +136,7 @@ public class ConfigUtils {
         if (rawList == null) return list;
         for (Object obj : rawList) {
             if (obj instanceof Map) {
-                Map<?, ?> map = (Map<?, ?>) obj;
-                MemoryConfiguration section = new MemoryConfiguration();
-                for (Map.Entry<?, ?> entry : map.entrySet()) {
-                    String sectionKey = entry.getKey().toString();
-                    section.set(sectionKey, processValue(section, sectionKey, entry.getValue()));
-                }
-                list.add(section);
+                list.add(toSection((Map<?, ?>) obj));
                 continue;
             }
             if (obj instanceof ConfigurationSection) {
@@ -150,6 +144,16 @@ public class ConfigUtils {
             }
         }
         return list;
+    }
+
+    @NotNull
+    public static ConfigurationSection toSection(Map<?, ?> map) {
+        MemoryConfiguration section = new MemoryConfiguration();
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            String sectionKey = entry.getKey().toString();
+            section.set(sectionKey, processValue(section, sectionKey, entry.getValue()));
+        }
+        return section;
     }
 
     private static Object processValue(ConfigurationSection parent, String key, Object value) {
