@@ -249,7 +249,7 @@ class LibraryHelper {
         return list
     }
 
-    static void initJava(Project project, LibraryHelper base, int targetJavaVersion, boolean extraJar) {
+    static void initJava(Project project, LibraryHelper base, int targetJavaVersion, boolean extraJar, String version = String.valueOf(project.version)) {
         project.extensions.configure(JavaPluginExtension.class) {
             it.disableAutoTargetJvm()
             def javaVersion = JavaVersion.toVersion(targetJavaVersion)
@@ -267,7 +267,7 @@ class LibraryHelper {
         def copyTask = tasks.register("copyBuildArtifact", Copy.class) {
             it.dependsOn(shadowJar)
             it.from(shadowJar.get().outputs)
-            it.rename((_) -> "${project.name}-${project.version}.jar")
+            it.rename((_) -> "${project.name}-${version}.jar")
             it.into(project.rootProject.file("out"))
         }
         tasks.named("build") {
@@ -321,9 +321,13 @@ class LibraryHelper {
                     it.artifactId = project.name
                     it.version = project.version.toString()
 
-                    it.artifact(project.tasks.named("shadowJar")).classifier = null
-                    it.artifact(project.tasks.named("sourcesJar"))
-                    it.artifact(project.tasks.named("javadocJar"))
+                    def mainJar = project.tasks.named("shadowJar").orElse(project.tasks.named("jar"))
+                    def sourcesJar = project.tasks.named("sourcesJar")
+                    def javadocJar = project.tasks.named("javadocJar")
+
+                    if (mainJar.isPresent()) it.artifact(mainJar).classifier = null
+                    if (sourcesJar.isPresent()) it.artifact(sourcesJar)
+                    if (javadocJar.isPresent()) it.artifact(javadocJar)
                 }
             }
         }
