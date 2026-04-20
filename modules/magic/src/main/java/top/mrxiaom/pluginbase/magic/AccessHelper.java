@@ -35,7 +35,20 @@ public class AccessHelper<Target> {
                 methodName,
                 MethodType.methodType(returnType, parameterTypes)
         );
-        return new MethodHolder(targetClass, lookup, handle, returnType, methodName, parameterTypes);
+        return new MethodHolder(targetClass, lookup, handle, returnType, methodName, parameterTypes, false);
+    }
+
+    public MethodHolder staticMethod(
+            Class<?> returnType,
+            String methodName,
+            Class<?>... parameterTypes
+    ) throws ReflectiveOperationException {
+        MethodHandle handle = lookup.findVirtual(
+                targetClass,
+                methodName,
+                MethodType.methodType(returnType, parameterTypes)
+        );
+        return new MethodHolder(targetClass, lookup, handle, returnType, methodName, parameterTypes, true);
     }
 
     public <FieldType> FieldHolder<Target, FieldType> field(
