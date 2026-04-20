@@ -51,7 +51,7 @@ public class ActionMessageAdventure implements IAction {
     public ActionMessageAdventure(@NotNull String message, @Nullable List<String> hoverLines, @Nullable String clickAction, @Nullable String clickValue) {
         this.message = message;
         this.hoverLines = hoverLines;
-        this.clickAction = clickAction;
+        this.clickAction = clickAction == null ? null : clickAction.replace("-", "_").toUpperCase();
         this.clickValue = clickValue;
     }
 
