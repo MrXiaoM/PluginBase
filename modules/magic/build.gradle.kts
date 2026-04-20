@@ -1,7 +1,6 @@
 
 dependencies {
     applyLibraries("spigot-api", "compileOnly")
-    implementation(project(":modules:library"))
 }
 
 val java9 by sourceSets.creating {
