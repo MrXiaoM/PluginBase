@@ -298,7 +298,7 @@ class LibraryHelper {
             it.duplicatesStrategy = DuplicatesStrategy.INCLUDE
             it.from(sourceSets.named("main").get().resources.srcDirs) { CopySpec copy ->
                 Map<String, Object> map = new HashMap<>()
-                map.put("version", project.version)
+                map.put("version", version)
                 if (base != null) {
                     def joiner = new StringJoiner("\"\n  - \"")
                     for (final def lib in base.getAddedLibraries()) {
@@ -313,13 +313,13 @@ class LibraryHelper {
         }
     }
 
-    static void initPublishing(Project project) {
+    static void initPublishing(Project project, String groupId = project.group.toString(), String name = project.name, String version = project.version.toString()) {
         project.extensions.configure(PublishingExtension.class) {
             it.publications {
                 it.create("maven", MavenPublication.class) {
-                    it.groupId = project.group.toString()
-                    it.artifactId = project.name
-                    it.version = project.version.toString()
+                    it.groupId = groupId
+                    it.artifactId = name
+                    it.version = version
 
                     def mainJar = project.tasks.named("shadowJar").orElse(project.tasks.named("jar"))
                     def sourcesJar = project.tasks.named("sourcesJar")
