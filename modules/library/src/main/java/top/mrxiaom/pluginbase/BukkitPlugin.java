@@ -36,6 +36,7 @@ import top.mrxiaom.pluginbase.utils.scheduler.BukkitScheduler;
 import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -489,8 +490,32 @@ public abstract class BukkitPlugin extends JavaPlugin {
             return;
         }
 
-        String packageName = options.scanPackage != null ? options.scanPackage : getClass().getPackage().getName();
-        Set<Class<?>> classes = Util.getClasses(getFile(), packageName, options.scanIgnore);
+        Set<Class<?>> classes;
+        InputStream holdersIn = getClassLoader().getResourceAsStream("META-INF/PluginBaseHolders");
+        if (holdersIn != null) {
+            // 存在预扫描文件时，直接读取文件内容
+            classes = new TreeSet<>(Comparator.comparing(Class::getName));
+            try (InputStream in = holdersIn;
+                InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(reader)
+            ) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String className = line.trim();
+                    if (className.isEmpty()) continue;
+                    try {
+                        classes.add(Class.forName(className));
+                    } catch (ClassNotFoundException | LinkageError ignored) {
+                    }
+                }
+            } catch (IOException e) {
+                warn("无法读取 META-INF/PluginBaseHolders，请联系插件开发者", e);
+            }
+        } else {
+            // 不存在预扫描文件时，读取 jar 包文件来扫描
+            String packageName = options.scanPackage != null ? options.scanPackage : getClass().getPackage().getName();
+            classes = Util.getClasses(getFile(), packageName, options.scanIgnore);
+        }
         for (Class<?> clazz : classes) {
             if (clazz.isInterface() || clazz.isAnnotation() || clazz.isEnum()) continue;
             if (!AbstractPluginHolder.class.isAssignableFrom(clazz)) continue;
