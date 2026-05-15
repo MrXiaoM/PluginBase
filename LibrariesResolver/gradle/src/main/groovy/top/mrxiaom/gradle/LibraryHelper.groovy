@@ -2,7 +2,6 @@ package top.mrxiaom.gradle
 
 import com.google.common.collect.Iterables
 import com.google.common.collect.Lists
-import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ExternalModuleDependency
@@ -247,6 +246,11 @@ class LibraryHelper {
             }
         }
         return list
+    }
+
+    void collectPluginHolders() {
+        project.dependencies.add("compileOnly", "top.mrxiaom:LibrariesResolver-Gradle:${modules.VERSION}")
+        project.dependencies.add("annotationProcessor", "top.mrxiaom:LibrariesResolver-Gradle:${modules.VERSION}")
     }
 
     static void initJava(Project project, LibraryHelper base, int targetJavaVersion, boolean extraJar, String version = String.valueOf(project.version)) {

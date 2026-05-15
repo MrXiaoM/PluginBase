@@ -25,6 +25,9 @@ dependencies {
     compileOnly(gradleApi())
     compileOnly("org.jetbrains:annotations:24.0.0")
     implementation("com.google.guava:guava:21.0")
+
+    compileOnly("com.google.auto.service:auto-service:1.1.1")
+    annotationProcessor("com.google.auto.service:auto-service:1.1.1")
 }
 
 setupJava(targetJavaVersion)
