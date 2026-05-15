@@ -250,11 +250,14 @@ class LibraryHelper {
     }
 
     static void initJava(Project project, LibraryHelper base, int targetJavaVersion, boolean extraJar, String version = String.valueOf(project.version)) {
+        initJava(project, base, null, targetJavaVersion, extraJar, version)
+    }
+
+    static void initJava(Project project, LibraryHelper base, Integer toolchainVersion, int targetJavaVersion, boolean extraJar, String version = String.valueOf(project.version)) {
         project.extensions.configure(JavaPluginExtension.class) {
             it.disableAutoTargetJvm()
-            def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-            if (JavaVersion.current() < javaVersion) {
-                it.toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
+            if (toolchainVersion != null) {
+                it.toolchain.languageVersion.set(JavaLanguageVersion.of(toolchainVersion))
             }
             if (extraJar) {
                 it.withJavadocJar()
@@ -289,9 +292,7 @@ class LibraryHelper {
         tasks.withType(JavaCompile.class).configureEach {
             it.options.encoding = "UTF-8"
             it.options.compilerArgs.add("-Xlint:-options")
-            if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-                it.options.release.set(targetJavaVersion)
-            }
+            it.options.release.set(targetJavaVersion)
         }
         def sourceSets = (SourceSetContainer) project.extensions.getByName("sourceSets")
         tasks.named("processResources", ProcessResources.class) {

@@ -93,7 +93,7 @@ buildConfig {
     forClass("top.mrxiaom.gradle", "Depend") {
         field("annotations", "org.jetbrains:annotations:24.0.0")
         field("HikariCP", "com.zaxxer:HikariCP:4.0.3")
-        field("EvalEx", "top.mrxiaom:EvalEx-j8:3.4.0")
+        field("EvalEx", "top.mrxiaom:EvalEx-j8:3.6.1")
         field("nbtapi", "de.tr7zw:item-nbt-api:2.15.7")
     }
 }
