@@ -9,6 +9,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.text.object.ObjectContents;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -36,6 +37,8 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
         put("shadow", c -> c.style().shadowColor(ShadowColor.none()));
         put("font", c -> c.style().font(Key.key("default")));
         put("gradient", c -> c.style().color(TextColor.color(255, 255, 255)));
+        put("head", c -> Component.object().contents(ObjectContents.playerHead("Steve")));
+        put("sprite", c -> Component.object().contents(ObjectContents.sprite(Key.key("blocks"), Key.key("block/stone"))));
     }};
     private final List<String> disabledTags = new ArrayList<>();
     private final Map<UUID, AudiencePlayer> players = new HashMap<>();
