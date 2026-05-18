@@ -19,7 +19,7 @@ subprojects {
     )
     setupLibraries(
         key="nbt-api",
-        "de.tr7zw:item-nbt-api:2.15.0",
+        "de.tr7zw:item-nbt-api:2.15.7",
     )
     setupLibraries(
         key="adventure",
