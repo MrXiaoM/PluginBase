@@ -166,6 +166,30 @@ public class AdventureUtil {
     }
 
     /**
+     * 返回 Component 的所有文字，不带任何颜色和格式
+     */
+    @NotNull
+    public static String plain(@NotNull Component component) {
+        return handler.plain(component);
+    }
+
+    /**
+     * 将 Component 转换为旧版样式代码，使用 <code>&</code> 作为控制符
+     */
+    @NotNull
+    public static String legacyAmpersand(@NotNull Component component) {
+        return handler.legacyAmpersand(component);
+    }
+
+    /**
+     * 将 Component 转换为旧版样式代码，使用 <code>§</code> 作为控制符
+     */
+    @NotNull
+    public static String legacySection(@NotNull Component component) {
+        return handler.legacySection(component);
+    }
+
+    /**
      * 移除文本组件中所有的 hover event 和 click event。
      */
     @Contract("null->null")

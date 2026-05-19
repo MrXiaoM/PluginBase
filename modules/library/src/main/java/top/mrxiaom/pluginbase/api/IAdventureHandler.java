@@ -2,6 +2,7 @@ package top.mrxiaom.pluginbase.api;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.flattener.ComponentFlattener;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -9,8 +10,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.List;
+import java.util.Objects;
 
 public interface IAdventureHandler {
     @NotNull
@@ -63,6 +66,26 @@ public interface IAdventureHandler {
     @NotNull
     default List<String> miniMessage_(List<Component> components) {
         return miniMessage_(miniMessage(), components);
+    }
+
+    @NotNull
+    default String plain(@NotNull Component component) {
+        Component input = Objects.requireNonNull(component, "component");
+        StringBuilder sb = new StringBuilder();
+        ComponentFlattener.basic().flatten(input, sb::append);
+        return sb.toString();
+    }
+
+    @NotNull
+    default String legacyAmpersand(@NotNull Component component) {
+        Component input = Objects.requireNonNull(component, "component");
+        return LegacyComponentSerializer.legacyAmpersand().serialize(input);
+    }
+
+    @NotNull
+    default String legacySection(@NotNull Component component) {
+        Component input = Objects.requireNonNull(component, "component");
+        return LegacyComponentSerializer.legacySection().serialize(input);
     }
 
     void sendTitle(@NotNull Player player, @NotNull Component title, @NotNull Component subTitle, int fadeIn, int stay, int fadeOut);
