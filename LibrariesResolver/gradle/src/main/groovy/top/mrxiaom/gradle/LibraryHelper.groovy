@@ -65,7 +65,7 @@ class LibraryHelper {
     }
 
     static List<String> adventure(
-            String adventureVersion = "4.22.0",
+            String adventureVersion = "4.25.0",
             List<String> modules = Lists.newArrayList(
                     "api",
                     "text-minimessage",
