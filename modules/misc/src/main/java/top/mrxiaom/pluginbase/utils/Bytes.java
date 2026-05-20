@@ -48,6 +48,10 @@ public class Bytes {
         whoever.sendPluginMessage(BukkitPlugin.getInstance(), channel, bytes);
     }
 
+    public static void forwardToAll(@NotNull String channel, @NotNull DataConsumer data) {
+        sendByWhoeverOrNot("BungeeCord", build(data, "Forward", "ALL", channel));
+    }
+
     public static ByteArrayDataOutput newDataOutput() {
         return new ByteArrayDataOutputStream(new ByteArrayOutputStream());
     }
