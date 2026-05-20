@@ -60,11 +60,38 @@ public class Duration {
     }
 
     public String getDisplay(String daysText, String hoursText, String minutesText, String secondsText) {
-        StringJoiner joiner = new StringJoiner("");
+        return getDisplay("", daysText, hoursText, minutesText, secondsText);
+    }
+
+    public String getDisplay(String delimiter, String daysText, String hoursText, String minutesText, String secondsText) {
+        StringJoiner joiner = new StringJoiner(delimiter);
         if (days > 0) joiner.add(days + daysText);
         if (hours > 0) joiner.add(hours + hoursText);
         if (minutes > 0) joiner.add(minutes + minutesText);
         if (seconds > 0) joiner.add(seconds + secondsText);
+        return joiner.toString();
+    }
+
+    public String getDisplay(
+            String delimiter,
+            String dayText, String daysText,
+            String hourText, String hoursText,
+            String minuteText, String minutesText,
+            String secondText, String secondsText
+    ) {
+        StringJoiner joiner = new StringJoiner(delimiter);
+        if (days > 0) {
+            joiner.add(days + (days > 1 ? daysText : dayText));
+        }
+        if (hours > 0) {
+            joiner.add(hours + (hours > 1 ? hoursText : hourText));
+        }
+        if (minutes > 0) {
+            joiner.add(minutes + (minutes > 1 ? minutesText : minuteText));
+        }
+        if (seconds > 0) {
+            joiner.add(seconds + (seconds > 1 ? secondsText : secondText));
+        }
         return joiner.toString();
     }
 
