@@ -2,6 +2,7 @@ package top.mrxiaom.pluginbase.data;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 import top.mrxiaom.pluginbase.utils.CollectionUtils;
 import top.mrxiaom.pluginbase.utils.Util;
 
@@ -48,11 +49,26 @@ public class Duration {
         return totalSeconds;
     }
 
-    public LocalDateTime addFrom(LocalDateTime time) {
-        return time.plusDays(days)
+    public LocalDateTime addFrom(LocalDateTime dateTime) {
+        return dateTime.plusDays(days)
                 .plusHours(hours)
                 .plusMinutes(minutes)
                 .plusSeconds(seconds);
+    }
+
+    public LocalDateTime minusFrom(LocalDateTime dateTime) {
+        return dateTime.minusDays(days)
+                .minusHours(hours)
+                .minusMinutes(minutes)
+                .minusSeconds(seconds);
+    }
+
+    public Duration add(Duration other) {
+        return fromTotalSeconds(totalSeconds + other.totalSeconds);
+    }
+
+    public Duration minus(Duration other) {
+        return fromTotalSeconds(Math.max(0, totalSeconds - other.totalSeconds));
     }
 
     public String getDisplay() {
@@ -114,7 +130,9 @@ public class Duration {
      * 根据时间段的总秒数来解析间隔时间
      * @param totalSeconds 总秒数
      */
-    public static Duration fromTotalSeconds(long totalSeconds) {
+    public static Duration fromTotalSeconds(
+            @Range(from = 0, to = Long.MAX_VALUE) long totalSeconds
+    ) {
         int days = (int)((totalSeconds / 86400));
         int hours = (int)((totalSeconds / 3600) % 24);
         int minutes = (int)((totalSeconds / 60) % 60);
