@@ -1,9 +1,15 @@
 package top.mrxiaom.pluginbase.data;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.utils.CollectionUtils;
+import top.mrxiaom.pluginbase.utils.Util;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.StringJoiner;
 
 public class Duration {
@@ -141,4 +147,39 @@ public class Duration {
         }
         return Result.ok(new Duration(days, hours, minutes, seconds));
     }
+
+    @Nullable
+    public static LocalDate parseLocalDateOrNull(@Nullable String str) {
+        return parseLocalDateOrNull(str, "-");
+    }
+
+    @Nullable
+    public static LocalDate parseLocalDateOrNull(@Nullable String str, @NotNull String splitter) {
+        if (str == null || str.isEmpty()) return null;
+        List<String> dateSplit = CollectionUtils.split(str, splitter, 3);
+        if (dateSplit.size() != 3) return null;
+        Integer year = Util.parseInt(dateSplit.get(0)).orElse(null);
+        Integer month = Util.parseInt(dateSplit.get(1)).orElse(null);
+        Integer date = Util.parseInt(dateSplit.get(2)).orElse(null);
+        if (year == null || month == null || date == null) return null;
+        return LocalDate.of(year, month, date);
+    }
+
+    @Nullable
+    public static LocalTime parseLocalTimeOrNull(@Nullable String str) {
+        return parseLocalTimeOrNull(str, ":");
+    }
+
+    @Nullable
+    public static LocalTime parseLocalTimeOrNull(@Nullable String str, @NotNull String splitter) {
+        if (str == null || str.isEmpty()) return null;
+        List<String> split = CollectionUtils.split(str, splitter, 3);
+        int size = split.size();
+        Integer hour = size > 0 ? Util.parseInt(split.get(0)).orElse(null) : Integer.valueOf(0);
+        Integer minute = size > 1 ? Util.parseInt(split.get(1)).orElse(null) : Integer.valueOf(0);
+        Integer second = size > 2 ? Util.parseInt(split.get(2)).orElse(null) : Integer.valueOf(0);
+        if (hour == null || minute == null || second == null) return null;
+        return LocalTime.of(hour, minute, second);
+    }
+
 }
