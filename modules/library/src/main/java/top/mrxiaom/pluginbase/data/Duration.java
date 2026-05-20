@@ -3,11 +3,12 @@ package top.mrxiaom.pluginbase.data;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.StringJoiner;
 
 public class Duration {
     private final int days, hours, minutes, seconds;
-    private final int totalSeconds;
+    private final long totalSeconds;
 
     public Duration(int days, int hours, int minutes, int seconds) {
         this.days = days;
@@ -15,9 +16,9 @@ public class Duration {
         this.minutes = minutes;
         this.seconds = seconds;
         this.totalSeconds =
-                days * 24 * 60 * 60
-                + hours * 60 * 60
-                + minutes * 60
+                days * 24L * 60L * 60L
+                + hours * 60L * 60L
+                + minutes * 60L
                 + seconds;
     }
 
@@ -37,7 +38,7 @@ public class Duration {
         return seconds;
     }
 
-    public int getTotalSeconds() {
+    public long getTotalSeconds() {
         return totalSeconds;
     }
 
@@ -64,6 +65,28 @@ public class Duration {
     @Override
     public String toString() {
         return getDisplay("d", "h", "m", "s");
+    }
+
+    /**
+     * 计算两个时间点之间的间隔时间
+     * @param startTime 起始时间
+     * @param endTime 结束时间
+     */
+    public static Duration between(LocalDateTime startTime, LocalDateTime endTime) {
+        long totalSeconds = endTime.toEpochSecond(ZoneOffset.UTC) - startTime.toEpochSecond(ZoneOffset.UTC);
+        return fromTotalSeconds(totalSeconds);
+    }
+
+    /**
+     * 根据时间段的总秒数来解析间隔时间
+     * @param totalSeconds 总秒数
+     */
+    public static Duration fromTotalSeconds(long totalSeconds) {
+        int days = (int)((totalSeconds / 86400));
+        int hours = (int)((totalSeconds / 3600) % 24);
+        int minutes = (int)((totalSeconds / 60) % 60);
+        int seconds = (int)(totalSeconds % 60);
+        return new Duration(days, hours, minutes, seconds);
     }
 
     /**
