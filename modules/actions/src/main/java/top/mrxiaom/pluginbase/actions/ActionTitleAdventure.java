@@ -55,8 +55,8 @@ public class ActionTitleAdventure implements IAction {
     @Override
     public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
         if (player != null) {
-            String title = PAPI.setPlaceholders(player, Pair.replace(this.title, replacements));
-            String subtitle = PAPI.setPlaceholders(player, Pair.replace(this.subtitle, replacements));
+            String title = Pair.replace(PAPI.setPlaceholders(player, this.title), replacements);
+            String subtitle = Pair.replace(PAPI.setPlaceholders(player, this.subtitle), replacements);
             AdventureUtil.sendTitle(player, title, subtitle, fadeIn, stay, fadeOut);
         }
     }

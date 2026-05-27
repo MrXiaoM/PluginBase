@@ -49,7 +49,7 @@ public class ActionBroadcastMessage implements IAction {
     public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
         String str;
         if (player != null) {
-            str = PAPI.setPlaceholders(player, Pair.replace(message, replacements));
+            str = Pair.replace(PAPI.setPlaceholders(player, message), replacements);
         } else {
             str = Pair.replace(message, replacements);
         }

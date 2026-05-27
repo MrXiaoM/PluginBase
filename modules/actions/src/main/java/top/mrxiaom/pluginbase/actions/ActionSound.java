@@ -49,7 +49,7 @@ public class ActionSound implements IAction {
     public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
         if (player != null) {
             Location location = player.getLocation();
-            String sound = PAPI.setPlaceholders(player, Pair.replace(this.sound, replacements));
+            String sound = Pair.replace(PAPI.setPlaceholders(player, this.sound), replacements);
             player.playSound(location, sound, volume, pitch);
         }
     }

@@ -46,11 +46,10 @@ public class ActionMessage implements IAction {
 
     @Override
     public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
-        String s = Pair.replace(message, replacements);
         if (player != null) {
-            t(player, PAPI.setPlaceholders(player, s));
+            t(player, Pair.replace(PAPI.setPlaceholders(player, message), replacements));
         } else {
-            t(Bukkit.getConsoleSender(), s);
+            t(Bukkit.getConsoleSender(), Pair.replace(message, replacements));
         }
     }
 }

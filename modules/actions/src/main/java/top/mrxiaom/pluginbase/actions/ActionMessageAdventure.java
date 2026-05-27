@@ -60,7 +60,7 @@ public class ActionMessageAdventure implements IAction {
         String s = Pair.replace(message, replacements);
         Component component;
         if (player != null) {
-            component = parseComponent(PAPI.setPlaceholders(player, Pair.replace(message, replacements)), hoverLines, clickAction, clickValue);
+            component = parseComponent(Pair.replace(PAPI.setPlaceholders(player, message), replacements), hoverLines, clickAction, clickValue);
             AdventureUtil.sendMessage(player, component);
         } else {
             component = parseComponent(Pair.replace(message, replacements), hoverLines, clickAction, clickValue);

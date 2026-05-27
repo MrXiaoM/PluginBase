@@ -59,7 +59,7 @@ public class ActionBroadcastMessageAdventure implements IAction {
     public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
         Component component;
         if (player != null) {
-            String str = PAPI.setPlaceholders(player, Pair.replace(message, replacements));
+            String str = Pair.replace(PAPI.setPlaceholders(player, message), replacements);
             component = ActionMessageAdventure.parseComponent(str, hoverLines, clickAction, clickValue);
         } else {
             String str = Pair.replace(message, replacements);

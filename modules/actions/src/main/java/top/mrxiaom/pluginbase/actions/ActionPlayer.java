@@ -46,7 +46,7 @@ public class ActionPlayer implements IAction {
     @Override
     public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
         if (player != null) {
-            String commandLine = PAPI.setPlaceholders(player, Pair.replace(command, replacements));
+            String commandLine = Pair.replace(PAPI.setPlaceholders(player, command), replacements);
             if (commandLine.trim().isEmpty()) {
                 BukkitPlugin.getInstance().warn("无法运行操作 '[player]" + command + "'，其解析后的命令为空");
                 return;
