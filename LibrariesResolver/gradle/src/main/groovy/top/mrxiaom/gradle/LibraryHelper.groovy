@@ -70,7 +70,6 @@ class LibraryHelper {
                     "api",
                     "text-minimessage",
                     "text-serializer-gson",
-                    "text-serializer-plain",
             )
     ) {
         List<String> list = new ArrayList<>()
