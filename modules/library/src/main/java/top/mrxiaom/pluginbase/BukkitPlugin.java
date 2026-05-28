@@ -34,6 +34,7 @@ import top.mrxiaom.pluginbase.utils.item.LegacyItemEditor;
 import top.mrxiaom.pluginbase.utils.scheduler.BukkitScheduler;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
@@ -425,6 +426,13 @@ public abstract class BukkitPlugin extends JavaPlugin {
     }
 
     /**
+     * 在服务器启动完毕后执行的操作
+     */
+    protected void afterServerLoaded() {
+
+    }
+
+    /**
      * 在插件卸载时，最先执行的操作
      */
     protected void beforeDisable() {
@@ -477,7 +485,6 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     @Override
     @Deprecated
-    @SuppressWarnings({"unchecked"})
     public void onEnable() {
         Util.init(this);
         inventory = initInventoryFactory();
@@ -551,6 +558,13 @@ public abstract class BukkitPlugin extends JavaPlugin {
             }
         }
         afterEnable();
+        try {
+            Method method = getClass().getDeclaredMethod("afterServerLoaded");
+            if (!BukkitPlugin.class.equals(method.getDeclaringClass())) {
+                getScheduler().runTaskLater(this::afterServerLoaded, 1L);
+            }
+        } catch (ReflectiveOperationException ignored) {
+        }
     }
 
     @SafeVarargs
