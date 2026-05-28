@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.gui.IGuiHolder;
+import top.mrxiaom.pluginbase.material.builtin.VanillaMaterial;
 import top.mrxiaom.pluginbase.utils.Util;
 
 import java.util.function.BiConsumer;
@@ -29,6 +30,7 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
     public GuiManager(BukkitPlugin plugin) {
         super(plugin, true);
         registerEvents(this);
+        LoadedIcon.material().register(VanillaMaterial.PROVIDER);
     }
 
     public void openGui(IGuiHolder gui) {
