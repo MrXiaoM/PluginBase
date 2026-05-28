@@ -13,6 +13,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
+import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.gui.IGuiHolder;
 import top.mrxiaom.pluginbase.utils.Util;
 
@@ -58,6 +59,7 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
                 if (disable != null) disable.accept(player, gui);
             }
         }
+        LoadedIcon.material().unregisterAll();
     }
 
     public void setDisableAction(@Nullable BiConsumer<Player, IGuiHolder> consumer) {

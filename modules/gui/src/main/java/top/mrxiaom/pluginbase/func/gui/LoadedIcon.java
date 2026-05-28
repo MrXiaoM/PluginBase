@@ -6,10 +6,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
+import top.mrxiaom.pluginbase.api.IRegistry;
+import top.mrxiaom.pluginbase.data.SimpleRegistry;
+import top.mrxiaom.pluginbase.material.IMaterial;
+import top.mrxiaom.pluginbase.material.builtin.VanillaMaterial;
 import top.mrxiaom.pluginbase.utils.*;
 import top.mrxiaom.pluginbase.utils.depend.PAPI;
 
@@ -22,12 +27,17 @@ import static top.mrxiaom.pluginbase.func.gui.IModifier.fit;
  * 通用界面图标配置
  */
 public class LoadedIcon {
+    private static final IRegistry<IMaterial.Provider> materialRegistry = new SimpleRegistry<>();
     private static final List<ITagProvider> tagProviders = new ArrayList<>();
     private final boolean adventure = BukkitPlugin.getInstance().options.adventure();
     /**
      * 物品材质
      */
-    public String material;
+    public @NotNull String material;
+    /**
+     * 解析后的物品材质
+     */
+    public @NotNull IMaterial itemMaterial;
     /**
      * 物品数量
      */
@@ -35,11 +45,11 @@ public class LoadedIcon {
     /**
      * 物品显示名称
      */
-    public String display;
+    public @NotNull String display;
     /**
      * 物品 Lore
      */
-    public List<String> lore;
+    public @NotNull List<String> lore;
     /**
      * 物品是否发光，即物品是否添加一个附魔并隐藏，以产生附魔光泽
      */
@@ -47,39 +57,39 @@ public class LoadedIcon {
     /**
      * 物品的自定义模型标记
      */
-    public Integer customModelData;
+    public @Nullable Integer customModelData;
     /**
      * 物品的额外 NBT
      */
-    public Map<String, String> nbtStrings;
+    public @NotNull Map<String, String> nbtStrings;
     /**
      * 物品的额外 NBT
      */
-    public Map<String, String> nbtInts;
+    public @NotNull Map<String, String> nbtInts;
     /**
      * 左键点击物品执行的操作
      */
-    public List<IAction> leftClickCommands;
+    public @NotNull List<IAction> leftClickCommands;
     /**
      * 右键点击物品执行的操作
      */
-    public List<IAction> rightClickCommands;
+    public @NotNull List<IAction> rightClickCommands;
     /**
      * Shift+左键点击物品执行的操作
      */
-    public List<IAction> shiftLeftClickCommands;
+    public @NotNull List<IAction> shiftLeftClickCommands;
     /**
      * Shift+右键点击物品执行的操作
      */
-    public List<IAction> shiftRightClickCommands;
+    public @NotNull List<IAction> shiftRightClickCommands;
     /**
      * 鼠标悬停，Q键点击物品执行的操作
      */
-    public List<IAction> dropCommands;
+    public @NotNull List<IAction> dropCommands;
     /**
      * 物品的自定义标签，通过 ITagProvider 提供
      */
-    public Object tag;
+    public @Nullable Object tag;
 
     private final ConfigurationSection section;
 
@@ -93,7 +103,8 @@ public class LoadedIcon {
                 material = materialStr + ":" + current.getInt("data");
             } else material = materialStr;
         } else material = "PAPER";
-        this.material = material.toUpperCase();
+        this.material = material;
+        this.itemMaterial = parseMaterial(material, VanillaMaterial.DEFAULT);
 
         this.amount = current.getInt("amount", 1);
         this.display = current.getString("display", "");
@@ -124,6 +135,7 @@ public class LoadedIcon {
         this.tag = tag;
     }
 
+    @NotNull
     public ConfigurationSection getSection() {
         return section;
     }
@@ -133,22 +145,47 @@ public class LoadedIcon {
      * @param player 玩家，用于替换 PAPI 变量。使用 <code>null</code> 则不替换 PAPI 变量
      * @see LoadedIcon#generateIcon(ItemStack, Player, IModifier, IModifier)
      */
+    @NotNull
     public ItemStack generateIcon(Player player) {
         return generateIcon(player, null, null);
     }
 
     /**
      * 生成一个新的物品
-     * @param player 玩家，用于替换 PAPI 变量。使用 <code>null</code> 则不替换 PAPI 变量
+     * @param player 玩家，用于替换 PAPI 变量和生成物品
+     * @param papi 是否替换 PAPI 变量
+     * @see LoadedIcon#generateIcon(ItemStack, Player, IModifier, IModifier)
+     */
+    @NotNull
+    public ItemStack generateIcon(Player player, boolean papi) {
+        return generateIcon(player, papi, null, null);
+    }
+
+    /**
+     * 生成一个新的物品
+     * @param player 玩家，用于替换 PAPI 变量和生成物品
      * @param displayNameModifier 物品名称修饰器
      * @param loreModifier 物品Lore修饰器
      * @see LoadedIcon#generateIcon(ItemStack, Player, IModifier, IModifier)
      */
+    @NotNull
     public ItemStack generateIcon(Player player, @Nullable IModifier<String> displayNameModifier, @Nullable IModifier<List<String>> loreModifier) {
+        return generateIcon(player, true, displayNameModifier, loreModifier);
+    }
+
+    /**
+     * 生成一个新的物品
+     * @param player 玩家，用于替换 PAPI 变量和生成物品
+     * @param papi 是否替换 PAPI 变量
+     * @param displayNameModifier 物品名称修饰器
+     * @param loreModifier 物品Lore修饰器
+     * @see LoadedIcon#generateIcon(ItemStack, Player, IModifier, IModifier)
+     */
+    @NotNull
+    public ItemStack generateIcon(Player player, boolean papi, @Nullable IModifier<String> displayNameModifier, @Nullable IModifier<List<String>> loreModifier) {
         if (material.equals("AIR") || amount == 0) return new ItemStack(Material.AIR);
-        Pair<Material, Integer> pair = ItemStackUtil.parseMaterial(this.material);
-        ItemStack item = pair == null ? new ItemStack(Material.PAPER) : ItemStackUtil.legacy(pair);
-        return generateIcon(item, player, displayNameModifier, loreModifier);
+        ItemStack item = itemMaterial.create(player, amount);
+        return generateIcon(item, papi ? player : null, displayNameModifier, loreModifier);
     }
 
     /**
@@ -158,6 +195,7 @@ public class LoadedIcon {
      * @return <code>item</code> 的引用
      * @see LoadedIcon#generateIcon(ItemStack, Player, IModifier, IModifier)
      */
+    @NotNull
     public ItemStack generateIcon(@Nullable ItemStack item, @Nullable Player player) {
         return generateIcon(item, player, null, null);
     }
@@ -170,7 +208,8 @@ public class LoadedIcon {
      * @param loreModifier 物品Lore修饰器
      * @return 如果 <code>item</code> 不是 <code>null</code>，返回原物品的引用
      */
-    public @NotNull ItemStack generateIcon(@Nullable ItemStack item, @Nullable Player player, @Nullable IModifier<String> displayNameModifier, @Nullable IModifier<List<String>> loreModifier) {
+    @NotNull
+    public ItemStack generateIcon(@Nullable ItemStack item, @Nullable Player player, @Nullable IModifier<String> displayNameModifier, @Nullable IModifier<List<String>> loreModifier) {
         if (item == null || amount == 0) return new ItemStack(Material.AIR);
         item.setAmount(amount);
         applyItemMeta(item, player, displayNameModifier, loreModifier);
@@ -197,16 +236,26 @@ public class LoadedIcon {
     public void applyItemMeta(@NotNull ItemStack item, @Nullable Player player, @Nullable IModifier<String> displayNameModifier, @Nullable IModifier<List<String>> loreModifier) {
         if (!display.isEmpty()) {
             String displayName = PAPI.setPlaceholders(player, fit(displayNameModifier, display));
-            if (adventure) AdventureItemStack.setItemDisplayName(item, displayName);
-            else ItemStackUtil.setItemDisplayName(item, displayName);
+            if (adventure) {
+                AdventureItemStack.setItemDisplayName(item, displayName);
+            } else {
+                ItemStackUtil.setItemDisplayName(item, displayName);
+            }
         }
         if (!lore.isEmpty()) {
             List<String> loreList = PAPI.setPlaceholders(player, fit(loreModifier, lore));
-            if (adventure) AdventureItemStack.setItemLoreMiniMessage(item, loreList);
-            else ItemStackUtil.setItemLore(item, loreList);
+            if (adventure) {
+                AdventureItemStack.setItemLoreMiniMessage(item, loreList);
+            } else {
+                ItemStackUtil.setItemLore(item, loreList);
+            }
         }
-        if (glow) ItemStackUtil.setGlow(item);
-        if (customModelData != null) ItemStackUtil.setCustomModelData(item, customModelData);
+        if (glow) {
+            ItemStackUtil.setGlow(item);
+        }
+        if (customModelData != null) {
+            ItemStackUtil.setCustomModelData(item, customModelData);
+        }
         if (!nbtStrings.isEmpty() || !nbtInts.isEmpty()) {
             NBT.modify(item, nbt -> {
                 for (Map.Entry<String, String> entry : nbtStrings.entrySet()) {
@@ -275,7 +324,8 @@ public class LoadedIcon {
      * 加载图标配置
      * @param section 配置根部分
      */
-    public static @NotNull LoadedIcon load(@NotNull ConfigurationSection section) {
+    @NotNull
+    public static LoadedIcon load(@NotNull ConfigurationSection section) {
         return load(section, null);
     }
 
@@ -284,7 +334,8 @@ public class LoadedIcon {
      * @param section 配置
      * @param id 配置根部分的位置键，若为 <code>null</code>，则配置根部分为 <code>section</code>
      */
-    public static @NotNull LoadedIcon load(@NotNull ConfigurationSection section, @Nullable String id) {
+    @NotNull
+    public static LoadedIcon load(@NotNull ConfigurationSection section, @Nullable String id) {
         ConfigurationSection current = id == null ? section : section.getConfigurationSection(id);
         if (current == null) throw new IllegalArgumentException("Can't find root section of LoadedIcon");
 
@@ -297,5 +348,22 @@ public class LoadedIcon {
     public static void registerTagProvider(ITagProvider provider) {
         tagProviders.add(provider);
         tagProviders.sort(Comparator.comparingInt(ITagProvider::priority));
+    }
+
+    public static IRegistry<IMaterial.Provider> material() {
+        return materialRegistry;
+    }
+
+    @Nullable
+    @Contract("_,!null->!null")
+    public static IMaterial parseMaterial(@Nullable String input, IMaterial def) {
+        if (input == null || input.isEmpty()) return def;
+        for (IMaterial.Provider provider : materialRegistry.all()) {
+            IMaterial material = provider.parse(input);
+            if (material != null) {
+                return material;
+            }
+        }
+        return def;
     }
 }
