@@ -174,7 +174,7 @@ public class AdventureUtil {
     }
 
     /**
-     * 将 Component 转换为旧版样式代码，使用 <code>&</code> 作为控制符
+     * 将 Component 转换为旧版样式代码，使用 <code>&amp;</code> 作为控制符
      */
     @NotNull
     public static String legacyAmpersand(@NotNull Component component) {
