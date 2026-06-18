@@ -123,6 +123,9 @@ public class LoadedIcon {
         this.lore = current.getStringList("lore");
         this.glow = current.getBoolean("glow");
         this.customModelData = current.contains("custom-model-data") ? current.getInt("custom-model-data") : null;
+        this.itemModel = current.getString("item-model", null);
+        this.tooltipStyle = current.getString("tooltip-style", null);
+        this.hideTooltip = current.getBoolean("hide-tooltip", false);
         this.nbtStrings = new HashMap<>();
         section = current.getConfigurationSection("nbt-strings");
         if (section != null) for (String key : section.getKeys(false)) {
