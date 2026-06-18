@@ -247,7 +247,12 @@ public class LoadedIcon {
      */
     public void applyItemMeta(@NotNull ItemStack item, @Nullable Player player, @Nullable IModifier<String> displayNameModifier, @Nullable IModifier<List<String>> loreModifier) {
         if (!display.isEmpty()) {
-            String displayName = PAPI.setPlaceholders(player, fit(displayNameModifier, display));
+            String displayName;
+            if (player == null) {
+                displayName = fit(displayNameModifier, display);
+            } else {
+                displayName = PAPI.setPlaceholders(player, fit(displayNameModifier, display));
+            }
             if (adventure) {
                 AdventureItemStack.setItemDisplayName(item, displayName);
             } else {
@@ -255,7 +260,12 @@ public class LoadedIcon {
             }
         }
         if (!lore.isEmpty()) {
-            List<String> loreList = PAPI.setPlaceholders(player, fit(loreModifier, lore));
+            List<String> loreList;
+            if (player == null) {
+                loreList = fit(loreModifier, lore);
+            } else {
+                loreList = PAPI.setPlaceholders(player, fit(loreModifier, lore));
+            }
             if (adventure) {
                 AdventureItemStack.setItemLoreMiniMessage(item, loreList);
             } else {
@@ -280,11 +290,21 @@ public class LoadedIcon {
         if (!nbtStrings.isEmpty() || !nbtInts.isEmpty()) {
             NBT.modify(item, nbt -> {
                 for (Map.Entry<String, String> entry : nbtStrings.entrySet()) {
-                    String value = PAPI.setPlaceholders(player, entry.getValue());
+                    String value;
+                    if (player == null) {
+                        value = entry.getValue();
+                    } else {
+                        value = PAPI.setPlaceholders(player, entry.getValue());
+                    }
                     nbt.setString(entry.getKey(), value);
                 }
                 for (Map.Entry<String, String> entry : nbtInts.entrySet()) {
-                    String value = PAPI.setPlaceholders(player, entry.getValue());
+                    String value;
+                    if (player == null) {
+                        value = entry.getValue();
+                    } else {
+                        value = PAPI.setPlaceholders(player, entry.getValue());
+                    }
                     Integer i = Util.parseInt(value).orElse(null);
                     if (i == null) continue;
                     nbt.setInteger(entry.getKey(), i);
