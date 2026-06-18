@@ -59,6 +59,18 @@ public class LoadedIcon {
      */
     public @Nullable Integer customModelData;
     /**
+     * 添加物品模型标记 (命名空间:键)
+     */
+    public @Nullable String itemModel;
+    /**
+     * 添加物品悬停提示样式 (命名空间:键)
+     */
+    public @Nullable String tooltipStyle;
+    /**
+     * 是否隐藏物品悬停提示
+     */
+    public boolean hideTooltip;
+    /**
      * 物品的额外 NBT
      */
     public @NotNull Map<String, String> nbtStrings;
@@ -255,6 +267,15 @@ public class LoadedIcon {
         }
         if (customModelData != null) {
             ItemStackUtil.setCustomModelData(item, customModelData);
+        }
+        if (itemModel != null) {
+            ItemStackUtil.setItemModel(item, itemModel);
+        }
+        if (tooltipStyle != null) {
+            ItemStackUtil.setTooltipStyle(item, tooltipStyle);
+        }
+        if (hideTooltip) {
+            ItemStackUtil.setHideTooltip(item, true);
         }
         if (!nbtStrings.isEmpty() || !nbtInts.isEmpty()) {
             NBT.modify(item, nbt -> {

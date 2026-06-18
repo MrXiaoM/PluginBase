@@ -2,10 +2,7 @@ package top.mrxiaom.pluginbase.utils;
 
 import com.google.common.collect.Lists;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -252,6 +249,39 @@ public class ItemStackUtil {
             ItemMeta meta = item.getItemMeta();
             if (meta != null) {
                 meta.setCustomModelData(customModelData);
+                item.setItemMeta(meta);
+            }
+        } catch (Throwable ignored) {
+        }
+    }
+
+    public static void setItemModel(ItemStack item, String namespacedKey) {
+        try {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.setItemModel(NamespacedKey.fromString(namespacedKey));
+                item.setItemMeta(meta);
+            }
+        } catch (Throwable ignored) {
+        }
+    }
+
+    public static void setTooltipStyle(ItemStack item, String namespacedKey) {
+        try {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.setTooltipStyle(NamespacedKey.fromString(namespacedKey));
+                item.setItemMeta(meta);
+            }
+        } catch (Throwable ignored) {
+        }
+    }
+
+    public static void setHideTooltip(ItemStack item, boolean hideTooltip) {
+        try {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.setHideTooltip(hideTooltip);
                 item.setItemMeta(meta);
             }
         } catch (Throwable ignored) {

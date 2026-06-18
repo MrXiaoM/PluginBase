@@ -15,7 +15,7 @@ subprojects {
     setupJavadoc()
     setupLibraries(
         key="spigot-api",
-        "org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT",
+        "org.spigotmc:spigot-api:1.21.2-R0.1-SNAPSHOT",
     )
     setupLibraries(
         key="nbt-api",
