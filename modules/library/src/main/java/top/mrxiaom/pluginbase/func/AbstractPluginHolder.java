@@ -149,6 +149,22 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
     }
 
     /**
+     * 所有模块加载完成后执行操作
+     */
+    public void onModulesLoaded() {
+
+    }
+
+    public static void callModulesLoaded() {
+        List<AbstractPluginHolder<?>> holders = new ArrayList<>(registeredHolders.values());
+        holders.sort(Comparator.comparingInt(AbstractPluginHolder::priority));
+        for (AbstractPluginHolder<?> holder : holders) {
+            holder.onModulesLoaded();
+        }
+        holders.clear();
+    }
+
+    /**
      * 接收插件卸载时执行操作
      */
     public void onDisable() {

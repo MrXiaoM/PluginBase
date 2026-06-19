@@ -539,6 +539,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
         loadModules(this, modulesToRegister);
         modulesToRegister.clear();
 
+        callModulesLoaded();
         afterEnableModules();
 
         reloadConfig();
