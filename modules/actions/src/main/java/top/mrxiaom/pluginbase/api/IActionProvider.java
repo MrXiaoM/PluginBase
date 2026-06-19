@@ -6,13 +6,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 
 @FunctionalInterface
-public interface IActionProvider {
+public interface IActionProvider extends WithPriority {
     /**
      * IAction 提供器，返回 null 代表字符串不匹配当前 Action
      * @param input 输入值，可能是字符串，也可能是 {@link org.bukkit.configuration.ConfigurationSection}
      */
     @Nullable
     IAction provide(@NotNull Object input);
+
+    @Override
+    default int getPriority() {
+        return priority();
+    }
 
     /**
      * 处理优先级，数字越小越先处理

@@ -6,18 +6,31 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
+import top.mrxiaom.pluginbase.api.IActionPostProcessor;
 import top.mrxiaom.pluginbase.api.IActionProvider;
+import top.mrxiaom.pluginbase.api.IRegistry;
+import top.mrxiaom.pluginbase.data.SimpleRegistry;
 import top.mrxiaom.pluginbase.utils.ConfigUtils;
 import top.mrxiaom.pluginbase.utils.Pair;
 
 import java.util.*;
 
 public class ActionProviders {
-    private static final List<IActionProvider> actionProviders = new ArrayList<>();
+    private static final IRegistry<IActionProvider> actionProviderRegistry = new SimpleRegistry<>();
+    private static final IRegistry<IActionPostProcessor> actionPostProcessorRegistry = new SimpleRegistry<>();
+    private static boolean registeredBuiltIn = false;
     private ActionProviders() {}
 
+    public static IRegistry<IActionProvider> actionProviderRegistry() {
+        return actionProviderRegistry;
+    }
+
+    public static IRegistry<IActionPostProcessor> actionPostProcessorRegistry() {
+        return actionPostProcessorRegistry;
+    }
+
     public static void registerBuiltInActions(BukkitPlugin plugin) {
-        if (!actionProviders.isEmpty()) return;
+        if (registeredBuiltIn) return;
         try {
             ActionProviders.registerActionProvider(ActionConsole.PROVIDER);
             ActionProviders.registerActionProvider(ActionPlayer.PROVIDER);
@@ -36,6 +49,7 @@ public class ActionProviders {
             ActionProviders.registerActionProvider(ActionDelay.PROVIDER);
         } catch (Throwable ignored) {
         }
+        registeredBuiltIn = true;
     }
 
     @NotNull
@@ -62,10 +76,10 @@ public class ActionProviders {
     }
 
     @NotNull
-    public static List<IAction> loadActions(@NotNull List<Object> list) {
+    public static List<IAction> loadActions(@NotNull List<?> list) {
         List<IAction> actions = new ArrayList<>();
-        for (Object s : list) {
-            IAction action = loadAction(s);
+        for (Object input : list) {
+            IAction action = loadAction(input);
             if (action != null) {
                 actions.add(action);
             }
@@ -74,27 +88,39 @@ public class ActionProviders {
     }
 
     @Nullable
-    public static IAction loadAction(@Nullable Object s) {
-        if (s == null) return null;
-        for (IActionProvider provider : actionProviders) {
-            IAction action = provider.provide(s);
-            if (action != null) return action;
+    public static IAction loadAction(@Nullable Object input) {
+        if (input == null) return null;
+        List<IActionProvider> allProviders = actionProviderRegistry.all();
+        List<IActionPostProcessor> allPostProcessors = actionPostProcessorRegistry.all();
+        for (IActionProvider provider : allProviders) {
+            IAction action = provider.provide(input);
+            if (action != null) {
+                for (IActionPostProcessor processor : allPostProcessors) {
+                    IAction processed = processor.process(input, provider, action);
+                    if (processed != null) {
+                        return processed;
+                    }
+                }
+                return action;
+            }
         }
         return null;
     }
 
     public static void registerActionProvider(IActionProvider provider) {
-        actionProviders.add(provider);
-        actionProviders.sort(Comparator.comparingInt(IActionProvider::priority));
+        actionProviderRegistry.register(provider);
     }
 
     public static void registerActionProviders(IActionProvider... providers) {
-        registerActionProviders(Arrays.asList(providers));
+        for (IActionProvider provider : providers) {
+            actionProviderRegistry.register(provider);
+        }
     }
 
     public static void registerActionProviders(Collection<IActionProvider> providers) {
-        actionProviders.addAll(providers);
-        actionProviders.sort(Comparator.comparingInt(IActionProvider::priority));
+        for (IActionProvider provider : providers) {
+            actionProviderRegistry.register(provider);
+        }
     }
 
     public static void run(@NotNull BukkitPlugin plugin, @Nullable Player player, @NotNull List<IAction> actions) {
