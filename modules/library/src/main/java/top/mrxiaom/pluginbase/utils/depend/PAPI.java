@@ -1,6 +1,7 @@
 package top.mrxiaom.pluginbase.utils.depend;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -58,5 +59,11 @@ public class PAPI {
             return result;
         }
         return PlaceholderAPI.setPlaceholders(player, list);
+    }
+    public static String bool(boolean value) {
+        if (!isEnabled) {
+            return value ? "yes" : "no";
+        }
+        return value ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
     }
 }
