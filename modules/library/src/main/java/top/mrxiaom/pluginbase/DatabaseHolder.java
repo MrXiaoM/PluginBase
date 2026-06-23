@@ -3,11 +3,14 @@ package top.mrxiaom.pluginbase;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.database.IDatabase;
 import top.mrxiaom.pluginbase.utils.ConfigUtils;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -16,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static top.mrxiaom.pluginbase.utils.Util.isPresent;
@@ -28,22 +32,32 @@ public class DatabaseHolder {
     List<IDatabase> databases = new ArrayList<>();
     private boolean firstConnectFlag = false;
     private String tablePrefix;
-    private String driver;
+    private String driverType;
+    private String driverClass;
     private String version = "unknown";
     protected DatabaseHolder(BukkitPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public void registerDatabase(IDatabase... databases) {
+    public void registerDatabase(@NotNull IDatabase... databases) {
         this.databases.addAll(Arrays.asList(databases));
+    }
+
+    @NotNull
+    public List<IDatabase> getRegisteredDatabases() {
+        return Collections.unmodifiableList(databases);
     }
 
     public String getTablePrefix() {
         return tablePrefix;
     }
 
+    public String getDriverType() {
+        return driverType;
+    }
+
     public String getDriver() {
-        return driver;
+        return driverClass;
     }
 
     public boolean isSQLite() {
@@ -56,6 +70,10 @@ public class DatabaseHolder {
 
     public String getVersion() {
         return version;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
     }
 
     @Nullable
@@ -76,27 +94,21 @@ public class DatabaseHolder {
         reloadFromFile(file);
     }
     private void reloadFromFile(File file) {
-        YamlConfiguration config = ConfigUtils.load(file);
-        if (config.contains("goto")) {
-            File gotoFile = new File(config.getString("goto", ""));
-            if (gotoFile.exists() && gotoFile.isFile()) {
-                reloadFromFile(gotoFile);
-                return;
-            }
-        }
+        YamlConfiguration config = plugin.resolveGotoFlag(ConfigUtils.load(file));
         tablePrefix = config.getString("table_prefix", "");
         String type = config.getString("type", "sqlite").toLowerCase();
-        driver = null;
+        driverType = type;
+        driverClass = null;
         switch (type) {
             case "mysql":
                 int mysqlVersion = config.getInt("mysql.version", 8);
                 if (mysqlVersion == 8 && isPresent("com.mysql.cj.jdbc.Driver")) {
-                    driver = checkDriver("MySQL", "com.mysql.cj.jdbc.Driver");
+                    driverClass = checkDriver("MySQL", "com.mysql.cj.jdbc.Driver");
                 } else {
-                    driver = checkDriver("MySQL", "com.mysql.jdbc.Driver");
-                    if (driver != null) {
+                    driverClass = checkDriver("MySQL", "com.mysql.jdbc.Driver");
+                    if (driverClass != null) {
                         if (mysqlVersion == 8) {
-                            driver = null;
+                            driverClass = null;
                             plugin.warn("你在数据库配置中指定了 MySQL 版本为 8，但插件只找到了 MySQL 5 的数据库驱动");
                             if (plugin.options.libraries) {
                                 plugin.warn("请从以下链接下载 MySQL JDBC 8，放入 plugins/" + plugin.getDescription().getName() + "/libraries 文件夹，并重启服务器");
@@ -117,8 +129,8 @@ public class DatabaseHolder {
                 }
                 break;
             case "sqlite":
-                driver = checkDriver("SQLite", "org.sqlite.JDBC");
-                if (driver == null) {
+                driverClass = checkDriver("SQLite", "org.sqlite.JDBC");
+                if (driverClass == null) {
                     plugin.warn("插件在服务器中未找到 SQLite 数据库驱动");
                     if (plugin.options.libraries) {
                         plugin.warn("请从以下链接下载 SQLite JDBC，放入 plugins/" + plugin.getDescription().getName() + "/libraries 文件夹，并重启服务器");
@@ -131,7 +143,7 @@ public class DatabaseHolder {
             default:
                 break;
         }
-        if (driver == null) return;
+        if (driverClass == null) return;
         String query = config.getString("query", "");
         query = (query.isEmpty() ? "" : ("?" + query));
         hikariConfig = new HikariConfig();
@@ -142,7 +154,7 @@ public class DatabaseHolder {
             Class<?> clazz = hikariConfig.getClass();
             Field field = clazz.getDeclaredField("driverClassName");
             field.setAccessible(true);
-            field.set(hikariConfig, driver);
+            field.set(hikariConfig, driverClass);
         } catch (ReflectiveOperationException e) {
             plugin.warn("设置数据库驱动时出现一个异常", e);
             return;

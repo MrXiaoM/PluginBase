@@ -620,10 +620,20 @@ public abstract class BukkitPlugin extends JavaPlugin {
      * 以免出现死循环，最多支持转跳 <code>64</code> 次。
      */
     public FileConfiguration resolveGotoFlag(FileConfiguration config) {
+        String gotoFlag = config.getString("goto", null);
+        if (gotoFlag != null) {
+            File file = resolve(gotoFlag);
+            YamlConfiguration newConfig = ConfigUtils.load(file);
+            return resolveGotoFlag(newConfig, 1);
+        }
+        return config;
+    }
+
+    public YamlConfiguration resolveGotoFlag(YamlConfiguration config) {
         return resolveGotoFlag(config, 0);
     }
 
-    private FileConfiguration resolveGotoFlag(FileConfiguration last, int times) {
+    private YamlConfiguration resolveGotoFlag(YamlConfiguration last, int times) {
         if (times > 64) {
             warn("配置文件中的 goto 跳转次数过多，请自行检查 goto 标签是否有循环调用问题");
             return last;
