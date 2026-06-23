@@ -8,6 +8,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
@@ -318,6 +319,20 @@ public abstract class AbstractPluginHolder<T extends BukkitPlugin> {
         T inst = (T) registeredHolders.get(type);
         if (inst == null) throw new IllegalStateException("无法找到已注册的 " + type.getName());
         return inst;
+    }
+
+    @Nullable
+    @ApiStatus.Experimental
+    public static <T> T unregister(@NotNull Class<T> type) {
+        // noinspection unchecked
+        return (T) registeredHolders.remove(type);
+    }
+
+    @Nullable
+    @ApiStatus.Experimental
+    public static <T> T unregisterBungee(@NotNull Class<T> type) {
+        // noinspection unchecked
+        return (T) registeredBungeeHolders.remove(type);
     }
 
     /**
