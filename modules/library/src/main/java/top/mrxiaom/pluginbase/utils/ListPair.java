@@ -69,7 +69,7 @@ public class ListPair<K, V> implements List<Pair<K, V>> {
      * 该方法仅限在泛型 V 的类型为 Object 时使用
      */
     @SuppressWarnings({"unchecked"})
-    public boolean add(K key, Supplier<V> supplier) {
+    public boolean add(K key, Supplier<Object> supplier) {
         return add(Pair.of(key, (V) supplier));
     }
 
