@@ -4,9 +4,6 @@ import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -40,8 +37,6 @@ import java.util.regex.MatchResult;
  */
 @SuppressWarnings({"unused"})
 public class Util {
-    public static Map<String, OfflinePlayer> players = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public static Map<UUID, OfflinePlayer> playersByUUID = new TreeMap<>();
     private static ICommandDispatcher dispatcher;
 
     public static void init(BukkitPlugin plugin) {
@@ -51,22 +46,6 @@ public class Util {
         } catch (ReflectiveOperationException e) {
             dispatcher = BukkitDispatcher.INSTANCE;
         }
-        plugin.getScheduler().runTaskAsync(() -> {
-            for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-                if (player.getName() != null) {
-                    players.put(player.getName(), player);
-                    playersByUUID.put(player.getUniqueId(), player);
-                }
-            }
-        });
-        Bukkit.getPluginManager().registerEvents(new Listener() {
-            @EventHandler
-            public void onJoin(PlayerJoinEvent e) {
-                Player player = e.getPlayer();
-                players.put(player.getName(), player);
-                playersByUUID.put(player.getUniqueId(), player);
-            }
-        }, plugin);
         try {
             PAPI.init();
         } catch (Throwable ignored) {
@@ -232,19 +211,28 @@ public class Util {
     }
 
     /**
-     * 获取已缓存的离线玩家数据
+     * 获取离线玩家数据
      * @param name 玩家名
      */
     public static Optional<OfflinePlayer> getOfflinePlayer(String name) {
-        return Optional.ofNullable(players.get(name));
+        //noinspection deprecation
+        OfflinePlayer p = Bukkit.getOfflinePlayer(name);
+        return Optional.of(p);
     }
 
     /**
-     * 获取已缓存的离线玩家数据
+     * 获取离线玩家数据
      * @param uuid 玩家UUID
      */
     public static Optional<OfflinePlayer> getOfflinePlayer(UUID uuid) {
-        return Optional.ofNullable(playersByUUID.get(uuid));
+        OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
+        String name = p.getName();
+        if (name == null || name.isEmpty()) {
+            // 名字为空代表未加载
+            return Optional.empty();
+        } else {
+            return Optional.of(p);
+        }
     }
 
     /**
