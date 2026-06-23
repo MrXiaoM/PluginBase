@@ -29,6 +29,9 @@ import java.util.function.Consumer;
  * 玩家透露相关工具
  */
 public class SkullsUtil {
+
+    private static Field profileField;
+
     public static class Skull {
         private final Consumer<SkullMeta> applier;
         public Skull(Consumer<SkullMeta> applier) {
@@ -105,11 +108,12 @@ public class SkullsUtil {
         }
         GameProfile profile = getGameProfile(base64);
         return new Skull(meta -> {
-            Field field;
             try {
-                field = meta.getClass().getDeclaredField("profile");
-                field.setAccessible(true);
-                field.set(meta, profile);
+                if (profileField == null) {
+                    profileField = meta.getClass().getDeclaredField("profile");
+                    profileField.setAccessible(true);
+                }
+                profileField.set(meta, profile);
             } catch (ReflectiveOperationException e) {
                 BukkitPlugin.getInstance().warn("无法从 base64 加载头颅材质", e);
             }
