@@ -283,8 +283,6 @@ class LibraryHelper {
             tasks.named("javadoc", Javadoc.class) {
                 def options = it.options as StandardJavadocDocletOptions
 
-                options.links("https://hub.spigotmc.org/javadocs/spigot/")
-
                 options.locale("zh_CN")
                 options.encoding("UTF-8")
                 options.docEncoding("UTF-8")
