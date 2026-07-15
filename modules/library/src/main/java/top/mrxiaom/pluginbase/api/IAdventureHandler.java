@@ -17,7 +17,11 @@ import java.util.Objects;
 
 public interface IAdventureHandler {
     @NotNull
-    MiniMessage.Builder builder();
+    default MiniMessage.Builder builder() {
+        return builder(true);
+    }
+    @NotNull
+    MiniMessage.Builder builder(boolean legacyProcessor);
     @NotNull
     @ApiStatus.Experimental
     Audience of(@NotNull CommandSender sender);

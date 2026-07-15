@@ -75,11 +75,14 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     }
 
     @Override
-    public @NotNull MiniMessage.Builder builder() {
-        return MiniMessage.builder()
-                .editTags(it -> remove(it, disabledTags))
-                .preProcessor(this::legacyToMiniMessage)
-                .postProcessor(it -> it.decoration(TextDecoration.ITALIC, false));
+    public @NotNull MiniMessage.Builder builder(boolean legacyProcessor) {
+        MiniMessage.Builder builder = MiniMessage.builder();
+        builder.editTags(it -> remove(it, disabledTags));
+        if (legacyProcessor) {
+            builder.preProcessor(this::legacyToMiniMessage);
+        }
+        builder.postProcessor(it -> it.decoration(TextDecoration.ITALIC, false));
+        return builder;
     }
 
     @EventHandler
