@@ -3,7 +3,10 @@ package top.mrxiaom.pluginbase.utils.scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.BukkitPlugin;
@@ -101,6 +104,16 @@ public class BukkitScheduler implements IScheduler {
     public void teleport(@NotNull Entity entity, @NotNull Location location, Consumer<Entity> then) {
         entity.teleport(location);
         if (then != null) then.accept(entity);
+    }
+
+    @Override
+    public void openInventory(HumanEntity player, Inventory inv) {
+        player.openInventory(inv);
+    }
+
+    @Override
+    public void openInventory(HumanEntity player, InventoryView view) {
+        player.openInventory(view);
     }
 
     @Override

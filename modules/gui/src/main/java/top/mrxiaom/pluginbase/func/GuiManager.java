@@ -40,7 +40,7 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
         Inventory inv = gui.newInventory();
         if (inv != null) {
             if (Util.getHolder(inv) == gui) {
-                player.openInventory(inv);
+                plugin.getScheduler().openInventory(player, inv);
             } else {
                 player.closeInventory();
                 warn("试图为玩家 " + player.getName() + " 打开界面 " + gui.getClass().getName() + " 时，界面未设置 InventoryHolder 为自身实例");

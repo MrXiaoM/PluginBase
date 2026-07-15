@@ -5,7 +5,10 @@ import com.tcoded.folialib.impl.PlatformScheduler;
 import com.tcoded.folialib.wrapper.task.WrappedTask;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
@@ -107,6 +110,26 @@ public class FoliaLibScheduler implements IScheduler {
     public void teleport(@NotNull Entity entity, @NotNull Location location, @Nullable Consumer<Entity> then) {
         CompletableFuture<Boolean> future = scheduler.teleportAsync(entity, location);
         if (then != null) future.thenRun(() -> then.accept(entity));
+    }
+
+    @Override
+    public void openInventory(HumanEntity player, Inventory inv) {
+        // Fuck Folia
+        if (foliaLib.isFolia()) {
+            scheduler.runAtEntity(player, t -> player.openInventory(inv));
+        } else {
+            player.openInventory(inv);
+        }
+    }
+
+    @Override
+    public void openInventory(HumanEntity player, InventoryView view) {
+        // Fuck Folia
+        if (foliaLib.isFolia()) {
+            scheduler.runAtEntity(player, t -> player.openInventory(view));
+        } else {
+            player.openInventory(view);
+        }
     }
 
     @Override
