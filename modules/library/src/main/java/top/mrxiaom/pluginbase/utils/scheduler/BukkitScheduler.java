@@ -117,6 +117,11 @@ public class BukkitScheduler implements IScheduler {
     }
 
     @Override
+    public void closeInventory(HumanEntity player) {
+        player.closeInventory();
+    }
+
+    @Override
     public void cancelTasks() {
         Bukkit.getScheduler().cancelTasks(plugin);
     }

@@ -33,6 +33,7 @@ public interface IScheduler {
     void teleport(@NotNull Entity entity, @NotNull Location location, @Nullable Consumer<Entity> then);
     void openInventory(HumanEntity player, Inventory inv);
     void openInventory(HumanEntity player, InventoryView view);
+    void closeInventory(HumanEntity player);
     default @NotNull IRunTask runTaskAsynchronously(@NotNull Runnable runnable) {
         return runTaskAsync(runnable);
     }

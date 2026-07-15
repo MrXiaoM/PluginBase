@@ -133,6 +133,16 @@ public class FoliaLibScheduler implements IScheduler {
     }
 
     @Override
+    public void closeInventory(HumanEntity player) {
+        // Fuck Folia
+        if (foliaLib.isFolia()) {
+            scheduler.runAtEntity(player, t -> player.closeInventory());
+        } else {
+            player.closeInventory();
+        }
+    }
+
+    @Override
     public void cancelTasks() {
         scheduler.cancelAllTasks();
     }

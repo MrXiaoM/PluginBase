@@ -3,6 +3,7 @@ package top.mrxiaom.pluginbase.actions;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAction;
 import top.mrxiaom.pluginbase.api.IActionProvider;
 import top.mrxiaom.pluginbase.utils.Pair;
@@ -35,7 +36,7 @@ public class ActionClose implements IAction {
     @Override
     public void run(@Nullable Player player, @Nullable List<Pair<String, Object>> replacements) {
         if (player != null) {
-            player.closeInventory();
+            BukkitPlugin.getInstance().getScheduler().closeInventory(player);
         }
     }
 }

@@ -42,7 +42,7 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
             if (Util.getHolder(inv) == gui) {
                 plugin.getScheduler().openInventory(player, inv);
             } else {
-                player.closeInventory();
+                plugin.getScheduler().closeInventory(player);
                 warn("试图为玩家 " + player.getName() + " 打开界面 " + gui.getClass().getName() + " 时，界面未设置 InventoryHolder 为自身实例");
             }
         } else if (!gui.allowNullInventory()) {
@@ -52,12 +52,19 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
 
     public void onDisable() {
         disabled = true;
+        boolean canRunScheduler = true;
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryView view = player.getOpenInventory();
             IGuiHolder gui = getInventoryHolder(view.getTopInventory());
             if (gui != null) {
                 gui.onClose(view);
-                player.closeInventory();
+                if (canRunScheduler) {
+                     try {
+                         plugin.getScheduler().closeInventory(player);
+                     } catch (Throwable ignored) {
+                         canRunScheduler = false;
+                     }
+                }
                 if (disable != null) disable.accept(player, gui);
             }
         }
