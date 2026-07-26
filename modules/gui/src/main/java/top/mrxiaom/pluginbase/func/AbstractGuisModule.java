@@ -6,12 +6,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
+import top.mrxiaom.pluginbase.api.InventoryViewAccessor;
 import top.mrxiaom.pluginbase.func.gui.IModel;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.gui.IGuiHolder;
@@ -133,7 +133,7 @@ public abstract class AbstractGuisModule<T extends BukkitPlugin, M extends IMode
             updateInventory(inv::setItem);
         }
 
-        public void updateInventory(InventoryView view) {
+        public void updateInventory(InventoryViewAccessor view) {
             updateInventory(view.getTopInventory()::setItem);
             Util.submitInvUpdate(player);
         }

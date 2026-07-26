@@ -8,12 +8,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IRunTask;
 import top.mrxiaom.pluginbase.api.IScheduler;
+import top.mrxiaom.pluginbase.api.InventoryViewAccessor;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -123,12 +123,12 @@ public class FoliaLibScheduler implements IScheduler {
     }
 
     @Override
-    public void openInventory(HumanEntity player, InventoryView view) {
+    public void openInventory(HumanEntity player, InventoryViewAccessor view) {
         // Fuck Folia
         if (foliaLib.isFolia()) {
-            scheduler.runAtEntity(player, t -> player.openInventory(view));
+            scheduler.runAtEntity(player, t -> view.openInventory(player));
         } else {
-            player.openInventory(view);
+            view.openInventory(player);
         }
     }
 

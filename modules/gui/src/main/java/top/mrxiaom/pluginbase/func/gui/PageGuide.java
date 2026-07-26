@@ -4,10 +4,10 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
+import top.mrxiaom.pluginbase.api.InventoryViewAccessor;
 import top.mrxiaom.pluginbase.utils.Pair;
 import top.mrxiaom.pluginbase.utils.Util;
 
@@ -68,7 +68,7 @@ public class PageGuide<T> {
     /**
      * 更新物品栏界面
      */
-    public void updateInventory(InventoryView view) {
+    public void updateInventory(InventoryViewAccessor view) {
         updateInventory(view::setItem);
         HumanEntity player = view.getPlayer();
         if (player instanceof Player) {
@@ -113,13 +113,13 @@ public class PageGuide<T> {
         if (prevPageSlots.contains(slot) && hasPrevPage()) {
             event.setCancelled(true);
             prevPage();
-            updateInventory(event.getView());
+            updateInventory(Util.getView(event));
             return true;
         }
         if (nextPageSlots.contains(slot) && hasNextPage()) {
             event.setCancelled(true);
             nextPage();
-            updateInventory(event.getView());
+            updateInventory(Util.getView(event));
             return true;
         }
         return false;

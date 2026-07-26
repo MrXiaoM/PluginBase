@@ -10,9 +10,9 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
+import top.mrxiaom.pluginbase.api.InventoryViewAccessor;
 import top.mrxiaom.pluginbase.func.gui.LoadedIcon;
 import top.mrxiaom.pluginbase.gui.IGuiHolder;
 import top.mrxiaom.pluginbase.material.builtin.VanillaMaterial;
@@ -54,7 +54,7 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
         disabled = true;
         boolean canRunScheduler = true;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            InventoryView view = player.getOpenInventory();
+            InventoryViewAccessor view = Util.getOpenInventory(player);
             IGuiHolder gui = getInventoryHolder(view.getTopInventory());
             if (gui != null) {
                 gui.onClose(view);
@@ -97,7 +97,7 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
     public void onPlayerQuit(PlayerQuitEvent e) {
         if (disabled) return;
         Player player = e.getPlayer();
-        InventoryView view = player.getOpenInventory();
+        InventoryViewAccessor view = Util.getOpenInventory(player);
         IGuiHolder gui = getInventoryHolder(view.getTopInventory());
         if (gui != null) {
             gui.onClose(view);
@@ -107,14 +107,14 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (disabled || !(event.getWhoClicked() instanceof Player)) return;
-        InventoryView view = event.getView();
+        InventoryViewAccessor view = Util.getView(event);
         IGuiHolder gui = getInventoryHolder(view.getTopInventory());
         if (gui != null) {
             gui.onClick(
                     event.getAction(), event.getClick(),
                     event.getSlotType(), event.getRawSlot(),
                     event.getCurrentItem(), event.getCursor(),
-                    event.getView(), event
+                    view, event
             );
         }
     }
@@ -122,7 +122,7 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         if (disabled || !(event.getWhoClicked() instanceof Player)) return;
-        InventoryView view = event.getView();
+        InventoryViewAccessor view = Util.getView(event);
         IGuiHolder gui = getInventoryHolder(view.getTopInventory());
         if (gui != null) {
             gui.onDrag(view, event);
@@ -132,7 +132,7 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         if (disabled || !(event.getPlayer() instanceof Player)) return;
-        InventoryView view = event.getView();
+        InventoryViewAccessor view = Util.getView(event);
         IGuiHolder gui = getInventoryHolder(view.getTopInventory());
         if (gui != null) {
             gui.onClose(view);

@@ -3,10 +3,8 @@ package top.mrxiaom.pluginbase.api;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +30,7 @@ public interface IScheduler {
     void teleport(@NotNull Entity entity, @NotNull Location location, @NotNull PlayerTeleportEvent.TeleportCause cause, @Nullable Consumer<Entity> then);
     void teleport(@NotNull Entity entity, @NotNull Location location, @Nullable Consumer<Entity> then);
     void openInventory(HumanEntity player, Inventory inv);
-    void openInventory(HumanEntity player, InventoryView view);
+    void openInventory(HumanEntity player, InventoryViewAccessor view);
     void closeInventory(HumanEntity player);
     default @NotNull IRunTask runTaskAsynchronously(@NotNull Runnable runnable) {
         return runTaskAsync(runnable);

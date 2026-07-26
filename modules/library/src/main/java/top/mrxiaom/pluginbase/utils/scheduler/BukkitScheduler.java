@@ -6,12 +6,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IRunTask;
 import top.mrxiaom.pluginbase.api.IScheduler;
+import top.mrxiaom.pluginbase.api.InventoryViewAccessor;
 
 import java.util.function.Consumer;
 
@@ -112,8 +112,8 @@ public class BukkitScheduler implements IScheduler {
     }
 
     @Override
-    public void openInventory(HumanEntity player, InventoryView view) {
-        player.openInventory(view);
+    public void openInventory(HumanEntity player, InventoryViewAccessor view) {
+        view.openInventory(player);
     }
 
     @Override

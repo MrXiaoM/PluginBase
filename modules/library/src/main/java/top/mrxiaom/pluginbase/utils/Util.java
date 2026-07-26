@@ -3,7 +3,9 @@ package top.mrxiaom.pluginbase.utils;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -12,11 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.ICommandDispatcher;
+import top.mrxiaom.pluginbase.api.InventoryViewAccessor;
 import top.mrxiaom.pluginbase.utils.depend.PAPI;
 import top.mrxiaom.pluginbase.utils.diapatcher.BukkitDispatcher;
 import top.mrxiaom.pluginbase.utils.diapatcher.FoliaDispatcher;
+import top.mrxiaom.pluginbase.utils.inventory.accessor.ViewAccessorInterface;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.file.Path;
@@ -38,6 +43,7 @@ import java.util.regex.MatchResult;
 @SuppressWarnings({"unused"})
 public class Util {
     private static ICommandDispatcher dispatcher;
+    private static InventoryViewAccessor.Provider inventoryViewAccessor;
 
     public static void init(BukkitPlugin plugin) {
         try {
@@ -55,12 +61,38 @@ public class Util {
         } catch (Throwable ignored) {
         }
         try {
+            Class<?> type = Class.forName("top.mrxiaom.pluginbase.utils.inventory.accessor.ViewAccessorAbstractClass");
+            Method method = type.getDeclaredMethod("testBestProvider");
+            inventoryViewAccessor = (InventoryViewAccessor.Provider) method.invoke(null);
+        } catch (Throwable ignored) {
+            inventoryViewAccessor = ViewAccessorInterface.PROVIDER;
+        }
+        try {
             RegistryConverter.init();
         } catch (Throwable ignored) {
         }
         if (plugin.options.adventure()) {
             AdventureUtil.init(plugin);
         }
+    }
+
+    @NotNull
+    public static InventoryViewAccessor.Provider getInventoryViewAccessor() {
+        return inventoryViewAccessor;
+    }
+
+    public static void setInventoryViewAccessor(@NotNull InventoryViewAccessor.Provider inventoryViewAccessor) {
+        Util.inventoryViewAccessor = Objects.requireNonNull(inventoryViewAccessor, "inventoryViewAccessor");
+    }
+
+    @NotNull
+    public static InventoryViewAccessor getOpenInventory(@NotNull HumanEntity entity) {
+        return inventoryViewAccessor.get(Objects.requireNonNull(entity, "entity"));
+    }
+
+    @NotNull
+    public static InventoryViewAccessor getView(@NotNull InventoryEvent event) {
+        return inventoryViewAccessor.get(Objects.requireNonNull(event, "event"));
     }
 
     public static void dispatchCommand(@NotNull CommandSender sender, @NotNull String commandLine) {
