@@ -78,7 +78,8 @@ public class GuiManager extends AbstractPluginHolder<BukkitPlugin> implements Li
     @Nullable
     public IGuiHolder getOpeningGui(Player player) {
         if (disabled) return null;
-        return getInventoryHolder(player.getOpenInventory().getTopInventory());
+        InventoryViewAccessor view = Util.getOpenInventory(player);
+        return getInventoryHolder(view.getTopInventory());
     }
 
     public IGuiHolder getInventoryHolder(Inventory inv) {
