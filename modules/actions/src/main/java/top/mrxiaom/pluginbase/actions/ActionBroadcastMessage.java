@@ -21,28 +21,31 @@ public class ActionBroadcastMessage implements IAction {
             if (!section.contains("type") && section.contains("broadcast")) {
                 String content = section.getString("broadcast");
                 if (content != null) {
-                    return new ActionBroadcastMessage(content);
+                    return new ActionBroadcastMessage(content, true);
                 }
             } else if ("broadcast".equals(section.getString("type"))) {
+                boolean console = section.getBoolean("console", true);
                 String content = section.getString("content");
                 if (content != null) {
-                    return new ActionBroadcastMessage(content);
+                    return new ActionBroadcastMessage(content, console);
                 }
             }
         } else {
             String s = String.valueOf(input);
             if (s.startsWith("[broadcast]")) {
-                return new ActionBroadcastMessage(s.substring(11));
+                return new ActionBroadcastMessage(s.substring(11), true);
             }
             if (s.startsWith("broadcast:")) {
-                return new ActionBroadcastMessage(s.substring(10));
+                return new ActionBroadcastMessage(s.substring(10), true);
             }
         }
         return null;
     };
     public final String message;
-    public ActionBroadcastMessage(String message) {
+    public final boolean console;
+    public ActionBroadcastMessage(String message, boolean console) {
         this.message = message;
+        this.console = console;
     }
 
     @Override
@@ -53,7 +56,9 @@ public class ActionBroadcastMessage implements IAction {
         } else {
             str = Pair.replace(message, replacements);
         }
-        t(Bukkit.getConsoleSender(), str);
+        if (console) {
+            t(Bukkit.getConsoleSender(), str);
+        }
         for (Player p : Bukkit.getOnlinePlayers()) {
             t(p, str);
         }

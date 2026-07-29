@@ -1,7 +1,6 @@
 package top.mrxiaom.pluginbase.actions;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -22,34 +21,37 @@ public class ActionBroadcastMessageAdventure implements IAction {
             if (!section.contains("type") && section.contains("broadcast")) {
                 String content = section.getString("broadcast");
                 if (content != null) {
-                    return new ActionBroadcastMessageAdventure(content, null, null, null);
+                    return new ActionBroadcastMessageAdventure(content, true, null, null, null);
                 }
             } else if ("broadcast".equals(section.getString("type"))) {
                 String content = section.getString("content");
                 if (content != null) {
+                    boolean console = section.getBoolean("console", true);
                     List<String> hoverLines = section.contains("hover") ? section.getStringList("hover") : null;
                     String clickAction = section.getString("click.action", "RUN_COMMAND");
                     String clickValue = section.getString("click.value", null);
-                    return new ActionBroadcastMessageAdventure(content, hoverLines, clickAction, clickValue);
+                    return new ActionBroadcastMessageAdventure(content, console, hoverLines, clickAction, clickValue);
                 }
             }
         } else {
             String s = String.valueOf(input);
             if (s.startsWith("[broadcast]")) {
-                return new ActionBroadcastMessageAdventure(s.substring(11), null, null, null);
+                return new ActionBroadcastMessageAdventure(s.substring(11), true, null, null, null);
             }
             if (s.startsWith("broadcast:")) {
-                return new ActionBroadcastMessageAdventure(s.substring(10), null, null, null);
+                return new ActionBroadcastMessageAdventure(s.substring(10), true, null, null, null);
             }
         }
         return null;
     };
     public final @NotNull String message;
+    public final boolean console;
     public final @Nullable List<String> hoverLines;
     public final @Nullable String clickAction;
     public final @Nullable String clickValue;
-    public ActionBroadcastMessageAdventure(@NotNull String message, @Nullable List<String> hoverLines, @Nullable String clickAction, @Nullable String clickValue) {
+    public ActionBroadcastMessageAdventure(@NotNull String message, boolean console, @Nullable List<String> hoverLines, @Nullable String clickAction, @Nullable String clickValue) {
         this.message = message;
+        this.console = console;
         this.hoverLines = hoverLines;
         this.clickAction = clickAction == null ? null : clickAction.replace("-", "_").toUpperCase();
         this.clickValue = clickValue;
@@ -65,7 +67,9 @@ public class ActionBroadcastMessageAdventure implements IAction {
             String str = Pair.replace(message, replacements);
             component = ActionMessageAdventure.parseComponent(str, hoverLines, clickAction, clickValue);
         }
-        AdventureUtil.sendMessage(Bukkit.getConsoleSender(), component);
+        if (console) {
+            AdventureUtil.sendMessage(Bukkit.getConsoleSender(), component);
+        }
         for (Player p : Bukkit.getOnlinePlayers()) {
             AdventureUtil.sendMessage(p, component);
         }
