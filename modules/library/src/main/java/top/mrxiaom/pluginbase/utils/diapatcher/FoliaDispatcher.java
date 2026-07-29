@@ -2,6 +2,7 @@ package top.mrxiaom.pluginbase.utils.diapatcher;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.api.ICommandDispatcher;
@@ -16,7 +17,9 @@ public class FoliaDispatcher implements ICommandDispatcher {
     @Override
     public void dispatchCommand(@NotNull CommandSender sender, @NotNull String commandLine) {
         if (sender instanceof Entity) {
-            scheduler.runAtEntity((Entity) sender, () -> Bukkit.dispatchCommand(sender, commandLine));
+            scheduler.runAtEntityJoin((Entity) sender, () -> Bukkit.dispatchCommand(sender, commandLine));
+        } else if (sender instanceof ConsoleCommandSender) {
+            scheduler.runTaskJoin(() -> Bukkit.dispatchCommand(sender, commandLine));
         } else {
             Bukkit.dispatchCommand(sender, commandLine);
         }

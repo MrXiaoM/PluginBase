@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IRunTask;
 import top.mrxiaom.pluginbase.api.IScheduler;
@@ -39,9 +40,13 @@ public class FoliaLibScheduler implements IScheduler {
     }
 
     @Override
-    public @NotNull IRunTask runTask(@NotNull Runnable runnable) {
+    public void runTask(@NotNull Runnable runnable) {
         scheduler.runNextTick((t) -> runnable.run());
-        return DummyTask.INSTANCE;
+    }
+
+    @Override
+    public void runTaskJoin(@NotNull Runnable runnable) {
+        scheduler.runNextTick((t) -> runnable.run()).join();
     }
 
     @Override
@@ -73,6 +78,11 @@ public class FoliaLibScheduler implements IScheduler {
     @Override
     public <T extends Entity> void runAtEntity(@NotNull T entity, @NotNull Consumer<T> runnable) {
         scheduler.runAtEntity(entity, wt -> runnable.accept(entity));
+    }
+
+    @Override
+    public <T extends Entity> void runAtEntityJoin(@NonNull T entity, @NotNull Consumer<T> runnable) {
+        scheduler.runAtEntity(entity, wt -> runnable.accept(entity)).join();
     }
 
     @Override

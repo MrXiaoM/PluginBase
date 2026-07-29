@@ -46,10 +46,9 @@ public class Util {
     private static InventoryViewAccessor.Provider inventoryViewAccessor;
 
     public static void init(BukkitPlugin plugin) {
-        try {
-            Bukkit.getServer().getClass().getDeclaredMethod("dispatchCmdAsync", CommandSender.class, String.class);
+        if (/* isFolia() */Util.isPresent("io.papermc.paper.threadedregions.RegionizedServer")) {
             dispatcher = new FoliaDispatcher(plugin.getScheduler());
-        } catch (ReflectiveOperationException e) {
+        } else {
             dispatcher = BukkitDispatcher.INSTANCE;
         }
         try {
