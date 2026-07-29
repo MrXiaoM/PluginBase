@@ -27,6 +27,7 @@ public interface IScheduler {
     <T extends Entity> @NotNull IRunTask runAtEntityLater(@NotNull T entity, @NotNull Consumer<T> runnable, long delay);
     <T extends Entity> @NotNull IRunTask runAtEntityTimer(@NotNull T entity, @NotNull Consumer<T> runnable, long delay, long period);
     void runAtLocation(@NotNull Location location, @NotNull Consumer<Location> runnable);
+    void runAtLocationJoin(@NotNull Location location, @NotNull Consumer<Location> runnable);
     @NotNull IRunTask runAtLocationLater(@NotNull Location location, @NotNull Consumer<Location> runnable, long delay);
     @NotNull IRunTask runAtLocationTimer(@NotNull Location location, @NotNull Consumer<Location> runnable, long delay, long period);
     void teleport(@NotNull Entity entity, @NotNull Location location, @NotNull PlayerTeleportEvent.TeleportCause cause, @Nullable Consumer<Entity> then);
@@ -57,6 +58,9 @@ public interface IScheduler {
     }
     default void runAtLocation(@NotNull Location location, @NotNull Runnable runnable) {
         runAtLocation(location, l -> runnable.run());
+    }
+    default void runAtLocationJoin(@NotNull Location location, @NotNull Runnable runnable) {
+        runAtLocationJoin(location, l -> runnable.run());
     }
     default @NotNull IRunTask runAtLocationLater(@NotNull Location location, @NotNull Runnable runnable, long delay) {
         return runAtLocationLater(location, l -> runnable.run(), delay);

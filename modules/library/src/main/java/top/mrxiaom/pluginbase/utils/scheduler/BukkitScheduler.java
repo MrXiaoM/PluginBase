@@ -108,6 +108,11 @@ public class BukkitScheduler implements IScheduler {
     }
 
     @Override
+    public void runAtLocationJoin(@NotNull Location location, @NotNull Consumer<Location> runnable) {
+        runnable.accept(location);
+    }
+
+    @Override
     public @NotNull IRunTask runAtLocationLater(@NotNull Location location, @NotNull Consumer<Location> runnable, long delay) {
         return runTaskLater(() -> runnable.accept(location), delay);
     }

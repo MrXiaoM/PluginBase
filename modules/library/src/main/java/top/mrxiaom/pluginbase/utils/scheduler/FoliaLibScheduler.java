@@ -101,6 +101,11 @@ public class FoliaLibScheduler implements IScheduler {
     }
 
     @Override
+    public void runAtLocationJoin(@NotNull Location location, @NotNull Consumer<Location> runnable) {
+        scheduler.runAtLocation(location, wt -> runnable.accept(location)).join();
+    }
+
+    @Override
     public @NotNull IRunTask runAtLocationLater(@NotNull Location location, @NotNull Consumer<Location> runnable, long delay) {
         return wrap(scheduler.runAtLocationLater(location, () -> runnable.accept(location), delay));
     }
@@ -126,7 +131,7 @@ public class FoliaLibScheduler implements IScheduler {
     public void openInventory(HumanEntity player, Inventory inv) {
         // Fuck Folia
         if (foliaLib.isFolia()) {
-            scheduler.runAtEntity(player, t -> player.openInventory(inv));
+            scheduler.runAtEntity(player, t -> player.openInventory(inv)).join();
         } else {
             player.openInventory(inv);
         }
@@ -136,7 +141,7 @@ public class FoliaLibScheduler implements IScheduler {
     public void openInventory(HumanEntity player, InventoryViewAccessor view) {
         // Fuck Folia
         if (foliaLib.isFolia()) {
-            scheduler.runAtEntity(player, t -> view.openInventory(player));
+            scheduler.runAtEntity(player, t -> view.openInventory(player)).join();
         } else {
             view.openInventory(player);
         }
@@ -146,7 +151,7 @@ public class FoliaLibScheduler implements IScheduler {
     public void closeInventory(HumanEntity player) {
         // Fuck Folia
         if (foliaLib.isFolia()) {
-            scheduler.runAtEntity(player, t -> player.closeInventory());
+            scheduler.runAtEntity(player, t -> player.closeInventory()).join();
         } else {
             player.closeInventory();
         }
