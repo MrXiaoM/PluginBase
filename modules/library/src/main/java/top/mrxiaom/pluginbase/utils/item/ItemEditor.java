@@ -5,6 +5,7 @@ import net.kyori.adventure.text.serializer.ComponentSerializer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.AdventureComponentSerializer;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface ItemEditor {
     /**
      * 获取 Component 序列化器
      */
-    ComponentSerializer<Component, ?, String> serializer();
+    AdventureComponentSerializer<Component, ?, String> serializer();
 
     /**
      * 获取物品名

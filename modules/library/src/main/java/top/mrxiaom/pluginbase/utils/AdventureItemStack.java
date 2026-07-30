@@ -16,7 +16,6 @@ import net.kyori.adventure.text.minimessage.internal.serializer.SerializableReso
 import net.kyori.adventure.text.minimessage.internal.serializer.StyleClaim;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.adventure.text.serializer.ComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -25,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.utils.adventure.DefaultAdventureHandler;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.AdventureComponentSerializer;
 import top.mrxiaom.pluginbase.utils.item.ItemEditor;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class AdventureItemStack {
      * 获取 Component 序列化器
      * @see ItemEditor#serializer()
      */
-    public static ComponentSerializer<Component, ?, String> serializer() {
+    public static AdventureComponentSerializer<Component, ?, String> serializer() {
         return itemEditor.serializer();
     }
 

@@ -9,7 +9,6 @@ import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBTList;
 import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.ComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +16,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.utils.AdventureItemStack;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.AdventureComponentSerializer;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.AdventureComponentSerializerImpl;
 import top.mrxiaom.pluginbase.utils.adventure.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.ArrayList;
@@ -60,9 +61,9 @@ public class LegacyItemEditor implements ItemEditor {
     }
 
     @Override
-    public ComponentSerializer<Component, ?, String> serializer() {
+    public AdventureComponentSerializer<Component, ?, String> serializer() {
         if (textUseComponent) {
-            return GsonComponentSerializer.gson();
+            return new AdventureComponentSerializerImpl<>(GsonComponentSerializer.gson());
         } else {
             return LegacyComponentSerializer.legacySection();
         }

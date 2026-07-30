@@ -1,12 +1,13 @@
 package top.mrxiaom.pluginbase.paper.item;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.ComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.AdventureComponentSerializer;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.AdventureComponentSerializerImpl;
 import top.mrxiaom.pluginbase.utils.item.ItemEditor;
 
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ public class PaperItemEditor implements ItemEditor {
     }
 
     @Override
-    public ComponentSerializer<Component, ?, String> serializer() {
-        return GsonComponentSerializer.gson();
+    public AdventureComponentSerializer<Component, ?, String> serializer() {
+        return new AdventureComponentSerializerImpl<>(GsonComponentSerializer.gson());
     }
 
     @Override

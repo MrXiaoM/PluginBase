@@ -25,7 +25,6 @@ package top.mrxiaom.pluginbase.utils.adventure.serializer.legacy;
 
 import java.util.List;
 import java.util.regex.Pattern;
-import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -33,9 +32,9 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.flattener.ComponentFlattener;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.serializer.ComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.utils.adventure.serializer.AdventureComponentSerializer;
 
 /**
  * A legacy component serializer.
@@ -45,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @since 4.0.0
  */
-public interface LegacyComponentSerializer extends ComponentSerializer<Component, TextComponent, String> {
+public interface LegacyComponentSerializer extends AdventureComponentSerializer<Component, TextComponent, String> {
     /**
      * Gets a component serializer for legacy-based serialization and deserialization. Note that this
      * serializer works exactly like vanilla Minecraft and does not detect any links. If you want to
@@ -146,7 +145,7 @@ public interface LegacyComponentSerializer extends ComponentSerializer<Component
      *
      * @since 4.0.0
      */
-    interface Builder extends AbstractBuilder<LegacyComponentSerializer> {
+    interface Builder {
         /**
          * Sets the legacy character used by the serializer.
          *
@@ -259,7 +258,6 @@ public interface LegacyComponentSerializer extends ComponentSerializer<Component
          *
          * @return the built serializer
          */
-        @Override
         @NotNull LegacyComponentSerializer build();
     }
 }
