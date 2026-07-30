@@ -248,8 +248,9 @@ class LibraryHelper {
     }
 
     void collectPluginHolders() {
-        project.dependencies.add("compileOnly", "top.mrxiaom:LibrariesResolver-Gradle:${modules.VERSION}")
-        project.dependencies.add("annotationProcessor", "top.mrxiaom:LibrariesResolver-Gradle:${modules.VERSION}")
+        var notation = "${resolver.GROUP}:LibrariesResolver-Gradle:${modules.VERSION}"
+        project.dependencies.add("compileOnly", notation)
+        project.dependencies.add("annotationProcessor", notation)
     }
 
     static void initJava(Project project, LibraryHelper base, int targetJavaVersion, boolean extraJar, String version = String.valueOf(project.version)) {

@@ -85,6 +85,7 @@ buildConfig {
             val dep = dependency(proj) ?: continue
             field(name(proj), dep)
         }
+        field("GROUP", project.group.toString())
     }
     forClass("top.mrxiaom.gradle", "PluginBase") {
         for (proj in project(":modules").subprojects) {
