@@ -11,5 +11,5 @@ subprojects {
     }
 
     setupJava(8)
-    setupJavadoc(false)
+    setupJavadoc()
 }

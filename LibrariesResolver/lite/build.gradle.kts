@@ -17,7 +17,7 @@ buildConfig {
 }
 
 setupJava(8)
-setupJavadoc(false)
+setupJavadoc()
 setupPublishing(
     publishName = "LibrariesResolver-Lite",
     publishDesc = "MrXiaoM's Bukkit plugin libraries resolver, but a more simple variant",

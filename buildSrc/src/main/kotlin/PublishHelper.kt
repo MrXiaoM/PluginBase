@@ -36,13 +36,9 @@ fun Project.setupJava(targetJavaVersion: Int, withDocuments: Boolean = true) {
     }
 }
 
-fun Project.setupJavadoc(addSpigotLink: Boolean = true, block: StandardJavadocDocletOptions.() -> Unit = {}) {
+fun Project.setupJavadoc(block: StandardJavadocDocletOptions.() -> Unit = {}) {
     tasks.getByName<Javadoc>("javadoc") {
         (options as StandardJavadocDocletOptions).apply {
-            if (addSpigotLink) {
-                links("https://hub.spigotmc.org/javadocs/spigot/")
-            }
-
             locale("zh_CN")
             encoding("UTF-8")
             docEncoding("UTF-8")

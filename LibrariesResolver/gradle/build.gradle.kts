@@ -31,7 +31,7 @@ dependencies {
 }
 
 setupJava(targetJavaVersion)
-setupJavadoc(false)
+setupJavadoc()
 setupPublishing(
     publishName = "LibrariesResolver-Gradle",
     publishDesc = "MrXiaoM's Bukkit plugin libraries resolver gradle pre-process logic",
