@@ -64,7 +64,6 @@ fun Project.setupPublishing(
     publishDesc: String = "MrXiaoM's Bukkit plugin basic core",
     sourceCodeUrl: String = "https://github.com/MrXiaoM/PluginBase"
 ) {
-    jitpackGroup?.also { project.group = it }
     extensions.configure<PublishingExtension> {
         publications {
             create<MavenPublication>("maven") {

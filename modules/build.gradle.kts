@@ -4,7 +4,7 @@ subprojects {
     apply(plugin="maven-publish")
     apply(plugin="signing")
 
-    group = "${rootProject.group}.pluginbase"
+    group = project.jitpackGroup ?: "${rootProject.group}.pluginbase"
 
     dependencies {
         add("compileOnly", rootProject.files("buildSrc/libs/stub-rt.jar"))
