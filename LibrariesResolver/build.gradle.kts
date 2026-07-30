@@ -3,7 +3,7 @@ subprojects {
     apply(plugin="maven-publish")
     apply(plugin="signing")
 
-    group = "top.mrxiaom"
+    group = rootProject.group
 
     dependencies {
         add("compileOnly", rootProject.files("buildSrc/libs/stub-rt.jar"))
