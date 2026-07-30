@@ -104,7 +104,7 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
             return null;
         }
         if (foundFormat == FormatCodeType.KYORI_HEX) {
-            final @Nullable TextColor parsed = tryParseHexColor(input.substring(pos, pos + 6));
+            final @Nullable WrappedTextFormat parsed = tryParseHexColor(input.substring(pos, pos + 6));
             if (parsed != null) {
                 return new DecodedFormat(foundFormat, parsed);
             }
@@ -115,7 +115,7 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
             for (int i = pos - 1; i >= pos - 11; i -= 2) {
                 foundHex.append(input.charAt(i));
             }
-            final @Nullable TextColor parsed = tryParseHexColor(foundHex.reverse().toString());
+            final @Nullable WrappedTextFormat parsed = tryParseHexColor(foundHex.reverse().toString());
             if (parsed != null) {
                 return new DecodedFormat(foundFormat, parsed);
             }
@@ -123,10 +123,10 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
         return null;
     }
 
-    private static @Nullable TextColor tryParseHexColor(final String hexDigits) {
+    private static @Nullable WrappedTextFormat tryParseHexColor(final String hexDigits) {
         try {
             final int color = Integer.parseInt(hexDigits, 16);
-            return TextColor.color(color);
+            return new WrappedTextFormat(TextColor.color(color));
         } catch (final NumberFormatException ex) {
             return null;
         }
@@ -136,9 +136,9 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
         return format instanceof TextColor && !(format instanceof NamedTextColor);
     }
 
-    private @Nullable String toLegacyCode(TextFormat format) {
-        if (isHexTextColor(format)) {
-            final TextColor color = (TextColor) format;
+    private @Nullable String toLegacyCode(WrappedTextFormat format) {
+        if (isHexTextColor(format.get())) {
+            final TextColor color = (TextColor) format.get();
             if (this.hexColours) {
                 final String hex = String.format("%06x", color.value());
                 if (this.useTerriblyStupidHexFormat) {
@@ -156,7 +156,7 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
                 if (!(color instanceof NamedTextColor)) {
                     // if we are not using hex colours, then convert the hex colour
                     // to the "nearest" possible named/standard text colour
-                    format = TextColor.nearestColorTo(this.formats.colors, color);
+                    format = new WrappedTextFormat(TextColor.nearestColorTo(this.formats.colors, color));
                 }
             }
         }
@@ -245,14 +245,15 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
         return state.toString();
     }
 
-    private static boolean applyFormat(final TextComponent.@NotNull Builder builder, final @NotNull TextFormat format) {
-        if (format instanceof TextColor) {
-            builder.colorIfAbsent((TextColor) format);
+    private static boolean applyFormat(final TextComponent.@NotNull Builder builder, final @NotNull WrappedTextFormat format) {
+        TextFormat raw = format.get();
+        if (raw instanceof TextColor) {
+            builder.colorIfAbsent((TextColor) raw);
             return true;
-        } else if (format instanceof TextDecoration) {
-            builder.decoration((TextDecoration) format, TextDecoration.State.TRUE);
+        } else if (raw instanceof TextDecoration) {
+            builder.decoration((TextDecoration) raw, TextDecoration.State.TRUE);
             return false;
-        } else if (format instanceof Reset) {
+        } else if (format.isReset()) {
             return true;
         }
         throw new IllegalArgumentException(String.format("unknown format '%s'", format.getClass()));
@@ -262,7 +263,7 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
     private final class Cereal implements FlattenerListener {
         private final StringBuilder sb = new StringBuilder();
         private final StyleState style = new StyleState();
-        private @Nullable TextFormat lastWritten;
+        private @Nullable WrappedTextFormat lastWritten;
         private StyleState[] styles = new StyleState[8];
         private int head = -1;
 
@@ -307,6 +308,10 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
         }
 
         void append(final @NotNull TextFormat format) {
+            append(new WrappedTextFormat(format));
+        }
+
+        void append(final @NotNull WrappedTextFormat format) {
             if (this.lastWritten != format) {
                 final String legacyCode = LegacyComponentSerializerImpl.this.toLegacyCode(format);
                 if (legacyCode == null) {
@@ -368,14 +373,14 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
                 final boolean colorChanged = this.color != Cereal.this.style.color;
                 if (this.needsReset) {
                     if (!colorChanged) {
-                        Cereal.this.append(Reset.INSTANCE);
+                        Cereal.this.append(WrappedTextFormat.RESET);
                     }
                     this.needsReset = false;
                 }
 
                 // If color changes, we need to do a full reset.
                 // Additionally, if the last thing to be appended was a reset then we need to re-apply everything.
-                if (colorChanged || Cereal.this.lastWritten == Reset.INSTANCE) {
+                if (colorChanged || Cereal.this.lastWritten == WrappedTextFormat.RESET) {
                     this.applyFullFormat();
                     return;
                 }
@@ -399,7 +404,7 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
                 if (this.color != null) {
                     Cereal.this.append(this.color);
                 } else {
-                    Cereal.this.append(Reset.INSTANCE);
+                    Cereal.this.append(WrappedTextFormat.RESET);
                 }
                 Cereal.this.style.color = this.color;
 
@@ -522,9 +527,9 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
 
     static final class DecodedFormat {
         final FormatCodeType encodedFormat;
-        final TextFormat format;
+        final WrappedTextFormat format;
 
-        private DecodedFormat(final FormatCodeType encodedFormat, final TextFormat format) {
+        private DecodedFormat(final FormatCodeType encodedFormat, final WrappedTextFormat format) {
             if (format == null) {
                 throw new IllegalStateException("No format found");
             }

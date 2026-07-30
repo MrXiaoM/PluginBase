@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.kyori.adventure.internal.Internals;
-import net.kyori.adventure.text.format.TextFormat;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,10 +34,10 @@ import static java.util.Objects.requireNonNull;
 
 final class CharacterAndFormatImpl implements CharacterAndFormat {
     private final char character;
-    private final TextFormat format;
+    private final WrappedTextFormat format;
     private final boolean caseInsensitive;
 
-    CharacterAndFormatImpl(final char character, final @NotNull TextFormat format, final boolean caseInsensitive) {
+    CharacterAndFormatImpl(final char character, final @NotNull WrappedTextFormat format, final boolean caseInsensitive) {
         this.character = character;
         this.format = requireNonNull(format, "format");
         this.caseInsensitive = caseInsensitive;
@@ -50,7 +49,7 @@ final class CharacterAndFormatImpl implements CharacterAndFormat {
     }
 
     @Override
-    public @NotNull TextFormat format() {
+    public @NotNull WrappedTextFormat format() {
         return this.format;
     }
 

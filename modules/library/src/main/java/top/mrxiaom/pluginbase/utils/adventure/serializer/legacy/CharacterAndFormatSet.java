@@ -31,25 +31,26 @@ import net.kyori.adventure.text.format.TextFormat;
 
 final class CharacterAndFormatSet {
     static final CharacterAndFormatSet DEFAULT = of(CharacterAndFormat.defaults());
-    final List<TextFormat> formats;
+    final List<WrappedTextFormat> formats;
     final List<TextColor> colors;
     final String characters;
 
     static CharacterAndFormatSet of(final List<CharacterAndFormat> pairs) {
         final int size = pairs.size();
         final List<TextColor> colors = new ArrayList<>();
-        final List<TextFormat> formats = new ArrayList<>(size);
+        final List<WrappedTextFormat> formats = new ArrayList<>(size);
         final StringBuilder characters = new StringBuilder(size);
         for (final CharacterAndFormat pair : pairs) {
             final char character = pair.character();
-            final TextFormat format = pair.format();
-            final boolean formatIsTextColor = format instanceof TextColor;
+            final WrappedTextFormat format = pair.format();
+            final TextFormat raw = format.get();
+            final boolean formatIsTextColor = raw instanceof TextColor;
 
             // First, add the "standard" character.
             characters.append(character);
             formats.add(format);
             if (formatIsTextColor) {
-                colors.add((TextColor) format);
+                colors.add((TextColor) raw);
             }
 
             // If the character is case-insensitive, we need to add the other character too.
@@ -67,7 +68,7 @@ final class CharacterAndFormatSet {
                 if (added) {
                     formats.add(format);
                     if (formatIsTextColor) {
-                        colors.add((TextColor) format);
+                        colors.add((TextColor) raw);
                     }
                 }
             }
@@ -78,7 +79,7 @@ final class CharacterAndFormatSet {
         return new CharacterAndFormatSet(Collections.unmodifiableList(formats), Collections.unmodifiableList(colors), characters.toString());
     }
 
-    CharacterAndFormatSet(final List<TextFormat> formats, final List<TextColor> colors, final String characters) {
+    CharacterAndFormatSet(final List<WrappedTextFormat> formats, final List<TextColor> colors, final String characters) {
         this.formats = formats;
         this.colors = colors;
         this.characters = characters;

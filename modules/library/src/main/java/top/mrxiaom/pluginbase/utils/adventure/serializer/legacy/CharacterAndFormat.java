@@ -32,6 +32,7 @@ import net.kyori.examination.Examinable;
 import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 /**
@@ -170,11 +171,11 @@ public interface CharacterAndFormat extends Examinable {
     CharacterAndFormat ITALIC = characterAndFormat('o', TextDecoration.ITALIC, true);
 
     /**
-     * Character and format pair representing {@link Reset#INSTANCE}.
+     * Character and format pair representing {@link WrappedTextFormat#RESET}.
      *
      * @since 4.14.0
      */
-    CharacterAndFormat RESET = characterAndFormat('r', Reset.INSTANCE, true);
+    CharacterAndFormat RESET = characterAndFormat('r', WrappedTextFormat.RESET, true);
 
     /**
      * Creates a new combination of a case-sensitive {@code character} and a {@link TextFormat}.
@@ -185,7 +186,7 @@ public interface CharacterAndFormat extends Examinable {
      * @since 4.14.0
      */
     static @NotNull CharacterAndFormat characterAndFormat(final char character, final @NotNull TextFormat format) {
-        return characterAndFormat(character, format, false);
+        return characterAndFormat(character, new WrappedTextFormat(format), false);
     }
 
     /**
@@ -198,6 +199,19 @@ public interface CharacterAndFormat extends Examinable {
      * @since 4.17.0
      */
     static @NotNull CharacterAndFormat characterAndFormat(final char character, final @NotNull TextFormat format, final boolean caseInsensitive) {
+        return new CharacterAndFormatImpl(character, new WrappedTextFormat(format), caseInsensitive);
+    }
+
+    /**
+     * Creates a new combination of a {@code character} and a {@link TextFormat}.
+     *
+     * @param character the character
+     * @param format the format
+     * @param caseInsensitive if the character is case-insensitive
+     * @return a new character and format instance.
+     * @since 4.17.0
+     */
+    static @NotNull CharacterAndFormat characterAndFormat(final char character, final @NotNull WrappedTextFormat format, final boolean caseInsensitive) {
         return new CharacterAndFormatImpl(character, format, caseInsensitive);
     }
 
@@ -226,7 +240,7 @@ public interface CharacterAndFormat extends Examinable {
      * @return the format
      * @since 4.14.0
      */
-    @NotNull TextFormat format();
+    @NotNull WrappedTextFormat format();
 
     /**
      * If the {@link #character()} is case-insensitive.
