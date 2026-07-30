@@ -15,6 +15,14 @@ import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.signing.SigningExtension
 
+val Project.jitpackGroup: String?
+    get() {
+        if (System.getenv("JITPACK") == "true") {
+            return "${rootProject.group}.PluginBase"
+        }
+        return null
+    }
+
 fun Project.setupJava(targetJavaVersion: Int, withDocuments: Boolean = true) {
     extensions.configure<JavaPluginExtension> {
         disableAutoTargetJvm()
@@ -56,6 +64,7 @@ fun Project.setupPublishing(
     publishDesc: String = "MrXiaoM's Bukkit plugin basic core",
     sourceCodeUrl: String = "https://github.com/MrXiaoM/PluginBase"
 ) {
+    jitpackGroup?.also { project.group = it }
     extensions.configure<PublishingExtension> {
         publications {
             create<MavenPublication>("maven") {

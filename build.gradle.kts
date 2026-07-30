@@ -6,6 +6,10 @@ plugins {
     id("com.gradleup.shadow") version "9.3.0" apply false
 }
 
+if (rootProject.jitpackGroup != null) {
+    println("Found jitpack.")
+}
+
 allprojects {
     group = rootProject.group
     version = rootProject.version
