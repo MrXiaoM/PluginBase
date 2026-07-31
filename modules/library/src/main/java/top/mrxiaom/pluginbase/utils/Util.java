@@ -44,9 +44,10 @@ import java.util.regex.MatchResult;
 public class Util {
     private static ICommandDispatcher dispatcher;
     private static InventoryViewAccessor.Provider inventoryViewAccessor;
+    private static Boolean folia;
 
     public static void init(BukkitPlugin plugin) {
-        if (/* isFolia() */Util.isPresent("io.papermc.paper.threadedregions.RegionizedServer")) {
+        if (isFolia()) {
             dispatcher = new FoliaDispatcher(plugin.getScheduler());
         } else {
             dispatcher = BukkitDispatcher.INSTANCE;
@@ -73,6 +74,13 @@ public class Util {
         if (plugin.options.adventure()) {
             AdventureUtil.init(plugin);
         }
+    }
+
+    public static boolean isFolia() {
+        if (folia == null) {
+            folia = Util.isPresent("io.papermc.paper.threadedregions.RegionizedServer");
+        }
+        return folia;
     }
 
     @NotNull

@@ -27,8 +27,6 @@ dependencies {
 
     applyLibraries("adventure", "compileOnly")
     applyLibraries("nbt-api", "compileOnly")
-    compileOnly("com.github.technicallycoded:FoliaLib:0.4.4")
-
 }
 
 setupPublishing(

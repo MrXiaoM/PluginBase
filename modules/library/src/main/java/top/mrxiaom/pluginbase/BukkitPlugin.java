@@ -247,7 +247,7 @@ public abstract class BukkitPlugin extends JavaPlugin {
     /**
      * 已包装的调度器，用于兼容 Folia 服务端
      */
-    protected IScheduler scheduler = new BukkitScheduler(this);
+    protected IScheduler scheduler;
     /**
      * 物品栏创建工厂
      */
@@ -261,10 +261,21 @@ public abstract class BukkitPlugin extends JavaPlugin {
             throw new IllegalStateException("PluginBase 依赖没有 relocate 到插件包，插件无法正常工作，请联系开发者解决该问题\n参考文档: https://plugins.mcio.dev/elopers/base/buildscript");
         }
         instance = this;
+        this.scheduler = initScheduler();
         this.options = options;
         this.classLoader = initClassLoader((URLClassLoader) getClassLoader());
         if (this.options.libraries() || this.options.database) {
             loadLibraries();
+        }
+    }
+
+    protected IScheduler initScheduler() {
+        try {
+            Class<?> type = Class.forName("top.mrxiaom.pluginbase.utils.scheduler.Schedulers");
+            Method method = type.getDeclaredMethod("create", BukkitPlugin.class);
+            return (IScheduler) method.invoke(null, this);
+        } catch (Throwable ex) {
+            return new BukkitScheduler(this);
         }
     }
 
