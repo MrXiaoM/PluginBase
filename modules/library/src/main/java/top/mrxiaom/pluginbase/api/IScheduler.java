@@ -16,18 +16,15 @@ import java.util.function.Consumer;
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 public interface IScheduler {
     void runTask(@NotNull Runnable runnable);
-    void runTaskJoin(@NotNull Runnable runnable);
     @NotNull IRunTask runTaskLater(@NotNull Runnable runnable, long delay);
     @NotNull IRunTask runTaskTimer(@NotNull Runnable runnable, long delay, long period);
     @NotNull IRunTask runTaskAsync(@NotNull Runnable runnable);
     @NotNull IRunTask runTaskLaterAsync(@NotNull Runnable runnable, long delay);
     @NotNull IRunTask runTaskTimerAsync(@NotNull Runnable runnable, long delay, long period);
     <T extends Entity> void runAtEntity(@NotNull T entity, @NotNull Consumer<T> runnable);
-    <T extends Entity> void runAtEntityJoin(@NotNull T entity, @NotNull Consumer<T> runnable);
     <T extends Entity> @NotNull IRunTask runAtEntityLater(@NotNull T entity, @NotNull Consumer<T> runnable, long delay);
     <T extends Entity> @NotNull IRunTask runAtEntityTimer(@NotNull T entity, @NotNull Consumer<T> runnable, long delay, long period);
     void runAtLocation(@NotNull Location location, @NotNull Consumer<Location> runnable);
-    void runAtLocationJoin(@NotNull Location location, @NotNull Consumer<Location> runnable);
     @NotNull IRunTask runAtLocationLater(@NotNull Location location, @NotNull Consumer<Location> runnable, long delay);
     @NotNull IRunTask runAtLocationTimer(@NotNull Location location, @NotNull Consumer<Location> runnable, long delay, long period);
     void teleport(@NotNull Entity entity, @NotNull Location location, @NotNull PlayerTeleportEvent.TeleportCause cause, @Nullable Consumer<Entity> then);
@@ -47,9 +44,6 @@ public interface IScheduler {
     default <T extends Entity> void runAtEntity(@NotNull T entity, @NotNull Runnable runnable) {
         runAtEntity(entity, e -> runnable.run());
     }
-    default <T extends Entity> void runAtEntityJoin(@NotNull T entity, @NotNull Runnable runnable) {
-        runAtEntityJoin(entity, e -> runnable.run());
-    }
     default <T extends Entity> @NotNull IRunTask runAtEntityLater(@NotNull T entity, @NotNull Runnable runnable, long delay) {
         return runAtEntityLater(entity, e -> runnable.run(), delay);
     }
@@ -58,9 +52,6 @@ public interface IScheduler {
     }
     default void runAtLocation(@NotNull Location location, @NotNull Runnable runnable) {
         runAtLocation(location, l -> runnable.run());
-    }
-    default void runAtLocationJoin(@NotNull Location location, @NotNull Runnable runnable) {
-        runAtLocationJoin(location, l -> runnable.run());
     }
     default @NotNull IRunTask runAtLocationLater(@NotNull Location location, @NotNull Runnable runnable, long delay) {
         return runAtLocationLater(location, l -> runnable.run(), delay);

@@ -42,22 +42,6 @@ public class BukkitScheduler implements IScheduler {
     }
 
     @Override
-    public void runTaskJoin(@NotNull Runnable runnable) {
-        CompletableFuture<Void> future = new CompletableFuture<>();
-        IllegalStateException ex = new IllegalStateException("");
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            try {
-                runnable.run();
-            } catch (Throwable t) {
-                plugin.warn("执行 runTaskJoin 时出现异常", ex.initCause(t));
-            } finally {
-                future.complete(null);
-            }
-        });
-        future.join();
-    }
-
-    @Override
     public @NotNull IRunTask runTaskLater(@NotNull Runnable runnable, long delay) {
         return wrap(Bukkit.getScheduler().runTaskLater(plugin, runnable, delay));
     }
@@ -88,11 +72,6 @@ public class BukkitScheduler implements IScheduler {
     }
 
     @Override
-    public <T extends Entity> void runAtEntityJoin(@NonNull T entity, @NotNull Consumer<T> runnable) {
-        runnable.accept(entity);
-    }
-
-    @Override
     public <T extends Entity> @NotNull IRunTask runAtEntityLater(@NotNull T entity, @NotNull Consumer<T> runnable, long delay) {
         return runTaskLater(() -> runnable.accept(entity), delay);
     }
@@ -104,11 +83,6 @@ public class BukkitScheduler implements IScheduler {
 
     @Override
     public void runAtLocation(@NotNull Location location, @NotNull Consumer<Location> runnable) {
-        runnable.accept(location);
-    }
-
-    @Override
-    public void runAtLocationJoin(@NotNull Location location, @NotNull Consumer<Location> runnable) {
         runnable.accept(location);
     }
 

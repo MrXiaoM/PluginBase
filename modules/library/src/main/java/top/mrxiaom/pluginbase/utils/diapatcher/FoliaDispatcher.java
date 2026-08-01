@@ -17,9 +17,9 @@ public class FoliaDispatcher implements ICommandDispatcher {
     @Override
     public void dispatchCommand(@NotNull CommandSender sender, @NotNull String commandLine) {
         if (sender instanceof Entity) {
-            scheduler.runAtEntityJoin((Entity) sender, () -> Bukkit.dispatchCommand(sender, commandLine));
+            scheduler.runAtEntity((Entity) sender, () -> Bukkit.dispatchCommand(sender, commandLine));
         } else if (sender instanceof ConsoleCommandSender) {
-            scheduler.runTaskJoin(() -> Bukkit.dispatchCommand(sender, commandLine));
+            scheduler.runTask(() -> Bukkit.dispatchCommand(sender, commandLine));
         } else {
             Bukkit.dispatchCommand(sender, commandLine);
         }
