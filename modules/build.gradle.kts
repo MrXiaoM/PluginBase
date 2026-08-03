@@ -27,4 +27,7 @@ subprojects {
         "net.kyori:adventure-text-serializer-gson:4.25.0",
         "net.kyori:adventure-text-minimessage:4.25.0",
     )
+    configurations.named("compileOnly").configure {
+        exclude(group="org.jspecify", module="jspecify")
+    }
 }
