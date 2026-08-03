@@ -93,6 +93,7 @@ public class Arguments {
                     keyStringBuilder.append(" ");
                     if (arg.endsWith(keyStringEndQuote)) {
                         keyStringBuilder.append(arg, 0, arg.length() - 1);
+                        stringMap.put(keyString, keyStringBuilder.toString());
                         keyString = null;
                         keyStringEndQuote = null;
                         keyStringBuilder = null;
