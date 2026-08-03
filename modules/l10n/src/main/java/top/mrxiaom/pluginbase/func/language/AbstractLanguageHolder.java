@@ -1,15 +1,18 @@
 package top.mrxiaom.pluginbase.func.language;
 
-import com.google.common.collect.Lists;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.func.LanguageManager;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
+import top.mrxiaom.pluginbase.utils.CollectionUtils;
 import top.mrxiaom.pluginbase.utils.ColorHelper;
 import top.mrxiaom.pluginbase.utils.Pair;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,17 +30,23 @@ public abstract class AbstractLanguageHolder {
     /**
      * 默认值
      */
-    public final Object defaultValue;
+    public final @NotNull Object defaultValue;
+    /**
+     * 配置值
+     */
+    private @Nullable Object rawValue;
 
-    public AbstractLanguageHolder(@NotNull String key, List<String> defaultValue) {
+    public AbstractLanguageHolder(@NotNull String key, @NotNull List<String> defaultValue) {
         this.key = key;
         this.isList = true;
         this.defaultValue = defaultValue;
+        this.rawValue = defaultValue;
     }
-    public AbstractLanguageHolder(@NotNull String key, String defaultValue) {
+    public AbstractLanguageHolder(@NotNull String key, @NotNull String defaultValue) {
         this.key = key;
         this.isList = false;
         this.defaultValue = defaultValue;
+        this.rawValue = defaultValue;
     }
 
     protected void key(String key) {
@@ -52,25 +61,67 @@ public abstract class AbstractLanguageHolder {
     }
 
     /**
+     * 获取原始配置值，有可能是 <code>String</code> 或 <code>List&lt;String&gt;</code>
+     */
+    @Nullable
+    public Object rawValue() {
+        return rawValue;
+    }
+
+    @NotNull
+    @SuppressWarnings("unchecked")
+    protected List<String> getAsList() {
+        if (rawValue instanceof List<?>) {
+            return (List<String>) rawValue;
+        }
+        return (List<String>) defaultValue;
+    }
+
+    @NotNull
+    protected String getAsString() {
+        if (rawValue instanceof String) {
+            return (String) rawValue;
+        }
+        return (String) defaultValue;
+    }
+
+    public void onReload(@NotNull ConfigurationSection config, @NotNull String fullKey) {
+        if (isList) {
+            if (config.isList(fullKey)) {
+                this.rawValue = config.getStringList(fullKey);
+            } else {
+                String value = config.getString(fullKey);
+                if (value != null) {
+                    this.rawValue = Collections.singletonList(value);
+                } else {
+                    this.rawValue = null;
+                }
+            }
+        } else {
+            if (config.isList(fullKey)) {
+                this.rawValue = String.join("\n", config.getStringList(fullKey));
+            } else {
+                this.rawValue = config.getString(fullKey);
+            }
+        }
+    }
+
+    /**
      * 获取本地化管理器
      */
+    @NotNull
     public abstract LanguageManager getLanguageManager();
-
-    @SuppressWarnings({"unchecked"})
-    private <T> T getOrDefault(T value) {
-        return value == null ? (T) defaultValue : value;
-    }
 
     /**
      * 获取本地化字符串
      */
+    @NotNull
     public String str() {
-        LanguageManager lang = getLanguageManager();
         if (isList) {
-            List<String> list = getOrDefault(lang.getAsList(key));
+            List<String> list = getAsList();
             return String.join("\n", list);
         } else {
-            return getOrDefault(lang.getAsString(key));
+            return getAsString();
         }
     }
     /**
@@ -78,6 +129,7 @@ public abstract class AbstractLanguageHolder {
      * @param args 参数列表
      * @see String#format(String, Object...)
      */
+    @NotNull
     public String strFormat(Object... args) {
         Object[] arguments = new Object[args.length];
         ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
@@ -90,6 +142,7 @@ public abstract class AbstractLanguageHolder {
      * 获取本地化字符串，并替换变量
      * @param replacements 替换变量列表
      */
+    @NotNull
     @SafeVarargs
     public final String str(Pair<String, Object>... replacements) {
         List<Pair<String, Object>> list = new ArrayList<>();
@@ -103,6 +156,7 @@ public abstract class AbstractLanguageHolder {
      * 获取本地化字符串，并替换变量
      * @param replacements 替换变量列表
      */
+    @NotNull
     public String str(Iterable<Pair<String, Object>> replacements) {
         List<Pair<String, Object>> list = new ArrayList<>();
         ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
@@ -114,13 +168,12 @@ public abstract class AbstractLanguageHolder {
     /**
      * 获取本地化字符串列表
      */
+    @NotNull
     public List<String> list() {
-        LanguageManager lang = getLanguageManager();
         if (isList) {
-            return getOrDefault(lang.getAsList(key));
+            return getAsList();
         } else {
-            String str = getOrDefault(lang.getAsString(key));
-            return Lists.newArrayList(str.split("\n"));
+            return CollectionUtils.split(getAsString(), '\n');
         }
     }
     /**
@@ -128,6 +181,7 @@ public abstract class AbstractLanguageHolder {
      * @param args 参数列表
      * @see String#format(String, Object...)
      */
+    @NotNull
     public List<String> listFormat(Object... args) {
         Object[] arguments = new Object[args.length];
         ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();
@@ -135,12 +189,13 @@ public abstract class AbstractLanguageHolder {
             arguments[i] = processor.execute(this, null, args[i]);
         }
         String formatted = String.format(String.join("\n", list()), arguments);
-        return Lists.newArrayList(formatted.split("\n"));
+        return CollectionUtils.split(formatted, '\n');
     }
     /**
      * 获取本地化字符串列表，并替换变量
      * @param replacements 替换变量列表
      */
+    @NotNull
     @SafeVarargs
     public final List<String> list(Pair<String, Object>... replacements) {
         List<Pair<String, Object>> list = new ArrayList<>();
@@ -156,6 +211,7 @@ public abstract class AbstractLanguageHolder {
      * 获取本地化字符串列表，并替换变量
      * @param replacements 替换变量列表
      */
+    @NotNull
     public List<String> list(Iterable<Pair<String, Object>> replacements) {
         List<Pair<String, Object>> list = new ArrayList<>();
         ILanguageArgumentProcessor processor = getLanguageManager().getProcessor();

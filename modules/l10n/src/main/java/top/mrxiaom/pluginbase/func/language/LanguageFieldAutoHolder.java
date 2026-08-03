@@ -1,6 +1,7 @@
 package top.mrxiaom.pluginbase.func.language;
 
 import com.google.common.collect.Lists;
+import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.func.LanguageManager;
 
 import java.lang.reflect.Field;
@@ -32,7 +33,7 @@ public class LanguageFieldAutoHolder extends Message {
     }
 
     @Override
-    public LanguageManager getLanguageManager() {
+    public @NotNull LanguageManager getLanguageManager() {
         if (manager != null) {
             return manager;
         }

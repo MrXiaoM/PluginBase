@@ -21,7 +21,6 @@ import java.util.function.Function;
 public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
     @SuppressWarnings({"rawtypes"})
     private final Map<String, Function> holderGetters = new HashMap<>();
-    private final Map<String, Object> holderValues = new HashMap<>();
     private final Map<String, AbstractLanguageHolder> holders = new HashMap<>();
     private ILanguageArgumentProcessor processor = (holder, key, value) -> value;
     private File file = null;
@@ -175,10 +174,14 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
      * 用于 AbstractLanguageHolder，一般不直接调用
      */
     @Nullable
+    @Deprecated
     public String getAsString(String key) {
-        Object obj = holderValues.get(key);
-        if (obj instanceof String) {
-            return (String) obj;
+        AbstractLanguageHolder holder = holders.get(key);
+        if (holder != null) {
+            Object obj = holder.rawValue();
+            if (obj instanceof String) {
+                return (String) obj;
+            }
         }
         return null;
     }
@@ -187,11 +190,15 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
      * 用于 AbstractLanguageHolder，一般不直接调用
      */
     @Nullable
+    @Deprecated
     @SuppressWarnings({"unchecked"})
     public List<String> getAsList(String key) {
-        Object obj = holderValues.get(key);
-        if (obj instanceof List<?>) {
-            return (List<String>) obj;
+        AbstractLanguageHolder holder = holders.get(key);
+        if (holder != null) {
+            Object obj = holder.rawValue();
+            if (obj instanceof List<?>) {
+                return (List<String>) obj;
+            }
         }
         return null;
     }
@@ -207,20 +214,14 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
      */
     public LanguageManager reload() {
         if (file == null || holders.isEmpty()) return this;
-        holderValues.clear();
         YamlConfiguration config = ConfigUtils.load(file);
         config.setDefaults(new YamlConfiguration());
         for (AbstractLanguageHolder holder : holders.values()) {
             String fullKey = keyPrefix + holder.key();
             if (!config.contains(fullKey)) {
                 config.set(fullKey, holder.defaultValue);
-                continue;
             }
-            if (holder.isList) {
-                holderValues.put(holder.key(), config.getStringList(fullKey));
-            } else {
-                holderValues.put(holder.key(), config.getString(fullKey));
-            }
+            holder.onReload(config, fullKey);
         }
         try {
             ConfigUtils.save(config, file);
