@@ -121,10 +121,9 @@ public class ColorHelper {
      */
     public static String parseHex(String hex) {
         StringBuilder result = new StringBuilder("§x");
-        for (char c : hex.substring(1, hex.length() - 1).toLowerCase().toCharArray()) {
+        for (char c : hex.substring(1).toLowerCase().toCharArray()) {
             result.append('§').append(c);
         }
-        result.append("§F");
         return result.toString();
     }
 
