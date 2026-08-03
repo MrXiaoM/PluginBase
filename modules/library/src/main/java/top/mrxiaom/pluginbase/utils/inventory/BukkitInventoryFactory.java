@@ -12,6 +12,11 @@ public class BukkitInventoryFactory implements InventoryFactory {
     @Override
     public Inventory create(InventoryHolder owner, int size, String title) {
         Component parsed = AdventureUtil.miniMessage(title);
-        return Bukkit.createInventory(owner, size, legacy.serialize(parsed));
+        return create(owner, size, parsed);
+    }
+
+    @Override
+    public Inventory create(InventoryHolder owner, int size, Component title) {
+        return Bukkit.createInventory(owner, size, legacy.serialize(title));
     }
 }

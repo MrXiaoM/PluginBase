@@ -378,6 +378,11 @@ public abstract class BukkitPlugin extends JavaPlugin {
         return scheduler;
     }
 
+    @NotNull
+    public InventoryFactory getInventoryFactory() {
+        return inventory;
+    }
+
     /**
      * 创建一个物品栏实例
      * @param holder 物品栏持有数据

@@ -1,5 +1,6 @@
 package top.mrxiaom.pluginbase.utils.inventory;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -11,4 +12,12 @@ public interface InventoryFactory {
      * @param title 标题，自动转换颜色字符
      */
     Inventory create(InventoryHolder owner, int size, String title);
+
+    /**
+     * 新建一个界面
+     * @param owner holder
+     * @param size 大小
+     * @param title 标题
+     */
+    Inventory create(InventoryHolder owner, int size, Component title);
 }

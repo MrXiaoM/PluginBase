@@ -12,14 +12,18 @@ public class PaperInventoryFactory implements InventoryFactory {
     public PaperInventoryFactory() {}
 
     @Override
-    @SuppressWarnings("deprecation")
     public Inventory create(InventoryHolder owner, int size, String title) {
+        Component parsed = AdventureUtil.miniMessage(title);
+        return create(owner, size, parsed);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public Inventory create(InventoryHolder owner, int size, Component title) {
         try {
-            Component parsed = AdventureUtil.miniMessage(title);
-            return Bukkit.createInventory(owner, size, parsed);
+            return Bukkit.createInventory(owner, size, title);
         } catch (LinkageError e) { // 1.16 以下的旧版本 Paper 服务端不支持这个接口
-            Component parsed = AdventureUtil.miniMessage(title);
-            return Bukkit.createInventory(owner, size, AdventureUtil.legacySection(parsed));
+            return Bukkit.createInventory(owner, size, AdventureUtil.legacySection(title));
         }
     }
 
