@@ -198,14 +198,15 @@ public abstract class CommandArguments {
             if (sender instanceof Player) {
                 return (Player) sender;
             }
-            selfNotPlayerAction.run();
+            if (selfNotPlayerAction != null) selfNotPlayerAction.run();
+            return null;
         }
         if (perm != null && !sender.hasPermission(perm)) {
-            selfNoPermission.run();
+            if (selfNoPermission != null) selfNoPermission.run();
             return null;
         }
         return Util.getOnlinePlayer(value).orElseGet(() -> {
-            noPlayerAction.run();
+            if (noPlayerAction != null) noPlayerAction.run();
             return null;
         });
     }
@@ -235,14 +236,15 @@ public abstract class CommandArguments {
             if (sender instanceof OfflinePlayer) {
                 return (OfflinePlayer) sender;
             }
-            selfNotPlayerAction.run();
+            if (selfNotPlayerAction != null) selfNotPlayerAction.run();
+            return null;
         }
         if (perm != null && !sender.hasPermission(perm)) {
-            selfNoPermission.run();
+            if (selfNoPermission != null) selfNoPermission.run();
             return null;
         }
         return Util.getOfflinePlayer(value).orElseGet(() -> {
-            noPlayerAction.run();
+            if (noPlayerAction != null) noPlayerAction.run();
             return null;
         });
     }

@@ -168,8 +168,8 @@ public class LegacyItemEditor implements ItemEditor {
             ReadWriteNBT nbt = nbtItem.getCompound("components");
             if (nbt == null) return null;
             if (componentUseNBT) {
-                ReadWriteNBTCompoundList components = nbt.hasTag("minecraft:custom_name")
-                        ? nbt.getCompoundList("minecraft:custom_name")
+                ReadWriteNBTCompoundList components = nbt.hasTag("minecraft:lore")
+                        ? nbt.getCompoundList("minecraft:lore")
                         : null;
                 if (components == null) return null;
                 List<String> list = new ArrayList<>();
@@ -178,7 +178,7 @@ public class LegacyItemEditor implements ItemEditor {
                 }
                 return list;
             } else {
-                return nbt.hasTag("minecraft:custom_name", NBTType.NBTTagList)
+                return nbt.hasTag("minecraft:lore", NBTType.NBTTagList)
                         ? nbt.getStringList("minecraft:lore").toListCopy()
                         : null;
             }

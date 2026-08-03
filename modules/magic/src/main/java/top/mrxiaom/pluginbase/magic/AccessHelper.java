@@ -43,7 +43,7 @@ public class AccessHelper<Target> {
             String methodName,
             Class<?>... parameterTypes
     ) throws ReflectiveOperationException {
-        MethodHandle handle = lookup.findVirtual(
+        MethodHandle handle = lookup.findStatic(
                 targetClass,
                 methodName,
                 MethodType.methodType(returnType, parameterTypes)

@@ -211,14 +211,15 @@ public class LanguageManager extends AbstractPluginHolder<BukkitPlugin> {
         YamlConfiguration config = ConfigUtils.load(file);
         config.setDefaults(new YamlConfiguration());
         for (AbstractLanguageHolder holder : holders.values()) {
-            if (!config.contains(holder.key())) {
-                config.set(keyPrefix + holder.key(), holder.defaultValue);
+            String fullKey = keyPrefix + holder.key();
+            if (!config.contains(fullKey)) {
+                config.set(fullKey, holder.defaultValue);
                 continue;
             }
             if (holder.isList) {
-                holderValues.put(keyPrefix + holder.key(), config.getStringList(holder.key()));
+                holderValues.put(holder.key(), config.getStringList(fullKey));
             } else {
-                holderValues.put(keyPrefix + holder.key(), config.getString(holder.key()));
+                holderValues.put(holder.key(), config.getString(fullKey));
             }
         }
         try {
