@@ -4,7 +4,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     applyLibraries("adventure", "compileOnly")
     implementation(project(":modules:library"))
 }
