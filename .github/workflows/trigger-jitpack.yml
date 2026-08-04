@@ -1,0 +1,15 @@
+name: Trigger Jitpack
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Jitpack
+        if: ${{ github.repository == 'MrXiaoM/PluginBase' }}
+        continue-on-error: true
+        run: |
+          curl -L https://jitpack.io/top/mrxiaom/PluginBase/${{ github.event.release.tag_name }}/build.log
