@@ -1,5 +1,7 @@
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
+import org.gradle.api.tasks.bundling.ZipEntryCompression
+import org.gradle.jvm.tasks.Jar
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
@@ -14,6 +16,12 @@ import org.gradle.kotlin.dsl.getByName
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.signing.SigningExtension
+
+val Project.noJavadoc: Boolean
+    get() = providers.gradleProperty("noJavadoc").isPresent
+
+val Project.compactJavadocs: Boolean
+    get() = providers.gradleProperty("compactJavadocs").isPresent
 
 val Project.jitpackGroup: String?
     get() {
@@ -32,7 +40,9 @@ fun Project.setupJava(targetJavaVersion: Int, withDocuments: Boolean = true) {
         }
         if (withDocuments) {
             withSourcesJar()
-            withJavadocJar()
+            if (!noJavadoc) {
+                withJavadocJar()
+            }
         }
     }
     tasks.withType<JavaCompile>().configureEach {
@@ -45,6 +55,7 @@ fun Project.setupJava(targetJavaVersion: Int, withDocuments: Boolean = true) {
 }
 
 fun Project.setupJavadoc(block: StandardJavadocDocletOptions.() -> Unit = {}) {
+    if (noJavadoc) return
     tasks.getByName<Javadoc>("javadoc") {
         (options as StandardJavadocDocletOptions).apply {
             locale("zh_CN")
@@ -54,6 +65,33 @@ fun Project.setupJavadoc(block: StandardJavadocDocletOptions.() -> Unit = {}) {
             addBooleanOption("Xdoclint:none", true)
 
             block()
+        }
+    }
+    tasks.withType<Jar>().configureEach {
+        if (name != "javadocJar") return@configureEach
+
+        inputs.property("compactJavadocs", compactJavadocs)
+        if (compactJavadocs) {
+            entryCompression = ZipEntryCompression.DEFLATED
+            isPreserveFileTimestamps = false
+            isReproducibleFileOrder = true
+
+            // IntelliJ IDEA reads type/package HTML and element-list directly from this archive.
+            // The excluded browser assets remain available in build/docs/javadoc for site deployment.
+            exclude(
+                "legal/**",
+                "**/fonts/**",
+                "**/*.woff",
+                "**/*.woff2",
+                "**/*-search-index.*",
+                "**/search.*",
+                "**/search-page.js",
+                "**/search.js",
+                "**/script.js",
+                "**/script-files/**",
+                "**/jquery/**",
+                "**/jquery-ui.overrides.css",
+            )
         }
     }
 }
