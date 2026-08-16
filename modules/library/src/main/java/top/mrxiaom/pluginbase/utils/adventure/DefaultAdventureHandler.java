@@ -1,15 +1,11 @@
 package top.mrxiaom.pluginbase.utils.adventure;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.ShadowColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.adventure.text.object.ObjectContents;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -25,30 +21,29 @@ import top.mrxiaom.pluginbase.api.IAdventureHandler;
 import top.mrxiaom.pluginbase.utils.CollectionUtils;
 import top.mrxiaom.pluginbase.utils.adventure.audience.AudienceConsole;
 import top.mrxiaom.pluginbase.utils.adventure.audience.AudiencePlayer;
+import top.mrxiaom.pluginbase.utils.adventure.test.*;
 
 import java.lang.reflect.Field;
 import java.time.Duration;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     private static Field resolversField;
-    private static final Map<String, Consumer<Component>> tagImplMap = new HashMap<String, Consumer<Component>>() {{
-        put("shadow", c -> c.style().shadowColor(ShadowColor.none()));
-        put("font", c -> c.style().font(Key.key("default")));
-        put("gradient", c -> c.style().color(TextColor.color(255, 255, 255)));
-        put("head", c -> Component.object().contents(ObjectContents.playerHead("Steve")));
-        put("sprite", c -> Component.object().contents(ObjectContents.sprite(Key.key("blocks"), Key.key("block/stone"))));
-    }};
     private final List<String> disabledTags = new ArrayList<>();
     private final Map<UUID, AudiencePlayer> players = new HashMap<>();
     protected MiniMessage miniMessage;
     public DefaultAdventureHandler(BukkitPlugin plugin) {
+        Map<String, IAdventureTest> tagImplMap = new HashMap<>();
+        tagImplMap.put("shadow", new TestShadow());
+        tagImplMap.put("font", new TestFont());
+        tagImplMap.put("gradient", new TestGradient());
+        tagImplMap.put("head", new TestHead());
+        tagImplMap.put("sprite", new TestSprite());
         disabledTags.add("pride");
         tagImplMap.forEach((tag, type) -> {
             try {
-                type.accept(Component.empty());
-            } catch (LinkageError e) {
+                type.test();
+            } catch (Throwable e) {
                 disabledTags.add(tag);
             }
         });
