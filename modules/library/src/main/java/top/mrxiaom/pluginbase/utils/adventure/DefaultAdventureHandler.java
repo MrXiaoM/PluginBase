@@ -140,7 +140,7 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
         TextComponent.Builder text = Component.text();
         text.append(miniMessage(list.get(0)));
         for (int i = 1; i < list.size(); i++) {
-            text.appendNewline();
+            text.append(Component.newline());
             text.append(miniMessage(miniMessage, list.get(i)));
         }
         return text.build();

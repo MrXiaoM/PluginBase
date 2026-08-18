@@ -11,13 +11,18 @@ import java.util.List;
 public class ConvertTranslatable {
     public static BaseComponent convert(Component input) {
         if (input instanceof net.kyori.adventure.text.TranslatableComponent) {
+            TranslatableComponent component;
             String key = ((net.kyori.adventure.text.TranslatableComponent) input).key();
-            List<TranslationArgument> arguments = ((net.kyori.adventure.text.TranslatableComponent) input).arguments();
-            List<Object> args = new ArrayList<>();
-            for (TranslationArgument argument : arguments) {
-                args.add(argument.value());
+            try {
+                List<TranslationArgument> arguments = ((net.kyori.adventure.text.TranslatableComponent) input).arguments();
+                List<Object> args = new ArrayList<>();
+                for (TranslationArgument argument : arguments) {
+                    args.add(argument.value());
+                }
+                component = new TranslatableComponent(key, args.toArray());
+            } catch (LinkageError ignored) {
+                component = new TranslatableComponent(key);
             }
-            TranslatableComponent component = new TranslatableComponent(key, args.toArray());
             try {
                 String fallback = ((net.kyori.adventure.text.TranslatableComponent) input).fallback();
                 if (fallback != null) {

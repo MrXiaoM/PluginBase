@@ -38,11 +38,8 @@ import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.flattener.ComponentFlattener;
 import net.kyori.adventure.text.flattener.FlattenerListener;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.Style;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.format.TextFormat;
+import net.kyori.adventure.text.format.*;
+import net.kyori.adventure.util.HSVLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -156,7 +153,7 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
                 if (!(color instanceof NamedTextColor)) {
                     // if we are not using hex colours, then convert the hex colour
                     // to the "nearest" possible named/standard text colour
-                    format = new WrappedTextFormat(TextColor.nearestColorTo(this.formats.colors, color));
+                    format = new WrappedTextFormat(nearestColorTo(this.formats.colors, color));
                 }
             }
         }
@@ -166,6 +163,31 @@ final class LegacyComponentSerializerImpl implements LegacyComponentSerializer {
             return null;
         }
         return Character.toString(this.formats.characters.charAt(index));
+    }
+
+    private <C extends TextColor> @NotNull C nearestColorTo(final @NotNull List<C> values, final @NotNull TextColor any) {
+        // TextColor#nearestColorTo since 4.14.0
+        requireNonNull(any, "color");
+
+        float matchedDistance = Float.MAX_VALUE;
+        C match = values.get(0);
+        for (final C potential : values) {
+            HSVLike self = any.asHSV();
+            HSVLike other = potential.asHSV();
+            // weight hue more heavily than saturation and brightness. kind of magic numbers, but is fine for our use case of downsampling to a set of colors
+            final float hueDistance = 3 * Math.min(Math.abs(self.h() - other.h()), 1f - Math.abs(self.h() - other.h()));
+            final float saturationDiff = self.s() - other.s();
+            final float valueDiff = self.v() - other.v();
+            final float distance = hueDistance * hueDistance + saturationDiff * saturationDiff + valueDiff * valueDiff;
+            if (distance < matchedDistance) {
+                match = potential;
+                matchedDistance = distance;
+            }
+            if (distance == 0) {
+                break; // same colour! whoo!
+            }
+        }
+        return match;
     }
 
     private TextComponent extractUrl(final TextComponent component) {

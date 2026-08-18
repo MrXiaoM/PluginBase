@@ -31,7 +31,6 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.flattener.ComponentFlattener;
 import net.kyori.adventure.text.format.Style;
-import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.utils.adventure.serializer.AdventureComponentSerializer;
@@ -120,7 +119,7 @@ public interface LegacyComponentSerializer extends AdventureComponentSerializer<
      *
      * @since 4.0.0
      */
-    char HEX_CHAR = TextColor.HEX_CHARACTER;
+    char HEX_CHAR = '#';
 
     /**
      * Deserialize a component from a legacy {@link String}.
