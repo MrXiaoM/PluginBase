@@ -1,7 +1,7 @@
 package top.mrxiaom.pluginbase.func.language;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import top.mrxiaom.pluginbase.api.ITagSerializer;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.ColorHelper;
 import top.mrxiaom.pluginbase.utils.Pair;
@@ -132,9 +132,9 @@ public interface IHolderAccessor {
     }
 
     /**
-     * @see AbstractLanguageHolder#tm(MiniMessage, CommandSender)
+     * @see AbstractLanguageHolder#tm(ITagSerializer, CommandSender)
      */
-    default boolean tm(MiniMessage miniMessage, CommandSender receiver) {
+    default boolean tm(ITagSerializer miniMessage, CommandSender receiver) {
         String message = str();
         if (!message.isEmpty()) {
             AdventureUtil.sendMessage(receiver, miniMessage, message);
@@ -154,9 +154,9 @@ public interface IHolderAccessor {
     }
 
     /**
-     * @see AbstractLanguageHolder#tmf(MiniMessage, CommandSender, Object...)
+     * @see AbstractLanguageHolder#tmf(ITagSerializer, CommandSender, Object...)
      */
-    default boolean tmf(MiniMessage miniMessage, CommandSender receiver, Object... args) {
+    default boolean tmf(ITagSerializer miniMessage, CommandSender receiver, Object... args) {
         String message = strFormat(args);
         if (!message.isEmpty()) {
             AdventureUtil.sendMessage(receiver, miniMessage, message);
@@ -176,9 +176,9 @@ public interface IHolderAccessor {
     }
 
     /**
-     * @see AbstractLanguageHolder#tm(MiniMessage, CommandSender, Pair[])
+     * @see AbstractLanguageHolder#tm(ITagSerializer, CommandSender, Pair[])
      */
-    default boolean tm(MiniMessage miniMessage, CommandSender receiver, Pair... replacements) {
+    default boolean tm(ITagSerializer miniMessage, CommandSender receiver, Pair... replacements) {
         String message = str(replacements);
         if (!message.isEmpty()) {
             AdventureUtil.sendMessage(receiver, miniMessage, message);
@@ -198,9 +198,9 @@ public interface IHolderAccessor {
     }
 
     /**
-     * @see AbstractLanguageHolder#tm(MiniMessage, CommandSender, Iterable)
+     * @see AbstractLanguageHolder#tm(ITagSerializer, CommandSender, Iterable)
      */
-    default boolean tm(MiniMessage miniMessage, CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
+    default boolean tm(ITagSerializer miniMessage, CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
         String message = str(replacements);
         if (!message.isEmpty()) {
             AdventureUtil.sendMessage(receiver, miniMessage, message);

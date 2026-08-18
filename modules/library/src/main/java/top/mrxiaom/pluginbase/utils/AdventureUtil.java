@@ -11,9 +11,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAdventureHandler;
+import top.mrxiaom.pluginbase.api.ITagSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static top.mrxiaom.pluginbase.utils.adventure.DefaultMiniMessage.from;
 
 /**
  * adventure 与 mini message 相关操作工具
@@ -24,7 +27,7 @@ public class AdventureUtil {
     /**
      * 创建 MiniMessage.Builder，添加了一些方便的设置，例如移除部分标签、自动转换旧版颜色代码等等
      */
-    public static MiniMessage.Builder builder() {
+    public static ITagSerializer.Builder builder() {
         return handler.builder();
     }
 
@@ -83,7 +86,7 @@ public class AdventureUtil {
     /**
      * 获取 MiniMessage 实例
      */
-    public static MiniMessage miniMessage() {
+    public static ITagSerializer miniMessage() {
         return handler.miniMessage();
     }
 
@@ -99,8 +102,14 @@ public class AdventureUtil {
      * 将字符串通过 MiniMessage 转换为 Component
      */
     @NotNull
-    public static Component miniMessage(@NotNull MiniMessage miniMessage, @Nullable String s) {
+    public static Component miniMessage(@NotNull ITagSerializer miniMessage, @Nullable String s) {
         return handler.miniMessage(miniMessage, s);
+    }
+
+    @NotNull
+    @Deprecated
+    public static Component miniMessage(@NotNull MiniMessage miniMessage, @Nullable String s) {
+        return miniMessage(from(miniMessage), s);
     }
 
     /**
@@ -115,8 +124,14 @@ public class AdventureUtil {
      * 将 Component 通过 MiniMessage 转换为字符串
      */
     @NotNull
-    public static String miniMessage(@NotNull MiniMessage miniMessage, @Nullable Component component) {
+    public static String miniMessage(@NotNull ITagSerializer miniMessage, @Nullable Component component) {
         return handler.miniMessage(miniMessage, component);
+    }
+
+    @NotNull
+    @Deprecated
+    public static String miniMessage(@NotNull MiniMessage miniMessage, @Nullable Component component) {
+        return miniMessage(from(miniMessage), component);
     }
 
     /**
@@ -131,8 +146,14 @@ public class AdventureUtil {
      * 将字符串列表通过 MiniMessage 转换为 Component 列表
      */
     @NotNull
-    public static List<Component> miniMessage(MiniMessage miniMessage, List<String> list) {
+    public static List<Component> miniMessage(ITagSerializer miniMessage, List<String> list) {
         return handler.miniMessage(miniMessage, list);
+    }
+
+    @NotNull
+    @Deprecated
+    public static List<Component> miniMessage(MiniMessage miniMessage, List<String> list) {
+        return miniMessage(from(miniMessage), list);
     }
 
     /**
@@ -145,8 +166,13 @@ public class AdventureUtil {
     /**
      * 将字符串列表通过 MiniMessage 转换为 Component，列表每一项均为一行
      */
-    public static Component miniMessageLines(MiniMessage miniMessage, List<String> list) {
+    public static Component miniMessageLines(ITagSerializer miniMessage, List<String> list) {
         return handler.miniMessageLines(miniMessage, list);
+    }
+
+    @Deprecated
+    public static Component miniMessageLines(MiniMessage miniMessage, List<String> list) {
+        return miniMessageLines(from(miniMessage), list);
     }
 
     /**
@@ -161,8 +187,14 @@ public class AdventureUtil {
      * 将 Component 列表通过 MiniMessage 转换为字符串列表
      */
     @NotNull
-    public static List<String> miniMessage_(MiniMessage miniMessage, List<Component> components) {
+    public static List<String> miniMessage_(ITagSerializer miniMessage, List<Component> components) {
         return handler.miniMessage_(miniMessage, components);
+    }
+
+    @NotNull
+    @Deprecated
+    public static List<String> miniMessage_(MiniMessage miniMessage, List<Component> components) {
+        return miniMessage_(from(miniMessage), components);
     }
 
     /**
@@ -225,8 +257,13 @@ public class AdventureUtil {
      * @param stay 保持时间 (tick)
      * @param fadeOut 淡出时间 (tick)
      */
-    public static void sendTitle(Player player, MiniMessage miniMessage, String title, String subTitle, int fadeIn, int stay, int fadeOut) {
+    public static void sendTitle(Player player, ITagSerializer miniMessage, String title, String subTitle, int fadeIn, int stay, int fadeOut) {
         handler.sendTitle(player, miniMessage, title, subTitle, fadeIn, stay, fadeOut);
+    }
+
+    @Deprecated
+    public static void sendTitle(Player player, MiniMessage miniMessage, String title, String subTitle, int fadeIn, int stay, int fadeOut) {
+        sendTitle(player, from(miniMessage), title, subTitle, fadeIn, stay, fadeOut);
     }
 
     /**
@@ -273,8 +310,13 @@ public class AdventureUtil {
      * @param miniMessage 自定义 MiniMessage 实例
      * @param message 消息
      */
-    public static void sendMessage(CommandSender sender, MiniMessage miniMessage, String message) {
+    public static void sendMessage(CommandSender sender, ITagSerializer miniMessage, String message) {
         handler.sendMessage(sender, miniMessage, message);
+    }
+
+    @Deprecated
+    public static void sendMessage(CommandSender sender, MiniMessage miniMessage, String message) {
+        sendMessage(sender, from(miniMessage), message);
     }
 
     /**
@@ -301,8 +343,13 @@ public class AdventureUtil {
      * @param miniMessage 自定义 MiniMessage 实例
      * @param message 消息
      */
-    public static void sendActionBar(Player player, MiniMessage miniMessage, String message) {
+    public static void sendActionBar(Player player, ITagSerializer miniMessage, String message) {
         handler.sendActionBar(player, miniMessage, message);
+    }
+
+    @Deprecated
+    public static void sendActionBar(Player player, MiniMessage miniMessage, String message) {
+        sendActionBar(player, from(miniMessage), message);
     }
 
     /**

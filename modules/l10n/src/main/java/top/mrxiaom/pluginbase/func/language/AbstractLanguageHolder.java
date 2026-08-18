@@ -1,10 +1,10 @@
 package top.mrxiaom.pluginbase.func.language;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.api.ITagSerializer;
 import top.mrxiaom.pluginbase.func.LanguageManager;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.CollectionUtils;
@@ -293,7 +293,7 @@ public abstract class AbstractLanguageHolder {
      * @param receiver 消息接收者
      * @return 用于命令快捷返回，恒返回 true
      */
-    public boolean tm(MiniMessage miniMessage, CommandSender receiver) {
+    public boolean tm(ITagSerializer miniMessage, CommandSender receiver) {
         String message = str();
         if (!message.isEmpty()) {
             AdventureUtil.sendMessage(receiver, miniMessage, message);
@@ -320,7 +320,7 @@ public abstract class AbstractLanguageHolder {
      * @param args <code>String.format</code> 参数
      * @return 用于命令快捷返回，恒返回 true
      */
-    public boolean tmf(MiniMessage miniMessage, CommandSender receiver, Object... args) {
+    public boolean tmf(ITagSerializer miniMessage, CommandSender receiver, Object... args) {
         String message = strFormat(args);
         if (!message.isEmpty()) {
             AdventureUtil.sendMessage(receiver, miniMessage, message);
@@ -349,7 +349,7 @@ public abstract class AbstractLanguageHolder {
      * @return 用于命令快捷返回，恒返回 true
      */
     @SafeVarargs
-    public final boolean tm(MiniMessage miniMessage, CommandSender receiver, Pair<String, Object>... replacements) {
+    public final boolean tm(ITagSerializer miniMessage, CommandSender receiver, Pair<String, Object>... replacements) {
         String message = str(replacements);
         if (!message.isEmpty()) {
             AdventureUtil.sendMessage(receiver, miniMessage, message);
@@ -376,7 +376,7 @@ public abstract class AbstractLanguageHolder {
      * @param replacements 变量替换键值对
      * @return 用于命令快捷返回，恒返回 true
      */
-    public boolean tm(MiniMessage miniMessage, CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
+    public boolean tm(ITagSerializer miniMessage, CommandSender receiver, Iterable<Pair<String, Object>> replacements) {
         String message = str(replacements);
         if (!message.isEmpty()) {
             AdventureUtil.sendMessage(receiver, miniMessage, message);

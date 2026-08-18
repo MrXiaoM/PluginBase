@@ -19,11 +19,12 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
-import top.mrxiaom.pluginbase.utils.adventure.DefaultAdventureHandler;
+import top.mrxiaom.pluginbase.api.ITagSerializer;
 import top.mrxiaom.pluginbase.utils.adventure.serializer.AdventureComponentSerializer;
 import top.mrxiaom.pluginbase.utils.item.ItemEditor;
 
@@ -36,7 +37,7 @@ import static top.mrxiaom.pluginbase.utils.AdventureUtil.miniMessage;
  * 基于 adventure 的 Component 的物品操作工具
  */
 public class AdventureItemStack {
-    private static MiniMessage miniMessageWithoutEvents;
+    private static ITagSerializer miniMessageWithoutEvents;
     private static ItemEditor itemEditor;
     private static boolean supportCustomModelData = false;
     protected static void init(BukkitPlugin plugin) {
@@ -46,7 +47,7 @@ public class AdventureItemStack {
         } catch (Throwable ignored) {
         }
         miniMessageWithoutEvents = AdventureUtil.builder()
-                .editTags(it -> DefaultAdventureHandler.remove(it, Lists.newArrayList("hover", "click")))
+                .removeTags(Lists.newArrayList("hover", "click"))
                 .build();
         itemEditor = plugin.initItemEditor();
     }
@@ -279,17 +280,33 @@ public class AdventureItemStack {
                 itemTag);
     }
 
-    public static MiniMessage.Builder wrapHoverEvent(ItemStack item) {
-        return wrapHoverEvent("item", item);
+    @ApiStatus.Experimental
+    public static ITagSerializer.Builder wrapHoverEvent(ITagSerializer.Builder builder, ItemStack item) {
+        // TODO: 实现 ITagSerializer 的添加标签功能
+        throw new UnsupportedOperationException("");
     }
 
-    public static MiniMessage.Builder wrapHoverEvent(String tagName, ItemStack item) {
-        return AdventureUtil.builder()
-                .editTags(it -> it.resolver(wrapHoverResolver(tagName, item)));
+    @ApiStatus.Experimental
+    public static ITagSerializer.Builder wrapHoverEvent(ITagSerializer.Builder builder, String tagName, ItemStack item) {
+        // TODO: 实现 ITagSerializer 的添加标签功能
+        throw new UnsupportedOperationException("");
     }
 
-    public static MiniMessage.Builder wrapHoverEvent(List<Pair<String, ItemStack>> items) {
-        MiniMessage.Builder builder = AdventureUtil.builder();
+    @ApiStatus.Experimental
+    public static ITagSerializer.Builder wrapHoverEvent(ITagSerializer.Builder builder, List<Pair<String, ItemStack>> items) {
+        // TODO: 实现 ITagSerializer 的添加标签功能
+        throw new UnsupportedOperationException("");
+    }
+
+    public static MiniMessage.Builder wrapHoverEvent(MiniMessage.Builder builder, ItemStack item) {
+        return wrapHoverEvent(builder, "item", item);
+    }
+
+    public static MiniMessage.Builder wrapHoverEvent(MiniMessage.Builder builder, String tagName, ItemStack item) {
+        return builder.editTags(it -> it.resolver(wrapHoverResolver(tagName, item)));
+    }
+
+    public static MiniMessage.Builder wrapHoverEvent(MiniMessage.Builder builder, List<Pair<String, ItemStack>> items) {
         for (Pair<String, ItemStack> pair : items) {
             builder.editTags(it -> it.resolver(wrapHoverResolver(pair.key(), pair.value())));
         }

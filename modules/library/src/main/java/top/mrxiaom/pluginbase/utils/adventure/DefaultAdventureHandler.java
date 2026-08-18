@@ -4,7 +4,6 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -18,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAdventureHandler;
+import top.mrxiaom.pluginbase.api.ITagSerializer;
 import top.mrxiaom.pluginbase.utils.CollectionUtils;
 import top.mrxiaom.pluginbase.utils.adventure.audience.AudienceConsole;
 import top.mrxiaom.pluginbase.utils.adventure.audience.AudiencePlayer;
@@ -31,7 +31,7 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     private static Field resolversField;
     private final List<String> disabledTags = new ArrayList<>();
     private final Map<UUID, AudiencePlayer> players = new HashMap<>();
-    protected MiniMessage miniMessage;
+    protected ITagSerializer miniMessage;
     public DefaultAdventureHandler(BukkitPlugin plugin) {
         Map<String, IAdventureTest> tagImplMap = new HashMap<>();
         tagImplMap.put("shadow", new TestShadow());
@@ -70,9 +70,9 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     }
 
     @Override
-    public @NotNull MiniMessage.Builder builder(boolean legacyProcessor) {
-        MiniMessage.Builder builder = MiniMessage.builder();
-        builder.editTags(it -> remove(it, disabledTags));
+    public @NotNull ITagSerializer.Builder builder(boolean legacyProcessor) {
+        ITagSerializer.Builder builder = DefaultMiniMessage.builder();
+        builder.removeTags(disabledTags);
         if (legacyProcessor) {
             builder.preProcessor(this::legacyToMiniMessage);
         }
@@ -104,12 +104,12 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     }
 
     @Override
-    public @NotNull MiniMessage miniMessage() {
+    public @NotNull ITagSerializer miniMessage() {
         return miniMessage;
     }
 
     @Override
-    public @NotNull Component miniMessage(@NotNull MiniMessage miniMessage, @Nullable String s) {
+    public @NotNull Component miniMessage(@NotNull ITagSerializer miniMessage, @Nullable String s) {
         if (s == null) {
             return Component.empty();
         }
@@ -117,7 +117,7 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     }
 
     @Override
-    public @NotNull String miniMessage(@NotNull MiniMessage miniMessage, @Nullable Component component) {
+    public @NotNull String miniMessage(@NotNull ITagSerializer miniMessage, @Nullable Component component) {
         if (component == null) {
             return "";
         }
@@ -125,7 +125,7 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     }
 
     @Override
-    public @NotNull List<Component> miniMessage(MiniMessage miniMessage, List<String> list) {
+    public @NotNull List<Component> miniMessage(ITagSerializer miniMessage, List<String> list) {
         if (list == null || list.isEmpty()) return new ArrayList<>();
         List<Component> components = new ArrayList<>();
         for (String s : list) {
@@ -135,7 +135,7 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     }
 
     @Override
-    public @NotNull Component miniMessageLines(MiniMessage miniMessage, List<String> list) {
+    public @NotNull Component miniMessageLines(ITagSerializer miniMessage, List<String> list) {
         if (list == null || list.isEmpty()) return Component.empty();
         TextComponent.Builder text = Component.text();
         text.append(miniMessage(list.get(0)));
@@ -147,7 +147,7 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     }
 
     @Override
-    public @NotNull List<String> miniMessage_(MiniMessage miniMessage, List<Component> components) {
+    public @NotNull List<String> miniMessage_(ITagSerializer miniMessage, List<Component> components) {
         if (components == null) return new ArrayList<>();
         List<String> list = new ArrayList<>();
         for (Component component : components) {
@@ -168,7 +168,7 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     }
 
     @Override
-    public void sendTitle(@NotNull Player player, @NotNull MiniMessage miniMessage, @NotNull String title, @NotNull String subTitle, int fadeIn, int stay, int fadeOut) {
+    public void sendTitle(@NotNull Player player, @NotNull ITagSerializer miniMessage, @NotNull String title, @NotNull String subTitle, int fadeIn, int stay, int fadeOut) {
         sendTitle(player, miniMessage(miniMessage, title), miniMessage(miniMessage, subTitle), fadeIn, stay, fadeOut);
     }
 
@@ -188,7 +188,7 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     }
 
     @Override
-    public void sendMessage(@NotNull CommandSender sender, @NotNull MiniMessage miniMessage, @NotNull String message) {
+    public void sendMessage(@NotNull CommandSender sender, @NotNull ITagSerializer miniMessage, @NotNull String message) {
         sendMessage(sender, miniMessage(miniMessage, message));
     }
 
@@ -198,7 +198,7 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     }
 
     @Override
-    public void sendActionBar(@NotNull Player player, @NotNull MiniMessage miniMessage, @NotNull String message) {
+    public void sendActionBar(@NotNull Player player, @NotNull ITagSerializer miniMessage, @NotNull String message) {
         sendActionBar(player, miniMessage(message));
     }
 
