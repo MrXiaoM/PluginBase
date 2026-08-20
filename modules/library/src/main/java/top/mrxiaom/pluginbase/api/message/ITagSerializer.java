@@ -1,9 +1,13 @@
 package top.mrxiaom.pluginbase.api.message;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.StyleBuilderApplicable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.utils.adventure.TagPattern;
 
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -50,5 +54,15 @@ public interface ITagSerializer {
 
     interface TagBuilder {
         @NotNull TagBuilder removeTags(@NotNull Iterable<String> tagNames);
+        @NotNull TagBuilder addInserting(@TagPattern String name, @NotNull Component component);
+        default @NotNull TagBuilder addInserting(@TagPattern String name, @NotNull ComponentLike value) {
+            return addInserting(name, value.asComponent());
+        }
+        @NotNull TagBuilder addSelfClosingInserting(@TagPattern String name, @NotNull Component component);
+        default @NotNull TagBuilder addSelfClosingInserting(@TagPattern String name, @NotNull ComponentLike value) {
+            return addSelfClosingInserting(name, value.asComponent());
+        }
+        @NotNull TagBuilder addStyling(@TagPattern String name, @NotNull Consumer<Style.Builder> styles);
+        @NotNull TagBuilder addStyling(@TagPattern String name, @NotNull StyleBuilderApplicable @NotNull... actions);
     }
 }

@@ -1,7 +1,10 @@
 package top.mrxiaom.pluginbase.utils.adventure;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.StyleBuilderApplicable;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
 import top.mrxiaom.pluginbase.api.message.ITagSerializer;
@@ -91,6 +94,7 @@ public class DefaultMiniMessage implements ITagSerializer {
         }
     }
 
+    @SuppressWarnings("PatternValidation")
     public static class TagBuilder implements ITagSerializer.TagBuilder {
         private final TagResolver.Builder tags;
         public TagBuilder(TagResolver.Builder tags) {
@@ -100,6 +104,30 @@ public class DefaultMiniMessage implements ITagSerializer {
         @Override
         public ITagSerializer.@NotNull TagBuilder removeTags(@NotNull Iterable<String> tagNames) {
             Builder.remove(tags, tagNames);
+            return this;
+        }
+
+        @Override
+        public ITagSerializer.@NotNull TagBuilder addInserting(@TagPattern String name, @NotNull Component component) {
+            tags.tag(name, Tag.inserting(component));
+            return this;
+        }
+
+        @Override
+        public ITagSerializer.@NotNull TagBuilder addSelfClosingInserting(@TagPattern String name, @NotNull Component component) {
+            tags.tag(name, Tag.selfClosingInserting(component));
+            return this;
+        }
+
+        @Override
+        public ITagSerializer.@NotNull TagBuilder addStyling(@TagPattern String name, @NotNull Consumer<Style.Builder> styles) {
+            tags.tag(name, Tag.styling(styles));
+            return this;
+        }
+
+        @Override
+        public ITagSerializer.@NotNull TagBuilder addStyling(@TagPattern String name, @NotNull StyleBuilderApplicable @NotNull ... actions) {
+            tags.tag(name, Tag.styling(actions));
             return this;
         }
     }
