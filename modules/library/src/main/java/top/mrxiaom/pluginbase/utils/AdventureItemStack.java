@@ -10,16 +10,9 @@ import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.event.HoverEventSource;
-import net.kyori.adventure.text.format.Style;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.internal.serializer.SerializableResolver;
-import net.kyori.adventure.text.minimessage.internal.serializer.StyleClaim;
-import net.kyori.adventure.text.minimessage.tag.Tag;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -280,49 +273,21 @@ public class AdventureItemStack {
                 itemTag);
     }
 
-    @ApiStatus.Experimental
     public static ITagSerializer.Builder wrapHoverEvent(ITagSerializer.Builder builder, ItemStack item) {
-        // TODO: 实现 ITagSerializer 的添加标签功能
-        throw new UnsupportedOperationException("");
-    }
-
-    @ApiStatus.Experimental
-    public static ITagSerializer.Builder wrapHoverEvent(ITagSerializer.Builder builder, String tagName, ItemStack item) {
-        // TODO: 实现 ITagSerializer 的添加标签功能
-        throw new UnsupportedOperationException("");
-    }
-
-    @ApiStatus.Experimental
-    public static ITagSerializer.Builder wrapHoverEvent(ITagSerializer.Builder builder, List<Pair<String, ItemStack>> items) {
-        // TODO: 实现 ITagSerializer 的添加标签功能
-        throw new UnsupportedOperationException("");
-    }
-
-    public static MiniMessage.Builder wrapHoverEvent(MiniMessage.Builder builder, ItemStack item) {
         return wrapHoverEvent(builder, "item", item);
     }
 
-    public static MiniMessage.Builder wrapHoverEvent(MiniMessage.Builder builder, String tagName, ItemStack item) {
-        return builder.editTags(it -> it.resolver(wrapHoverResolver(tagName, item)));
+    public static ITagSerializer.Builder wrapHoverEvent(ITagSerializer.Builder builder, String tagName, ItemStack item) {
+        return builder.editTags(it -> it.addHoverTag(tagName, toHoverEvent(item)));
     }
 
-    public static MiniMessage.Builder wrapHoverEvent(MiniMessage.Builder builder, List<Pair<String, ItemStack>> items) {
-        for (Pair<String, ItemStack> pair : items) {
-            builder.editTags(it -> it.resolver(wrapHoverResolver(pair.key(), pair.value())));
-        }
+    public static ITagSerializer.Builder wrapHoverEvent(ITagSerializer.Builder builder, List<Pair<String, ItemStack>> items) {
+        builder.editTags(it -> {
+            for (Pair<String, ItemStack> pair : items) {
+                it.addHoverTag(pair.key(), toHoverEvent(pair.value()));
+            }
+        });
         return builder;
-    }
-
-    @SuppressWarnings("UnstableApiUsage")
-    private static TagResolver wrapHoverResolver(String tagName, ItemStack item) {
-        return SerializableResolver.claimingStyle(
-                tagName,
-                (args, ctx) -> Tag.styling(toHoverEvent(item).asHoverEvent()),
-                StyleClaim.claim(
-                        tagName,
-                        Style::hoverEvent,
-                        (event, emitter) -> emitter.tag(tagName)
-                ));
     }
 
     /**

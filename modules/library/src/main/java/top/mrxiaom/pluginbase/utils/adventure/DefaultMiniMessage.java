@@ -1,9 +1,12 @@
 package top.mrxiaom.pluginbase.utils.adventure;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEventSource;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.StyleBuilderApplicable;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.internal.serializer.SerializableResolver;
+import net.kyori.adventure.text.minimessage.internal.serializer.StyleClaim;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
@@ -128,6 +131,20 @@ public class DefaultMiniMessage implements ITagSerializer {
         @Override
         public ITagSerializer.@NotNull TagBuilder addStyling(@TagPattern String name, @NotNull StyleBuilderApplicable @NotNull ... actions) {
             tags.tag(name, Tag.styling(actions));
+            return this;
+        }
+
+        @Override
+        @SuppressWarnings("UnstableApiUsage")
+        public ITagSerializer.@NotNull TagBuilder addHoverTag(String name, HoverEventSource<?> source) {
+            tags.resolver(SerializableResolver.claimingStyle(
+                    name,
+                    (args, ctx) -> Tag.styling(source.asHoverEvent()),
+                    StyleClaim.claim(
+                            name,
+                            Style::hoverEvent,
+                            (event, emitter) -> emitter.tag(name)
+                    )));
             return this;
         }
     }

@@ -2,6 +2,7 @@ package top.mrxiaom.pluginbase.api.message;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.event.HoverEventSource;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.StyleBuilderApplicable;
 import org.jetbrains.annotations.Contract;
@@ -64,5 +65,7 @@ public interface ITagSerializer {
         }
         @NotNull TagBuilder addStyling(@TagPattern String name, @NotNull Consumer<Style.Builder> styles);
         @NotNull TagBuilder addStyling(@TagPattern String name, @NotNull StyleBuilderApplicable @NotNull... actions);
+
+        @NotNull TagBuilder addHoverTag(String name, HoverEventSource<?> source);
     }
 }
