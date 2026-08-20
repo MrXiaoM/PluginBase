@@ -1,7 +1,7 @@
 package top.mrxiaom.pluginbase.func.language;
 
 import org.bukkit.command.CommandSender;
-import top.mrxiaom.pluginbase.api.ITagSerializer;
+import top.mrxiaom.pluginbase.api.message.ITagSerializer;
 import top.mrxiaom.pluginbase.utils.AdventureUtil;
 import top.mrxiaom.pluginbase.utils.ColorHelper;
 import top.mrxiaom.pluginbase.utils.Pair;

@@ -4,10 +4,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
-import top.mrxiaom.pluginbase.api.ITagSerializer;
+import top.mrxiaom.pluginbase.api.message.ITagSerializer;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 public class DefaultMiniMessage implements ITagSerializer {
@@ -64,8 +65,11 @@ public class DefaultMiniMessage implements ITagSerializer {
         }
 
         @Override
-        public @NotNull ITagSerializer.Builder removeTags(@NotNull Iterable<String> tagNames) {
-            builder.editTags(tags -> remove(tags, tagNames));
+        public ITagSerializer.@NotNull Builder editTags(@NotNull Consumer<ITagSerializer.TagBuilder> consumer) {
+            builder.editTags(it -> {
+                TagBuilder wrapper = new TagBuilder(it);
+                consumer.accept(wrapper);
+            });
             return this;
         }
 
@@ -84,6 +88,19 @@ public class DefaultMiniMessage implements ITagSerializer {
         @Override
         public @NotNull ITagSerializer build() {
             return from(builder.build());
+        }
+    }
+
+    public static class TagBuilder implements ITagSerializer.TagBuilder {
+        private final TagResolver.Builder tags;
+        public TagBuilder(TagResolver.Builder tags) {
+            this.tags = tags;
+        }
+
+        @Override
+        public ITagSerializer.@NotNull TagBuilder removeTags(@NotNull Iterable<String> tagNames) {
+            Builder.remove(tags, tagNames);
+            return this;
         }
     }
 }

@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
-import top.mrxiaom.pluginbase.api.ITagSerializer;
+import top.mrxiaom.pluginbase.api.message.ITagSerializer;
 import top.mrxiaom.pluginbase.utils.adventure.serializer.AdventureComponentSerializer;
 import top.mrxiaom.pluginbase.utils.item.ItemEditor;
 
@@ -47,7 +47,7 @@ public class AdventureItemStack {
         } catch (Throwable ignored) {
         }
         miniMessageWithoutEvents = AdventureUtil.builder()
-                .removeTags(Lists.newArrayList("hover", "click"))
+                .editTags(it -> it.removeTags(Lists.newArrayList("hover", "click")))
                 .build();
         itemEditor = plugin.initItemEditor();
     }

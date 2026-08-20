@@ -4,7 +4,6 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -17,18 +16,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAdventureHandler;
-import top.mrxiaom.pluginbase.api.ITagSerializer;
+import top.mrxiaom.pluginbase.api.message.ITagSerializer;
 import top.mrxiaom.pluginbase.utils.CollectionUtils;
 import top.mrxiaom.pluginbase.utils.adventure.audience.AudienceConsole;
 import top.mrxiaom.pluginbase.utils.adventure.audience.AudiencePlayer;
 import top.mrxiaom.pluginbase.utils.adventure.test.*;
 
-import java.lang.reflect.Field;
 import java.time.Duration;
 import java.util.*;
 
 public class DefaultAdventureHandler implements IAdventureHandler, Listener {
-    private static Field resolversField;
     private final List<String> disabledTags = new ArrayList<>();
     private final Map<UUID, AudiencePlayer> players = new HashMap<>();
     protected ITagSerializer miniMessage;
@@ -48,31 +45,19 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
             }
         });
         miniMessage = builder().build();
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        if (plugin != null) {
+            Bukkit.getPluginManager().registerEvents(this, plugin);
+        }
     }
 
-    @SuppressWarnings({"unchecked", "SameParameterValue"})
-    public static void remove(TagResolver.Builder builder, Iterable<String> tags) {
-        try {
-            if (resolversField == null) {
-                resolversField = builder.getClass().getDeclaredField("resolvers");
-                resolversField.setAccessible(true);
-            }
-            List<TagResolver> list = (List<TagResolver>) resolversField.get(builder);
-            list.removeIf(it -> {
-                for (String tag : tags) {
-                    if (it.has(tag)) return true;
-                }
-                return false;
-            });
-        } catch (Throwable ignored) {
-        }
+    protected @NotNull ITagSerializer.Builder rawBuilder() {
+        return DefaultMiniMessage.builder();
     }
 
     @Override
     public @NotNull ITagSerializer.Builder builder(boolean legacyProcessor) {
-        ITagSerializer.Builder builder = DefaultMiniMessage.builder();
-        builder.removeTags(disabledTags);
+        ITagSerializer.Builder builder = rawBuilder();
+        builder.editTags(it -> it.removeTags(disabledTags));
         if (legacyProcessor) {
             builder.preProcessor(this::legacyToMiniMessage);
         }

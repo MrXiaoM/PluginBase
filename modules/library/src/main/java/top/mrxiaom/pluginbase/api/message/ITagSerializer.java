@@ -1,10 +1,11 @@
-package top.mrxiaom.pluginbase.api;
+package top.mrxiaom.pluginbase.api.message;
 
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 public interface ITagSerializer {
@@ -39,11 +40,15 @@ public interface ITagSerializer {
     interface Builder {
         // TODO: 设计并实现添加标签相关接口
 
-        @NotNull Builder removeTags(@NotNull Iterable<String> tagNames);
+        @NotNull Builder editTags(@NotNull Consumer<TagBuilder> consumer);
 
         @NotNull Builder postProcessor(final @NotNull UnaryOperator<Component> postProcessor);
         @NotNull Builder preProcessor(final @NotNull UnaryOperator<String> preProcessor);
 
         @NotNull ITagSerializer build();
+    }
+
+    interface TagBuilder {
+        @NotNull TagBuilder removeTags(@NotNull Iterable<String> tagNames);
     }
 }
