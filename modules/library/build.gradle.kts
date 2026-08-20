@@ -17,7 +17,7 @@ repositories {
 @Suppress("VulnerableLibrariesLocal")
 dependencies {
     applyLibraries("spigot-api", "compileOnly", "testImplementation")
-    
+
     compileOnly("net.milkbowl.vault:VaultAPI:1.7")
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.6.3-beta-14")
     compileOnly("me.clip:placeholderapi:2.12.2")
@@ -25,8 +25,24 @@ dependencies {
     compileOnly("com.mojang:authlib:2.1.28")
     compileOnly("net.md-5:bungeecord-chat:1.21-R0.5-SNAPSHOT")
 
-    applyLibraries("adventure", "compileOnly")
+//    "5.2.0".also {
+//    "4.17.0".also {
+//    "4.11.0".also {
+//        testRuntimeOnly("net.kyori:adventure-api:$it")
+//        testRuntimeOnly("net.kyori:adventure-text-serializer-gson:$it")
+//        testRuntimeOnly("net.kyori:adventure-text-minimessage:$it")
+//    }
+
+    testImplementation(platform("org.junit:junit-bom:6.1.3"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    applyLibraries("adventure", "compileOnly", "testCompileOnly")
     applyLibraries("nbt-api", "compileOnly")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 setupPublishing(

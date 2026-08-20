@@ -1,0 +1,149 @@
+/*
+ * This file is part of adventure, licensed under the MIT License.
+ *
+ * Copyright (c) 2017-2025 KyoriPowered
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package top.mrxiaom.pluginbase.utils.adventure.sparrow.message;
+
+import net.kyori.adventure.pointer.Pointered;
+import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
+import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.resolver.ArgumentQueue;
+import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.resolver.TagResolver;
+
+/**
+ * Parser context for use within transformations.
+ *
+ * <p>This allows operating recursive parses, for cases where messages may include parse-specific tags.</p>
+ *
+ * @since 4.10.0
+ */
+public interface Context {
+
+    /**
+     * The target of the parse context, if provided.
+     * Can be used for tags that provide information relating to the target of the resulting message.
+     *
+     * @return the target, if provided
+     * @since 4.17.0
+     */
+    @Nullable Pointered target();
+
+    /**
+     * The target of the parse context.
+     * Can be used for tags that provide information relating to the target of the resulting message.
+     *
+     * <p>If the caller did not provide a target, a parse exception is thrown with a default message.</p>
+     *
+     * @return the target, if provided
+     * @since 4.17.0
+     */
+    Pointered targetOrThrow();
+
+    /**
+     * The target of the parse context, casted to a provided type.
+     * Can be used for tags that provide information relating to the target of the resulting message.
+     *
+     * <p>If the caller did not provide a target, or the target is not of the provided type, a parse
+     * exception is thrown with a default message.</p>
+     *
+     * @param <T>         the required type
+     * @param targetClass the class of the required type
+     * @return the target
+     * @since 4.17.0
+     */
+    <T extends Pointered> T targetAsType(final Class<T> targetClass);
+
+    /**
+     * Deserializes a MiniMessage string using all the settings of this context.
+     *
+     * @param message the message to parse
+     * @return the parsed message
+     * @since 4.10.0
+     */
+    Component deserialize(final String message);
+
+    /**
+     * Deserializes a MiniMessage string using all the settings of this context.
+     *
+     * @param message  the message to parse
+     * @param resolver additional tag resolver, added to all other resolvers in this parse, but taking priority in the event of a name overlap
+     * @return the parsed message
+     * @since 4.10.0
+     */
+    Component deserialize(final String message, final TagResolver resolver);
+
+    /**
+     * Deserializes a MiniMessage string using all the settings of this context.
+     *
+     * @param message   the message to parse
+     * @param resolvers additional tag resolvers, added to all other resolvers in this parse, but taking priority in the event of a name overlap
+     * @return the parsed message
+     * @since 4.10.0
+     */
+    Component deserialize(final String message, final TagResolver... resolvers);
+
+    /**
+     * Create a new parsing exception.
+     *
+     * @param message a detail message describing the error
+     * @param tags    the tag parts which caused the error
+     * @return the new parsing exception
+     * @since 4.10.0
+     */
+    ParsingException newException(
+            final String message,
+            final ArgumentQueue tags
+    );
+
+    /**
+     * Create a new parsing exception without reference to a specific location.
+     *
+     * @param message a detail message describing the error
+     * @return the new parsing exception
+     * @since 4.10.0
+     */
+    ParsingException newException(final String message);
+
+    /**
+     * Create a new parsing exception.
+     *
+     * @param message a detail message describing the error
+     * @param cause   the cause
+     * @param args    arguments that caused the errors
+     * @return the new parsing exception
+     * @since 4.10.0
+     */
+    ParsingException newException(
+            final String message,
+            final @Nullable Throwable cause,
+            final ArgumentQueue args
+    );
+
+    /**
+     * Dictates if transformations may emit virtual components or not.
+     *
+     * @return the boolean flag, {@code true} if transformations may
+     * emit virtuals, {@code false} otherwise.
+     * @since 4.19.0
+     */
+    boolean emitVirtuals();
+}

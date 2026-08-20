@@ -8,6 +8,7 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,18 +19,35 @@ import top.mrxiaom.pluginbase.BukkitPlugin;
 import top.mrxiaom.pluginbase.api.IAdventureHandler;
 import top.mrxiaom.pluginbase.api.message.ITagSerializer;
 import top.mrxiaom.pluginbase.utils.CollectionUtils;
+import top.mrxiaom.pluginbase.utils.ConfigUtils;
 import top.mrxiaom.pluginbase.utils.adventure.audience.AudienceConsole;
 import top.mrxiaom.pluginbase.utils.adventure.audience.AudiencePlayer;
 import top.mrxiaom.pluginbase.utils.adventure.test.*;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     private final List<String> disabledTags = new ArrayList<>();
     private final Map<UUID, AudiencePlayer> players = new HashMap<>();
     protected ITagSerializer miniMessage;
+    private final Supplier<ITagSerializer.Builder> defaultBuilder;
     public DefaultAdventureHandler(BukkitPlugin plugin) {
+        File file = plugin == null
+                ? new File("pluginbase.yml")
+                : new File(plugin.getDataFolder(), "pluginbase.yml");
+        if (file.exists()) {
+            YamlConfiguration config = ConfigUtils.load(file);
+            if (config.getBoolean("using-default-mini-message")) {
+                defaultBuilder = DefaultMiniMessage::builder;
+            } else {
+                defaultBuilder = SparrowMiniMessage::builder;
+            }
+        } else {
+            defaultBuilder = SparrowMiniMessage::builder;
+        }
         Map<String, IAdventureTest> tagImplMap = new HashMap<>();
         tagImplMap.put("shadow", new TestShadow());
         tagImplMap.put("font", new TestFont());
@@ -51,7 +69,7 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     }
 
     protected @NotNull ITagSerializer.Builder rawBuilder() {
-        return DefaultMiniMessage.builder();
+        return defaultBuilder.get();
     }
 
     @Override
