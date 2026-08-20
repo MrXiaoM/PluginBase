@@ -123,12 +123,11 @@ abstract class AbstractColorChangingTag implements Modifying {
         }
 
         this.disableApplyingColorDepth = -1;
-        if (current instanceof VirtualComponent) {
+        String virtualContent = virtual.content(current);
+        if (virtualContent != null) {
             // this component has its own information, so we can't rainbowify direct content -- we can process children tho
             // basically treat as if it's a non-text component
-            VirtualComponent virtualComponent = (VirtualComponent) current;
-            this.skipColorForLengthOf(virtualComponent.content());
-
+            this.skipColorForLengthOf(virtualContent);
             return current.children(new ArrayList<>());
         } else if (current instanceof TextComponent && !((TextComponent) current).content().isEmpty()) {
             TextComponent textComponent = (TextComponent) current;

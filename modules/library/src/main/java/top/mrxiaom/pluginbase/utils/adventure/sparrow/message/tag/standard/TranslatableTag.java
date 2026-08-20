@@ -24,8 +24,8 @@
 package top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.standard;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.TranslatableComponent;
-import net.kyori.adventure.text.TranslationArgument;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.Context;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.ParsingException;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.internal.serializer.Emitable;
@@ -34,6 +34,11 @@ import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.Tag;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.resolver.ArgumentQueue;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.resolver.TagResolver;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Insert a translation component into the result.
@@ -60,15 +65,32 @@ public final class TranslatableTag {
     }
 
     static @Nullable Emitable claim(final Component input) {
-        if (!(input instanceof TranslatableComponent) || ((TranslatableComponent) input).fallback() != null) return null;
+        if (!(input instanceof TranslatableComponent) || fallback((TranslatableComponent) input) != null) return null;
         TranslatableComponent tr = (TranslatableComponent) input;
 
         return emit -> {
             emit.tag(LANG);
             emit.argument(tr.key());
-            for (final TranslationArgument with : tr.arguments()) {
+            for (ComponentLike with : arguments(tr)) {
                 emit.argument(with.asComponent());
             }
         };
+    }
+
+    static @Nullable String fallback(TranslatableComponent component) {
+        try {
+            return component.fallback();
+        } catch (LinkageError ignored) {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    static List<? extends ComponentLike> arguments(TranslatableComponent component) {
+        try {
+            return component.arguments();
+        } catch (Throwable t) {
+            return component.args();
+        }
     }
 }

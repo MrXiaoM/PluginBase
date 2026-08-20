@@ -30,6 +30,14 @@ public class VirtualFallback implements VirtualOperation {
     }
 
     @Override
+    public @Nullable String content(Component comp) {
+        if (!(comp instanceof VirtualFallbackComponent)) {
+            return null;
+        }
+        return ((VirtualFallbackComponent<?>) comp).content();
+    }
+
+    @Override
     public Component createVirtualTagInfoHolder(Consumer<TokenEmitter> preserveData, Component current) {
         return VirtualFallbackComponent.createVirtual(Void.class, new TagInfoHolder(preserveData, current), Collections.emptyList(), current.style());
     }

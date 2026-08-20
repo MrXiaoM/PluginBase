@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 public interface VirtualOperation {
     @Nullable Emitable claimComponent(final Component comp);
+    @Nullable String content(final Component comp);
     Component createVirtualTagInfoHolder(Consumer<TokenEmitter> preserveData, Component current);
 
     static VirtualOperation create() {

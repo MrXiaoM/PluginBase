@@ -24,8 +24,8 @@
 package top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.standard;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.TranslatableComponent;
-import net.kyori.adventure.text.TranslationArgument;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.Context;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.ParsingException;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.internal.serializer.Emitable;
@@ -77,14 +77,16 @@ public final class TranslatableFallbackTag {
     }
 
     static @Nullable Emitable claim(final Component input) {
-        if (!(input instanceof TranslatableComponent) || ((TranslatableComponent) input).fallback() == null) return null;
+        if (!(input instanceof TranslatableComponent)) return null;
         TranslatableComponent tr = (TranslatableComponent) input;
+        String fallback = TranslatableTag.fallback(tr);
+        if (fallback == null) return null;
 
         return emit -> {
             emit.tag(LANG_OR);
             emit.argument(tr.key());
-            emit.argument(tr.fallback());
-            for (final TranslationArgument with : tr.arguments()) {
+            emit.argument(fallback);
+            for (ComponentLike with : TranslatableTag.arguments(tr)) {
                 emit.argument(with.asComponent());
             }
         };

@@ -13,6 +13,10 @@ import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.internal.serialize
 import java.util.function.Consumer;
 
 public class VirtualAdventure implements VirtualOperation {
+    public VirtualAdventure() throws Throwable {
+        Class.forName("net.kyori.adventure.text.VirtualComponent");
+    }
+
     @Override
     public @Nullable Emitable claimComponent(Component comp) {
         if (!(comp instanceof VirtualComponent)) {
@@ -26,6 +30,14 @@ public class VirtualAdventure implements VirtualOperation {
         }
 
         return (TagInfoHolder) holder;
+    }
+
+    @Override
+    public @Nullable String content(Component comp) {
+        if (!(comp instanceof VirtualComponent)) {
+            return null;
+        }
+        return ((VirtualComponent) comp).content();
     }
 
     @Override
