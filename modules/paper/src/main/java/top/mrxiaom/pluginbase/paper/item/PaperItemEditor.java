@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PaperItemEditor implements ItemEditor {
+    protected AdventureComponentSerializer<Component, ?, String> serializer = new AdventureComponentSerializerImpl<>(GsonComponentSerializer.gson());
+
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public PaperItemEditor() throws Exception {
         ItemMeta.class.getDeclaredMethod("displayName");
@@ -24,7 +26,7 @@ public class PaperItemEditor implements ItemEditor {
 
     @Override
     public AdventureComponentSerializer<Component, ?, String> serializer() {
-        return new AdventureComponentSerializerImpl<>(GsonComponentSerializer.gson());
+        return serializer;
     }
 
     @Override

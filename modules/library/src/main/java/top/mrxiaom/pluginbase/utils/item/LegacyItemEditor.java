@@ -24,9 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LegacyItemEditor implements ItemEditor {
-    private final boolean textUseComponent;
     private static boolean itemNbtUseComponentsFormat;
     private static boolean componentUseNBT;
+    protected final boolean textUseComponent;
+    protected AdventureComponentSerializer<Component, ?, String> serializer;
     public LegacyItemEditor() {
         itemNbtUseComponentsFormat = MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4);
         ItemStack item = new ItemStack(Material.STONE);
@@ -58,15 +59,16 @@ public class LegacyItemEditor implements ItemEditor {
                 componentUseNBT = false;
             }
         }
+        if (textUseComponent) {
+            serializer = new AdventureComponentSerializerImpl<>(GsonComponentSerializer.gson());
+        } else {
+            serializer = LegacyComponentSerializer.legacySection();
+        }
     }
 
     @Override
     public AdventureComponentSerializer<Component, ?, String> serializer() {
-        if (textUseComponent) {
-            return new AdventureComponentSerializerImpl<>(GsonComponentSerializer.gson());
-        } else {
-            return LegacyComponentSerializer.legacySection();
-        }
+        return serializer;
     }
 
     @Override
