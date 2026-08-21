@@ -10,8 +10,10 @@ import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.MiniMessage;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.internal.serializer.SerializableResolver;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.internal.serializer.StyleClaim;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.Tag;
+import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.resolver.Removable;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.resolver.TagResolver;
 
+import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -91,12 +93,22 @@ public class SparrowMiniMessage implements ITagSerializer {
 
         @Override
         public ITagSerializer.@NotNull TagBuilder removeTags(@NotNull Iterable<String> tagNames) {
-            tags.resolvers().removeIf(it -> {
-                for (String tag : tagNames) {
-                    if (it.has(tag)) return true;
+            Iterator<? extends TagResolver> i = tags.resolvers().iterator();
+            while (i.hasNext()) {
+                TagResolver it = i.next();
+                if (it instanceof Removable) {
+                    for (String tag : tagNames) {
+                        ((Removable) it).remove(tag);
+                    }
+                    continue;
                 }
-                return false;
-            });
+                for (String tag : tagNames) {
+                    if (it.has(tag)) {
+                        i.remove();
+                        break;
+                    }
+                }
+            }
             return this;
         }
 

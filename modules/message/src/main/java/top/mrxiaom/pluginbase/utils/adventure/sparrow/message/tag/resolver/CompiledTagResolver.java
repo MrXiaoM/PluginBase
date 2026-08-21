@@ -49,7 +49,7 @@ import java.util.function.BiConsumer;
  * from a fully sequential scan: a statically known name always beats a dynamic resolver,
  * even if the dynamic resolver was registered later.</p>
  */
-final class CompiledTagResolver implements TagResolver, SerializableResolver {
+final class CompiledTagResolver implements TagResolver, SerializableResolver, Removable {
     private final Map<String, TagResolver> dispatch;
     private final TagResolver[] dynamic; // reverse registration order (last registered first)
     private final boolean anyPreProcess;
@@ -58,6 +58,21 @@ final class CompiledTagResolver implements TagResolver, SerializableResolver {
         this.dispatch = dispatch;
         this.dynamic = dynamic;
         this.anyPreProcess = anyPreProcess;
+    }
+
+    @Override
+    public void remove(String tagName) {
+        dispatch.remove(tagName);
+        for (int i = 0; i < dynamic.length; i++) {
+            TagResolver resolver = dynamic[i];
+            if (resolver.has(tagName)) {
+                if (resolver instanceof Removable) {
+                    ((Removable) resolver).remove(tagName);
+                } else {
+                    dynamic[i] = EmptyTagResolver.INSTANCE;
+                }
+            }
+        }
     }
 
     @Override

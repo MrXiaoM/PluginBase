@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-final class CachingTagResolver implements TagResolver.WithoutArguments, MappableResolver, SerializableResolver {
+final class CachingTagResolver implements TagResolver.WithoutArguments, Removable, MappableResolver, SerializableResolver {
     private static final Tag NULL_REPLACEMENT = (Inserting) () -> {
         throw new UnsupportedOperationException("no-op null tag");
     };
@@ -51,6 +51,14 @@ final class CachingTagResolver implements TagResolver.WithoutArguments, Mappable
             final Tag result = this.resolver.resolve(k);
             return result == null ? NULL_REPLACEMENT : result;
         });
+    }
+
+    @Override
+    public void remove(String tagName) {
+        this.cache.remove(tagName);
+        if (resolver instanceof Removable) {
+            ((Removable) resolver).remove(tagName);
+        }
     }
 
     @Override

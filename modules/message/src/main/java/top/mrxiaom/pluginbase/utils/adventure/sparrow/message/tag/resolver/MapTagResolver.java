@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Objects;
 
-public class MapTagResolver implements TagResolver.WithoutArguments, MappableResolver {
+public class MapTagResolver implements TagResolver.WithoutArguments, Removable, MappableResolver {
     private Map<String, ? extends Tag> tagMap;
 
     public MapTagResolver(Map<String, ? extends Tag> tagMap) {
@@ -42,6 +42,11 @@ public class MapTagResolver implements TagResolver.WithoutArguments, MappableRes
 
     public void tagMap(Map<String, ? extends Tag> tagMap) {
         this.tagMap = tagMap;
+    }
+
+    @Override
+    public void remove(String tagName) {
+        tagMap.remove(tagName);
     }
 
     @Override

@@ -40,7 +40,7 @@ import java.util.function.BiConsumer;
  * "last registered wins" semantics. For a handful of resolvers this is faster than
  * compiling a dispatch table that would be used for a single parse.
  */
-final class ArrayTagResolver implements TagResolver, SerializableResolver {
+final class ArrayTagResolver implements TagResolver, Removable, SerializableResolver {
     private final TagResolver[] resolvers; // reverse registration order (last registered first)
     private final boolean anyPreProcess;
     private final boolean exhaustivelyKnown;
@@ -55,6 +55,20 @@ final class ArrayTagResolver implements TagResolver, SerializableResolver {
         }
         this.anyPreProcess = preProcess;
         this.exhaustivelyKnown = exhaustive;
+    }
+
+    @Override
+    public void remove(String tagName) {
+        for (int i = 0; i < resolvers.length; i++) {
+            TagResolver resolver = resolvers[i];
+            if (resolver.has(tagName)) {
+                if (resolver instanceof Removable) {
+                    ((Removable) resolver).remove(tagName);
+                } else {
+                    resolvers[i] = EmptyTagResolver.INSTANCE;
+                }
+            }
+        }
     }
 
     @Override

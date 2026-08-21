@@ -32,13 +32,31 @@ import org.jetbrains.annotations.Nullable;
  * A lightweight pair of resolvers consulted in priority order, used to combine a
  * MiniMessage instance's tags with per-call extra tags without recompiling anything.
  */
-public final class PrioritizedTagResolver implements TagResolver {
-    private final TagResolver primary;
-    private final TagResolver secondary;
+public final class PrioritizedTagResolver implements TagResolver, Removable {
+    private TagResolver primary;
+    private TagResolver secondary;
 
     public PrioritizedTagResolver(final TagResolver primary, final TagResolver secondary) {
         this.primary = primary;
         this.secondary = secondary;
+    }
+
+    @Override
+    public void remove(String tagName) {
+        if (primary.has(tagName)) {
+            if (primary instanceof Removable) {
+                ((Removable) primary).remove(tagName);
+            } else {
+                primary = EmptyTagResolver.INSTANCE;
+            }
+        }
+        if (secondary.has(tagName)) {
+            if (secondary instanceof Removable) {
+                ((Removable) secondary).remove(tagName);
+            } else {
+                secondary = EmptyTagResolver.INSTANCE;
+            }
+        }
     }
 
     @Override
