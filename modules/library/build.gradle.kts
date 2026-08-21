@@ -26,8 +26,19 @@ dependencies {
     compileOnly("com.mojang:authlib:2.1.28")
     compileOnly("net.md-5:bungeecord-chat:1.21-R0.5-SNAPSHOT")
 
-    applyLibraries("adventure", "compileOnly")
+    add("testImplementation", platform("org.junit:junit-bom:6.1.3"))
+    add("testImplementation", "org.junit.jupiter:junit-jupiter")
+    add("testRuntimeOnly", "org.junit.platform:junit-platform-launcher")
+
+    applyLibraries("adventure", "compileOnly", "testImplementation")
     applyLibraries("nbt-api", "compileOnly")
+}
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
 }
 
 setupPublishing(
