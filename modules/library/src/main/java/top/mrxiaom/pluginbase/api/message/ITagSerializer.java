@@ -5,6 +5,7 @@ import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.event.HoverEventSource;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.StyleBuilderApplicable;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,17 +56,25 @@ public interface ITagSerializer {
 
     interface TagBuilder {
         @NotNull TagBuilder removeTags(@NotNull Iterable<String> tagNames);
+
+        @ApiStatus.Experimental
         @NotNull TagBuilder addInserting(@TagPattern String name, @NotNull Component component);
+        @ApiStatus.Experimental
         default @NotNull TagBuilder addInserting(@TagPattern String name, @NotNull ComponentLike value) {
             return addInserting(name, value.asComponent());
         }
+        @ApiStatus.Experimental
         @NotNull TagBuilder addSelfClosingInserting(@TagPattern String name, @NotNull Component component);
+        @ApiStatus.Experimental
         default @NotNull TagBuilder addSelfClosingInserting(@TagPattern String name, @NotNull ComponentLike value) {
             return addSelfClosingInserting(name, value.asComponent());
         }
+        @ApiStatus.Experimental
         @NotNull TagBuilder addStyling(@TagPattern String name, @NotNull Consumer<Style.Builder> styles);
+        @ApiStatus.Experimental
         @NotNull TagBuilder addStyling(@TagPattern String name, @NotNull StyleBuilderApplicable @NotNull... actions);
 
+        @ApiStatus.Experimental
         @NotNull TagBuilder addHoverTag(String name, HoverEventSource<?> source);
     }
 }
