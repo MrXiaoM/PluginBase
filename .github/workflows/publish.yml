@@ -11,14 +11,14 @@ jobs:
         with:
           fetch-depth: 0
       - name: Validate Gradle wrapper
-        uses: gradle/actions/wrapper-validation@v4
+        uses: gradle/actions/wrapper-validation@v6
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
       - name: Set up Java
         uses: actions/setup-java@v5
         with:
           java-version: '25'
-          distribution: 'adopt'
+          distribution: 'temurin'
       - name: Publish Package to Stage Repository
         run: ./gradlew cleanMavenPublishingStage build publishAllPublicationsToMavenStageRepository -PcompactJavadocs
         env:
