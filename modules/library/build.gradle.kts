@@ -14,6 +14,11 @@ repositories {
         mavenContent { includeGroup("com.mojang") }
     }
 }
+fun DependencyHandlerScope.testAdventure(v: String?) {
+    testRuntimeOnly("net.kyori:adventure-api:${v}")
+    testRuntimeOnly("net.kyori:adventure-text-serializer-gson:${v}")
+    testRuntimeOnly("net.kyori:adventure-text-minimessage:${v}")
+}
 @Suppress("VulnerableLibrariesLocal")
 dependencies {
     applyLibraries("spigot-api", "compileOnly", "testImplementation")
@@ -26,12 +31,7 @@ dependencies {
     compileOnly("net.md-5:bungeecord-chat:1.21-R0.5-SNAPSHOT")
 
     // "4.11.0", "4.17.0", "4.25.0", "5.2.0"
-    val testAdventureVersion: String? = "4.11.0"
-    testAdventureVersion?.also {
-        testRuntimeOnly("net.kyori:adventure-api:$it")
-        testRuntimeOnly("net.kyori:adventure-text-serializer-gson:$it")
-        testRuntimeOnly("net.kyori:adventure-text-minimessage:$it")
-    }
+    testAdventure("4.11.0")
 
     testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -43,6 +43,9 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
 }
 
 setupPublishing(
