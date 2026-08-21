@@ -71,7 +71,7 @@ buildConfig {
         }
     }
     fun dependency(proj: Project): String? {
-        val publishing = proj.extensions.getByType<PublishingExtension>()
+        val publishing = proj.extensions.findByType<PublishingExtension>() ?: return null
         val publication = publishing.publications.filterIsInstance<MavenPublication>().firstOrNull() ?: return null
         return "${publication.groupId}:${publication.artifactId}:${publication.version}"
     }

@@ -1,8 +1,11 @@
 
 subprojects {
+    val shouldPublish = !path.contains("tests")
     apply(plugin="java")
-    apply(plugin="maven-publish")
-    apply(plugin="signing")
+    if (shouldPublish) {
+        apply(plugin = "maven-publish")
+        apply(plugin = "signing")
+    }
 
     group = project.jitpackGroup ?: "${rootProject.group}.pluginbase"
 
@@ -12,7 +15,9 @@ subprojects {
     }
 
     setupJava(8)
-    setupJavadoc()
+    if (shouldPublish) {
+        setupJavadoc()
+    }
     setupLibraries(
         key="spigot-api",
         "org.spigotmc:spigot-api:1.21.2-R0.1-SNAPSHOT",

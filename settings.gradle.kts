@@ -1,7 +1,7 @@
 rootProject.name = "PluginBase"
 
 fun includeProjects(name: String) {
-    val files = File(name).listFiles() ?: return
+    val files = File(name.replace(':', '/')).listFiles() ?: return
     include(":$name")
     for (folder in files) {
         if (folder.isDirectory && File(folder, "build.gradle.kts").exists()) {
@@ -10,4 +10,5 @@ fun includeProjects(name: String) {
     }
 }
 includeProjects("modules")
+includeProjects("modules:library:tests")
 includeProjects("LibrariesResolver")
