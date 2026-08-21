@@ -1,0 +1,29 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - '*.md'
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - '*.md'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '25'
+          distribution: 'adopt'
+      - name: Test
+        run: ./gradlew test
