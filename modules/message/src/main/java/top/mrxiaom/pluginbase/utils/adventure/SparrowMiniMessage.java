@@ -13,6 +13,7 @@ import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.Tag;
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.resolver.TagResolver;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 public class SparrowMiniMessage implements ITagSerializer {
@@ -42,6 +43,10 @@ public class SparrowMiniMessage implements ITagSerializer {
 
     public static ITagSerializer.Builder builder(MiniMessage.Builder builder) {
         return new Builder(builder);
+    }
+
+    public static Supplier<ITagSerializer.Builder> builderSupplier() {
+        return SparrowMiniMessage::builder;
     }
 
     public static class Builder implements ITagSerializer.Builder {

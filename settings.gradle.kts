@@ -10,5 +10,5 @@ fun includeProjects(name: String) {
     }
 }
 includeProjects("modules")
-includeProjects("modules:library:tests")
+includeProjects("modules:message:tests")
 includeProjects("LibrariesResolver")

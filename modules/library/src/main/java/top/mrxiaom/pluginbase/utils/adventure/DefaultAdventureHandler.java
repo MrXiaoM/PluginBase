@@ -25,6 +25,7 @@ import top.mrxiaom.pluginbase.utils.adventure.audience.AudiencePlayer;
 import top.mrxiaom.pluginbase.utils.adventure.test.*;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.*;
 import java.util.function.Supplier;
@@ -34,19 +35,31 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
     private final Map<UUID, AudiencePlayer> players = new HashMap<>();
     protected ITagSerializer miniMessage;
     private final Supplier<ITagSerializer.Builder> defaultBuilder;
+    @SuppressWarnings("unchecked")
     public DefaultAdventureHandler(BukkitPlugin plugin) {
         File file = plugin == null
                 ? new File("pluginbase.yml")
                 : new File(plugin.getDataFolder(), "pluginbase.yml");
-        if (file.exists()) {
-            YamlConfiguration config = ConfigUtils.load(file);
-            if (config.getBoolean("using-default-mini-message")) {
-                defaultBuilder = DefaultMiniMessage::builder;
+        Supplier<ITagSerializer.Builder> sparrowBuilder = null;
+        try {
+            Class<?> sparrow = Class.forName("top.mrxiaom.pluginbase.utils.adventure.SparrowMiniMessage");
+            Method method = sparrow.getDeclaredMethod("builderSupplier");
+            sparrowBuilder = (Supplier<ITagSerializer.Builder>) method.invoke(null);
+        } catch (Throwable ignored) {
+        }
+        if (sparrowBuilder != null) {
+            if (file.exists()) {
+                YamlConfiguration config = ConfigUtils.load(file);
+                if (config.getBoolean("using-default-mini-message")) {
+                    defaultBuilder = DefaultMiniMessage::builder;
+                } else {
+                    defaultBuilder = sparrowBuilder;
+                }
             } else {
-                defaultBuilder = SparrowMiniMessage::builder;
+                defaultBuilder = sparrowBuilder;
             }
         } else {
-            defaultBuilder = SparrowMiniMessage::builder;
+            defaultBuilder = DefaultMiniMessage::builder;
         }
         Map<String, IAdventureTest> tagImplMap = new HashMap<>();
         tagImplMap.put("shadow", new TestShadow());

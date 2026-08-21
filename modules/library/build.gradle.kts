@@ -30,12 +30,6 @@ dependencies {
     applyLibraries("nbt-api", "compileOnly")
 }
 
-tasks.test {
-    for (item in subprojects) {
-        dependsOn(item.tasks.test)
-    }
-}
-
 setupPublishing(
     sourceCodeUrl = "https://github.com/MrXiaoM/PluginBase/tree/main/modules/library"
 )
