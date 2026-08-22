@@ -161,7 +161,7 @@ public class DatabaseHolder {
         }
         if (type.equals("sqlite")) {
             hikariConfig.setMinimumIdle(1);
-            hikariConfig.setMaximumPoolSize(1);
+            hikariConfig.setMaximumPoolSize(10);
         } else {
             hikariConfig.setIdleTimeout(config.getLong("hikari.idle_timeout", 10000L));
             hikariConfig.setMinimumIdle(config.getInt("hikari.minimum_idle", 8));
@@ -184,7 +184,7 @@ public class DatabaseHolder {
         if (isSQLite()) {
             String database = config.getString("sqlite.file", "database.db");
             hikariConfig.setJdbcUrl("jdbc:sqlite:plugins/" + plugin.getName() + "/" + database);
-            hikariConfig.setConnectionTestQuery("SELECT CURRENT_TIMESTAMP;");
+            hikariConfig.setConnectionTestQuery("PRAGMA journal_mode=WAL; PRAGMA busy_timeout = 5000;");
         }
         if (!firstConnectFlag && !plugin.options.reconnectDatabaseWhenReloadConfig) {
             reconnect();
