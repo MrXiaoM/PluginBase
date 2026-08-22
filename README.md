@@ -2,6 +2,9 @@
 
 Minecraft 插件开发前置
 
+[![](https://img.shields.io/maven-central/v/top.mrxiaom.pluginbase/library)](https://mvnrepository.com/artifact/top.mrxiaom.pluginbase/library) 
+[![](https://jitpack.io/v/top.mrxiaom/PluginBase.svg)](https://jitpack.io/#top.mrxiaom/PluginBase)
+
 ## 简介
 
 经过两年多 Minecraft 服务器插件的开发，我逐渐感觉到有一些步骤没有必要。  

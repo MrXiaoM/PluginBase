@@ -7,3 +7,18 @@
 实现注册自定义标签时，参考 [CraftEngineTags](https://github.com/Xiao-MoMi/craft-engine/blob/main/core/src/main/java/net/momirealms/craftengine/core/plugin/text/minimessage/CraftEngineTags.java) 相关代码以获得最佳性能。
 
 > 将会逐步抛弃默认 MiniMessage 实现，目前框架内的实现仍是通用方法，有待优化。
+
+## JMH 性能测试
+
+运行一次完整的性能测试，可能需要半个小时左右，故只支持最新 Adventure 版本。
+
+```shell
+python ./modules/message/tests/adventure050200/tools/clear_jmh_lock.py
+
+./gradlew :modules:message:tests:adventure050200:jmh
+
+cd ./modules/message/tests/adventure050200/
+python ./tools/generate_jmh_report.py ./build/jmh/results.json ./build/jmh/comparison.html
+```
+
+完整报告会生成在 `./modules/message/tests/adventure050200/build/jmh/comparison.html` 文件中。
