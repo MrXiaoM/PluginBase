@@ -72,6 +72,16 @@ public class MiniMessagePerformanceBenchmark {
         blackhole.consume(state.defaultMiniMessage.serialize(state.interactive));
     }
 
+    @Benchmark
+    public void sparrowSerializeDeep(final SerializationState state, final Blackhole blackhole) {
+        blackhole.consume(state.sparrow.serialize(state.deep));
+    }
+
+    @Benchmark
+    public void defaultSerializeDeep(final SerializationState state, final Blackhole blackhole) {
+        blackhole.consume(state.defaultMiniMessage.serialize(state.deep));
+    }
+
     /** 渐变的组件树布局不同，故只比较各实现处理自身解析结果的成本。 */
     @Benchmark
     public void sparrowSerializeGradient(final SerializationState state, final Blackhole blackhole) {
@@ -163,6 +173,7 @@ public class MiniMessagePerformanceBenchmark {
         private Component basic;
         private Component styled;
         private Component interactive;
+        private Component deep;
         private Component sparrowGradient;
         private Component defaultGradient;
 
@@ -173,6 +184,7 @@ public class MiniMessagePerformanceBenchmark {
             this.basic = MiniMessageBenchmarkFixtures.serializationBasicComponent();
             this.styled = MiniMessageBenchmarkFixtures.serializationStyledComponent();
             this.interactive = MiniMessageBenchmarkFixtures.serializationInteractiveComponent();
+            this.deep = MiniMessageBenchmarkFixtures.serializationDeepComponent();
             this.sparrowGradient = MiniMessageBenchmarkFixtures.serializationGradientComponent(this.sparrow);
             this.defaultGradient = MiniMessageBenchmarkFixtures.serializationGradientComponent(this.defaultMiniMessage);
         }

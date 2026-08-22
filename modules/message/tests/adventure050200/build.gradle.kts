@@ -10,12 +10,15 @@ dependencies {
     applyLibraries("spigot-api", "compileOnly", "testImplementation")
 
     val v = "5.2.0"
-    compileOnly("net.kyori:adventure-api:${v}")
-    compileOnly("net.kyori:adventure-text-serializer-gson:${v}")
-    compileOnly("net.kyori:adventure-text-minimessage:${v}")
-    testRuntimeOnly("net.kyori:adventure-api:${v}")
-    testRuntimeOnly("net.kyori:adventure-text-serializer-gson:${v}")
-    testRuntimeOnly("net.kyori:adventure-text-minimessage:${v}")
+    listOf(
+        "net.kyori:adventure-api:${v}",
+        "net.kyori:adventure-text-serializer-gson:${v}",
+        "net.kyori:adventure-text-minimessage:${v}"
+    ).forEach {
+        compileOnly(it)
+        runtimeOnly(it)
+        testRuntimeOnly(it)
+    }
 
     applyLibraries("adventure", "compileOnly", "testCompileOnly")
     applyLibraries("nbt-api", "compileOnly")

@@ -30,9 +30,8 @@ import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.internal.parser.To
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.internal.serializer.*;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -46,7 +45,7 @@ final class MiniMessageSerializer {
     //
 
     static String serialize(final Component component, final SerializableResolver resolver, final boolean strict) {
-        final StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder(estimatedSize(component));
         final Collector emitter = new Collector(resolver, strict, sb);
 
         emitter.mark();
@@ -80,6 +79,24 @@ final class MiniMessageSerializer {
         }
     }
 
+    private static int estimatedSize(final Component component) {
+        int size = 32;
+        if (component instanceof TextComponent) {
+            size += ((TextComponent) component).content().length();
+        }
+        final List<Component> children = component.children();
+        final int childCount = children.size();
+        size += childCount * 8;
+        if (childCount == 1) {
+            size += estimatedSize(children.get(0));
+        } else if (childCount > 1) {
+            for (final Component child : children) {
+                size += estimatedSize(child);
+            }
+        }
+        return size;
+    }
+
     static final class Collector implements TokenEmitter, ClaimConsumer {
         /**
          * mark tag boundaries within the stack, without needing to mess with typing too much.
@@ -89,7 +106,8 @@ final class MiniMessageSerializer {
         private static final char[] TAG_TOKENS = {TokenParser.TAG_END, TokenParser.SEPARATOR};
         private static final char[] SINGLE_QUOTED_ESCAPES = {TokenParser.ESCAPE, '\''};
         private static final char[] DOUBLE_QUOTED_ESCAPES = {TokenParser.ESCAPE, '"'};
-        final Set<String> claimedStyleElements = new HashSet<>();
+        private String[] claimedStyleKeys = new String[8];
+        private int claimedStyleCount = 0;
         private final SerializableResolver resolver;
         private final boolean strict;
         private final StringBuilder consumer;
@@ -105,6 +123,10 @@ final class MiniMessageSerializer {
         }
 
         static void appendEscaping(final StringBuilder builder, final String text, final char[] escapeChars, final boolean allowEscapes) {
+            if (escapeChars.length == 2) {
+                appendEscapingTwo(builder, text, escapeChars[0], escapeChars[1], allowEscapes);
+                return;
+            }
             int startIdx = 0;
             boolean unescapedFound = false;
 
@@ -130,6 +152,35 @@ final class MiniMessageSerializer {
                 }
             }
 
+            if (startIdx < text.length() && unescapedFound) {
+                builder.append(text, startIdx, text.length());
+            }
+        }
+
+        private static void appendEscapingTwo(
+                final StringBuilder builder,
+                final String text,
+                final char first,
+                final char second,
+                final boolean allowEscapes
+        ) {
+            int startIdx = 0;
+            boolean unescapedFound = false;
+            for (int i = 0; i < text.length(); i++) {
+                final char test = text.charAt(i);
+                if (test == first || test == second) {
+                    if (!allowEscapes) {
+                        throw new IllegalArgumentException("Invalid escapable character '" + test + "' found at index " + i + " in string '" + text + "'");
+                    }
+                    if (unescapedFound) {
+                        builder.append(text, startIdx, i);
+                    }
+                    startIdx = i + 1;
+                    builder.append(TokenParser.ESCAPE).append(test);
+                } else {
+                    unescapedFound = true;
+                }
+            }
             if (startIdx < text.length() && unescapedFound) {
                 builder.append(text, startIdx, text.length());
             }
@@ -298,7 +349,7 @@ final class MiniMessageSerializer {
 
         @Override
         public void style(final String claimKey, final Emitable styleClaim) {
-            if (this.claimedStyleElements.add(requireNonNull(claimKey, "claimKey"))) {
+            if (this.claimStyle(requireNonNull(claimKey, "claimKey"))) {
                 styleClaim.emit(this);
             }
         }
@@ -318,7 +369,27 @@ final class MiniMessageSerializer {
 
         @Override
         public boolean styleClaimed(final String claimId) {
-            return this.claimedStyleElements.contains(claimId);
+            return this.containsClaim(claimId);
+        }
+
+        private boolean claimStyle(final String claimKey) {
+            if (this.containsClaim(claimKey)) {
+                return false;
+            }
+            if (this.claimedStyleCount == this.claimedStyleKeys.length) {
+                this.claimedStyleKeys = Arrays.copyOf(this.claimedStyleKeys, this.claimedStyleKeys.length * 2);
+            }
+            this.claimedStyleKeys[this.claimedStyleCount++] = claimKey;
+            return true;
+        }
+
+        private boolean containsClaim(final String claimId) {
+            for (int i = 0; i < this.claimedStyleCount; i++) {
+                if (claimId.equals(this.claimedStyleKeys[i])) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Nullable Component flushClaims(final Component component) { // return: a substitute to provide children
@@ -333,7 +404,7 @@ final class MiniMessageSerializer {
                 // todo: best choice?
                 throw new IllegalStateException("Unclaimed component " + component);
             }
-            this.claimedStyleElements.clear();
+            this.claimedStyleCount = 0;
             return ret;
         }
 

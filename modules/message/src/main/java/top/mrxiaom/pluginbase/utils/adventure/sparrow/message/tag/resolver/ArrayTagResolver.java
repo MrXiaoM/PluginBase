@@ -42,6 +42,7 @@ import java.util.function.BiConsumer;
  */
 final class ArrayTagResolver implements TagResolver, Removable, SerializableResolver {
     private final TagResolver[] resolvers; // reverse registration order (last registered first)
+    private SerializableResolver[] serializers;
     private final boolean anyPreProcess;
     private final boolean exhaustivelyKnown;
 
@@ -55,10 +56,12 @@ final class ArrayTagResolver implements TagResolver, Removable, SerializableReso
         }
         this.anyPreProcess = preProcess;
         this.exhaustivelyKnown = exhaustive;
+        this.serializers = SerializationResolvers.unique(resolvers);
     }
 
     @Override
     public void remove(String tagName) {
+        boolean changed = false;
         for (int i = 0; i < resolvers.length; i++) {
             TagResolver resolver = resolvers[i];
             if (resolver.has(tagName)) {
@@ -67,7 +70,11 @@ final class ArrayTagResolver implements TagResolver, Removable, SerializableReso
                 } else {
                     resolvers[i] = EmptyTagResolver.INSTANCE;
                 }
+                changed = true;
             }
+        }
+        if (changed) {
+            this.serializers = SerializationResolvers.unique(resolvers);
         }
     }
 
@@ -144,11 +151,8 @@ final class ArrayTagResolver implements TagResolver, Removable, SerializableReso
 
     @Override
     public void handle(final Component serializable, final ClaimConsumer consumer) {
-        for (final TagResolver resolver : this.resolvers) {
-            if (resolver instanceof SerializableResolver) {
-                SerializableResolver serializableResolver = (SerializableResolver) resolver;
-                serializableResolver.handle(serializable, consumer);
-            }
+        for (final SerializableResolver resolver : this.serializers) {
+            resolver.handle(serializable, consumer);
         }
     }
 }

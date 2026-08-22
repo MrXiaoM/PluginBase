@@ -31,7 +31,6 @@ import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.internal.serialize
 import top.mrxiaom.pluginbase.utils.adventure.sparrow.message.tag.Tag;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -52,12 +51,14 @@ import java.util.function.BiConsumer;
 final class CompiledTagResolver implements TagResolver, SerializableResolver, Removable {
     private final Map<String, TagResolver> dispatch;
     private final TagResolver[] dynamic; // reverse registration order (last registered first)
+    private SerializableResolver[] serializers;
     private final boolean anyPreProcess;
 
     CompiledTagResolver(final Map<String, TagResolver> dispatch, final TagResolver[] dynamic, final boolean anyPreProcess) {
         this.dispatch = dispatch;
         this.dynamic = dynamic;
         this.anyPreProcess = anyPreProcess;
+        this.serializers = SerializationResolvers.unique(dispatch.values(), dynamic);
     }
 
     @Override
@@ -73,6 +74,7 @@ final class CompiledTagResolver implements TagResolver, SerializableResolver, Re
                 }
             }
         }
+        this.serializers = SerializationResolvers.unique(dispatch.values(), dynamic);
     }
 
     @Override
@@ -176,18 +178,8 @@ final class CompiledTagResolver implements TagResolver, SerializableResolver, Re
 
     @Override
     public void handle(final Component serializable, final ClaimConsumer consumer) {
-        final IdentityHashMap<TagResolver, Boolean> seen = new IdentityHashMap<>();
-        for (final TagResolver resolver : this.dispatch.values()) {
-            if (seen.put(resolver, Boolean.TRUE) == null && resolver instanceof SerializableResolver) {
-                SerializableResolver serializableResolver = (SerializableResolver) resolver;
-                serializableResolver.handle(serializable, consumer);
-            }
-        }
-        for (final TagResolver resolver : this.dynamic) {
-            if (seen.put(resolver, Boolean.TRUE) == null && resolver instanceof SerializableResolver) {
-                SerializableResolver serializableResolver = (SerializableResolver) resolver;
-                serializableResolver.handle(serializable, consumer);
-            }
+        for (final SerializableResolver resolver : this.serializers) {
+            resolver.handle(serializable, consumer);
         }
     }
 }

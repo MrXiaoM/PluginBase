@@ -73,6 +73,19 @@ public final class MiniMessageBenchmarkFixtures {
                 .insertion("copied");
     }
 
+    /**
+     * 多层子组件树，用于放大每个节点的序列化固定成本。
+     */
+    public static Component serializationDeepComponent() {
+        Component current = Component.text("叶子", NamedTextColor.GREEN);
+        for (int index = 0; index < 8; index++) {
+            current = Component.text("层" + index + " ")
+                    .decorate(TextDecoration.ITALIC)
+                    .append(current);
+        }
+        return current;
+    }
+
     public static Component serializationGradientComponent(final ITagSerializer serializer) {
         return serializer.deserialize(GRADIENT);
     }

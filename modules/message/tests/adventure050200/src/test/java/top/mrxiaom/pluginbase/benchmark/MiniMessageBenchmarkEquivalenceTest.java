@@ -23,6 +23,7 @@ public class MiniMessageBenchmarkEquivalenceTest {
         assertCrossReadable("基础组件", MiniMessageBenchmarkFixtures.serializationBasicComponent(), sparrow, defaultMiniMessage);
         assertCrossReadable("样式组件", MiniMessageBenchmarkFixtures.serializationStyledComponent(), sparrow, defaultMiniMessage);
         assertCrossReadable("交互组件", MiniMessageBenchmarkFixtures.serializationInteractiveComponent(), sparrow, defaultMiniMessage);
+        assertCrossReadable("深层组件", MiniMessageBenchmarkFixtures.serializationDeepComponent(), sparrow, defaultMiniMessage);
 
         final Component sparrowGradient = MiniMessageBenchmarkFixtures.serializationGradientComponent(sparrow);
         final Component defaultGradient = MiniMessageBenchmarkFixtures.serializationGradientComponent(defaultMiniMessage);
@@ -41,6 +42,7 @@ public class MiniMessageBenchmarkEquivalenceTest {
             final ITagSerializer defaultMiniMessage
     ) {
         final String sparrowSerialized = sparrow.serialize(component);
+        assertEquals(sparrowSerialized, sparrow.serialize(component), name + " 的 Sparrow 序列化结果必须稳定");
         final String defaultSerialized = defaultMiniMessage.serialize(component);
 
         final String expectedVisibleText = MiniMessageBenchmarkFixtures.visibleText(component);

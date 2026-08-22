@@ -48,6 +48,7 @@ def display_name(suffix):
         "Serialize Basic": "序列化：基础组件",
         "Serialize Styled": "序列化：样式组件",
         "Serialize Interactive": "序列化：交互组件",
+        "Serialize Deep": "序列化：深层组件",
         "Serialize Gradient": "序列化：渐变组件",
     }
     spaced = "".join(result)
