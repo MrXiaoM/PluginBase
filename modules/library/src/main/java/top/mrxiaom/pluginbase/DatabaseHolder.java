@@ -160,7 +160,7 @@ public class DatabaseHolder {
             return;
         }
         if (type.equals("sqlite")) {
-            hikariConfig.setMinimumIdle(1);
+            hikariConfig.setMinimumIdle(10);
             hikariConfig.setMaximumPoolSize(10);
         } else {
             hikariConfig.setIdleTimeout(config.getLong("hikari.idle_timeout", 10000L));
