@@ -32,8 +32,7 @@ public enum Styles {
     COLOR((bc, c) -> {
         TextColor color = c.color();
         if (color != null) {
-            if (color.equals(NamedTextColor.AQUA)) bc.setColor(ChatColor.AQUA);
-            else if (color.equals(NamedTextColor.BLACK)) bc.setColor(ChatColor.BLACK);
+            if (color.equals(NamedTextColor.BLACK)) bc.setColor(ChatColor.BLACK);
             else if (color.equals(NamedTextColor.DARK_BLUE)) bc.setColor(ChatColor.DARK_BLUE);
             else if (color.equals(NamedTextColor.DARK_GREEN)) bc.setColor(ChatColor.DARK_GREEN);
             else if (color.equals(NamedTextColor.DARK_AQUA)) bc.setColor(ChatColor.DARK_AQUA);
@@ -44,6 +43,7 @@ public enum Styles {
             else if (color.equals(NamedTextColor.DARK_GRAY)) bc.setColor(ChatColor.DARK_GRAY);
             else if (color.equals(NamedTextColor.BLUE)) bc.setColor(ChatColor.BLUE);
             else if (color.equals(NamedTextColor.AQUA)) bc.setColor(ChatColor.AQUA);
+            else if (color.equals(NamedTextColor.GREEN)) bc.setColor(ChatColor.GREEN);
             else if (color.equals(NamedTextColor.RED)) bc.setColor(ChatColor.RED);
             else if (color.equals(NamedTextColor.LIGHT_PURPLE)) bc.setColor(ChatColor.LIGHT_PURPLE);
             else if (color.equals(NamedTextColor.YELLOW)) bc.setColor(ChatColor.YELLOW);
