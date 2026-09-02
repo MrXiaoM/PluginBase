@@ -28,6 +28,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class DefaultAdventureHandler implements IAdventureHandler, Listener {
@@ -218,10 +219,18 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
         sendActionBar(player, miniMessage(message));
     }
 
+    private static void appendColor(AtomicBoolean reset, StringBuilder builder, String color) {
+        if (reset.compareAndSet(true, false)) {
+            builder.append("<reset><!i>");
+        }
+        builder.append(color);
+    }
+
     @Override
     public @NotNull String legacyToMiniMessage(@NotNull String legacy) {
         StringBuilder builder = new StringBuilder();
         char[] chars = legacy.toCharArray();
+        AtomicBoolean r = new AtomicBoolean(false);
         for (int i = 0; i < chars.length; i++) {
             if (!isColorCode(chars[i])) {
                 builder.append(chars[i]);
@@ -232,28 +241,28 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
                 continue;
             }
             switch (Character.toLowerCase(chars[i+1])) {
-                case '0': builder.append("<black>"); break;
-                case '1': builder.append("<dark_blue>"); break;
-                case '2': builder.append("<dark_green>"); break;
-                case '3': builder.append("<dark_aqua>"); break;
-                case '4': builder.append("<dark_red>"); break;
-                case '5': builder.append("<dark_purple>"); break;
-                case '6': builder.append("<gold>"); break;
-                case '7': builder.append("<gray>"); break;
-                case '8': builder.append("<dark_gray>"); break;
-                case '9': builder.append("<blue>"); break;
-                case 'a': builder.append("<green>"); break;
-                case 'b': builder.append("<aqua>"); break;
-                case 'c': builder.append("<red>"); break;
-                case 'd': builder.append("<light_purple>"); break;
-                case 'e': builder.append("<yellow>"); break;
-                case 'f': builder.append("<white>"); break;
+                case '0': appendColor(r, builder, "<black>"); break;
+                case '1': appendColor(r, builder, "<dark_blue>"); break;
+                case '2': appendColor(r, builder, "<dark_green>"); break;
+                case '3': appendColor(r, builder, "<dark_aqua>"); break;
+                case '4': appendColor(r, builder, "<dark_red>"); break;
+                case '5': appendColor(r, builder, "<dark_purple>"); break;
+                case '6': appendColor(r, builder, "<gold>"); break;
+                case '7': appendColor(r, builder, "<gray>"); break;
+                case '8': appendColor(r, builder, "<dark_gray>"); break;
+                case '9': appendColor(r, builder, "<blue>"); break;
+                case 'a': appendColor(r, builder, "<green>"); break;
+                case 'b': appendColor(r, builder, "<aqua>"); break;
+                case 'c': appendColor(r, builder, "<red>"); break;
+                case 'd': appendColor(r, builder, "<light_purple>"); break;
+                case 'e': appendColor(r, builder, "<yellow>"); break;
+                case 'f': appendColor(r, builder, "<white>"); break;
                 case 'r': builder.append("<reset><!i>"); break;
-                case 'l': builder.append("<b>"); break;
-                case 'm': builder.append("<st>"); break;
-                case 'o': builder.append("<i>"); break;
-                case 'n': builder.append("<u>"); break;
-                case 'k': builder.append("<obf>"); break;
+                case 'l': builder.append("<b>"); r.set(true); break;
+                case 'm': builder.append("<st>"); r.set(true); break;
+                case 'o': builder.append("<i>"); r.set(true); break;
+                case 'n': builder.append("<u>"); r.set(true); break;
+                case 'k': builder.append("<obf>"); r.set(true); break;
                 case 'x': {
                     if (i + 13 >= chars.length
                             || !isColorCode(chars[i+2])
@@ -264,6 +273,9 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
                             || !isColorCode(chars[i+12])) {
                         builder.append(chars[i]);
                         continue;
+                    }
+                    if (r.compareAndSet(true, false)) {
+                        builder.append("<reset><!i>");
                     }
                     builder
                             .append("<#")
@@ -281,6 +293,9 @@ public class DefaultAdventureHandler implements IAdventureHandler, Listener {
                     if (i + 6 >= chars.length) {
                         builder.append(chars[i]);
                         continue;
+                    }
+                    if (r.compareAndSet(true, false)) {
+                        builder.append("<reset><!i>");
                     }
                     builder
                             .append("<#")
