@@ -37,7 +37,15 @@ import static java.util.Objects.requireNonNull;
 
 class MiniMessageImpl implements MiniMessage {
     static final UnaryOperator<String> DEFAULT_NO_OP = UnaryOperator.identity();
-    static final UnaryOperator<Component> DEFAULT_COMPACTING_METHOD = Component::compact;
+    static final UnaryOperator<Component> DEFAULT_COMPACTING_METHOD;
+    static {
+        UnaryOperator<Component> defaultCompacting = UnaryOperator.identity();
+        try {
+            defaultCompacting = Component::compact;
+        } catch (Throwable ignored) {
+        }
+        DEFAULT_COMPACTING_METHOD = defaultCompacting;
+    }
 
     private MiniMessageParser parser;
     private boolean strict;
