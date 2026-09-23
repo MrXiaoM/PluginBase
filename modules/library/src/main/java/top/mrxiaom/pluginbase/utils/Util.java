@@ -21,7 +21,9 @@ import top.mrxiaom.pluginbase.utils.diapatcher.FoliaDispatcher;
 import top.mrxiaom.pluginbase.utils.inventory.accessor.ViewAccessorInterface;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.file.Path;
@@ -45,6 +47,7 @@ public class Util {
     private static ICommandDispatcher dispatcher;
     private static InventoryViewAccessor.Provider inventoryViewAccessor;
     private static Boolean folia;
+    private static final Map<String, Object> vanillaEnchantments = new HashMap<>();
 
     public static void init(BukkitPlugin plugin) {
         if (isFolia()) {
@@ -69,6 +72,19 @@ public class Util {
         }
         try {
             RegistryConverter.init();
+        } catch (Throwable ignored) {
+        }
+        try {
+            Class<?> type = Class.forName("org.bukkit.enchantments.Enchantment");
+            for (Field field : type.getDeclaredFields()) {
+                int m = field.getModifiers();
+                if (Modifier.isPublic(m) && Modifier.isStatic(m) && Modifier.isFinal(m)) {
+                    Object value = field.get(null);
+                    if (value.getClass().equals(type)) {
+                        vanillaEnchantments.put(field.getName().toUpperCase(), value);
+                    }
+                }
+            }
         } catch (Throwable ignored) {
         }
         if (plugin.options.adventure()) {
@@ -487,13 +503,27 @@ public class Util {
         return Optional.empty();
     }
 
+    @NotNull
+    public static Set<String> getEnchantKeys() {
+        return vanillaEnchantments.keySet();
+    }
+
+    @Nullable
+    public static Enchantment getEnchant(@NotNull String name) {
+        Object value = vanillaEnchantments.get(name.toUpperCase());
+        if (value instanceof Enchantment) {
+            return (Enchantment) value;
+        }
+        return null;
+    }
+
     /**
      * 通过 enum values 或者 Bukkit Registry 读取值
      * @param type 类型
      * @param s 输入的字符串
      * @param def 默认值
      */
-    @SuppressWarnings({"rawtypes"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T> T valueOr(Class<T> type, String s, T def) {
         if (s == null || s.isEmpty()) return def;
         if (type.isEnum()) {
@@ -506,7 +536,18 @@ public class Util {
                 if (t != null) {
                     return t;
                 }
+                return def;
             } catch (LinkageError ignored) {
+            }
+            try {
+                // 兼容旧版本的附魔，旧版本也不用 enum 声明附魔
+                if (type.getName().equals("org.bukkit.enchantments.Enchantment")) {
+                    Object value = vanillaEnchantments.get(s.toUpperCase());
+                    if (value != null) {
+                        return (T) value;
+                    }
+                }
+            } catch (Exception ignored) {
             }
         }
         return def;
