@@ -80,7 +80,7 @@ public class Util {
                 int m = field.getModifiers();
                 if (Modifier.isPublic(m) && Modifier.isStatic(m) && Modifier.isFinal(m)) {
                     Object value = field.get(null);
-                    if (value.getClass().equals(type)) {
+                    if (type.isAssignableFrom(value.getClass())) {
                         vanillaEnchantments.put(field.getName().toUpperCase(), value);
                     }
                 }
