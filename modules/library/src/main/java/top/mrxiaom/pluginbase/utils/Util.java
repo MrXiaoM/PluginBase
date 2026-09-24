@@ -47,6 +47,7 @@ public class Util {
     private static ICommandDispatcher dispatcher;
     private static InventoryViewAccessor.Provider inventoryViewAccessor;
     private static Boolean folia;
+    private static Boolean supportRegistry;
     private static final Map<String, Object> vanillaEnchantments = new HashMap<>();
 
     public static void init(BukkitPlugin plugin) {
@@ -90,6 +91,13 @@ public class Util {
         if (plugin.options.adventure()) {
             AdventureUtil.init(plugin);
         }
+    }
+
+    public static boolean isSupportRegistry() {
+        if (supportRegistry == null) {
+            supportRegistry = Util.isPresent("org.bukkit.Registry");
+        }
+        return supportRegistry;
     }
 
     public static boolean isFolia() {
@@ -531,23 +539,27 @@ public class Util {
                 if (((Enum) t).name().equalsIgnoreCase(s)) return t;
             }
         } else {
-            try {
-                T t = RegistryUtils.fromType(type, s);
-                if (t != null) {
-                    return t;
-                }
-                return def;
-            } catch (LinkageError ignored) {
-            }
-            try {
-                // 兼容旧版本的附魔，旧版本也不用 enum 声明附魔
-                if (type.getName().equals("org.bukkit.enchantments.Enchantment")) {
-                    Object value = vanillaEnchantments.get(s.toUpperCase());
-                    if (value != null) {
-                        return (T) value;
+            if (isSupportRegistry()) {
+                try {
+                    T t = RegistryUtils.fromType(type, s);
+                    if (t != null) {
+                        return t;
                     }
+                    return def;
+                } catch (LinkageError ignored) {
                 }
-            } catch (Exception ignored) {
+            } else {
+                // 兼容旧版本的其它注册表
+                try {
+                    // 旧版本也不用 enum 声明附魔，需要单独兼容
+                    if (type.getName().equals("org.bukkit.enchantments.Enchantment")) {
+                        Object value = vanillaEnchantments.get(s.toUpperCase());
+                        if (value != null) {
+                            return (T) value;
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
             }
         }
         return def;
