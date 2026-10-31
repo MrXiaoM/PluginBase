@@ -5,7 +5,9 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -71,6 +73,10 @@ public class LoadedIcon {
      */
     public boolean hideTooltip;
     /**
+     * 物品标记，用于隐藏属性等等
+     */
+    public List<ItemFlag> itemFlags;
+    /**
      * 物品的额外 NBT
      */
     public @NotNull Map<String, String> nbtStrings;
@@ -126,6 +132,13 @@ public class LoadedIcon {
         this.itemModel = current.getString("item-model", null);
         this.tooltipStyle = current.getString("tooltip-style", null);
         this.hideTooltip = current.getBoolean("hide-tooltip", false);
+        this.itemFlags = new ArrayList<>();
+        for (String input : current.getStringList("item-flags")) {
+            ItemFlag flag = Util.valueOr(ItemFlag.class, input, null);
+            if (flag != null) {
+                this.itemFlags.add(flag);
+            }
+        }
         this.nbtStrings = new HashMap<>();
         section = current.getConfigurationSection("nbt-strings");
         if (section != null) for (String key : section.getKeys(false)) {
@@ -249,6 +262,21 @@ public class LoadedIcon {
      * @param loreModifier 物品Lore修饰器
      */
     public void applyItemMeta(@NotNull ItemStack item, @Nullable Player player, @Nullable IModifier<String> displayNameModifier, @Nullable IModifier<List<String>> loreModifier) {
+        if (!itemFlags.isEmpty()) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                boolean modified = false;
+                for (ItemFlag flag : itemFlags) {
+                    if (!meta.hasItemFlag(flag)) {
+                        meta.addItemFlags(flag);
+                        modified = true;
+                    }
+                }
+                if (modified) {
+                    item.setItemMeta(meta);
+                }
+            }
+        }
         if (!display.isEmpty()) {
             String displayName;
             if (player == null) {
